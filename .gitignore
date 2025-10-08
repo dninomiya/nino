@@ -36,4 +36,4 @@ npm-debug.log*
 *.pem
 
 # DB
-packages/drizzle/local/
+packages/db/local/
