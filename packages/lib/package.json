@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "exports": {
-    "./get-base-url": "./get-base-url.ts"
+    "./get-base-url": "./get-base-url.ts",
+    "./constants": "./constants.ts"
   }
 }
