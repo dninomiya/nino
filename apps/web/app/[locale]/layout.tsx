@@ -1,10 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { Metadata } from "next";
 import { APP_NAME } from "@workspace/lib/constants";
 import { setLocale } from "@/i18n/set-locale";
+import { NextIntlClientProvider } from "next-intl";
+import { routing } from "@/i18n/routing";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -15,6 +18,10 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +42,12 @@ export default async function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <NextIntlClientProvider locale={locale}>
+            {children}
+          </NextIntlClientProvider>
+        </Providers>
+        <Analytics />
       </body>
     </html>
   );

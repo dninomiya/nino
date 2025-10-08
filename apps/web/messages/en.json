@@ -2,7 +2,10 @@
   "LocaleSwitcher": {
     "locale": "{locale, select, ja {Japanese} en {English} other {Unknown}}"
   },
-  "HomePage": {
-    "title": "Hello world!"
+  "ModeToggle": {
+    "label": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }
