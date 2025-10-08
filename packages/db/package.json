@@ -5,14 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "turso dev -f local/local.db",
-    "generate": "pnpx drizzle-kit generate",
-    "migrate": "pnpx drizzle-kit migrate",
-    "studio": "pnpx drizzle-kit studio"
+    "generate": "pnpm drizzle-kit generate",
+    "migrate": "pnpm drizzle-kit migrate",
+    "gmigrate": "pnpm drizzle-kit generate && pnpm drizzle-kit migrate",
+    "studio": "pnpm drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
     "dotenv": "^17.2.3",
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "^0.44.6",
     "nanoid": "^5.1.6"
   },
   "devDependencies": {
