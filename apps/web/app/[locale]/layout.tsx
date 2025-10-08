@@ -4,7 +4,7 @@ import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { Metadata } from "next";
 import { APP_NAME } from "@workspace/lib/constants";
-import { Logo } from "@workspace/ui/blocks/logo/logo";
+import { setLocale } from "@/i18n/set-locale";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -24,13 +24,14 @@ export const metadata: Metadata = {
   description: "Web Developer",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
+  params,
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: LayoutProps<"/[locale]">) {
+  const locale = await setLocale(params);
+
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >

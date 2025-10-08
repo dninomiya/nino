@@ -1,0 +1,8 @@
+{
+  "LocaleSwitcher": {
+    "locale": "{locale, select, ja {Japanese} en {English} other {Unknown}}"
+  },
+  "HomePage": {
+    "title": "Hello world!"
+  }
+}

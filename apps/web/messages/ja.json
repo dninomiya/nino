@@ -1,0 +1,8 @@
+{
+  "LocaleSwitcher": {
+    "locale": "{locale, select, ja {日本語} en {英語} other {不明}}"
+  },
+  "HomePage": {
+    "title": "こんにちは"
+  }
+}

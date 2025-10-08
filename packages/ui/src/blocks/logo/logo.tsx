@@ -14,8 +14,8 @@ import { Download } from "lucide-react";
 import { useState } from "react";
 
 export const Logo = ({
-  width = 40,
-  height = 40,
+  width = 36,
+  height = 36,
 }: {
   width?: number;
   height?: number;
@@ -37,7 +37,7 @@ export const Logo = ({
           <Image src={img} alt={APP_NAME} width={width} height={height} />
         </Link>
       </div>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="start">
         <DropdownMenuItem asChild>
           <a href="/brandkit.zip" download>
             <Download />
