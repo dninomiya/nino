@@ -24,7 +24,7 @@ export const Logo = ({
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <div className="relative w-fit overflow-hidden rounded-full">
+      <div className="relative w-fit overflow-hidden rounded-lg">
         <DropdownMenuTrigger className="absolute inset-0" disabled />
         <Link
           href="/about"

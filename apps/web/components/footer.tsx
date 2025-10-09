@@ -6,6 +6,7 @@ import {
   SiZenn,
   SiGithub,
   SiYoutube,
+  SiDiscord,
 } from "@icons-pack/react-simple-icons";
 import {
   AUTHOR_X_URL,
@@ -13,6 +14,7 @@ import {
   AUTHOR_YOUTUBE_URL,
   AUTHOR_GITHUB_URL,
   APP_NAME,
+  AUTHOR_DISCORD_URL,
 } from "@workspace/lib/constants";
 
 const authorLinks = [
@@ -36,6 +38,11 @@ const authorLinks = [
     href: AUTHOR_ZENN_URL,
     label: "Zenn",
   },
+  {
+    icon: SiDiscord,
+    href: AUTHOR_DISCORD_URL,
+    label: "Discord",
+  },
 ];
 
 export const Footer = () => {
@@ -44,14 +51,11 @@ export const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="flex flex-col gap-3">
           <Logo />
-          <p className="text-sm text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-            quos.
-          </p>
+          <p className="text-sm text-muted-foreground">Web Developer.</p>
           <div className="flex gap-2">
             {authorLinks.map((link) => (
               <Button variant="ghost" asChild size="icon" key={link.label}>
-                <Link href={link.href}>
+                <Link href={link.href} target="_blank">
                   <link.icon />
                   <span className="sr-only">{link.label}</span>
                 </Link>
