@@ -15,7 +15,7 @@ export const CopyButton = ({ value }: { value: string }) => {
     }, 2000);
   };
   const baseClass =
-    "size-4 text-muted-foreground absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition duration-500";
+    "size-4 text-muted-foreground absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 transition duration-300";
 
   return (
     <Button
