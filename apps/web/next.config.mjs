@@ -1,7 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 import createMDX from '@next/mdx';
 
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
@@ -18,12 +17,7 @@ const withMDX = createMDX({
       'remark-reading-time/mdx',
     ],
     rehypePlugins: [
-      ['@shikijs/rehype', {
-        themes: {
-          light: 'github-light',
-          dark: 'github-dark',
-        }
-      }],
+      '@workspace/remark-code-meta',
       'rehype-slug',
     ],
   }
