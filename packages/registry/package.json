@@ -13,6 +13,7 @@
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@shikijs/transformers": "^3.13.0",
     "@workspace/ui": "workspace:*",
     "class-variance-authority": "^0.7.1",
@@ -38,11 +39,5 @@
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.9.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.1.2",
-      "@types/react-dom": "19.1.2"
-    }
   }
 }
