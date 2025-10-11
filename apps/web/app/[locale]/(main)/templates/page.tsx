@@ -1,3 +1,3 @@
 export default function TemplatesPage() {
-  return <div>TemplatesPage</div>;
+  return <div className="bg-[#f5f5f5]">TemplatesPage</div>;
 }

@@ -3,7 +3,6 @@ import { ModeToggle } from "@/components/mode-toggle";
 import LocaleToggle from "./locale-toggle";
 import { GlobalSearch } from "./global-search";
 import { MainNav } from "./main-nav";
-import { InviteNino } from "./invite-nino";
 import { Heart } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 

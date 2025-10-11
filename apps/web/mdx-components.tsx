@@ -11,7 +11,7 @@ export function useMDXComponents(): MDXComponents {
   return {
     ...components,
     div: createCodeSlotRenderer({
-      codeGroupRenderer: (items) => <CodeGroup items={items} />,
+      codeGroupRenderer: ({ items }) => <CodeGroup items={items} />,
       codeRenderer: (props) => <SingleCodeBlock {...props} />,
     }),
   };
