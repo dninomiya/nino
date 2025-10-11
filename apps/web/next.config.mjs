@@ -15,7 +15,7 @@ const withMDX = createMDX({
       'remark-mdx-frontmatter',
       'remark-reading-time',
       'remark-reading-time/mdx',
-      '@workspace/remark-code-meta/remark-code-group',
+      'remark-code-to-slot',
     ],
     rehypePlugins: [
       'rehype-slug',

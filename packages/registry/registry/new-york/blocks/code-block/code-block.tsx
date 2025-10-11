@@ -30,27 +30,26 @@ const icons = {
   sh: Terminal,
 } as const;
 
-type CodeItem = {
-  filename: string;
+type CodeBlockProps = {
   lang: string;
-  raw: string;
+  code: string;
+  title: string;
 };
 
-export function SingleCodeBlock({ filename, lang, raw }: CodeItem) {
+export function SingleCodeBlock({ title, lang, code }: CodeBlockProps) {
   return (
     <CodeCard>
       <CodeCardHeader>
-        <CodeTitle lang={lang} filename={filename} />
+        <CodeTitle lang={lang} title={title} />
         <span className="flex-1" />
-        <CodeCopyButton code={raw} />
+        <CodeCopyButton code={code} />
       </CodeCardHeader>
-      <Code raw={raw} lang={lang} />
+      <Code code={code} lang={lang} />
     </CodeCard>
   );
 }
 
-export function CodeGroup({ rawData }: { rawData: string }) {
-  const items = JSON.parse(rawData) as CodeItem[];
+export function CodeGroup({ items }: { items: CodeBlockProps[] }) {
   const itemsWithId = items.map((item, index) => ({
     ...item,
     id: index.toString(),
@@ -65,16 +64,16 @@ export function CodeGroup({ rawData }: { rawData: string }) {
       <TabsList>
         {itemsWithId.map((item) => (
           <TabsTrigger key={item.id} value={item.id}>
-            {item.filename}
+            {item.title}
           </TabsTrigger>
         ))}
       </TabsList>
       {itemsWithId.map((item) => (
         <TabsContent key={item.id} value={item.id}>
           <SingleCodeBlock
-            filename={item.filename}
+            title={item.title}
             lang={item.lang}
-            raw={item.raw}
+            code={item.code}
           />
         </TabsContent>
       ))}
@@ -90,26 +89,26 @@ function CodeCard({ children }: { children: React.ReactNode }) {
 
 function CodeCardHeader({ children }: { children: React.ReactNode }) {
   return (
-    <figcaption className="flex gap-2 h-12 text-sm items-center px-4 border-b not-prose">
+    <figcaption className="flex gap-2 h-12 text-sm text-muted-foreground items-center pl-4 pr-2 border-b not-prose">
       {children}
     </figcaption>
   );
 }
 
-function CodeTitle({ lang, filename }: { lang: string; filename: string }) {
+function CodeTitle({ lang, title }: { lang: string; title: string }) {
   const Icon = icons[lang as keyof typeof icons];
-  const title = filename || lang === "sh" ? "ターミナル" : lang;
+  const resolvedTitle = title || lang === "sh" ? "ターミナル" : lang;
 
   return (
     <span className="flex items-center gap-2 text-[13px]">
       <Icon className="size-4" />
-      {title}
+      {resolvedTitle}
     </span>
   );
 }
 
-async function Code({ raw, lang }: { raw: string; lang: string }) {
-  const html = await codeToHtml(raw, {
+async function Code({ code, lang }: { code: string; lang: string }) {
+  const html = await codeToHtml(code, {
     lang: lang,
     themes: {
       dark: "github-dark",
@@ -125,7 +124,7 @@ async function Code({ raw, lang }: { raw: string; lang: string }) {
   *:border-none *:focus-visible:outline-none *:p-0! *:m-0 text-sm
   overflow-auto
   [&_code]:py-3 [&_code]:flex [&_code]:flex-col [&_code]:w-fit
-  [&_.line]:px-4 [&_.line]:leading-relaxed
+  [&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px
   [&_.highlighted]:bg-muted
   "
       dangerouslySetInnerHTML={{ __html: html }}
