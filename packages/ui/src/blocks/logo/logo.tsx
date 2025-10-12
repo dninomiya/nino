@@ -27,7 +27,7 @@ export const Logo = ({
       <div className="relative w-fit overflow-hidden rounded-lg">
         <DropdownMenuTrigger className="absolute inset-0" disabled />
         <Link
-          href="/about"
+          href="/"
           className="relative"
           onContextMenu={(e) => {
             e.preventDefault();

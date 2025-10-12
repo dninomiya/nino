@@ -157,7 +157,7 @@ export const CodeTitle = ({
     if (hasActiveGroups && !activeGroups.includes(group)) {
       return null;
     }
-    // fallback to first group
+    // fallback
     if (!hasActiveGroups && groups && groups[0] !== group) {
       return null;
     }
