@@ -1,5 +1,5 @@
 import { MDXContent } from "@/components/mdx-contenet";
-import { CodeBlockGroupProvider } from "@workspace/registry/blocks/code-block/code-block";
+import { CodeBlockGroupProvider } from "@/components/code-block";
 
 export default function DocsLayout({
   children,

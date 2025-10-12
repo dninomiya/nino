@@ -1,6 +1,6 @@
 import { generateCodeHtml } from "@/lib/code-to-html";
 import { getBaseURL } from "@workspace/lib/get-base-url";
-import { CodeBlock } from "@workspace/registry/blocks/code-block/code-block";
+import { CodeBlock } from "@/components/code-block";
 
 export async function RegistryInstallCommand({
   registryName,

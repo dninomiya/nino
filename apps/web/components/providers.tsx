@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { CodeBlockGroupProvider } from "@workspace/registry/blocks/code-block/code-block";
+import { CodeBlockGroupProvider } from "@/components/code-block";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (

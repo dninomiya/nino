@@ -1,5 +1,5 @@
 import type { MDXComponents } from "mdx/types";
-import { CodeBlock } from "@workspace/registry/blocks/code-block/code-block";
+import { CodeBlock } from "@/components/code-block";
 import { createCodeSlotRenderer } from "remark-code-to-slot";
 import { generateCodeHtml } from "@/lib/code-to-html";
 
