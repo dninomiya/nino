@@ -4,16 +4,16 @@
   "homepage": "https://dninomiya.com",
   "items": [
     {
-      "name": "code-block",
-      "type": "registry:component",
-      "title": "Code Block",
-      "description": "Code Block",
+      "name": "code",
+      "type": "registry:block",
+      "title": "Code",
+      "description": "シンタックスハイライトとタブ切り替え機能を備えた高機能なコードブロックコンポーネント。",
       "registryDependencies": ["button"],
-      "dependencies": ["shiki", "@shikijs/transformers", "@icons-pack/react-simple-icons"],
+      "dependencies": ["@radix-ui/react-tabs", "@icons-pack/react-simple-icons"],
       "files": [
         {
-          "path": "registry/new-york/blocks/code-block/code-block.tsx",
-          "type": "registry:component"
+          "path": "registry/new-york/blocks/code/code.tsx",
+          "type": "registry:block"
         }
       ]
     }
