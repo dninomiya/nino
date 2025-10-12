@@ -1,11 +1,15 @@
 "use client";
 
 import {
+  SiBun,
   SiCss,
   SiHtml5,
   SiJavascript,
   SiTypescript,
   SiYaml,
+  SiNpm,
+  SiYarn,
+  SiPnpm,
 } from "@icons-pack/react-simple-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
@@ -42,6 +46,10 @@ const icons = {
   html: SiHtml5,
   yml: SiYaml,
   sh: Terminal,
+  npm: SiNpm,
+  yarn: SiYarn,
+  bun: SiBun,
+  pnpm: SiPnpm,
 } as const;
 
 // Variants
@@ -480,30 +488,37 @@ function CodeGroupSelector({
     [groups, setActiveGroups]
   );
 
+  // 現在選択されているグループのアイコンを取得
+  const CurrentGroupIcon = currentGroup
+    ? icons[currentGroup.toLowerCase() as keyof typeof icons]
+    : undefined;
+
   return (
     <Select value={currentGroup} onValueChange={handleValueChange} {...props}>
       <SelectTrigger
         data-code-block="group-selector-trigger"
         data-slot="code-block-group-selector-trigger"
-        className="[&_span]:truncate [&_span]:max-w-20 [&_span]:block!"
+        className="[&_span]:truncate [&_span]:max-w-20"
       >
         <SelectValue />
       </SelectTrigger>
       <SelectContent
         data-code-block="group-selector-content"
         data-slot="code-block-group-selector-content"
-        className="max-w-80"
+        className="max-w-40"
         align="end"
       >
-        {groups.map((group) => (
-          <SelectItem
-            key={group}
-            value={group}
-            className="[&_span]:truncate [&_span]:block!"
-          >
-            {group}
-          </SelectItem>
-        ))}
+        {groups.map((group) => {
+          const Icon = icons[group.toLowerCase() as keyof typeof icons];
+          return (
+            <SelectItem key={group} value={group} className="[&_span]:truncate">
+              <span className="flex items-center gap-2">
+                {Icon && <Icon className="size-3.5" />}
+                <span>{group}</span>
+              </span>
+            </SelectItem>
+          );
+        })}
       </SelectContent>
     </Select>
   );

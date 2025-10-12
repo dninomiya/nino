@@ -14,9 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider className="flex flex-col">
       <div className="flex flex-1">
         <RegistrySidebar />
-        <SidebarInset className="block">
-          <MDXContent>{children}</MDXContent>
-        </SidebarInset>
+        <SidebarInset className="block">{children}</SidebarInset>
       </div>
     </SidebarProvider>
   );
