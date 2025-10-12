@@ -42,6 +42,7 @@ const icons = {
 
 // Types
 type Item = {
+  id: string;
   code: string;
   html: string;
   title: string;
@@ -181,19 +182,25 @@ export function CodeBlock({
     return <p>No codes</p>;
   }
 
+  // 各コードアイテムにIDを割り当て
+  const codesWithId: Item[] = codes.map((item, i) => ({
+    ...item,
+    id: item.group ? `${item.group}-${i}` : `${i}`,
+  }));
+
   return (
     <CodeBlockProvider
       initialId={firstItem.group ? `${firstItem.group}-0` : `0`}
-      codes={codes}
+      codes={codesWithId}
       groups={groups}
     >
       <CodeCard>
         <CodeCardHeader>
           <TabsList className="flex gap-1 overflow-auto">
-            {codes.map((item, i) => (
+            {codesWithId.map((item, i) => (
               <CodeTitle
                 key={i}
-                id={item.group ? `${item.group}-${i}` : `${i}`}
+                id={item.id}
                 lang={item.lang}
                 title={item.title}
                 group={item.group}
@@ -206,8 +213,8 @@ export function CodeBlock({
           )}
           <CopyCodeButton />
         </CodeCardHeader>
-        {codes.map((item, i) => (
-          <CodeContent key={i} id={item.group ? `${item.group}-${i}` : `${i}`}>
+        {codesWithId.map((item, i) => (
+          <CodeContent key={i} id={item.id}>
             <CodeDisplay html={item.html} />
           </CodeContent>
         ))}
@@ -302,7 +309,7 @@ export const CopyCodeButton = () => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
-    const code = codes.find((code) => code.title === currentId)?.code;
+    const code = codes.find((code) => code.id === currentId)?.code;
     /**
      * Removes shiki transformer notation lines from code.
      * @link https://shiki.style/packages/transformers

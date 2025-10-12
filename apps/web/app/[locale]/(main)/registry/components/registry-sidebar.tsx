@@ -14,6 +14,7 @@ import {
 } from "@workspace/ui/components/sidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { registries } from "@/lib/registry";
 
 export function RegistrySidebar({
   ...props
@@ -24,12 +25,12 @@ export function RegistrySidebar({
     navGroup: [
       {
         title: "コンポーネント",
-        items: [
-          {
-            title: "Input Image",
-            url: "/registry/input-image",
-          },
-        ],
+        items: registries
+          .filter((registry) => registry.type === "registry:component")
+          .map((registry) => ({
+            title: registry.title,
+            url: `/registry/${registry.name}`,
+          })),
       },
     ],
   };
