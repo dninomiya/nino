@@ -8,7 +8,7 @@
       "type": "registry:block",
       "title": "Code",
       "description": "シンタックスハイライトとタブ切り替え機能を備えた高機能なコードブロックコンポーネント。",
-      "registryDependencies": ["button"],
+      "registryDependencies": ["button", "select"],
       "dependencies": ["@radix-ui/react-tabs", "@icons-pack/react-simple-icons"],
       "files": [
         {
