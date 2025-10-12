@@ -45,7 +45,7 @@ type Item = {
   id: string;
   code: string;
   html: string;
-  title: string;
+  title?: string;
   lang: string;
   group?: string;
 };
@@ -62,7 +62,7 @@ type CodeBlockProps = {
   lang: string;
   code: string;
   html: string;
-  title: string;
+  title?: string;
   group?: string;
 };
 
@@ -262,7 +262,7 @@ export const CodeTitle = ({
 }: {
   id: string;
   lang: string;
-  title: string;
+  title?: string;
   group?: string;
 }) => {
   const Icon = icons[lang as keyof typeof icons];
