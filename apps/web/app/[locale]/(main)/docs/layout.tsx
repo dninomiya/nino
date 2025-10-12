@@ -1,5 +1,5 @@
 import { MDXContent } from "@/components/mdx-contenet";
-import { CodeBlockGroupProvider } from "@/components/code-block";
+import { CodeGroupProvider } from "@/components/code-block";
 
 export default function DocsLayout({
   children,
@@ -7,8 +7,8 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <CodeBlockGroupProvider>
+    <CodeGroupProvider>
       <MDXContent>{children}</MDXContent>
-    </CodeBlockGroupProvider>
+    </CodeGroupProvider>
   );
 }

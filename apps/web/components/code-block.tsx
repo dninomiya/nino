@@ -1,12 +1,12 @@
 import {
-  CodeCard,
-  CodeCardHeader,
-  CodeTabsList,
-  CodeTitle,
+  Code,
+  CodeHeader,
+  CodeList,
+  CodeTrigger,
   CodeContent,
   CodeDisplay,
-  CopyCodeButton,
-  CodeBlockGroupSelector,
+  CodeCopyButton,
+  CodeGroupSelector,
   type CodeBlockItem,
 } from "@workspace/registry/blocks/code-block/code-block";
 
@@ -36,11 +36,11 @@ export function CodeBlock({
   }));
 
   return (
-    <CodeCard codes={codesWithId} groups={groups}>
-      <CodeCardHeader>
-        <CodeTabsList>
+    <Code codes={codesWithId} groups={groups}>
+      <CodeHeader>
+        <CodeList>
           {codesWithId.map((item, i) => (
-            <CodeTitle
+            <CodeTrigger
               key={i}
               id={item.id}
               lang={item.lang}
@@ -48,21 +48,19 @@ export function CodeBlock({
               group={item.group}
             />
           ))}
-        </CodeTabsList>
+        </CodeList>
         <span className="flex-1" />
-        {groups && groups.length > 0 && (
-          <CodeBlockGroupSelector groups={groups} />
-        )}
-        <CopyCodeButton />
-      </CodeCardHeader>
+        {groups && groups.length > 0 && <CodeGroupSelector groups={groups} />}
+        <CodeCopyButton />
+      </CodeHeader>
       {codesWithId.map((item, i) => (
         <CodeContent key={i} id={item.id}>
           <CodeDisplay html={item.html} />
         </CodeContent>
       ))}
-    </CodeCard>
+    </Code>
   );
 }
 
-// 便利のため、CodeBlockGroupProviderも再エクスポート
-export { CodeBlockGroupProvider } from "@workspace/registry/blocks/code-block/code-block";
+// 便利のため、CodeGroupProviderも再エクスポート
+export { CodeGroupProvider } from "@workspace/registry/blocks/code-block/code-block";

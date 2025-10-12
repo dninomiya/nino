@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ninoui",
+  "homepage": "https://dninomiya.com",
+  "items": [
+    {
+      "name": "code-block",
+      "type": "registry:component",
+      "title": "Code Block",
+      "description": "Code Block",
+      "registryDependencies": ["button"],
+      "dependencies": ["shiki", "@shikijs/transformers", "@icons-pack/react-simple-icons"],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/code-block/code-block.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

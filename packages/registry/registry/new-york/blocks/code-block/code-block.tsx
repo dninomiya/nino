@@ -45,7 +45,7 @@ const icons = {
 } as const;
 
 // Variants
-const codeBlockTitleVariants = cva(
+const codeTriggerVariants = cva(
   "flex items-center gap-2 text-sm rounded px-2 py-1 outline-none transition-colors text-nowrap truncate max-w-50",
   {
     variants: {
@@ -91,7 +91,7 @@ export type CodeBlockItem = {
   group?: string;
 };
 
-type CodeBlockContextType = {
+type CodeContextType = {
   currentId: string;
   setCurrentId: (id: string) => void;
   codes: CodeBlockItem[];
@@ -100,20 +100,20 @@ type CodeBlockContextType = {
 };
 
 // Contexts
-const CodeBlockContext = createContext<CodeBlockContextType>({
+const CodeContext = createContext<CodeContextType>({
   currentId: "",
   setCurrentId: () => {},
   codes: [],
   currentGroup: "",
 });
 
-const CodeBlockGroupContext = createContext({
+const CodeGroupContext = createContext({
   activeGroups: [] as string[],
   setActiveGroups: (() => {}) as Dispatch<React.SetStateAction<string[]>>,
 });
 
 // Group Provider
-function CodeBlockGroupProvider({
+function CodeGroupProvider({
   children,
   defaultActiveGroups = [],
 }: {
@@ -154,19 +154,15 @@ function CodeBlockGroupProvider({
     [activeGroups]
   );
 
-  return (
-    <CodeBlockGroupContext value={contextValue}>
-      {children}
-    </CodeBlockGroupContext>
-  );
+  return <CodeGroupContext value={contextValue}>{children}</CodeGroupContext>;
 }
 
 // Hooks
-const useCodeBlockGroup = () => use(CodeBlockGroupContext);
-const useCodeBlock = () => use(CodeBlockContext);
+const useCodeGroup = () => use(CodeGroupContext);
+const useCode = () => use(CodeContext);
 
 // Block Provider (Internal use only)
-function CodeBlockProvider({
+function CodeProvider({
   children,
   initialId,
   codes,
@@ -178,7 +174,7 @@ function CodeBlockProvider({
   codes: CodeBlockItem[];
 }) {
   const [currentId, _setCurrentId] = useState<string>(initialId);
-  const { activeGroups } = useCodeBlockGroup();
+  const { activeGroups } = useCodeGroup();
   const currentGroup = useMemo(() => {
     return groups.find((group) => activeGroups.includes(group)) || groups[0];
   }, [groups, activeGroups]);
@@ -202,7 +198,7 @@ function CodeBlockProvider({
     }
   }, [currentGroup, codes]);
 
-  const contextValue = React.useMemo<CodeBlockContextType>(
+  const contextValue = React.useMemo<CodeContextType>(
     () => ({
       codes,
       currentId,
@@ -214,16 +210,16 @@ function CodeBlockProvider({
   );
 
   return (
-    <CodeBlockContext value={contextValue}>
+    <CodeContext value={contextValue}>
       <Tabs value={currentId} onValueChange={setCurrentId}>
         {children}
       </Tabs>
-    </CodeBlockContext>
+    </CodeContext>
   );
 }
 
 // UI Components
-function CodeCard({
+function Code({
   codes,
   groups,
   defaultSelectedId,
@@ -271,11 +267,7 @@ function CodeCard({
   }
 
   return (
-    <CodeBlockProvider
-      initialId={initialId}
-      codes={codesWithId}
-      groups={groups}
-    >
+    <CodeProvider initialId={initialId} codes={codesWithId} groups={groups}>
       <Comp
         data-code-block="card"
         data-slot="code-block-card"
@@ -284,11 +276,11 @@ function CodeCard({
       >
         {children}
       </Comp>
-    </CodeBlockProvider>
+    </CodeProvider>
   );
 }
 
-function CodeCardHeader({
+function CodeHeader({
   className,
   asChild = false,
   ...props
@@ -308,7 +300,7 @@ function CodeCardHeader({
   );
 }
 
-function CodeTabsList({
+function CodeList({
   className,
   ...props
 }: React.ComponentProps<typeof TabsList>) {
@@ -346,7 +338,7 @@ function CodeDisplay({
   );
 }
 
-function CodeTitle({
+function CodeTrigger({
   id,
   lang,
   title,
@@ -360,13 +352,13 @@ function CodeTitle({
   lang: string;
   title?: string;
   group?: string;
-} & VariantProps<typeof codeBlockTitleVariants> &
+} & VariantProps<typeof codeTriggerVariants> &
   Omit<React.ComponentProps<typeof TabsTrigger>, "value">) {
   const Icon = icons[lang as keyof typeof icons];
   const resolvedTitle = title || (lang === "sh" ? "ターミナル" : lang);
 
-  const { activeGroups } = useCodeBlockGroup();
-  const { groups } = useCodeBlock();
+  const { activeGroups } = useCodeGroup();
+  const { groups } = useCode();
   const hasActiveGroups = activeGroups.length > 0;
 
   if (group) {
@@ -387,7 +379,7 @@ function CodeTitle({
       value={id}
       title={resolvedTitle}
       className={cn(
-        codeBlockTitleVariants({ variant, size }),
+        codeTriggerVariants({ variant, size }),
         "only:bg-transparent!",
         className
       )}
@@ -415,11 +407,11 @@ function CodeContent({
   );
 }
 
-function CopyCodeButton({
+function CodeCopyButton({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "onClick">) {
-  const { currentId, codes } = useCodeBlock();
+  const { currentId, codes } = useCode();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
@@ -464,14 +456,14 @@ function CopyCodeButton({
   );
 }
 
-function CodeBlockGroupSelector({
+function CodeGroupSelector({
   groups,
   ...props
 }: {
   groups: string[];
 } & Omit<React.ComponentProps<typeof Select>, "value" | "onValueChange">) {
-  const { setActiveGroups } = useCodeBlockGroup();
-  const { currentGroup } = useCodeBlock();
+  const { setActiveGroups } = useCodeGroup();
+  const { currentGroup } = useCode();
 
   const handleValueChange = useCallback(
     (value: string) => {
@@ -514,15 +506,15 @@ function CodeBlockGroupSelector({
 }
 
 export {
-  CodeBlockGroupProvider,
-  CodeCard,
-  CodeCardHeader,
-  CodeTabsList,
-  CodeTitle,
+  CodeGroupProvider,
+  Code,
+  CodeHeader,
+  CodeList,
+  CodeTrigger,
   CodeContent,
   CodeDisplay,
-  CopyCodeButton,
-  CodeBlockGroupSelector,
-  useCodeBlock,
-  useCodeBlockGroup,
+  CodeCopyButton,
+  CodeGroupSelector,
+  useCode,
+  useCodeGroup,
 };

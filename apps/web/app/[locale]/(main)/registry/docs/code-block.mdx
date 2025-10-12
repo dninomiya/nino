@@ -109,38 +109,38 @@ yarn add @workspace/ui
 
 ## コンテキストプロバイダー
 
-### CodeBlockGroupProvider
+### CodeGroupProvider
 
 アプリケーションのルートレベルで使用し、グループ選択の状態を管理します。
 
 ```tsx
-import { CodeBlockGroupProvider } from "@/components/code-block";
+import { CodeGroupProvider } from "@/components/code-block";
 
 export default function Layout({ children }) {
   return (
-    <CodeBlockGroupProvider>
+    <CodeGroupProvider>
       {children}
-    </CodeBlockGroupProvider>
+    </CodeGroupProvider>
   );
 }
 ```
 
 ## フック
 
-### useCodeBlock
+### useCode
 
 現在のコードブロックの状態にアクセスします。
 
 ```tsx
-const { currentId, setCurrentId, codes, groups, currentGroup } = useCodeBlock();
+const { currentId, setCurrentId, codes, groups, currentGroup } = useCode();
 ```
 
-### useCodeBlockGroup
+### useCodeGroup
 
 グループ選択の状態にアクセスします。
 
 ```tsx
-const { activeGroups, setActiveGroups } = useCodeBlockGroup();
+const { activeGroups, setActiveGroups } = useCodeGroup();
 ```
 
 ## カスタマイズ例
@@ -177,11 +177,11 @@ export default function Example() {
 コピーボタンをカスタマイズする場合：
 
 ```tsx
-import { CopyCodeButton } from "@/components/code-block";
+import { CodeCopyButton } from "@/components/code-block";
 
-// CopyCodeButtonコンポーネントは自動的にコンテキストから
+// CodeCopyButtonコンポーネントは自動的にコンテキストから
 // 現在のコードを取得します
-<CopyCodeButton />
+<CodeCopyButton />
 ```
 
 ## 技術詳細
@@ -197,6 +197,6 @@ import { CopyCodeButton } from "@/components/code-block";
 
 ## 注意事項
 
-- `CodeBlockGroupProvider` は、グループ機能を使用する場合に必須です
+- `CodeGroupProvider` は、グループ機能を使用する場合に必須です
 - シンタックスハイライトのHTMLは、ビルド時に生成される必要があります
 - Shikiトランスフォーマーの注釈（`// [!code ...]`）は、コピー時に自動的に削除されます
