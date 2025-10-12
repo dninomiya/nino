@@ -1,4 +1,5 @@
 import { RegistrySidebar } from "@/app/[locale]/(main)/registry/components/registry-sidebar";
+import { MDXContent } from "@/components/mdx-contenet";
 import {
   SidebarInset,
   SidebarProvider,
@@ -13,8 +14,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider className="flex flex-col">
       <div className="flex flex-1">
         <RegistrySidebar />
-        <SidebarInset>
-          <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        <SidebarInset className="block">
+          <MDXContent>{children}</MDXContent>
         </SidebarInset>
       </div>
     </SidebarProvider>

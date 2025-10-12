@@ -1,4 +1,5 @@
-import { CodeBlockGroupProvider } from "@workspace/registry/blocks/code-block/code-block-proivder";
+import { MDXContent } from "@/components/mdx-contenet";
+import { CodeBlockGroupProvider } from "@workspace/registry/blocks/code-block/code-block";
 
 export default function DocsLayout({
   children,
@@ -7,9 +8,7 @@ export default function DocsLayout({
 }) {
   return (
     <CodeBlockGroupProvider>
-      <div className="prose mx-auto py-10 dark:prose-invert prose-neutral">
-        {children}
-      </div>
+      <MDXContent>{children}</MDXContent>
     </CodeBlockGroupProvider>
   );
 }
