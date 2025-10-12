@@ -24,9 +24,9 @@ export function RegistrySidebar({
   const data = {
     navGroup: [
       {
-        title: "コンポーネント",
+        title: "Blocks",
         items: registries
-          .filter((registry) => registry.type === "registry:component")
+          .filter((registry) => registry.type === "registry:block")
           .map((registry) => ({
             title: registry.title,
             url: `/registry/${registry.name}`,
