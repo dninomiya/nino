@@ -8,11 +8,8 @@ import {
   SiYaml,
 } from "@icons-pack/react-simple-icons";
 
-import { createContext, ReactNode, use, useEffect, useState } from "react";
-import { Button } from "@workspace/ui/components/button";
-import { Check, Copy, Terminal } from "lucide-react";
-import { cn } from "@workspace/ui/lib/utils";
 import { Tabs, TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
+import { Button } from "@workspace/ui/components/button";
 import {
   Select,
   SelectContent,
@@ -20,6 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
+import { cn } from "@workspace/ui/lib/utils";
+import { Check, Copy, Terminal } from "lucide-react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  use,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const icons = {
   ts: SiTypescript,
@@ -39,64 +47,83 @@ type Item = {
 };
 
 type CodeBlockContextType = {
-  currentPackageManager: string;
-  currentLanguage: string;
   currentId: string;
   setCurrentId: (id: string) => void;
-  setCurrentLanguage: (language: string) => void;
-  setCurrentPackageManager: (packageManager: string) => void;
-  items: Item[];
+  codes: Item[];
+  groups?: string[];
 };
 
 const CodeBlockContext = createContext<CodeBlockContextType>({
-  currentPackageManager: "pnpm",
-  currentLanguage: "ts",
   currentId: "",
   setCurrentId: () => {},
-  setCurrentLanguage: () => {},
-  setCurrentPackageManager: () => {},
-  items: [],
+  codes: [],
 });
+
+const CodeBlockGroupContext = createContext({
+  activeGroups: [] as string[],
+  setActiveGroups: (() => {}) as Dispatch<React.SetStateAction<string[]>>,
+});
+
+export function CodeBlockGroupProvider({ children }: { children: ReactNode }) {
+  const [activeGroups, setActiveGroups] = useState<string[]>([]);
+
+  useEffect(() => {
+    const groups = localStorage.getItem("code-block-groups");
+    if (groups) {
+      try {
+        setActiveGroups(JSON.parse(groups));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeGroups.length > 0) {
+      localStorage.setItem("code-block-groups", JSON.stringify(activeGroups));
+    } else {
+      localStorage.removeItem("code-block-groups");
+    }
+  }, [activeGroups]);
+
+  return (
+    <CodeBlockGroupContext
+      value={{
+        activeGroups,
+        setActiveGroups,
+      }}
+    >
+      {children}
+    </CodeBlockGroupContext>
+  );
+}
+
+export const useCodeBlockGroup = () => use(CodeBlockGroupContext);
 
 export function CodeBlockProvider({
   children,
   initialId,
-  items,
+  codes,
+  groups,
 }: {
   children: ReactNode;
   initialId: string;
-  items: {
+  groups?: string[];
+  codes: {
     code: string;
     title: string;
     lang: string;
   }[];
 }) {
-  const [currentPackageManager, setCurrentPackageManager] =
-    useState<string>("pnpm");
-  const [currentLanguage, setCurrentLanguage] = useState<string>("ts");
   const [currentId, setCurrentId] = useState<string>(initialId);
-
-  useEffect(() => {
-    const packageManager = localStorage.getItem("code-block-package-manager");
-    const language = localStorage.getItem("code-block-language");
-    if (packageManager) {
-      setCurrentPackageManager(packageManager);
-    }
-    if (language) {
-      setCurrentLanguage(language);
-    }
-  }, []);
 
   return (
     <CodeBlockContext
       value={{
-        items,
-        currentPackageManager,
-        currentLanguage,
+        codes,
         currentId,
         setCurrentId,
-        setCurrentLanguage,
-        setCurrentPackageManager,
+        groups,
       }}
     >
       <Tabs value={currentId} onValueChange={setCurrentId}>
@@ -110,9 +137,31 @@ export const useCodeBlock = () => {
   return use(CodeBlockContext);
 };
 
-export const CodeTitle = ({ lang, title }: { lang: string; title: string }) => {
+export const CodeTitle = ({
+  lang,
+  title,
+  group,
+}: {
+  lang: string;
+  title: string;
+  group: string;
+}) => {
   const Icon = icons[lang as keyof typeof icons];
   const resolvedTitle = title || (lang === "sh" ? "ターミナル" : lang);
+
+  const { activeGroups } = useCodeBlockGroup();
+  const { groups } = useCodeBlock();
+  const hasActiveGroups = activeGroups.length > 0;
+
+  if (group) {
+    if (hasActiveGroups && !activeGroups.includes(group)) {
+      return null;
+    }
+    // fallback to first group
+    if (!hasActiveGroups && groups && groups[0] !== group) {
+      return null;
+    }
+  }
 
   return (
     <TabsTrigger
@@ -137,11 +186,11 @@ export const CodeContent = ({
 };
 
 export const CopyCodeButton = () => {
-  const { currentId, items } = useCodeBlock();
+  const { currentId, codes } = useCodeBlock();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
-    const code = items.find((item) => item.title === currentId)?.code;
+    const code = codes.find((code) => code.title === currentId)?.code;
     const cleanCode = code?.replace(/\s*\/\/\s*\[!.*$/gm, "");
 
     if (!cleanCode) return;
@@ -170,22 +219,34 @@ export const CopyCodeButton = () => {
   );
 };
 
-export function LangSelector({ titles }: { titles: string[] }) {
-  const { currentId, setCurrentId } = useCodeBlock();
+export function CodeBlockGroupSelector({ groups }: { groups: string[] }) {
+  const { activeGroups, setActiveGroups } = useCodeBlockGroup();
+  const currentGroup = useMemo(() => {
+    return groups.find((group) => activeGroups.includes(group)) || groups[0];
+  }, [groups, activeGroups]);
 
   return (
-    <Select value={currentId} onValueChange={setCurrentId}>
+    <Select
+      value={currentGroup}
+      onValueChange={(value) => {
+        localStorage.setItem("code-block-group", value);
+        setActiveGroups((values) => {
+          const cleanItems = values.filter((value) => !groups.includes(value));
+          return [...cleanItems, value];
+        });
+      }}
+    >
       <SelectTrigger className="[&_span]:truncate [&_span]:max-w-20 [&_span]:block!">
         <SelectValue />
       </SelectTrigger>
       <SelectContent className="max-w-80" align="end">
-        {titles.map((title) => (
+        {groups.map((group) => (
           <SelectItem
-            key={title}
-            value={title}
+            key={group}
+            value={group}
             className="[&_span]:truncate [&_span]:block!"
           >
-            {title}
+            {group}
           </SelectItem>
         ))}
       </SelectContent>

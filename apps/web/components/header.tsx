@@ -8,7 +8,7 @@ import { Button } from "@workspace/ui/components/button";
 
 export const Header = () => {
   return (
-    <div className="sticky top-0 z-50 h-16 flex items-center gap-2 px-8 border-b">
+    <div className="sticky bg-background top-0 z-50 h-16 flex items-center gap-2 px-8 border-b">
       <Logo />
       <MainNav />
       <span className="flex-1" />

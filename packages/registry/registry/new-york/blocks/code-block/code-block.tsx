@@ -9,44 +9,54 @@ import {
   CodeContent,
   CodeTitle,
   CopyCodeButton,
-  LangSelector,
+  CodeBlockGroupSelector,
 } from "./code-block-proivder";
 
 type CodeBlockProps = {
   lang: string;
   code: string;
   title: string;
+  group: string;
 };
 
 export function CodeBlock({
-  type,
-  items,
+  groups,
+  codes,
 }: {
-  type?: string;
-  items: CodeBlockProps[];
+  groups?: string[];
+  codes: CodeBlockProps[];
 }) {
-  const firstItem = items[0];
+  const firstItem = codes[0];
 
   if (!firstItem) {
-    return null;
+    return <p>No codes</p>;
   }
 
   return (
-    <CodeBlockProvider initialId={firstItem.title} items={items}>
+    <CodeBlockProvider
+      initialId={firstItem.title}
+      codes={codes}
+      groups={groups}
+    >
       <CodeCard>
         <CodeCardHeader>
           <TabsList className="flex gap-1 overflow-auto">
-            {items.map((item) => (
-              <CodeTitle key={item.title} lang={item.lang} title={item.title} />
+            {codes.map((item) => (
+              <CodeTitle
+                key={item.title}
+                lang={item.lang}
+                title={item.title}
+                group={item.group}
+              />
             ))}
           </TabsList>
           <span className="flex-1" />
-          {type === "lang" && (
-            <LangSelector titles={items.map((item) => item.title)} />
+          {groups && groups.length > 0 && (
+            <CodeBlockGroupSelector groups={groups} />
           )}
           <CopyCodeButton />
         </CodeCardHeader>
-        {items.map((item) => (
+        {codes.map((item) => (
           <CodeContent key={item.title} id={item.title}>
             <Code code={item.code} lang={item.lang} />
           </CodeContent>

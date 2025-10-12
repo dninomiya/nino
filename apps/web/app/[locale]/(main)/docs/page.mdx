@@ -2,7 +2,7 @@
 
 `const demo = 1` aa
 
-```tsx:demo.tsx
+```tsx title=p.tsx
 const Demo = () => {
   return <div>Demo</div>;
 };
@@ -22,17 +22,17 @@ pnpm add @workspace/ui
 
 :::code-group
 
-```ts:a.ts
+```ts title=a.ts group=Node.js
 const a = 'Hello from a.ts';
 console.log(a);
 ```
 
-```ts:b.ts
+```ts title=b.ts group=Node.js
 const b = 'Hello from b.ts';
 console.log(b);
 ```
 
-```js:config.js
+```js title=config.js group=ruby
 module.exports = {
   name: 'demo'
 };
@@ -40,7 +40,27 @@ module.exports = {
 
 :::
 
-:::code-group lang
+:::code-group
+
+```ts title=a.ts group=Node.js
+const a = 'Hello from a.ts';
+console.log(a);
+```
+
+```ts title=b.ts group=Node.js
+const b = 'Hello from b.ts';
+console.log(b);
+```
+
+```js title=config.js group=ruby
+module.exports = {
+  name: 'demo'
+};
+```
+
+:::
+
+:::code-group
 
 ```ts:a.ts
 const a = 'Hello from a.ts';

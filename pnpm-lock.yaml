@@ -106,8 +106,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       remark-code-to-slot:
-        specifier: ^0.4.0
-        version: 0.4.0(react@19.1.1)(unified@11.0.5)
+        specifier: ^0.5.0
+        version: 0.5.0(react@19.1.1)(unified@11.0.5)
       remark-frontmatter:
         specifier: ^5.0.0
         version: 5.0.0
@@ -5272,8 +5272,8 @@ packages:
   rehype-slug@6.0.0:
     resolution: {integrity: sha512-lWyvf/jwu+oS5+hL5eClVd3hNdmwM1kAC0BUvEGD19pajQMIzcNUd/k9GsfQ+FfECvX+JE+e9/btsKH0EjJT6A==}
 
-  remark-code-to-slot@0.4.0:
-    resolution: {integrity: sha512-IrqQiYRlGl4BthLv2RlQ4ls475otmpIg0uWPOhIltV32nIW3QOddYpjOQdIl/fSexMtY2FhDbEUd+P2UalVnMg==}
+  remark-code-to-slot@0.5.0:
+    resolution: {integrity: sha512-VC0hvoZi2Ni3xMzbrQNWUX8o55SoemBnStGjnc1wH60cZW6J0TINYdWJ10OMNvLsw9DOnJdn4QAefX/Z0UkxQA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
@@ -11560,7 +11560,7 @@ snapshots:
       hast-util-to-string: 3.0.1
       unist-util-visit: 5.0.0
 
-  remark-code-to-slot@0.4.0(react@19.1.1)(unified@11.0.5):
+  remark-code-to-slot@0.5.0(react@19.1.1)(unified@11.0.5):
     dependencies:
       unified: 11.0.5
       unist-util-visit: 5.0.0

@@ -8,11 +8,7 @@ export function useMDXComponents(): MDXComponents {
   return {
     ...components,
     div: createCodeSlotRenderer({
-      codeGroupRenderer: ({ items, type }) => {
-        console.log(items, type);
-        return <CodeBlock items={items} type={type} />;
-      },
-      codeRenderer: (item) => <CodeBlock items={[item]} />,
+      render: CodeBlock,
     }),
   };
 }
