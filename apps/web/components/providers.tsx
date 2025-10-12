@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { CodeGroupProvider } from "@/components/code-block";
+import { CodeProvider } from "@/components/code-block";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      <CodeGroupProvider>{children}</CodeGroupProvider>
+      <CodeProvider>{children}</CodeProvider>
     </NextThemesProvider>
   );
 }

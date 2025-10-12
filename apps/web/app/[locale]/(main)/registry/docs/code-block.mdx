@@ -109,18 +109,18 @@ yarn add @workspace/ui
 
 ## コンテキストプロバイダー
 
-### CodeGroupProvider
+### CodeProvider
 
 アプリケーションのルートレベルで使用し、グループ選択の状態を管理します。
 
 ```tsx
-import { CodeGroupProvider } from "@/components/code-block";
+import { CodeProvider } from "@/components/code-block";
 
 export default function Layout({ children }) {
   return (
-    <CodeGroupProvider>
+    <CodeProvider>
       {children}
-    </CodeGroupProvider>
+    </CodeProvider>
   );
 }
 ```
@@ -197,6 +197,6 @@ import { CodeCopyButton } from "@/components/code-block";
 
 ## 注意事項
 
-- `CodeGroupProvider` は、グループ機能を使用する場合に必須です
+- `CodeProvider` は、グループ機能を使用する場合に必須です
 - シンタックスハイライトのHTMLは、ビルド時に生成される必要があります
 - Shikiトランスフォーマーの注釈（`// [!code ...]`）は、コピー時に自動的に削除されます
