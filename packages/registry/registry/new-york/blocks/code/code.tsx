@@ -90,29 +90,25 @@ const copyButtonVariants = cva(
 );
 
 // Types
-export type CodeBlockItem = {
-  id: string;
-  code: string;
-  html: string;
-  title?: string;
-  lang: string;
-  group?: string;
-};
-
 type CodeContextType = {
-  currentId: string;
-  setCurrentId: (id: string) => void;
-  codes: CodeBlockItem[];
-  groups?: string[];
+  currentValue: string;
+  setCurrentValue: (value: string) => void;
+  codeMap: Map<string, string>;
+  registerCode: (value: string, code: string) => void;
+  groups: string[];
+  registerGroup: (group: string) => void;
   currentGroup?: string;
 };
 
 // Contexts
 const CodeContext = createContext<CodeContextType>({
-  currentId: "",
-  setCurrentId: () => {},
-  codes: [],
-  currentGroup: "",
+  currentValue: "",
+  setCurrentValue: () => {},
+  codeMap: new Map(),
+  registerCode: () => {},
+  groups: [],
+  registerGroup: () => {},
+  currentGroup: undefined,
 });
 
 const CodeGroupContext = createContext({
@@ -172,54 +168,79 @@ const useCode = () => use(CodeContext);
 // Block Provider (Internal use only)
 function CodeInternalProvider({
   children,
-  initialId,
-  codes,
-  groups = [],
+  defaultValue,
 }: {
   children: ReactNode;
-  initialId: string;
-  groups?: string[];
-  codes: CodeBlockItem[];
+  defaultValue?: string;
 }) {
-  const [currentId, _setCurrentId] = useState<string>(initialId);
-  const { activeGroups } = useCodeGroup();
+  const [currentValue, setCurrentValue] = useState<string>(defaultValue || "");
+  const [codeMap, setCodeMap] = useState<Map<string, string>>(new Map());
+  const [groups, setGroups] = useState<string[]>([]);
+  const { activeGroups, setActiveGroups } = useCodeGroup();
+
   const currentGroup = useMemo(() => {
-    return groups.find((group) => activeGroups.includes(group)) || groups[0];
+    return groups.find((group) => activeGroups.includes(group));
   }, [groups, activeGroups]);
 
-  const setCurrentId = useCallback((id: string) => {
-    _setCurrentId(id);
+  const registerCode = useCallback((value: string, code: string) => {
+    setCodeMap((prev) => {
+      const newMap = new Map(prev);
+      newMap.set(value, code);
+      return newMap;
+    });
   }, []);
 
-  // グループが切り替わったときに、そのグループの最初のタブに切り替える
-  useEffect(() => {
-    if (currentGroup && codes.length > 0) {
-      // 現在のグループに属する最初のコードのインデックスを見つける
-      const firstCodeIndexInGroup = codes.findIndex(
-        (code) => code.group === currentGroup
-      );
+  const registerGroup = useCallback((group: string) => {
+    setGroups((prev) => {
+      if (!prev.includes(group)) {
+        return [...prev, group];
+      }
+      return prev;
+    });
+  }, []);
 
-      if (firstCodeIndexInGroup !== -1) {
-        const newId = `${currentGroup}-${firstCodeIndexInGroup}`;
-        _setCurrentId(newId);
+  // groups が登録されたときに、activeGroups にこのコンポーネントのグループが含まれていない場合、
+  // 最初のグループを自動選択
+  useEffect(() => {
+    if (groups.length > 0) {
+      const firstGroup = groups[0];
+      if (firstGroup) {
+        setActiveGroups((prev) => {
+          // すでにこのコンポーネントのグループが設定されているかチェック
+          const hasAnyGroupFromThis = groups.some((g) => prev.includes(g));
+          if (!hasAnyGroupFromThis) {
+            return [...prev, firstGroup];
+          }
+          return prev;
+        });
       }
     }
-  }, [currentGroup, codes]);
+  }, [groups, setActiveGroups]);
 
   const contextValue = React.useMemo<CodeContextType>(
     () => ({
-      codes,
-      currentId,
-      setCurrentId,
+      currentValue,
+      setCurrentValue,
+      codeMap,
+      registerCode,
       groups,
+      registerGroup,
       currentGroup,
     }),
-    [codes, currentId, setCurrentId, groups, currentGroup]
+    [
+      currentValue,
+      setCurrentValue,
+      codeMap,
+      registerCode,
+      groups,
+      registerGroup,
+      currentGroup,
+    ]
   );
 
   return (
     <CodeContext value={contextValue}>
-      <Tabs value={currentId} onValueChange={setCurrentId}>
+      <Tabs value={currentValue} onValueChange={setCurrentValue}>
         {children}
       </Tabs>
     </CodeContext>
@@ -227,59 +248,19 @@ function CodeInternalProvider({
 }
 
 // UI Components
-function Code({
-  codes,
-  groups,
-  defaultSelectedId,
+function Codes({
+  defaultValue,
   className,
   asChild = false,
   children,
   ...props
 }: {
-  codes: CodeBlockItem[];
-  groups?: string[];
-  defaultSelectedId?: string;
+  defaultValue?: string;
 } & React.ComponentProps<"figure"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "figure";
 
-  // 各コードアイテムにIDを割り当て
-  const codesWithId = useMemo(
-    () =>
-      codes.map((item, i) => ({
-        ...item,
-        id: item.id || (item.group ? `${item.group}-${i}` : `${i}`),
-      })),
-    [codes]
-  );
-
-  // initialIdを自動生成
-  const firstItem = codesWithId[0];
-  const autoInitialId = firstItem?.group
-    ? `${firstItem.group}-0`
-    : firstItem
-      ? `0`
-      : "";
-  const initialId = defaultSelectedId ?? autoInitialId;
-
-  if (!firstItem) {
-    return (
-      <Comp
-        data-code-block="card"
-        data-slot="code-block-card"
-        className={cn("border rounded-lg overflow-hidden", className)}
-        {...props}
-      >
-        <p className="p-4 text-muted-foreground">No codes available</p>
-      </Comp>
-    );
-  }
-
   return (
-    <CodeInternalProvider
-      initialId={initialId}
-      codes={codesWithId}
-      groups={groups}
-    >
+    <CodeInternalProvider defaultValue={defaultValue}>
       <Comp
         data-code-block="card"
         data-slot="code-block-card"
@@ -351,34 +332,26 @@ function CodeDisplay({
 }
 
 function CodeTrigger({
-  id,
-  lang,
-  title,
+  value,
   group,
   variant = "default",
   size = "default",
   className,
+  children,
   ...props
 }: {
-  id: string;
-  lang: string;
-  title?: string;
+  value: string;
   group?: string;
+  children?: ReactNode;
 } & VariantProps<typeof codeTriggerVariants> &
-  Omit<React.ComponentProps<typeof TabsTrigger>, "value">) {
-  const Icon = icons[lang as keyof typeof icons];
-  const resolvedTitle = title || (lang === "sh" ? "ターミナル" : lang);
-
+  Omit<React.ComponentProps<typeof TabsTrigger>, "value"> & { value: string }) {
   const { activeGroups } = useCodeGroup();
-  const { groups } = useCode();
-  const hasActiveGroups = activeGroups.length > 0;
+  const { currentGroup, groups } = useCode();
 
-  if (group) {
-    if (hasActiveGroups && !activeGroups.includes(group)) {
-      return null;
-    }
-    // fallback
-    if (!hasActiveGroups && groups && groups[0] !== group) {
+  // グループフィルタリング
+  if (group && groups.length > 0) {
+    // groups が登録されている場合のみフィルタリング
+    if (!currentGroup || currentGroup !== group) {
       return null;
     }
   }
@@ -388,8 +361,7 @@ function CodeTrigger({
       data-code-block="title"
       data-slot="code-block-title"
       data-group={group}
-      value={id}
-      title={resolvedTitle}
+      value={value}
       className={cn(
         codeTriggerVariants({ variant, size }),
         "only:bg-transparent!",
@@ -397,25 +369,39 @@ function CodeTrigger({
       )}
       {...props}
     >
-      {Icon && <Icon className="size-3.5" />}
-      <span>{resolvedTitle}</span>
+      {children}
     </TabsTrigger>
   );
 }
 
 function CodeContent({
-  id,
+  value,
+  code,
   className,
+  children,
   ...props
-}: { id: string } & Omit<React.ComponentProps<typeof TabsContent>, "value">) {
+}: {
+  value: string;
+  code: string;
+  children?: ReactNode;
+} & Omit<React.ComponentProps<typeof TabsContent>, "value">) {
+  const { registerCode } = useCode();
+
+  // code を登録
+  useEffect(() => {
+    registerCode(value, code);
+  }, [value, code, registerCode]);
+
   return (
     <TabsContent
       data-code-block="content"
       data-slot="code-block-content"
-      value={id}
+      value={value}
       className={cn(className)}
       {...props}
-    />
+    >
+      {children}
+    </TabsContent>
   );
 }
 
@@ -423,11 +409,11 @@ function CodeCopyButton({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "onClick">) {
-  const { currentId, codes } = useCode();
+  const { currentValue, codeMap } = useCode();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
-    const code = codes.find((code) => code.id === currentId)?.code;
+    const code = codeMap.get(currentValue);
     /**
      * Removes shiki transformer notation lines from code.
      * @link https://shiki.style/packages/transformers
@@ -441,7 +427,7 @@ function CodeCopyButton({
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
-  }, [currentId, codes]);
+  }, [currentValue, codeMap]);
 
   return (
     <Button
@@ -469,29 +455,38 @@ function CodeCopyButton({
 }
 
 function CodeGroupSelector({
-  groups,
+  children,
   ...props
 }: {
-  groups: string[];
-} & Omit<React.ComponentProps<typeof Select>, "value" | "onValueChange">) {
+  children?: ReactNode;
+} & Omit<
+  React.ComponentProps<typeof Select>,
+  "value" | "onValueChange" | "children"
+>) {
   const { setActiveGroups } = useCodeGroup();
-  const { currentGroup } = useCode();
+  const { currentGroup, groups, registerGroup } = useCode();
+
+  // children から groups を収集
+  useEffect(() => {
+    React.Children.forEach(children, (child) => {
+      if (React.isValidElement(child) && child.type === CodeGroupOption) {
+        const value = (child.props as { value?: string }).value;
+        if (value) {
+          registerGroup(value);
+        }
+      }
+    });
+  }, [children, registerGroup]);
 
   const handleValueChange = useCallback(
     (value: string) => {
-      localStorage.setItem("code-block-group", value);
       setActiveGroups((values) => {
-        const cleanItems = values.filter((value) => !groups.includes(value));
+        const cleanItems = values.filter((v) => !groups.includes(v));
         return [...cleanItems, value];
       });
     },
     [groups, setActiveGroups]
   );
-
-  // 現在選択されているグループのアイコンを取得
-  const CurrentGroupIcon = currentGroup
-    ? icons[currentGroup.toLowerCase() as keyof typeof icons]
-    : undefined;
 
   return (
     <Select value={currentGroup} onValueChange={handleValueChange} {...props}>
@@ -508,25 +503,35 @@ function CodeGroupSelector({
         className="max-w-40"
         align="end"
       >
-        {groups.map((group) => {
-          const Icon = icons[group.toLowerCase() as keyof typeof icons];
-          return (
-            <SelectItem key={group} value={group} className="[&_span]:truncate">
-              <span className="flex items-center gap-2">
-                {Icon && <Icon className="size-3.5" />}
-                <span>{group}</span>
-              </span>
-            </SelectItem>
-          );
-        })}
+        {children}
       </SelectContent>
     </Select>
   );
 }
 
+function CodeGroupOption({
+  value,
+  children,
+  className,
+  ...props
+}: {
+  value: string;
+  children?: ReactNode;
+} & React.ComponentProps<typeof SelectItem>) {
+  return (
+    <SelectItem
+      value={value}
+      className={cn("[&_span]:truncate", className)}
+      {...props}
+    >
+      <span className="flex items-center gap-2">{children}</span>
+    </SelectItem>
+  );
+}
+
 export {
   CodeProvider,
-  Code,
+  Codes,
   CodeHeader,
   CodeList,
   CodeTrigger,
@@ -534,6 +539,7 @@ export {
   CodeDisplay,
   CodeCopyButton,
   CodeGroupSelector,
+  CodeGroupOption,
   useCode,
   useCodeGroup,
 };

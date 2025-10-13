@@ -1,5 +1,17 @@
 import {
-  Code,
+  SiBun,
+  SiCss,
+  SiHtml5,
+  SiJavascript,
+  SiTypescript,
+  SiYaml,
+  SiNpm,
+  SiYarn,
+  SiPnpm,
+} from "@icons-pack/react-simple-icons";
+import { Terminal } from "lucide-react";
+import {
+  Codes,
   CodeHeader,
   CodeList,
   CodeTrigger,
@@ -7,7 +19,7 @@ import {
   CodeDisplay,
   CodeCopyButton,
   CodeGroupSelector,
-  type CodeBlockItem,
+  CodeGroupOption,
 } from "@workspace/registry/blocks/code/code";
 
 type CodeBlockProps = {
@@ -17,6 +29,22 @@ type CodeBlockProps = {
   title?: string;
   group?: string;
 };
+
+// Icons mapping
+const icons = {
+  ts: SiTypescript,
+  tsx: SiTypescript,
+  js: SiJavascript,
+  jsx: SiJavascript,
+  css: SiCss,
+  html: SiHtml5,
+  yml: SiYaml,
+  sh: Terminal,
+  npm: SiNpm,
+  yarn: SiYarn,
+  bun: SiBun,
+  pnpm: SiPnpm,
+} as const;
 
 /**
  * 統合CodeBlockコンポーネント
@@ -29,36 +57,54 @@ export function CodeBlock({
   groups?: string[];
   codes: CodeBlockProps[];
 }) {
-  // 各コードアイテムにIDを割り当て
-  const codesWithId: CodeBlockItem[] = codes.map((item, i) => ({
+  // 各コードアイテムに value を割り当て
+  const codesWithValue = codes.map((item, i) => ({
     ...item,
-    id: item.group ? `${item.group}-${i}` : `${i}`,
+    value: item.group ? `${item.group}-${i}` : `${i}`,
   }));
 
+  // 最初のアイテムを defaultValue に
+  const defaultValue = codesWithValue[0]?.value;
+
   return (
-    <Code codes={codesWithId} groups={groups}>
+    <Codes defaultValue={defaultValue}>
       <CodeHeader>
         <CodeList>
-          {codesWithId.map((item, i) => (
-            <CodeTrigger
-              key={i}
-              id={item.id}
-              lang={item.lang}
-              title={item.title}
-              group={item.group}
-            />
-          ))}
+          {codesWithValue.map((item, i) => {
+            const Icon = icons[item.lang as keyof typeof icons];
+            const label =
+              item.title || (item.lang === "sh" ? "ターミナル" : item.lang);
+
+            return (
+              <CodeTrigger key={i} value={item.value} group={item.group}>
+                {Icon && <Icon className="size-3.5" />}
+                <span>{label}</span>
+              </CodeTrigger>
+            );
+          })}
         </CodeList>
         <span className="flex-1" />
-        {groups && groups.length > 0 && <CodeGroupSelector groups={groups} />}
+        {groups && groups.length > 0 && (
+          <CodeGroupSelector>
+            {groups.map((group) => {
+              const Icon = icons[group.toLowerCase() as keyof typeof icons];
+              return (
+                <CodeGroupOption key={group} value={group}>
+                  {Icon && <Icon className="size-3.5" />}
+                  <span>{group}</span>
+                </CodeGroupOption>
+              );
+            })}
+          </CodeGroupSelector>
+        )}
         <CodeCopyButton />
       </CodeHeader>
-      {codesWithId.map((item, i) => (
-        <CodeContent key={i} id={item.id}>
+      {codesWithValue.map((item, i) => (
+        <CodeContent key={i} value={item.value} code={item.code}>
           <CodeDisplay html={item.html} />
         </CodeContent>
       ))}
-    </Code>
+    </Codes>
   );
 }
 

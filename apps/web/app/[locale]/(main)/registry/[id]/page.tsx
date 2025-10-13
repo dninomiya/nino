@@ -5,15 +5,23 @@ import { readFileSync } from "fs";
 import { notFound } from "next/navigation";
 import path from "path";
 
+export const generateMetadata = async ({
+  params,
+}: PageProps<"/[locale]/registry/[id]">) => {
+  const id = (await params).id;
+  const registry = getRegistry(id);
+  return { title: registry?.title };
+};
+
 export default async function RegistryPage({
   params,
 }: PageProps<"/[locale]/registry/[id]">) {
   const id = (await params).id;
-  const post = await import(`@/app/[locale]/(main)/registry/docs/${id}.mdx`);
+  const post = await import(`@/app/[locale]/(main)/registry/${id}/doc.mdx`);
   const Content = post.default;
   const registry = getRegistry(id);
   const markdownString = readFileSync(
-    path.join(process.cwd(), "app/[locale]/(main)/registry/docs", `${id}.mdx`),
+    path.join(process.cwd(), `app/[locale]/(main)/registry/${id}/doc.mdx`),
     "utf-8"
   );
 

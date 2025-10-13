@@ -2,6 +2,11 @@ import type { MDXComponents } from "mdx/types";
 import { CodeBlock } from "@/components/code-block";
 import { createCodeSlotRenderer } from "remark-code-to-slot";
 import { generateCodeHtml } from "@/lib/code-to-html";
+import {
+  ComponentPreview,
+  ComponentPreviewCode,
+  ComponentPreviewDemo,
+} from "./components/code-preview";
 
 const components: MDXComponents = {};
 
@@ -40,5 +45,8 @@ export function useMDXComponents(): MDXComponents {
     div: createCodeSlotRenderer({
       render: CodeBlockWrapper,
     }),
+    ComponentPreview: ComponentPreview,
+    ComponentPreviewCode: ComponentPreviewCode,
+    ComponentPreviewDemo: ComponentPreviewDemo,
   };
 }
