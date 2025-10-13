@@ -20,7 +20,7 @@ import {
   CodeCopyButton,
   CodeGroupSelector,
   CodeGroupOption,
-} from "@workspace/registry/blocks/code/code";
+} from "@workspace/registry/blocks/codes/codes";
 
 type CodeBlockProps = {
   lang: string;
@@ -109,4 +109,4 @@ export function CodeBlock({
 }
 
 // 便利のため、CodeProviderも再エクスポート
-export { CodeProvider } from "@workspace/registry/blocks/code/code";
+export { CodeProvider } from "@workspace/registry/blocks/codes/codes";

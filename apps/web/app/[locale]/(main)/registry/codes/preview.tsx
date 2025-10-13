@@ -9,7 +9,7 @@ import {
   CodeCopyButton,
   CodeGroupSelector,
   CodeGroupOption,
-} from "@workspace/registry/blocks/code/code";
+} from "@workspace/registry/blocks/codes/codes";
 
 const codes = [
   {
@@ -38,7 +38,7 @@ const codes = [
 
 export function CodeBlock() {
   return (
-    <Codes defaultValue="TypeScript-0">
+    <Codes defaultValue="TypeScript-0" groups={["TypeScript", "JavaScript"]}>
       <CodeHeader>
         <CodeList>
           <CodeTrigger value="TypeScript-0" group="TypeScript">
