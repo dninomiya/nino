@@ -9,7 +9,7 @@
       "title": "Codes",
       "description": "シンタックスハイライトとタブ切り替え機能を備えた高機能なコードブロックコンポーネント。",
       "registryDependencies": ["button", "select"],
-      "dependencies": ["@radix-ui/react-tabs", "@icons-pack/react-simple-icons"],
+      "dependencies": ["@radix-ui/react-tabs"],
       "files": [
         {
           "path": "registry/new-york/blocks/codes/codes.tsx",

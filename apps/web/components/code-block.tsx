@@ -21,11 +21,11 @@ import {
   CodeGroupSelector,
   CodeGroupOption,
 } from "@workspace/registry/blocks/codes/codes";
+import { generateCodeHtml } from "@/lib/code-to-html";
 
 type CodeBlockProps = {
   lang: string;
   code: string;
-  html: string;
   title?: string;
   group?: string;
 };
@@ -50,18 +50,24 @@ const icons = {
  * 統合CodeBlockコンポーネント
  * プリミティブコンポーネントを組み合わせた、すぐに使える統合コンポーネント
  */
-export function CodeBlock({
+export async function CodeBlock({
   groups,
   codes,
 }: {
   groups?: string[];
   codes: CodeBlockProps[];
 }) {
-  // 各コードアイテムに value を割り当て
-  const codesWithValue = codes.map((item, i) => ({
-    ...item,
-    value: item.group ? `${item.group}-${i}` : `${i}`,
-  }));
+  // 各コードをHTMLに変換し、valueを割り当て
+  const codesWithValue = await Promise.all(
+    codes.map(async (item, i) => {
+      const html = await generateCodeHtml(item.code, item.lang);
+      return {
+        ...item,
+        html,
+        value: item.group ? `${item.group}-${i}` : `${i}`,
+      };
+    })
+  );
 
   // 最初のアイテムを defaultValue に
   const defaultValue = codesWithValue[0]?.value;

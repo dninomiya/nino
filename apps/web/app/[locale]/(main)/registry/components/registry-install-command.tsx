@@ -1,8 +1,7 @@
-import { generateCodeHtml } from "@/lib/code-to-html";
 import { getBaseURL } from "@workspace/lib/get-base-url";
 import { CodeBlock } from "@/components/code-block";
 
-export async function RegistryInstallCommand({
+export function RegistryInstallCommand({
   registryName,
 }: {
   registryName: string;
@@ -28,15 +27,7 @@ export async function RegistryInstallCommand({
       code: `bunx --bun shadcn@latest add ${getBaseURL()}/r/${registryName}.json`,
       group: "bun",
     },
-  ].map(async (code) => ({
-    ...code,
-    html: await generateCodeHtml(code.code, code.lang),
-  }));
+  ];
 
-  return (
-    <CodeBlock
-      groups={["pnpm", "npm", "yarn", "bun"]}
-      codes={await Promise.all(codes)}
-    />
-  );
+  return <CodeBlock groups={["pnpm", "npm", "yarn", "bun"]} codes={codes} />;
 }
