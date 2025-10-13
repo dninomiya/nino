@@ -67,7 +67,7 @@ export function CodeBlock({
   const defaultValue = codesWithValue[0]?.value;
 
   return (
-    <Codes defaultValue={defaultValue}>
+    <Codes defaultValue={defaultValue} groups={groups}>
       <CodeHeader>
         <CodeList>
           {codesWithValue.map((item, i) => {

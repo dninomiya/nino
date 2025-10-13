@@ -98,6 +98,7 @@ type CodeContextType = {
   groups: string[];
   registerGroup: (group: string) => void;
   currentGroup?: string;
+  registerTab: (value: string, group?: string) => void;
 };
 
 // Contexts
@@ -109,6 +110,7 @@ const CodeContext = createContext<CodeContextType>({
   groups: [],
   registerGroup: () => {},
   currentGroup: undefined,
+  registerTab: () => {},
 });
 
 const CodeGroupContext = createContext({
@@ -169,13 +171,18 @@ const useCode = () => use(CodeContext);
 function CodeInternalProvider({
   children,
   defaultValue,
+  groups: initialGroups = [],
 }: {
   children: ReactNode;
   defaultValue?: string;
+  groups?: string[];
 }) {
   const [currentValue, setCurrentValue] = useState<string>(defaultValue || "");
   const [codeMap, setCodeMap] = useState<Map<string, string>>(new Map());
-  const [groups, setGroups] = useState<string[]>([]);
+  const [groups] = useState<string[]>(initialGroups);
+  const [groupTabsMap, setGroupTabsMap] = useState<Map<string, string[]>>(
+    new Map()
+  );
   const { activeGroups, setActiveGroups } = useCodeGroup();
 
   const currentGroup = useMemo(() => {
@@ -190,16 +197,20 @@ function CodeInternalProvider({
     });
   }, []);
 
-  const registerGroup = useCallback((group: string) => {
-    setGroups((prev) => {
-      if (!prev.includes(group)) {
-        return [...prev, group];
-      }
-      return prev;
-    });
+  const registerTab = useCallback((value: string, group?: string) => {
+    if (group) {
+      setGroupTabsMap((prev) => {
+        const newMap = new Map(prev);
+        const tabs = newMap.get(group) || [];
+        if (!tabs.includes(value)) {
+          newMap.set(group, [...tabs, value]);
+        }
+        return newMap;
+      });
+    }
   }, []);
 
-  // groups が登録されたときに、activeGroups にこのコンポーネントのグループが含まれていない場合、
+  // groups が設定されているときに、activeGroups にこのコンポーネントのグループが含まれていない場合、
   // 最初のグループを自動選択
   useEffect(() => {
     if (groups.length > 0) {
@@ -217,6 +228,19 @@ function CodeInternalProvider({
     }
   }, [groups, setActiveGroups]);
 
+  // currentGroup が変更されたときに、そのグループに属する最初のタブに自動的に切り替える
+  useEffect(() => {
+    if (currentGroup) {
+      const tabsInGroup = groupTabsMap.get(currentGroup);
+      if (tabsInGroup && tabsInGroup.length > 0) {
+        const firstTab = tabsInGroup[0];
+        if (firstTab && firstTab !== currentValue) {
+          setCurrentValue(firstTab);
+        }
+      }
+    }
+  }, [currentGroup, groupTabsMap, currentValue]);
+
   const contextValue = React.useMemo<CodeContextType>(
     () => ({
       currentValue,
@@ -224,8 +248,9 @@ function CodeInternalProvider({
       codeMap,
       registerCode,
       groups,
-      registerGroup,
+      registerGroup: () => {}, // 互換性のために空の関数を提供
       currentGroup,
+      registerTab,
     }),
     [
       currentValue,
@@ -233,8 +258,8 @@ function CodeInternalProvider({
       codeMap,
       registerCode,
       groups,
-      registerGroup,
       currentGroup,
+      registerTab,
     ]
   );
 
@@ -250,17 +275,19 @@ function CodeInternalProvider({
 // UI Components
 function Codes({
   defaultValue,
+  groups,
   className,
   asChild = false,
   children,
   ...props
 }: {
   defaultValue?: string;
+  groups?: string[];
 } & React.ComponentProps<"figure"> & { asChild?: boolean }) {
   const Comp = asChild ? Slot : "figure";
 
   return (
-    <CodeInternalProvider defaultValue={defaultValue}>
+    <CodeInternalProvider defaultValue={defaultValue} groups={groups}>
       <Comp
         data-code-block="card"
         data-slot="code-block-card"
@@ -346,7 +373,12 @@ function CodeTrigger({
 } & VariantProps<typeof codeTriggerVariants> &
   Omit<React.ComponentProps<typeof TabsTrigger>, "value"> & { value: string }) {
   const { activeGroups } = useCodeGroup();
-  const { currentGroup, groups } = useCode();
+  const { currentGroup, groups, registerTab } = useCode();
+
+  // タブとグループの対応関係を登録
+  useEffect(() => {
+    registerTab(value, group);
+  }, [value, group, registerTab]);
 
   // グループフィルタリング
   if (group && groups.length > 0) {
@@ -464,19 +496,7 @@ function CodeGroupSelector({
   "value" | "onValueChange" | "children"
 >) {
   const { setActiveGroups } = useCodeGroup();
-  const { currentGroup, groups, registerGroup } = useCode();
-
-  // children から groups を収集
-  useEffect(() => {
-    React.Children.forEach(children, (child) => {
-      if (React.isValidElement(child) && child.type === CodeGroupOption) {
-        const value = (child.props as { value?: string }).value;
-        if (value) {
-          registerGroup(value);
-        }
-      }
-    });
-  }, [children, registerGroup]);
+  const { currentGroup, groups } = useCode();
 
   const handleValueChange = useCallback(
     (value: string) => {
