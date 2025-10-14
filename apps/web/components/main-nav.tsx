@@ -1,4 +1,3 @@
-import Link from "next/link";
 import * as React from "react";
 
 import {
@@ -9,6 +8,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@workspace/ui/components/navigation-menu";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 export function MainNav() {
   return (
@@ -69,11 +69,6 @@ export function MainNav() {
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link href="/registry">レジストリ</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/llms">レジストリ</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
