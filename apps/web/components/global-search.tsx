@@ -2,6 +2,7 @@
 
 import {
   CreditCard,
+  Languages,
   Monitor,
   Moon,
   SearchIcon,
@@ -12,7 +13,6 @@ import {
 import { useTheme } from "next-themes";
 import * as React from "react";
 
-import { getRegistryDocMetas } from "@/lib/registry";
 import { Button } from "@workspace/ui/components/button";
 import {
   CommandDialog,
@@ -25,14 +25,37 @@ import {
   CommandShortcut,
 } from "@workspace/ui/components/command";
 import { Kbd } from "@workspace/ui/components/kbd";
-import { useRouter } from "next/navigation";
 import { useRegistry } from "./registry-provider";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
+import { Locale, useLocale, useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import { useTransition } from "react";
+import { Badge } from "@workspace/ui/components/badge";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams();
   const { setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
+  const currentLocale = useLocale();
+  const [isPending, startTransition] = useTransition();
+  const t = useTranslations("LocaleSwitcher");
+
+  const handleLocaleChange = (nextLocale: Locale) => {
+    startTransition(() => {
+      router.replace(
+        // @ts-expect-error -- TypeScript will validate that only known `params`
+        // are used in combination with a given `pathname`. Since the two will
+        // always match for the current route, we can skip runtime checks.
+        { pathname, params },
+        { locale: nextLocale }
+      );
+    });
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -106,22 +129,21 @@ export function GlobalSearch() {
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <User />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <CreditCard />
-              <span>Billing</span>
-              <CommandShortcut>⌘B</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <Settings />
-              <span>Settings</span>
-              <CommandShortcut>⌘S</CommandShortcut>
-            </CommandItem>
+          <CommandGroup heading="言語">
+            {routing.locales.map((locale) => (
+              <CommandItem
+                key={locale}
+                onSelect={() => handleLocaleChange(locale as Locale)}
+              >
+                <Languages />
+                <span>{t("locale", { locale })}</span>
+                {currentLocale === locale && (
+                  <Badge variant="outline" className="ml-auto">
+                    現在
+                  </Badge>
+                )}
+              </CommandItem>
+            ))}
           </CommandGroup>
         </CommandList>
       </CommandDialog>
