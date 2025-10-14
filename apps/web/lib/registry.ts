@@ -12,7 +12,7 @@ export const gettingStartedItems = [
   },
 ] as const;
 
-const registryDocNames = [
+export const registryDocNames = [
   ...gettingStartedItems.map((item) => item.name),
   ...registry.items.map((item) => item.name),
 ];

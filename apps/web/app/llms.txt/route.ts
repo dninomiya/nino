@@ -13,7 +13,7 @@ export const GET = async () => {
 
 ## Registries
 
-${allRegistryDocMetas.map((meta) => `- [${meta.title}](${origin}/registry/${meta.name}.md)`).join("\n")}
+${allRegistryDocMetas.map((meta) => `- [${meta.title}](${origin}/llms/registry/${meta.name}.md)`).join("\n")}
   `.trim();
 
   return new Response(doc, {
