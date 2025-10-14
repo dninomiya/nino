@@ -1,3 +1,8 @@
+---
+title: Image Cropper
+description: 画像のアップロード、プレビュー、クロップ機能を提供する Compound Component パターンのコンポーネント群です。実装者が Dialog や Popover で柔軟にラップできる設計になっています。
+---
+
 import { Preview } from "./preview";
 
 画像のアップロード、プレビュー、クロップ機能を提供する Compound Component パターンのコンポーネント群です。実装者が Dialog や Popover で柔軟にラップできる設計になっています。
@@ -58,8 +63,7 @@ export function ImageCropperExample() {
           setFile(file);
           setOpen(true);
         }}
-        aspectRatio={1}
-        width={200}
+        className="w-[200px] aspect-square"
       >
         {preview && (
           <ImageCropperPreview
@@ -123,8 +127,7 @@ export function ImageCropperPopoverExample() {
               setFile(file);
               setOpen(true);
             }}
-            aspectRatio={16/9}
-            width="100%"
+            className="w-full aspect-video"
           >
             {preview && (
               <ImageCropperPreview
@@ -163,7 +166,7 @@ export function ImageCropperPopoverExample() {
 ```tsx
 <ImageCropperFileSelector
   onFileSelect={(file) => {/* ... */}}
-  aspectRatio={1}
+  className="w-full aspect-square"
 >
   {preview && (
     <div className="relative w-full h-full">
@@ -199,7 +202,7 @@ export function SimpleImageUpload() {
         };
         reader.readAsDataURL(file);
       }}
-      aspectRatio={1}
+      className="w-full aspect-square"
     >
       {preview && (
         <ImageCropperPreview
@@ -259,8 +262,7 @@ onCrop={(dataUrl, blob) => {
 |------|------|-------------|
 | onFileSelect | (file: File) => void | ファイルが選択された時のコールバック |
 | maxSize | number | 入力画像の最大サイズ（バイト）。デフォルト: 4MB |
-| width | string \| number | プレビュー領域の横幅。デフォルト: "100%" |
-| aspectRatio | number | 画像のアスペクト比。デフォルト: 1 |
+| className | string | カスタムクラス名（width と aspect-ratio を含む）。デフォルト: "w-full aspect-square" |
 | disabled | boolean | 無効化フラグ |
 | children | React.ReactNode | 子要素（プレビューなど） |
 
@@ -286,19 +288,19 @@ onCrop={(dataUrl, blob) => {
 
 ```tsx
 // 正方形（1:1）- アバター、プロフィール画像
-<ImageCropperFileSelector aspectRatio={1} />
+<ImageCropperFileSelector className="w-full aspect-square" />
 
 // 横長（16:9）- サムネイル、カバー画像
-<ImageCropperFileSelector aspectRatio={16/9} />
+<ImageCropperFileSelector className="w-full aspect-video" />
 
 // 縦長（3:4）- ポートレート
-<ImageCropperFileSelector aspectRatio={3/4} />
+<ImageCropperFileSelector className="w-full aspect-[3/4]" />
 
 // 円形風（1:1 + border-radius）
-<ImageCropperFileSelector 
-  aspectRatio={1}
-  className="rounded-full"
-/>
+<ImageCropperFileSelector className="w-full aspect-square rounded-full" />
+
+// カスタムサイズ
+<ImageCropperFileSelector className="w-[240px] aspect-square" />
 ```
 
 ## サーバーへのアップロード

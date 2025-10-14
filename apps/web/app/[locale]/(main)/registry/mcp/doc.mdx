@@ -1,0 +1,49 @@
+---
+title: MCP
+description: MCPを設定すると、Agentがレジストリのコンポーネントを利用できるようになります。
+---
+
+MCPを設定すると、Agentがレジストリのコンポーネントを利用できるようになります。
+
+## 接続方法
+
+1. プロジェクト環境で shadcn MCP を有効にする。(Claude Code, Cursor などに対応)
+
+:::code-group
+
+```bash group=pnpm
+pnpx shadcn@latest mcp init
+```
+
+```bash group=npm
+npx shadcn@latest mcp init
+```
+
+```bash group=yarn
+yarn shadcn@latest mcp init
+```
+
+```bash group=bun
+bunx --bun shadcn@latest mcp init
+```
+
+:::
+
+2. プロジェクトにレジストリを登録する
+
+`components.json` にレジストリを登録する。`{name}` のままでOKです。
+
+```json
+{
+  "registries": {
+    "@ninoui": "https://dninomiya.com/r/{name}.json"
+  }
+}
+```
+
+以上でセットアップは完了です。たとえば以下のようにエージェントに依頼することができます。
+
+- `ninoui` のすべてのコンポーネントを見せて
+- `ninoui` の `image-cropper` を使ったアバターフォームを作って
+
+MCPが反応しない場合、エディターを再起動してください。

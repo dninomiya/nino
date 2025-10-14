@@ -35,7 +35,7 @@
       "title": "Image Cropper",
       "description": "画像のアップロード、プレビュー、クロップ機能を提供するコンポーネント群。",
       "registryDependencies": ["button", "slider"],
-      "dependencies": ["react-avatar-editor", "react-dropzone"],
+      "dependencies": ["react-avatar-editor", "@types/react-avatar-editor", "react-dropzone"],
       "files": [
         {
           "path": "registry/new-york/blocks/image-cropper.tsx",

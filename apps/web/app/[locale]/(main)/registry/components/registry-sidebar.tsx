@@ -24,6 +24,15 @@ export function RegistrySidebar({
   const data = {
     navGroup: [
       {
+        title: "Getting Started",
+        items: [
+          {
+            title: "MCP",
+            url: `/registry/mcp`,
+          },
+        ],
+      },
+      {
         title: "Blocks",
         items: registries
           .filter((registry) => registry.type === "registry:block")

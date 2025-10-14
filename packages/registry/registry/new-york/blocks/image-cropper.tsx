@@ -128,15 +128,9 @@ type ImageCropperFileSelectorProps = {
    */
   maxSize?: number;
   /**
-   * プレビュー領域の横幅
-   * @default "100%"
+   * カスタムクラス名（width と aspect-ratio を含む）
    */
-  width?: string | number;
-  /**
-   * 画像のアスペクト比
-   * @default 1
-   */
-  aspectRatio?: number;
+  className?: string;
   /**
    * 無効化フラグ
    */
@@ -150,8 +144,7 @@ type ImageCropperFileSelectorProps = {
 export function ImageCropperFileSelector({
   onFileSelect,
   maxSize = 1024 * 1024 * 4, // 4MB
-  width = "100%",
-  aspectRatio = 1,
+  className,
   disabled = false,
   children,
 }: ImageCropperFileSelectorProps) {
@@ -178,13 +171,11 @@ export function ImageCropperFileSelector({
       className={cn(
         "border rounded-md cursor-pointer relative overflow-hidden",
         "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:outline-none ring-offset-background",
+        "w-full aspect-square", // デフォルトのサイズとアスペクト比
         isDragAccept ? "border-primary bg-primary/10" : "bg-muted",
-        disabled && "opacity-50 cursor-not-allowed"
+        disabled && "opacity-50 cursor-not-allowed",
+        className
       )}
-      style={{
-        aspectRatio,
-        width,
-      }}
     >
       {children || (
         <div className="grid place-content-center h-full">

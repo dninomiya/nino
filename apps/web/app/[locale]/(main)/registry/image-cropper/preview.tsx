@@ -27,8 +27,7 @@ export function Preview() {
           setFile(file);
           setOpen(true);
         }}
-        aspectRatio={1}
-        width={240}
+        className="w-[240px] aspect-square"
       >
         {preview && (
           <ImageCropperPreview src={preview} onRemove={() => setPreview("")} />

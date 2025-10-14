@@ -19,20 +19,20 @@ export default async function RegistryPage({
   const id = (await params).id;
   const post = await import(`@/app/[locale]/(main)/registry/${id}/doc.mdx`);
   const Content = post.default;
-  const registry = getRegistry(id);
+  const metadata = post.frontmatter;
   const markdownString = readFileSync(
     path.join(process.cwd(), `app/[locale]/(main)/registry/${id}/doc.mdx`),
     "utf-8"
   );
 
-  if (!registry) {
+  if (!metadata) {
     notFound();
   }
 
   return (
     <MDXContent>
       <div className="flex items-center justify-between gap-2 not-prose">
-        <h1 className="text-4xl font-bold">{registry.title}</h1>
+        <h1 className="text-4xl font-bold">{metadata.title}</h1>
         <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
       </div>
 
