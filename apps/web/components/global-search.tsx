@@ -31,7 +31,7 @@ export function GlobalSearch() {
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
   const currentLocale = useLocale();
-  const [_, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const t = useTranslations("LocaleSwitcher");
 
   const handleLocaleChange = (nextLocale: Locale) => {
@@ -134,7 +134,7 @@ export function GlobalSearch() {
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="言語">
+          <CommandGroup heading="言語" aria-busy={isPending}>
             {routing.locales.map((locale) => (
               <CommandItem
                 key={locale}
