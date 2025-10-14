@@ -215,6 +215,177 @@ export function SimpleImageUpload() {
 }
 ```
 
+### React Hook Form と FormField で使用
+
+React Hook Form と shadcn/ui の Form コンポーネントを使用して、フォームバリデーションと統合できます。
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  ImageCropper,
+  ImageCropperFileSelector,
+  ImageCropperPreview,
+} from "@workspace/registry/blocks/image-cropper";
+import {
+  Dialog,
+  DialogContent,
+} from "@workspace/ui/components/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@workspace/ui/components/form";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+
+// フォームスキーマ
+const profileFormSchema = z.object({
+  username: z.string().min(2, {
+    message: "ユーザー名は2文字以上である必要があります。",
+  }),
+  profileImage: z.string().optional(),
+});
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+export function ProfileForm() {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      username: "",
+      profileImage: "",
+    },
+  });
+
+  function onSubmit(data: ProfileFormValues) {
+    console.log("フォームデータ:", data);
+    // ここでサーバーに送信
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ユーザー名</FormLabel>
+              <FormControl>
+                <Input placeholder="山田太郎" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="profileImage"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>プロフィール画像</FormLabel>
+              <FormControl>
+                <ImageCropperFileSelector
+                  onFileSelect={(file) => {
+                    setFile(file);
+                    setOpen(true);
+                  }}
+                  className="w-[200px] aspect-square"
+                >
+                  {field.value && (
+                    <ImageCropperPreview
+                      src={field.value}
+                      onRemove={() => field.onChange("")}
+                    />
+                  )}
+                </ImageCropperFileSelector>
+              </FormControl>
+              <FormDescription>
+                プロフィールに表示される画像をアップロードしてください。
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">保存</Button>
+      </form>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          {file && (
+            <ImageCropper
+              image={file}
+              canvasWidth={400}
+              aspectRatio={1}
+              resultWidth={600}
+              onCrop={(dataUrl, blob) => {
+                form.setValue("profileImage", dataUrl);
+                setOpen(false);
+              }}
+              onCancel={() => setOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </Form>
+  );
+}
+```
+
+### 必須バリデーション付きフォーム
+
+画像を必須フィールドにする場合：
+
+```tsx
+const profileFormSchema = z.object({
+  username: z.string().min(2),
+  profileImage: z.string().min(1, {
+    message: "プロフィール画像を選択してください。",
+  }),
+});
+
+// フォームフィールドは同じ実装でOK
+// バリデーションエラーは自動的に FormMessage に表示されます
+```
+
+### カスタムバリデーション
+
+画像のファイルサイズや形式を検証する場合：
+
+```tsx
+const profileFormSchema = z.object({
+  username: z.string().min(2),
+  profileImage: z
+    .string()
+    .refine((val) => val.length > 0, {
+      message: "プロフィール画像を選択してください。",
+    })
+    .refine(
+      (val) => {
+        // Data URL のサイズをチェック（約 1MB）
+        return val.length < 1400000;
+      },
+      {
+        message: "画像サイズが大きすぎます。",
+      }
+    ),
+});
+```
+
 ## コンポーネント
 
 ### ImageCropper
