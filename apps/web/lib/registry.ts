@@ -1,8 +1,19 @@
 import registry from "@workspace/registry";
 
+// Getting Started セクションのアイテム定義
+export const gettingStartedItems = [
+  {
+    name: "what-is-registry",
+    title: "レジストリとは？",
+  },
+  {
+    name: "mcp",
+    title: "MCP",
+  },
+] as const;
+
 export const registryDocNames = [
-  "what-is-registry",
-  "mcp",
+  ...gettingStartedItems.map((item) => item.name),
   ...registry.items.map((item) => item.name),
 ];
 

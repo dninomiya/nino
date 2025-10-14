@@ -14,7 +14,7 @@ import {
 } from "@workspace/ui/components/sidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { registries } from "@/lib/registry";
+import { registries, gettingStartedItems } from "@/lib/registry";
 
 const getRegistryItems = (type: string) => {
   return registries
@@ -23,6 +23,13 @@ const getRegistryItems = (type: string) => {
       title: registry.title,
       url: `/registry/${registry.name}`,
     }));
+};
+
+const getGettingStartedItems = () => {
+  return gettingStartedItems.map((item) => ({
+    title: item.title,
+    url: `/registry/${item.name}`,
+  }));
 };
 
 export function RegistrySidebar({
@@ -34,16 +41,7 @@ export function RegistrySidebar({
     navGroup: [
       {
         title: "Getting Started",
-        items: [
-          {
-            title: "レジストリとは？",
-            url: `/registry/what-is-registry`,
-          },
-          {
-            title: "MCP",
-            url: `/registry/mcp`,
-          },
-        ],
+        items: getGettingStartedItems(),
       },
       {
         title: "Blocks",
