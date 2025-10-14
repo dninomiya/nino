@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@workspace/ui/components/button";
-import { Slider } from "@workspace/ui/components/slider";
-import { cn } from "@workspace/ui/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";

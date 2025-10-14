@@ -4,8 +4,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"],
-      "@workspace/registry/blocks/*": ["../../packages/registry/registry/new-york/blocks/*"]
+      "@workspace/registry/blocks/*": ["../../packages/registry/registry/new-york/blocks/*"],
+
+      "@/components/ui/*": ["../../packages/ui/src/components/*"],
+      "@/lib/*": ["../../packages/ui/src/lib/*", "./lib/*"],
+      "@/hooks/*": ["../../packages/ui/src/hooks/*", "./hooks/*"],
     },
     "plugins": [
       {

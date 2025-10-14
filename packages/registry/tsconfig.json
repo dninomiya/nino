@@ -4,7 +4,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@workspace/ui/*": ["./src/*"]
+      "@/registry/*": ["./registry/new-york/*"],
+      "@/components/ui/*": ["../ui/src/components/*"],
+      "@/lib/*": ["../ui/src/lib/*"],
+      "@/hooks/*": ["../ui/src/hooks/*"],
+      "@/ui/*": ["../ui/src/components/*"]
     },
     "plugins": [
       {
