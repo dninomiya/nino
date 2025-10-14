@@ -87,9 +87,6 @@ importers:
         specifier: ^2.3.6
         version: 2.3.6(react@19.2.0)
     devDependencies:
-      '@shikijs/rehype':
-        specifier: ^3.13.0
-        version: 3.13.0
       '@types/node':
         specifier: ^20.19.9
         version: 20.19.9
@@ -226,9 +223,6 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.13
         version: 1.1.13(@types/react-dom@19.2.1(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@shikijs/transformers':
-        specifier: ^3.13.0
-        version: 3.13.0
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -259,9 +253,6 @@ importers:
       shadcn:
         specifier: ^3.0.0
         version: 3.4.0(@types/node@20.19.9)(typescript@5.9.2)
-      shiki:
-        specifier: ^3.13.0
-        version: 3.13.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -2318,9 +2309,6 @@ packages:
 
   '@shikijs/langs@3.13.0':
     resolution: {integrity: sha512-672c3WAETDYHwrRP0yLy3W1QYB89Hbpj+pO4KhxK6FzIrDI2FoEXNiNCut6BQmEApYLfuYfpgOZaqbY+E9b8wQ==}
-
-  '@shikijs/rehype@3.13.0':
-    resolution: {integrity: sha512-dxvB5gXEpiTI3beGwOPEwxFxQNmUWM4cwOWbvUmL6DnQJGl18/+cCjVHZK2OnasmU0v7SvM39Zh3iliWdwfBDA==}
 
   '@shikijs/themes@3.13.0':
     resolution: {integrity: sha512-Vxw1Nm1/Od8jyA7QuAenaV78BG2nSr3/gCGdBkLpfLscddCkzkL36Q5b67SrLLfvAJTOUzW39x4FHVCFriPVgg==}
@@ -8121,15 +8109,6 @@ snapshots:
   '@shikijs/langs@3.13.0':
     dependencies:
       '@shikijs/types': 3.13.0
-
-  '@shikijs/rehype@3.13.0':
-    dependencies:
-      '@shikijs/types': 3.13.0
-      '@types/hast': 3.0.4
-      hast-util-to-string: 3.0.1
-      shiki: 3.13.0
-      unified: 11.0.5
-      unist-util-visit: 5.0.0
 
   '@shikijs/themes@3.13.0':
     dependencies:

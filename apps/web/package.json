@@ -33,7 +33,6 @@
     "swr": "^2.3.6"
   },
   "devDependencies": {
-    "@shikijs/rehype": "^3.13.0",
     "@types/node": "^20.19.9",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
