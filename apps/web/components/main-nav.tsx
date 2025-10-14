@@ -68,7 +68,12 @@ export function MainNav() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/templates">レジストリ</Link>
+            <Link href="/registry">レジストリ</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href="/llms">LLMs</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
