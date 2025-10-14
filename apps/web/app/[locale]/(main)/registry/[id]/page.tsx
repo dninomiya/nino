@@ -1,7 +1,7 @@
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
-import { getRegistryDocMeta } from "@/lib/registry";
+import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
 import { readFileSync } from "fs";
 import { notFound } from "next/navigation";
 import path from "path";
@@ -12,6 +12,11 @@ export const generateMetadata = async ({
   const id = (await params).id;
   const registry = await getRegistryDocMeta(id);
   return { title: registry?.title };
+};
+
+export const generateStaticParams = async () => {
+  const registries = await getRegistryDocMetas();
+  return registries.map((registry) => ({ id: registry.name }));
 };
 
 export default async function RegistryPage({

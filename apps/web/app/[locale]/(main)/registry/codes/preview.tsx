@@ -20,7 +20,7 @@ import {
   CodeCopyButton,
   CodeGroupSelector,
   CodeGroupOption,
-} from "@workspace/registry/blocks/codes/codes";
+} from "@/registry/blocks/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
 
 // Icons mapping
@@ -60,7 +60,7 @@ const codes = [
 
 const groups = ["TypeScript", "JavaScript"];
 
-export async function Preview() {
+export default async function Preview() {
   // 各コードをHTMLに変換し、valueを割り当て
   const codesWithValue = await Promise.all(
     codes.map(async (item, i) => {
@@ -117,6 +117,3 @@ export async function Preview() {
     </Codes>
   );
 }
-
-// 便利のため、CodeProviderも再エクスポート
-export { CodeProvider } from "@workspace/registry/blocks/codes/codes";

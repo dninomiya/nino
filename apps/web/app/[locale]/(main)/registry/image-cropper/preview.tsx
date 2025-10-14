@@ -5,7 +5,7 @@ import {
   ImageCropper,
   ImageCropperFileSelector,
   ImageCropperPreview,
-} from "@workspace/registry/blocks/image-cropper";
+} from "@/registry/blocks/image-cropper";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Label } from "@workspace/ui/components/label";
 
-export function Preview() {
+export default function Preview() {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
