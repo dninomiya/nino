@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { registries } from "@/lib/registry";
+import Link from "next/link";
 
 const getRegistryItems = (type: string) => {
   return Promise.all(
@@ -21,21 +22,26 @@ export default async function RegistryPage() {
   const items = await getRegistryItems("registry:block");
 
   return (
-    <div className="container py-10">
+    <div className="p-8">
       <h1 className="text-4xl font-bold">Registry</h1>
 
       <section className="py-10 space-y-6">
         <h2 className="text-2xl font-bold">Blocks</h2>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {items.map((item) => (
-            <Card key={item.name}>
+            <Card key={item.name} className="relative">
               <CardContent>
                 <div className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20">
                   <item.preview />
                 </div>
               </CardContent>
               <CardHeader>
-                <CardTitle>{item.title}</CardTitle>
+                <CardTitle>
+                  <Link href={`/registry/${item.name}`}>
+                    {item.title}
+                    <span className="absolute inset-0" />
+                  </Link>
+                </CardTitle>
               </CardHeader>
             </Card>
           ))}
