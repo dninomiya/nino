@@ -1,6 +1,7 @@
 import registry from "@workspace/registry";
 
 export const registryDocNames = [
+  "what-is-registry",
   "mcp",
   ...registry.items.map((item) => item.name),
 ];

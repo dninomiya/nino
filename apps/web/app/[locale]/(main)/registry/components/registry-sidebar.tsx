@@ -36,6 +36,10 @@ export function RegistrySidebar({
         title: "Getting Started",
         items: [
           {
+            title: "レジストリとは？",
+            url: `/registry/what-is-registry`,
+          },
+          {
             title: "MCP",
             url: `/registry/mcp`,
           },
