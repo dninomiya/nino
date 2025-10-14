@@ -1,5 +1,6 @@
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
+import { TableOfContents } from "@/components/table-of-contents";
 import { getRegistryDocMeta } from "@/lib/registry";
 import { readFileSync } from "fs";
 import { notFound } from "next/navigation";
@@ -25,20 +26,23 @@ export default async function RegistryPage({
     "utf-8"
   );
 
-  console.log(post);
-
   if (!metadata) {
     notFound();
   }
 
   return (
-    <MDXContent>
-      <div className="flex items-center justify-between gap-2 not-prose">
-        <h1 className="text-4xl font-bold">{metadata.title}</h1>
-        <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
-      </div>
+    <div className="flex">
+      <MDXContent>
+        <div className="flex items-center justify-between gap-2 not-prose">
+          <h1 className="text-4xl font-bold">{metadata.title}</h1>
+          <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
+        </div>
 
-      <Content />
-    </MDXContent>
+        <Content />
+      </MDXContent>
+      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header))] px-6 py-10 overflow-auto">
+        <TableOfContents />
+      </aside>
+    </div>
   );
 }
