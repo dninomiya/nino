@@ -16,6 +16,15 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { registries } from "@/lib/registry";
 
+const getRegistryItems = (type: string) => {
+  return registries
+    .filter((registry) => registry.type === type)
+    .map((registry) => ({
+      title: registry.title,
+      url: `/registry/${registry.name}`,
+    }));
+};
+
 export function RegistrySidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
@@ -34,21 +43,11 @@ export function RegistrySidebar({
       },
       {
         title: "Blocks",
-        items: registries
-          .filter((registry) => registry.type === "registry:block")
-          .map((registry) => ({
-            title: registry.title,
-            url: `/registry/${registry.name}`,
-          })),
+        items: getRegistryItems("registry:block"),
       },
       {
         title: "Libraries",
-        items: registries
-          .filter((registry) => registry.type === "registry:lib")
-          .map((registry) => ({
-            title: registry.title,
-            url: `/registry/${registry.name}`,
-          })),
+        items: getRegistryItems("registry:lib"),
       },
     ],
   };
