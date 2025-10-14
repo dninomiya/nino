@@ -4,7 +4,6 @@ import {
   SiApple,
   SiBetterauth,
   SiCloudflare,
-  SiDiscord,
   SiDrizzle,
   SiExpo,
   SiFirebase,
@@ -24,7 +23,6 @@ import {
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -68,7 +66,7 @@ const MAX_PERFORMANCE_ENVIRONMENT = [
   },
 ];
 
-export const FAVORITE_TECHNOLOGIES = [
+const FAVORITE_TECHNOLOGIES = [
   {
     icon: SiNextdotjs,
     title: "Next.js",
