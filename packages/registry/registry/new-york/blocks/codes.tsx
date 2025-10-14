@@ -295,7 +295,10 @@ function Codes({
       <Comp
         data-code-block="card"
         data-slot="code-block-card"
-        className={cn("border rounded-lg overflow-hidden", className)}
+        className={cn(
+          "border rounded-lg bg-background overflow-hidden",
+          className
+        )}
         {...props}
       >
         {children}

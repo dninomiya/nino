@@ -26,11 +26,11 @@ export default async function RegistryPage() {
 
       <section className="py-10 space-y-6">
         <h2 className="text-2xl font-bold">Blocks</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-8">
           {items.map((item) => (
             <Card key={item.name}>
               <CardContent>
-                <div className="aspect-video border rounded-lg flex items-center justify-center p-8">
+                <div className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20">
                   <item.preview />
                 </div>
               </CardContent>
