@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@workspace/registry/blocks/*": ["../../packages/registry/registry/new-york/blocks/*"],
+      "@/registry/*": ["../../packages/registry/registry/new-york/*"],
 
       "@/components/ui/*": ["../../packages/ui/src/components/*"],
       "@/lib/*": ["../../packages/ui/src/lib/*", "./lib/*"],
