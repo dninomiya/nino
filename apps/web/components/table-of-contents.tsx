@@ -40,6 +40,7 @@ export function TableOfContents() {
     );
 
     elements.forEach((elem) => observer.observe(elem));
+
     return () => observer.disconnect();
   }, []);
 
@@ -64,13 +65,6 @@ export function TableOfContents() {
                   ? "text-foreground font-medium"
                   : "text-muted-foreground"
               )}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(heading.id)?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
             >
               {heading.text}
             </a>
