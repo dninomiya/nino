@@ -20,7 +20,7 @@ import {
   CodeCopyButton,
   CodeGroupSelector,
   CodeGroupOption,
-} from "@workspace/registry/blocks/codes/codes";
+} from "@/registry/blocks/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
 
 type CodeBlockProps = {
@@ -113,6 +113,3 @@ export async function CodeBlock({
     </Codes>
   );
 }
-
-// 便利のため、CodeProviderも再エクスポート
-export { CodeProvider } from "@workspace/registry/blocks/codes/codes";

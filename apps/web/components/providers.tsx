@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { CodeProvider } from "@/components/code-block";
+import { CodeProvider } from "@/registry/blocks/codes";
 import { RegistryProvider } from "./registry-provider";
 import { getRegistryDocMetas } from "@/lib/registry";
 
