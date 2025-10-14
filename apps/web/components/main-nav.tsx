@@ -73,7 +73,7 @@ export function MainNav() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link href="/llms">LLMs</Link>
+            <Link href="/llms">レジストリ</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
