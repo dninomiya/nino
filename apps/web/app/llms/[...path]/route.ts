@@ -7,10 +7,9 @@ import { join } from "node:path";
 
 export async function generateStaticParams() {
   const registryDocPaths = registryDocNames.map((name) => ({
-    path: `/llms/registry/${name}`,
+    path: ["registry", `${name}.md`],
   }));
-  console.log(registryDocPaths);
-  return [...registryDocPaths];
+  return registryDocPaths;
 }
 
 export const GET = async (
