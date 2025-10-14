@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  CreditCard,
-  Languages,
-  Monitor,
-  Moon,
-  SearchIcon,
-  Settings,
-  Sun,
-  User,
-} from "lucide-react";
+import { Languages, Monitor, Moon, SearchIcon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
+import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
   CommandDialog,
@@ -22,23 +16,19 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@workspace/ui/components/command";
 import { Kbd } from "@workspace/ui/components/kbd";
-import { useRegistry } from "./registry-provider";
-import { usePathname, useRouter } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
 import { Locale, useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { useTransition } from "react";
-import { Badge } from "@workspace/ui/components/badge";
+import { useRegistry } from "./registry-provider";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
   const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
@@ -108,6 +98,11 @@ export function GlobalSearch() {
               <Sun />
               <span>ライト</span>
               <small className="text-muted-foreground">Light</small>
+              {theme === "light" && (
+                <Badge variant="outline" className="ml-auto">
+                  現在
+                </Badge>
+              )}
             </CommandItem>
             <CommandItem
               onSelect={() => {
@@ -117,6 +112,11 @@ export function GlobalSearch() {
               <Moon />
               <span>ダーク</span>
               <small className="text-muted-foreground">Dark</small>
+              {theme === "dark" && (
+                <Badge variant="outline" className="ml-auto">
+                  現在
+                </Badge>
+              )}
             </CommandItem>
             <CommandItem
               onSelect={() => {
@@ -126,6 +126,11 @@ export function GlobalSearch() {
               <Monitor />
               <span>システム</span>
               <small className="text-muted-foreground">System</small>
+              {theme === "system" && (
+                <Badge variant="outline" className="ml-auto">
+                  現在
+                </Badge>
+              )}
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
