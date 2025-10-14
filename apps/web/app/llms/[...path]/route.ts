@@ -43,7 +43,7 @@ export const GET = async (
         "Content-Type": "text/plain; charset=utf-8",
       },
     });
-  } catch (error) {
+  } catch {
     // ファイルが見つからない場合は 404 を返す
     return new Response("Not Found", {
       status: 404,
