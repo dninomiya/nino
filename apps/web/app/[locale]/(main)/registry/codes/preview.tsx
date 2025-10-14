@@ -1,4 +1,15 @@
-import { SiJavascript, SiTypescript } from "@icons-pack/react-simple-icons";
+import {
+  SiBun,
+  SiCss,
+  SiHtml5,
+  SiJavascript,
+  SiTypescript,
+  SiYaml,
+  SiNpm,
+  SiYarn,
+  SiPnpm,
+} from "@icons-pack/react-simple-icons";
+import { Terminal } from "lucide-react";
 import {
   Codes,
   CodeHeader,
@@ -10,65 +21,102 @@ import {
   CodeGroupSelector,
   CodeGroupOption,
 } from "@workspace/registry/blocks/codes/codes";
+import { generateCodeHtml } from "@/lib/code-to-html";
+
+// Icons mapping
+const icons = {
+  ts: SiTypescript,
+  tsx: SiTypescript,
+  js: SiJavascript,
+  jsx: SiJavascript,
+  css: SiCss,
+  html: SiHtml5,
+  yml: SiYaml,
+  sh: Terminal,
+  npm: SiNpm,
+  yarn: SiYarn,
+  bun: SiBun,
+  pnpm: SiPnpm,
+} as const;
 
 const codes = [
   {
     lang: "tsx",
-    code: `const Demo: React.FC = () => {
+    code: `const Demo = () => {
   return <div>Demo</div>;
 }`,
-    html: `<pre><code class="language-tsx"><span class="line">const Demo: React.FC = () =&gt; {</span>
-<span class="line">  return &lt;div&gt;Demo&lt;/div&gt;;</span>
-<span class="line">}</span></code></pre>`,
     title: "demo.tsx",
     group: "TypeScript",
   },
   {
     lang: "js",
     code: `const Demo = () => {
-  return <div>Demo</div>;
+  return "Demo";
 }`,
-    html: `<pre><code class="language-js"><span class="line">const Demo = () =&gt; {</span>
-<span class="line">  return &lt;div&gt;Demo&lt;/div&gt;;</span>
-<span class="line">}</span></code></pre>`,
     title: "demo.js",
     group: "JavaScript",
   },
 ];
 
-export function CodeBlock() {
+const groups = ["TypeScript", "JavaScript"];
+
+export async function Preview() {
+  // 各コードをHTMLに変換し、valueを割り当て
+  const codesWithValue = await Promise.all(
+    codes.map(async (item, i) => {
+      const html = await generateCodeHtml(item.code, item.lang);
+      return {
+        ...item,
+        html,
+        value: item.group ? `${item.group}-${i}` : `${i}`,
+      };
+    })
+  );
+
+  // 最初のアイテムを defaultValue に
+  const defaultValue = codesWithValue[0]?.value;
+
   return (
-    <Codes defaultValue="TypeScript-0" groups={["TypeScript", "JavaScript"]}>
+    <Codes defaultValue={defaultValue} groups={groups}>
       <CodeHeader>
         <CodeList>
-          <CodeTrigger value="TypeScript-0" group="TypeScript">
-            <SiTypescript className="size-3.5" />
-            <span>demo.tsx</span>
-          </CodeTrigger>
-          <CodeTrigger value="JavaScript-1" group="JavaScript">
-            <SiJavascript className="size-3.5" />
-            <span>demo.js</span>
-          </CodeTrigger>
+          {codesWithValue.map((item, i) => {
+            const Icon = icons[item.lang as keyof typeof icons];
+            const label =
+              item.title || (item.lang === "sh" ? "ターミナル" : item.lang);
+
+            return (
+              <CodeTrigger key={i} value={item.value} group={item.group}>
+                {Icon && <Icon className="size-3.5" />}
+                <span>{label}</span>
+              </CodeTrigger>
+            );
+          })}
         </CodeList>
         <span className="flex-1" />
-        <CodeGroupSelector>
-          <CodeGroupOption value="TypeScript">
-            <SiTypescript className="size-3.5" />
-            <span>TypeScript</span>
-          </CodeGroupOption>
-          <CodeGroupOption value="JavaScript">
-            <SiJavascript className="size-3.5" />
-            <span>JavaScript</span>
-          </CodeGroupOption>
-        </CodeGroupSelector>
+        {groups && groups.length > 0 && (
+          <CodeGroupSelector>
+            {groups.map((group) => {
+              const Icon = icons[group.toLowerCase() as keyof typeof icons];
+              return (
+                <CodeGroupOption key={group} value={group}>
+                  {Icon && <Icon className="size-3.5" />}
+                  <span>{group}</span>
+                </CodeGroupOption>
+              );
+            })}
+          </CodeGroupSelector>
+        )}
         <CodeCopyButton />
       </CodeHeader>
-      <CodeContent value="TypeScript-0" code={codes[0]!.code}>
-        <CodeDisplay html={codes[0]!.html} />
-      </CodeContent>
-      <CodeContent value="JavaScript-1" code={codes[1]!.code}>
-        <CodeDisplay html={codes[1]!.html} />
-      </CodeContent>
+      {codesWithValue.map((item, i) => (
+        <CodeContent key={i} value={item.value} code={item.code}>
+          <CodeDisplay html={item.html} />
+        </CodeContent>
+      ))}
     </Codes>
   );
 }
+
+// 便利のため、CodeProviderも再エクスポート
+export { CodeProvider } from "@workspace/registry/blocks/codes/codes";

@@ -1,72 +1,14 @@
 import { RegistryInstallCommand } from "../components/registry-install-command";
+import { Preview } from "./preview";
 
 <ComponentPreview>
   <ComponentPreviewCode>
-```tsx
-import {
-  SiJavascript,
-  SiTypescript,
-} from "@icons-pack/react-simple-icons";
-import {
-  Codes,
-  CodeHeader,
-  CodeList,
-  CodeTrigger,
-  CodeContent,
-  CodeDisplay,
-  CodeCopyButton,
-  CodeGroupSelector,
-  CodeGroupOption,
-} from "@workspace/registry/blocks/codes/codes";
-
-/**
- * 基本的な使い方
- */
-export function CodeBlock() {
-  return (
-    <Codes defaultValue="demo-tsx">
-      <CodeHeader>
-        <CodeList>
-          <CodeTrigger value="demo-tsx" group="TypeScript">
-            <SiTypescript className="size-3.5" />
-            <span>demo.tsx</span>
-          </CodeTrigger>
-          <CodeTrigger value="demo-js" group="JavaScript">
-            <SiJavascript className="size-3.5" />
-            <span>demo.js</span>
-          </CodeTrigger>
-        </CodeList>
-        <span className="flex-1" />
-        <CodeGroupSelector>
-          <CodeGroupOption value="TypeScript">
-            <SiTypescript className="size-3.5" />
-            <span>TypeScript</span>
-          </CodeGroupOption>
-          <CodeGroupOption value="JavaScript">
-            <SiJavascript className="size-3.5" />
-            <span>JavaScript</span>
-          </CodeGroupOption>
-        </CodeGroupSelector>
-        <CodeCopyButton />
-      </CodeHeader>
-      <CodeContent value="demo-tsx" code={tsCode}>
-        <CodeDisplay html={tsHtml} />
-      </CodeContent>
-      <CodeContent value="demo-js" code={jsCode}>
-        <CodeDisplay html={jsHtml} />
-      </CodeContent>
-    </Codes>
-  );
-}
-
-// 便利のため、CodeProviderも再エクスポート
-export { CodeProvider } from "@workspace/registry/blocks/codes/codes";
-
+```tsx file=./preview.tsx
 ```
 
   </ComponentPreviewCode>
   <ComponentPreviewDemo>
-
+    <Preview />
   </ComponentPreviewDemo>
 </ComponentPreview>
 
