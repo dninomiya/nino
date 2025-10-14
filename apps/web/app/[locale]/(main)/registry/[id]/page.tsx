@@ -25,6 +25,8 @@ export default async function RegistryPage({
     "utf-8"
   );
 
+  console.log(post);
+
   if (!metadata) {
     notFound();
   }
