@@ -32,7 +32,7 @@ export default async function RegistryPage({
   return (
     <MDXContent>
       <div className="flex items-center justify-between gap-2 not-prose">
-        <h1 className="text-3xl font-bold">{registry.title}</h1>
+        <h1 className="text-4xl font-bold">{registry.title}</h1>
         <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
       </div>
 

@@ -1,6 +1,8 @@
 import { RegistryInstallCommand } from "../components/registry-install-command";
 import { Preview } from "./preview";
 
+複数のコードスニペットをタブ形式で表示し、グループ化やコピー機能を備えた composable で themeable なコードコンポーネントです。
+
 <ComponentPreview>
   <ComponentPreviewCode>
 ```tsx file=./preview.tsx
@@ -12,5 +14,379 @@ import { Preview } from "./preview";
   </ComponentPreviewDemo>
 </ComponentPreview>
 
+## インストール
 
 <RegistryInstallCommand registryName="codes" />
+
+## CodeProvider の設置
+
+グループの選択状態を記憶し、アプリケーション全体で同期するには、`CodeProvider` をレイアウトに設置する必要があります。
+
+```tsx title="app/layout.tsx"
+import { CodeProvider } from "@workspace/registry/blocks/codes/codes";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="ja">
+      <body>
+        <CodeProvider>{children}</CodeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+`CodeProvider` は以下の機能を提供します：
+
+- **グループ選択の永続化** - `localStorage` を使用してユーザーの選択を保存します。
+- **ページ間の同期** - すべてのページで同じグループが選択された状態を維持します。
+- **複数のコードブロック間の同期** - 1つのコードブロックでグループを変更すると、他のすべてのコードブロックも同じグループに切り替わります。
+
+例えば、npm/yarn/pnpm のようなパッケージマネージャーをグループで管理している場合、ユーザーが一度 pnpm を選択すれば、そのサイト内のすべてのインストールコマンドが pnpm で表示されるようになります。
+
+### Props
+
+| Name | Type | Description |
+|------|------|-------------|
+| defaultActiveGroups | string[] | デフォルトで選択されるグループの配列（オプション） |
+
+## 構造
+
+`Codes` コンポーネントは以下のパーツで構成されています：
+
+- `Codes` - メインのコンテナコンポーネント。タブの状態を管理します。
+- `CodeHeader` - ヘッダー部分。タブやボタンを配置します。
+- `CodeList` - タブのリスト部分。
+- `CodeTrigger` - 個別のタブトリガー。
+- `CodeContent` - コードコンテンツのラッパー。
+- `CodeDisplay` - シンタックスハイライトされたコードを表示。
+- `CodeCopyButton` - コピーボタン。
+- `CodeGroupSelector` - グループセレクター（オプション）。
+- `CodeGroupOption` - グループオプション。
+
+## 使い方
+
+### 基本的な使い方
+
+```tsx
+import {
+  Codes,
+  CodeHeader,
+  CodeList,
+  CodeTrigger,
+  CodeContent,
+  CodeDisplay,
+  CodeCopyButton,
+} from "@workspace/registry/blocks/codes/codes";
+import { generateCodeHtml } from "@/lib/code-to-html";
+
+export async function MyComponent() {
+  const code = `const hello = "world";`;
+  const html = await generateCodeHtml(code, "tsx");
+
+  return (
+    <Codes defaultValue="code-1">
+      <CodeHeader>
+        <CodeList>
+          <CodeTrigger value="code-1">
+            <span>demo.tsx</span>
+          </CodeTrigger>
+        </CodeList>
+        <CodeCopyButton />
+      </CodeHeader>
+      <CodeContent value="code-1" code={code}>
+        <CodeDisplay html={html} />
+      </CodeContent>
+    </Codes>
+  );
+}
+```
+
+### 複数のコードタブ
+
+```tsx
+const codes = [
+  {
+    lang: "tsx",
+    code: `const Demo = () => <div>Demo</div>;`,
+    title: "demo.tsx",
+  },
+  {
+    lang: "css",
+    code: `.demo { color: red; }`,
+    title: "demo.css",
+  },
+];
+
+export async function MultipleCodesExample() {
+  const codesWithValue = await Promise.all(
+    codes.map(async (item, i) => {
+      const html = await generateCodeHtml(item.code, item.lang);
+      return { ...item, html, value: `${i}` };
+    })
+  );
+
+  return (
+    <Codes defaultValue={codesWithValue[0]?.value}>
+      <CodeHeader>
+        <CodeList>
+          {codesWithValue.map((item, i) => (
+            <CodeTrigger key={i} value={item.value}>
+              <span>{item.title}</span>
+            </CodeTrigger>
+          ))}
+        </CodeList>
+        <CodeCopyButton />
+      </CodeHeader>
+      {codesWithValue.map((item, i) => (
+        <CodeContent key={i} value={item.value} code={item.code}>
+          <CodeDisplay html={item.html} />
+        </CodeContent>
+      ))}
+    </Codes>
+  );
+}
+```
+
+### グループセレクター付き
+
+パッケージマネージャーや言語の切り替えなど、グループごとにコードを切り替える場合に使用します。
+
+```tsx
+import {
+  CodeGroupSelector,
+  CodeGroupOption,
+} from "@workspace/registry/blocks/codes/codes";
+
+const codes = [
+  {
+    lang: "sh",
+    code: `npm install package`,
+    title: "npm",
+    group: "npm",
+  },
+  {
+    lang: "sh",
+    code: `yarn add package`,
+    title: "yarn",
+    group: "yarn",
+  },
+  {
+    lang: "sh",
+    code: `pnpm add package`,
+    title: "pnpm",
+    group: "pnpm",
+  },
+];
+
+const groups = ["npm", "yarn", "pnpm"];
+
+export async function GroupedCodesExample() {
+  const codesWithValue = await Promise.all(
+    codes.map(async (item, i) => {
+      const html = await generateCodeHtml(item.code, item.lang);
+      return {
+        ...item,
+        html,
+        value: `${item.group}-${i}`,
+      };
+    })
+  );
+
+  return (
+    <Codes defaultValue={codesWithValue[0]?.value} groups={groups}>
+      <CodeHeader>
+        <CodeList>
+          {codesWithValue.map((item, i) => (
+            <CodeTrigger key={i} value={item.value} group={item.group}>
+              <span>{item.title}</span>
+            </CodeTrigger>
+          ))}
+        </CodeList>
+        <span className="flex-1" />
+        <CodeGroupSelector>
+          {groups.map((group) => (
+            <CodeGroupOption key={group} value={group}>
+              <span>{group}</span>
+            </CodeGroupOption>
+          ))}
+        </CodeGroupSelector>
+        <CodeCopyButton />
+      </CodeHeader>
+      {codesWithValue.map((item, i) => (
+        <CodeContent key={i} value={item.value} code={item.code}>
+          <CodeDisplay html={item.html} />
+        </CodeContent>
+      ))}
+    </Codes>
+  );
+}
+```
+
+### アイコン付き
+
+```tsx
+import { SiTypescript, SiJavascript } from "@icons-pack/react-simple-icons";
+
+const icons = {
+  ts: SiTypescript,
+  js: SiJavascript,
+};
+
+// CodeTrigger 内でアイコンを使用
+<CodeTrigger value="code-1">
+  <SiTypescript className="size-3.5" />
+  <span>demo.tsx</span>
+</CodeTrigger>
+```
+
+## コンポーネント
+
+### Codes
+
+メインのコンテナコンポーネント。タブの状態管理を行います。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| defaultValue | string | デフォルトで選択されるタブの値 |
+| groups | string[] | グループの配列（オプション） |
+
+### CodeHeader
+
+ヘッダー部分のコンテナ。タブリストやボタンを配置します。
+
+### CodeList
+
+タブのリストコンテナ。スクロール可能で、複数の `CodeTrigger` を含みます。
+
+### CodeTrigger
+
+個別のタブトリガー。クリックでコードコンテンツを切り替えます。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| value | string | タブの一意な値 |
+| group | string | グループ名（オプション） |
+
+### CodeContent
+
+コードコンテンツのラッパー。選択されたタブに対応するコードを表示します。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| value | string | コンテンツの値（CodeTrigger の value と対応） |
+| code | string | コピー用の生のコード文字列 |
+
+### CodeDisplay
+
+シンタックスハイライトされたコードを表示します。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| html | string | `generateCodeHtml` で生成された HTML 文字列 |
+
+### CodeCopyButton
+
+現在選択されているコードをクリップボードにコピーするボタン。
+
+### CodeGroupSelector
+
+グループを切り替えるセレクター。
+
+### CodeGroupOption
+
+グループの選択肢。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| value | string | グループの値 |
+
+## 実装のヒント
+
+### CodeProvider の重要性
+
+グループ機能を使用する場合、`CodeProvider` の設置は**必須**です。設置しないと以下の問題が発生します：
+
+- グループの選択がページ遷移で失われる
+- 複数のコードブロック間で選択が同期されない
+- ユーザーの選択が記憶されない
+
+```tsx title="app/layout.tsx"
+// ❌ 悪い例: CodeProvider なし
+export default function Layout({ children }) {
+  return <>{children}</>;
+}
+
+// ✅ 良い例: CodeProvider あり
+export default function Layout({ children }) {
+  return <CodeProvider>{children}</CodeProvider>;
+}
+```
+
+### サーバーコンポーネントでの使用
+
+`generateCodeHtml` は非同期関数なので、React Server Components で使用するのが最適です。
+
+```tsx
+export async function MyServerComponent() {
+  const html = await generateCodeHtml(code, "tsx");
+  // ...
+}
+```
+
+### コードの取得
+
+コードは外部ファイルから読み込むこともできます：
+
+```tsx
+import { readFile } from "fs/promises";
+import { join } from "path";
+
+export async function CodeFromFile() {
+  const code = await readFile(
+    join(process.cwd(), "examples/demo.tsx"),
+    "utf-8"
+  );
+  const html = await generateCodeHtml(code, "tsx");
+  
+  return (
+    <Codes defaultValue="demo">
+      {/* ... */}
+    </Codes>
+  );
+}
+```
+
+### スタイリング
+
+コンポーネントは Tailwind CSS でスタイリングされており、カスタマイズ可能です：
+
+```tsx
+<CodeHeader className="bg-muted">
+  {/* ... */}
+</CodeHeader>
+
+<CodeDisplay className="text-sm" html={html} />
+```
+
+## 使用例
+
+- ドキュメント内でのコード例の表示
+- チュートリアルでの複数言語対応
+- パッケージマネージャーごとのインストールコマンド
+- ファイル構成の表示
+- API レスポンスの例示
