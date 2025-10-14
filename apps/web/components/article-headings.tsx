@@ -1,7 +1,12 @@
 import { Hash } from "lucide-react";
 
-const Heading = ({ level, children, id, ...props }: any) => {
-  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
+const Heading = ({
+  level,
+  children,
+  id,
+  ...props
+}: React.JSX.IntrinsicElements["h1"] & { level: number }) => {
+  const Tag = `h${level}` as ;
   return (
     <Tag id={id} className="group scroll-mt-8" {...props}>
       {children}
@@ -18,6 +23,8 @@ const Heading = ({ level, children, id, ...props }: any) => {
 export const headings = Object.fromEntries(
   [1, 2, 3, 4, 5, 6].map((level) => [
     `h${level}`,
-    (props: any) => <Heading level={level} {...props} />,
+    (props: React.JSX.IntrinsicElements["h1"]) => (
+      <Heading level={level} {...props} />
+    ),
   ])
 );

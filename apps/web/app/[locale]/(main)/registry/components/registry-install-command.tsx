@@ -1,4 +1,4 @@
-import { baseUrl } from "@workspace/registry/lib/base-url";
+import { baseUrl } from "@/registry/lib/base-url";
 import { CodeBlock } from "@/components/code-block";
 
 export function RegistryInstallCommand({

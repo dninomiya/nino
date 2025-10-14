@@ -31,7 +31,7 @@ export function GlobalSearch() {
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
   const currentLocale = useLocale();
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
   const t = useTranslations("LocaleSwitcher");
 
   const handleLocaleChange = (nextLocale: Locale) => {

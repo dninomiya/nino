@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   ImageCropper,
   ImageCropperFileSelector,
@@ -11,7 +10,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@workspace/ui/components/dialog";
-import { Label } from "@workspace/ui/components/label";
+import { useState } from "react";
 
 export default function Preview() {
   const [open, setOpen] = useState(false);

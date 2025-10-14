@@ -27,7 +27,7 @@ import Preview from "./preview";
 グループの選択状態を記憶し、アプリケーション全体で同期するには、`CodeProvider` をレイアウトに設置する必要があります。
 
 ```tsx title="app/layout.tsx"
-import { CodeProvider } from "@workspace/registry/blocks/codes/codes";
+import { CodeProvider } from "@/registry/blocks/codes";
 
 export default function RootLayout({
   children,
@@ -85,7 +85,7 @@ import {
   CodeContent,
   CodeDisplay,
   CodeCopyButton,
-} from "@workspace/registry/blocks/codes/codes";
+} from "@/registry/blocks/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
 
 export async function MyComponent() {
@@ -164,7 +164,7 @@ export async function MultipleCodesExample() {
 import {
   CodeGroupSelector,
   CodeGroupOption,
-} from "@workspace/registry/blocks/codes/codes";
+} from "@/registry/blocks/codes";
 
 const codes = [
   {

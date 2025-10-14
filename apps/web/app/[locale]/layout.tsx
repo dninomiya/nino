@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { baseUrl } from "@workspace/registry/lib/base-url";
+import { baseUrl } from "@/registry/lib/base-url";
 
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
