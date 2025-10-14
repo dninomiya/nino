@@ -1,0 +1,388 @@
+import { Preview } from "./preview";
+
+画像のアップロード、プレビュー、クロップ機能を提供する Compound Component パターンのコンポーネント群です。実装者が Dialog や Popover で柔軟にラップできる設計になっています。
+
+<ComponentPreview>
+  <ComponentPreviewCode>
+```tsx file=./preview.tsx
+```
+
+  </ComponentPreviewCode>
+  <ComponentPreviewDemo>
+    <Preview />
+  </ComponentPreviewDemo>
+</ComponentPreview>
+
+## インストール
+
+<RegistryInstallCommand registryName="image-cropper" />
+
+## 構造
+
+`ImageCropper` は以下の3つの独立したコンポーネントで構成されています：
+
+- `ImageCropper` - 画像のクロップ UI（AvatarEditor + Slider + ボタン）
+- `ImageCropperFileSelector` - ファイル選択とドロップゾーン機能
+- `ImageCropperPreview` - 画像のプレビュー表示と削除ボタン
+
+## 使い方
+
+### 基本的な使い方（Dialog）
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import {
+  ImageCropper,
+  ImageCropperFileSelector,
+  ImageCropperPreview,
+} from "@workspace/registry/blocks/image-cropper";
+import {
+  Dialog,
+  DialogContent,
+} from "@workspace/ui/components/dialog";
+import { Label } from "@workspace/ui/components/label";
+
+export function ImageCropperExample() {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Label>プロフィール画像</Label>
+      
+      <ImageCropperFileSelector
+        onFileSelect={(file) => {
+          setFile(file);
+          setOpen(true);
+        }}
+        aspectRatio={1}
+        width={200}
+      >
+        {preview && (
+          <ImageCropperPreview
+            src={preview}
+            onRemove={() => setPreview("")}
+          />
+        )}
+      </ImageCropperFileSelector>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          {file && (
+            <ImageCropper
+              image={file}
+              canvasWidth={400}
+              aspectRatio={1}
+              resultWidth={600}
+              onCrop={(dataUrl, blob) => {
+                setPreview(dataUrl);
+                setOpen(false);
+                // blob をサーバーにアップロードすることも可能
+              }}
+              onCancel={() => setOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+```
+
+### Popover で使用
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import {
+  ImageCropper,
+  ImageCropperFileSelector,
+  ImageCropperPreview,
+} from "@workspace/registry/blocks/image-cropper";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
+
+export function ImageCropperPopoverExample() {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <div>
+          <ImageCropperFileSelector
+            onFileSelect={(file) => {
+              setFile(file);
+              setOpen(true);
+            }}
+            aspectRatio={16/9}
+            width="100%"
+          >
+            {preview && (
+              <ImageCropperPreview
+                src={preview}
+                onRemove={() => setPreview("")}
+              />
+            )}
+          </ImageCropperFileSelector>
+        </div>
+      </PopoverTrigger>
+      
+      <PopoverContent className="w-auto p-0" align="start">
+        {file && (
+          <ImageCropper
+            image={file}
+            canvasWidth={300}
+            aspectRatio={16/9}
+            resultWidth={800}
+            onCrop={(dataUrl, blob) => {
+              setPreview(dataUrl);
+              setOpen(false);
+            }}
+            onCancel={() => setOpen(false)}
+          />
+        )}
+      </PopoverContent>
+    </Popover>
+  );
+}
+```
+
+### カスタムプレビュー
+
+`ImageCropperFileSelector` の `children` に任意の要素を渡すことで、カスタムプレビューを実装できます。
+
+```tsx
+<ImageCropperFileSelector
+  onFileSelect={(file) => {/* ... */}}
+  aspectRatio={1}
+>
+  {preview && (
+    <div className="relative w-full h-full">
+      <img src={preview} className="w-full h-full object-cover" />
+      <Badge className="absolute top-2 right-2">認証済み</Badge>
+    </div>
+  )}
+</ImageCropperFileSelector>
+```
+
+### クロップなしで使用
+
+クロップ機能が不要な場合は、`ImageCropperFileSelector` のみを使用できます。
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import {
+  ImageCropperFileSelector,
+  ImageCropperPreview,
+} from "@workspace/registry/blocks/image-cropper";
+
+export function SimpleImageUpload() {
+  const [preview, setPreview] = useState<string>("");
+
+  return (
+    <ImageCropperFileSelector
+      onFileSelect={(file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }}
+      aspectRatio={1}
+    >
+      {preview && (
+        <ImageCropperPreview
+          src={preview}
+          onRemove={() => setPreview("")}
+        />
+      )}
+    </ImageCropperFileSelector>
+  );
+}
+```
+
+## コンポーネント
+
+### ImageCropper
+
+画像のクロップ UI を提供するコンポーネント。Dialog や Popover でラップして使用します。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| image | File \| string | クロップする画像ファイル |
+| canvasWidth | number | キャンバスの横幅（ピクセル）。デフォルト: 400 |
+| aspectRatio | number | 画像のアスペクト比。デフォルト: 1 |
+| resultWidth | number | クロップ後の横幅（ピクセル）|
+| onCrop | (dataUrl: string, blob: Blob) => void | クロップ完了時のコールバック |
+| onCancel | () => void | キャンセル時のコールバック |
+
+**onCrop の返り値**
+
+- `dataUrl`: JPEG 形式の Data URL。プレビュー表示に使用
+- `blob`: JPEG 形式の Blob。サーバーへのアップロードに使用
+
+```tsx
+onCrop={(dataUrl, blob) => {
+  // プレビュー表示
+  setPreview(dataUrl);
+  
+  // サーバーへアップロード
+  const formData = new FormData();
+  formData.append("file", blob, "cropped-image.jpg");
+  await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+}}
+```
+
+### ImageCropperFileSelector
+
+ファイル選択とドロップゾーン機能を提供するコンポーネント。常にドラッグ&ドロップが有効です。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| onFileSelect | (file: File) => void | ファイルが選択された時のコールバック |
+| maxSize | number | 入力画像の最大サイズ（バイト）。デフォルト: 4MB |
+| width | string \| number | プレビュー領域の横幅。デフォルト: "100%" |
+| aspectRatio | number | 画像のアスペクト比。デフォルト: 1 |
+| disabled | boolean | 無効化フラグ |
+| children | React.ReactNode | 子要素（プレビューなど） |
+
+**children の扱い**
+
+- `children` がある場合: それを表示（プレビュー画像など）
+- `children` がない場合: デフォルトの ImagePlus アイコンを表示
+
+### ImageCropperPreview
+
+画像のプレビュー表示と削除ボタンを提供するコンポーネント。
+
+**Props**
+
+| Name | Type | Description |
+|------|------|-------------|
+| src | string | プレビュー画像の URL |
+| alt | string | 代替テキスト |
+| onRemove | () => void | 削除ボタンが押された時のコールバック |
+| showRemoveButton | boolean | 削除ボタンを表示するか。デフォルト: true |
+
+## アスペクト比の例
+
+```tsx
+// 正方形（1:1）- アバター、プロフィール画像
+<ImageCropperFileSelector aspectRatio={1} />
+
+// 横長（16:9）- サムネイル、カバー画像
+<ImageCropperFileSelector aspectRatio={16/9} />
+
+// 縦長（3:4）- ポートレート
+<ImageCropperFileSelector aspectRatio={3/4} />
+
+// 円形風（1:1 + border-radius）
+<ImageCropperFileSelector 
+  aspectRatio={1}
+  className="rounded-full"
+/>
+```
+
+## サーバーへのアップロード
+
+Blob を使用してサーバーにアップロードする例：
+
+```tsx
+// app/actions.ts
+"use server";
+
+import { writeFile } from "fs/promises";
+import { join } from "path";
+
+export async function uploadImage(formData: FormData) {
+  const file = formData.get("file") as File;
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  
+  const path = join(process.cwd(), "public/uploads", file.name);
+  await writeFile(path, buffer);
+  
+  return { success: true, path: `/uploads/${file.name}` };
+}
+
+// コンポーネント
+import { uploadImage } from "./actions";
+
+<ImageCropper
+  onCrop={async (dataUrl, blob) => {
+    const formData = new FormData();
+    formData.append("file", blob, "profile.jpg");
+    
+    const result = await uploadImage(formData);
+    console.log("アップロード完了:", result.path);
+  }}
+/>
+```
+
+## 実装のヒント
+
+### 画像の品質とサイズ
+
+`resultWidth` を適切に設定することで、画像のサイズと品質をコントロールできます：
+
+```tsx
+// 小さい画像（アバター用）
+<ImageCropper resultWidth={200} />
+
+// 中程度の画像（プロフィール用）
+<ImageCropper resultWidth={600} />
+
+// 大きい画像（カバー画像用）
+<ImageCropper resultWidth={1200} />
+```
+
+### ファイルサイズ制限
+
+`maxSize` prop で受け入れるファイルサイズを制限できます：
+
+```tsx
+// 1MB
+<ImageCropperFileSelector maxSize={1024 * 1024} />
+
+// 4MB（デフォルト）
+<ImageCropperFileSelector maxSize={1024 * 1024 * 4} />
+
+// 10MB
+<ImageCropperFileSelector maxSize={1024 * 1024 * 10} />
+```
+
+### ドラッグ&ドロップの視覚フィードバック
+
+`ImageCropperFileSelector` は自動的にドラッグ中の視覚フィードバックを提供します。カスタマイズする場合は、CSS で `border-primary` や `bg-primary/10` を調整してください。
+
+## 使用例
+
+- プロフィール画像のアップロード
+- 商品画像の登録
+- カバー画像の設定
+- アバター画像の編集
+- SNS 投稿の画像選択
+
+## 参考
+
+- [react-avatar-editor](https://github.com/mosch/react-avatar-editor) - クロップ機能のベースライブラリ
+- [react-dropzone](https://react-dropzone.js.org/) - ドロップゾーン機能のベースライブラリ
+

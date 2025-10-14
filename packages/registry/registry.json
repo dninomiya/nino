@@ -28,6 +28,20 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "image-cropper",
+      "type": "registry:block",
+      "title": "Image Cropper",
+      "description": "画像のアップロード、プレビュー、クロップ機能を提供するコンポーネント群。",
+      "registryDependencies": ["button", "slider"],
+      "dependencies": ["react-avatar-editor", "react-dropzone"],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/image-cropper.tsx",
+          "type": "registry:block"
+        }
+      ]
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 import { Button } from "@workspace/ui/components/button";
 import { Slider } from "@workspace/ui/components/slider";
-import { cn } from "@/lib/utils";
+import { cn } from "@workspace/ui/lib/utils";
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
