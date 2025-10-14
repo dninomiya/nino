@@ -44,7 +44,7 @@ type Props = {
   maxSize?: number;
 };
 
-export function InputImage({
+export function ImageCropper({
   width = "100%",
   aspectRatio = 1,
   maxSize = 1024 * 1024 * 4, // 4MB
