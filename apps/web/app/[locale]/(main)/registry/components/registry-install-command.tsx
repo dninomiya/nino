@@ -1,4 +1,4 @@
-import { getBaseURL } from "@workspace/lib/get-base-url";
+import { baseUrl } from "@workspace/registry/lib/base-url";
 import { CodeBlock } from "@/components/code-block";
 
 export function RegistryInstallCommand({
@@ -9,22 +9,22 @@ export function RegistryInstallCommand({
   const codes = [
     {
       lang: "sh",
-      code: `pnpx shadcn@latest add ${getBaseURL()}/r/${registryName}.json`,
+      code: `pnpx shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
       group: "pnpm",
     },
     {
       lang: "sh",
-      code: `npx shadcn@latest add ${getBaseURL()}/r/${registryName}.json`,
+      code: `npx shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
       group: "npm",
     },
     {
       lang: "sh",
-      code: `yarn shadcn@latest add ${getBaseURL()}/r/${registryName}.json`,
+      code: `yarn shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
       group: "yarn",
     },
     {
       lang: "sh",
-      code: `bunx --bun shadcn@latest add ${getBaseURL()}/r/${registryName}.json`,
+      code: `bunx --bun shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
       group: "bun",
     },
   ];

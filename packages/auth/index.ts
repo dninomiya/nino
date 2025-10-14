@@ -3,11 +3,11 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@workspace/db";
 import { nanoid } from "nanoid";
 import { nextCookies } from "better-auth/next-js";
-import { getBaseURL } from "@workspace/lib/get-base-url";
+import { baseUrl } from "@workspace/lib/base-url";
 import { anonymous } from "better-auth/plugins";
 
 export const auth = betterAuth({
-  baseURL: getBaseURL(),
+  baseURL: baseUrl(),
   database: drizzleAdapter(db, {
     provider: "sqlite",
     usePlural: true,

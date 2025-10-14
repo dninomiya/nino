@@ -3,10 +3,10 @@ import {
   anonymousClient,
   inferAdditionalFields,
 } from "better-auth/client/plugins";
-import { getBaseURL } from "@workspace/lib/get-base-url";
+import { baseUrl } from "@workspace/lib/base-url";
 import { auth } from ".";
 
 export const authClient = createAuthClient({
-  baseURL: getBaseURL(),
+  baseURL: baseUrl(),
   plugins: [inferAdditionalFields<typeof auth>(), anonymousClient()],
 });

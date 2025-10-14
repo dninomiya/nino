@@ -7,7 +7,8 @@
   },
   "exports": {
     ".": "./registry.json",
-    "./blocks/*": "./registry/new-york/blocks/*"
+    "./blocks/*": "./registry/new-york/blocks/*",
+    "./lib/*": "./registry/new-york/lib/*"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.8.0",

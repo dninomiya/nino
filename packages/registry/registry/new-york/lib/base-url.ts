@@ -1,4 +1,4 @@
-export const getBaseURL = (options?: { useCommitURL?: boolean }) => {
+export const baseUrl = (options?: { useCommitURL?: boolean }) => {
   const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
   const url = isProd
     ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL

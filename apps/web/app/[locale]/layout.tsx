@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { baseUrl } from "@workspace/registry/lib/base-url";
 
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
@@ -8,7 +9,6 @@ import { APP_NAME } from "@workspace/lib/constants";
 import { setLocale } from "@/i18n/set-locale";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { getBaseURL } from "@workspace/lib/get-base-url";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     default: APP_NAME,
   },
   description: "Web Developer",
-  metadataBase: new URL(getBaseURL()),
+  metadataBase: new URL(baseUrl()),
 };
 
 export default async function RootLayout({

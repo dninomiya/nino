@@ -32,6 +32,15 @@ export function RegistrySidebar({
             url: `/registry/${registry.name}`,
           })),
       },
+      {
+        title: "Libraries",
+        items: registries
+          .filter((registry) => registry.type === "registry:lib")
+          .map((registry) => ({
+            title: registry.title,
+            url: `/registry/${registry.name}`,
+          })),
+      },
     ],
   };
 

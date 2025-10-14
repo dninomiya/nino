@@ -6,6 +6,7 @@ import {
   ComponentPreviewCode,
   ComponentPreviewDemo,
 } from "./components/code-preview";
+import { RegistryInstallCommand } from "./app/[locale]/(main)/registry/components/registry-install-command";
 
 const components: MDXComponents = {};
 
@@ -15,6 +16,7 @@ export function useMDXComponents(): MDXComponents {
     div: createCodeSlotRenderer({
       render: CodeBlock,
     }),
+    RegistryInstallCommand,
     ComponentPreview: ComponentPreview,
     ComponentPreviewCode: ComponentPreviewCode,
     ComponentPreviewDemo: ComponentPreviewDemo,
