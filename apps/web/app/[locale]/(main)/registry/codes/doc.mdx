@@ -390,3 +390,54 @@ export async function CodeFromFile() {
 - パッケージマネージャーごとのインストールコマンド
 - ファイル構成の表示
 - API レスポンスの例示
+
+## 関連ツール
+
+このコンポーネントを最大限活用するために、以下のツールを推奨します：
+
+### MDX のコード解析
+
+MDX ファイル内のコードブロックを解析するには、[**remark-code-to-slot**](https://github.com/dninomiya/remark-code-to-slot) を使用することを推奨します。
+
+このプラグインは、MDX 内のコードブロックをスロットに変換し、データ属性として解析しやすい形式で提供します。
+
+```tsx
+// next.config.mjs
+import createMDX from '@next/mdx';
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ['remark-code-to-slot'],
+    rehypePlugins: [],
+  },
+});
+
+export default withMDX(nextConfig);
+```
+
+詳細は [remark-code-to-slot のドキュメント](https://github.com/dninomiya/remark-code-to-slot)をご覧ください。
+
+### シンタックスハイライト
+
+コードのシンタックスハイライトには、[**Shiki**](https://shiki.style/) を使用することを推奨します。
+
+Shiki は VS Code と同じ TextMate 文法エンジンを使用しており、以下の特徴があります：
+
+- **正確で美しい** - VS Code と同じエンジンで一貫性のあるハイライト
+- **ゼロランタイム** - ビルド時に処理され、JavaScript を一切配信しない
+- **高度なカスタマイズ** - HAST ベースで、トランスフォーマーや装飾が可能
+- **ユニバーサル** - ブラウザ、Node.js、Cloudflare Workers など、あらゆる環境で動作
+
+```tsx
+import { codeToHtml } from 'shiki';
+
+export async function generateCodeHtml(code: string, lang: string) {
+  const html = await codeToHtml(code, {
+    lang,
+    theme: 'github-dark',
+  });
+  return html;
+}
+```
+
+詳細は [Shiki のドキュメント](https://shiki.style/)をご覧ください。
