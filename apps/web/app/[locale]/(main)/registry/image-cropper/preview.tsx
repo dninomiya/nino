@@ -19,15 +19,13 @@ export default function Preview() {
   const [preview, setPreview] = useState<string>("");
 
   return (
-    <div className="flex flex-col gap-3 max-w-[240px]">
-      <Label htmlFor="profile-image">プロフィール画像</Label>
-
+    <div>
       <ImageCropperFileSelector
         onFileSelect={(file) => {
           setFile(file);
           setOpen(true);
         }}
-        className="w-[240px] aspect-square"
+        className="w-40 aspect-square"
       >
         {preview && (
           <ImageCropperPreview src={preview} onRemove={() => setPreview("")} />

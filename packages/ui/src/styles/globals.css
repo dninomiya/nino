@@ -148,10 +148,6 @@
       @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm font-semibold text-muted-foreground;
     }
   }
-
-  pre {
-    @apply bg-transparent! border;
-  }
 }
 
 html.dark .shiki,
