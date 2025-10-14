@@ -1,16 +1,19 @@
 "use client";
 
-import * as React from "react";
 import {
-  Calculator,
-  Calendar,
   CreditCard,
+  Monitor,
+  Moon,
   SearchIcon,
   Settings,
-  Smile,
+  Sun,
   User,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+import * as React from "react";
 
+import { getRegistryDocMetas } from "@/lib/registry";
+import { Button } from "@workspace/ui/components/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -22,10 +25,14 @@ import {
   CommandShortcut,
 } from "@workspace/ui/components/command";
 import { Kbd } from "@workspace/ui/components/kbd";
-import { Button } from "@workspace/ui/components/button";
+import { useRouter } from "next/navigation";
+import { useRegistry } from "./registry-provider";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
+  const { setTheme } = useTheme();
+  const { registryDocMetas } = useRegistry();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -52,21 +59,50 @@ export function GlobalSearch() {
         <Kbd>K</Kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput placeholder="検索..." />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <Calendar />
-              <span>Calendar</span>
+          <CommandEmpty>検索結果がありません。</CommandEmpty>
+          <CommandGroup heading="レジストリ">
+            {registryDocMetas.map((meta) => (
+              <CommandItem
+                key={meta.title}
+                onSelect={() => {
+                  setOpen(false);
+                  router.push(`/registry/${meta.name}`);
+                }}
+              >
+                <span>{meta.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading="テーマ">
+            <CommandItem
+              onSelect={() => {
+                setTheme("light");
+              }}
+            >
+              <Sun />
+              <span>ライト</span>
+              <small className="text-muted-foreground">Light</small>
             </CommandItem>
-            <CommandItem>
-              <Smile />
-              <span>Search Emoji</span>
+            <CommandItem
+              onSelect={() => {
+                setTheme("dark");
+              }}
+            >
+              <Moon />
+              <span>ダーク</span>
+              <small className="text-muted-foreground">Dark</small>
             </CommandItem>
-            <CommandItem>
-              <Calculator />
-              <span>Calculator</span>
+            <CommandItem
+              onSelect={() => {
+                setTheme("system");
+              }}
+            >
+              <Monitor />
+              <span>システム</span>
+              <small className="text-muted-foreground">System</small>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />

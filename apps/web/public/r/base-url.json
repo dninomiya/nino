@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "base-url",
+  "type": "registry:lib",
+  "title": "Base URL",
+  "description": "環境に応じて適切なベースURLを取得するユーティリティ関数。",
+  "files": [
+    {
+      "path": "registry/new-york/lib/base-url.ts",
+      "content": "export const baseUrl = (options?: { useCommitURL?: boolean }) => {\n  const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === \"production\";\n  const url = isProd\n    ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL\n    : options?.useCommitURL\n      ? process.env.NEXT_PUBLIC_VERCEL_URL\n      : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;\n\n  return url\n    ? `https://${url}`\n    : `http://localhost:${process.env.PORT || 3000}`;\n};\n",
+      "type": "registry:lib"
+    }
+  ]
+}

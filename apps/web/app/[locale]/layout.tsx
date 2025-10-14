@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     template: `%s | ${APP_NAME}`,
     default: APP_NAME,
   },
-  description: "Web Developer",
   metadataBase: new URL(baseUrl()),
+  description: "Web Developer",
 };
 
 export default async function RootLayout({

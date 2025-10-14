@@ -13,10 +13,17 @@ export const getRegistryDocMetas = async () => {
       const post = await import(
         `@/app/[locale]/(main)/registry/${name}/doc.mdx`
       );
-      return post.frontmatter;
+      return {
+        ...post.frontmatter,
+        name,
+      };
     })
   );
 };
+
+export type RegistryDocMeta = Awaited<
+  ReturnType<typeof getRegistryDocMetas>
+>[number];
 
 export const getRegistryDocMeta = async (name: string) => {
   const post = await import(`@/app/[locale]/(main)/registry/${name}/doc.mdx`);

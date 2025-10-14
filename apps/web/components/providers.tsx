@@ -1,10 +1,12 @@
-"use client";
-
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { CodeProvider } from "@/components/code-block";
+import { RegistryProvider } from "./registry-provider";
+import { getRegistryDocMetas } from "@/lib/registry";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export async function Providers({ children }: { children: React.ReactNode }) {
+  const registryDocMetas = await getRegistryDocMetas();
+
   return (
     <NextThemesProvider
       attribute="class"
@@ -13,7 +15,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      <CodeProvider>{children}</CodeProvider>
+      <CodeProvider>
+        <RegistryProvider registryDocMetas={registryDocMetas}>
+          {children}
+        </RegistryProvider>
+      </CodeProvider>
     </NextThemesProvider>
   );
 }
