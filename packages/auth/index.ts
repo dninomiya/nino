@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@workspace/db";
 import { nanoid } from "nanoid";
 import { nextCookies } from "better-auth/next-js";
-import { baseUrl } from "@workspace/lib/base-url";
+import { baseUrl } from "@workspace/registry/lib/base-url";
 import { anonymous } from "better-auth/plugins";
 
 export const auth = betterAuth({

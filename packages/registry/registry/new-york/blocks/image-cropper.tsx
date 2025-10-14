@@ -172,7 +172,7 @@ export function ImageCropperFileSelector({
         "border rounded-md cursor-pointer relative overflow-hidden",
         "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:outline-none ring-offset-background",
         "w-full aspect-square", // デフォルトのサイズとアスペクト比
-        isDragAccept ? "border-primary bg-primary/10" : "bg-muted",
+        isDragAccept ? "border-primary bg-primary/10" : "bg-muted/60",
         disabled && "opacity-50 cursor-not-allowed",
         className
       )}
