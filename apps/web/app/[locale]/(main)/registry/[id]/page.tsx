@@ -45,7 +45,7 @@ export default async function RegistryPage({
 
         <Content />
       </MDXContent>
-      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header))] px-6 py-10 overflow-auto">
+      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header)-theme(spacing.4))] px-6 py-10 overflow-auto">
         <TableOfContents />
       </aside>
     </div>
