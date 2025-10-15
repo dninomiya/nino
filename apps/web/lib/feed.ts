@@ -349,6 +349,17 @@ export function getAvailableTechnologies(): string[] {
   return collections.map((collection) => collection.name);
 }
 
+export const typeLabels: Record<string, string> = {
+  リリース: "リリース",
+  ニュース: "ニュース",
+  変更履歴: "変更履歴",
+  動画: "動画",
+  releases: "リリース",
+  blog: "ニュース",
+  changelog: "変更履歴",
+  youtube: "動画",
+};
+
 export function getAvailableTypes(): string[] {
   const types = new Set<string>();
   collections.forEach((collection) => {

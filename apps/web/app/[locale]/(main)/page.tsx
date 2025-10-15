@@ -15,7 +15,7 @@ export default async function Page() {
     <div className="flex gap-6 container py-10">
       <div className="w-56">
         <h2 className="mb-6">絞り込み</h2>
-        <FeedFilter />
+        <FeedFilter feedItems={feedItems} />
       </div>
       <div className="flex-1">
         {/* <textarea value={JSON.stringify(feedItems, null, 2)} /> */}

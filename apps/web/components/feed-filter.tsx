@@ -3,16 +3,14 @@
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { getAvailableTechnologies, getAvailableTypes } from "@/lib/feed";
+import { FeedItem, typeLabels } from "@/lib/feed";
+import { useMemo } from "react";
 
-const typeLabels: Record<string, string> = {
-  releases: "リリース",
-  blog: "ニュース",
-  changelog: "変更履歴",
-  youtube: "動画",
-};
+interface FeedFilterProps {
+  feedItems: FeedItem[];
+}
 
-export function FeedFilter() {
+export function FeedFilter({ feedItems }: FeedFilterProps) {
   const [types, setTypes] = useQueryState(
     "type",
     parseAsArrayOf(parseAsString)
@@ -22,8 +20,61 @@ export function FeedFilter() {
     parseAsArrayOf(parseAsString)
   );
 
-  const availableTypes = getAvailableTypes();
-  const availableTechnologies = getAvailableTechnologies();
+  // 実際のフィードアイテムから利用可能なタイプを取得
+  const availableTypes = useMemo(() => {
+    const types = new Set<string>();
+    feedItems.forEach((item) => {
+      types.add(item.type);
+    });
+    return Array.from(types);
+  }, [feedItems]);
+
+  // 実際のフィードアイテムから利用可能なソースを取得
+  const availableTechnologies = useMemo(() => {
+    const sources = new Set<string>();
+    feedItems.forEach((item) => {
+      sources.add(item.source);
+    });
+    return Array.from(sources);
+  }, [feedItems]);
+
+  // 各タイプの件数を計算（現在のソースフィルターを考慮）
+  const typeCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    availableTypes.forEach((type) => {
+      counts[type] = feedItems.filter((item) => {
+        // タイプが一致するかチェック
+        if (item.type !== type) return false;
+
+        // ソースフィルターが設定されている場合、それも考慮
+        if (sources && sources.length > 0) {
+          return sources.includes(item.source);
+        }
+
+        return true;
+      }).length;
+    });
+    return counts;
+  }, [feedItems, availableTypes, sources]);
+
+  // 各ソースの件数を計算（現在のタイプフィルターを考慮）
+  const sourceCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    availableTechnologies.forEach((source) => {
+      counts[source] = feedItems.filter((item) => {
+        // ソースが一致するかチェック
+        if (item.source !== source) return false;
+
+        // タイプフィルターが設定されている場合、それも考慮
+        if (types && types.length > 0) {
+          return types.includes(item.type);
+        }
+
+        return true;
+      }).length;
+    });
+    return counts;
+  }, [feedItems, availableTechnologies, types]);
 
   const toggleType = (type: string, checked: boolean) => {
     if (checked) {
@@ -55,7 +106,15 @@ export function FeedFilter() {
                   toggleType(type, checked as boolean);
                 }}
               />
-              <Label htmlFor={`type-${type}`}>{typeLabels[type] || type}</Label>
+              <Label
+                htmlFor={`type-${type}`}
+                className="flex items-center justify-between w-full"
+              >
+                <span>{typeLabels[type] || type}</span>
+                <span className="text-sm text-muted-foreground ml-2">
+                  ({typeCounts[type] || 0})
+                </span>
+              </Label>
             </div>
           ))}
         </div>
@@ -73,7 +132,15 @@ export function FeedFilter() {
                   toggleSource(technology, checked as boolean);
                 }}
               />
-              <Label htmlFor={`source-${technology}`}>{technology}</Label>
+              <Label
+                htmlFor={`source-${technology}`}
+                className="flex items-center justify-between w-full"
+              >
+                <span>{technology}</span>
+                <span className="text-sm text-muted-foreground ml-2">
+                  ({sourceCounts[technology] || 0})
+                </span>
+              </Label>
             </div>
           ))}
         </div>
