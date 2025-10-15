@@ -36,6 +36,131 @@ const collections: Collection[] = [
       },
     ],
   },
+  {
+    name: "React",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/facebook/react/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Resend",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/resend/resend-node/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Better Auth",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/better-auth/better-auth/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Turso",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/tursodatabase/libsql/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Raycast",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://www.raycast.com/blog/rss",
+        category: "ブログ",
+      },
+    ],
+  },
+  {
+    name: "Notion",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://www.notion.so/blog/rss",
+        category: "ブログ",
+      },
+    ],
+  },
+  {
+    name: "Drizzle",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/drizzle-team/drizzle-orm/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Stripe",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://stripe.com/blog/feed.rss",
+        category: "ブログ",
+      },
+    ],
+  },
+  {
+    name: "nuqs",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/47ng/nuqs/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "React Hook Form",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/react-hook-form/react-hook-form/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "shadcn/ui",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/shadcn-ui/ui/releases.atom",
+        category: "リリース",
+      },
+    ],
+  },
+  {
+    name: "Tailwind CSS",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/tailwindlabs/tailwindcss/releases.atom",
+        category: "リリース",
+      },
+      {
+        method: "rss",
+        url: "https://tailwindcss.com/feeds/feed.xml",
+        category: "ブログ",
+      },
+    ],
+  },
 ];
 
 export type FeedItem = {
