@@ -274,6 +274,8 @@ export type FeedItem = {
   source: string;
   content?: string;
   thumbnail?: string;
+  rawXml?: string;
+  rssUrl?: string;
 };
 
 const parser = new Parser({
@@ -292,20 +294,31 @@ function extractThumbnail(item: any): string | undefined {
     return item.mediaThumbnail.$.url;
   }
 
-  // 2. enclosureから画像を取得
-  if (item.enclosure && Array.isArray(item.enclosure)) {
-    const imageEnclosure = item.enclosure.find((enc: any) =>
-      enc.$?.type?.startsWith("image/")
-    );
-    if (imageEnclosure?.$?.url) {
-      return imageEnclosure.$.url;
+  // 2. enclosureから画像を取得（複数の構造に対応）
+  if (item.enclosure) {
+    // 配列の場合
+    if (Array.isArray(item.enclosure)) {
+      const imageEnclosure = item.enclosure.find((enc: any) => {
+        const type = enc.$?.type || enc.type;
+        return type && type.startsWith("image/");
+      });
+      if (imageEnclosure) {
+        return imageEnclosure.$?.url || imageEnclosure.url;
+      }
+    }
+    // 単一オブジェクトの場合
+    else if (item.enclosure.$?.type?.startsWith("image/")) {
+      return item.enclosure.$.url;
+    } else if (item.enclosure.type?.startsWith("image/")) {
+      return item.enclosure.url;
     }
   }
 
   // 3. description内の画像から抽出
-  if ((item as any).description) {
-    const match = (item as any).description.match(/<img[^>]+src="([^">]+)"/i);
-    if (match) {
+  const description = (item as any).description;
+  if (description) {
+    const match = description.match(/<img[^>]+src="([^">]+)"/i);
+    if (match && match[1]) {
       return match[1];
     }
   }
@@ -313,7 +326,15 @@ function extractThumbnail(item: any): string | undefined {
   // 4. content内の画像から抽出
   if (item.content) {
     const match = item.content.match(/<img[^>]+src="([^">]+)"/i);
-    if (match) {
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  // 5. contentSnippet内の画像から抽出
+  if (item.contentSnippet) {
+    const match = item.contentSnippet.match(/<img[^>]+src="([^">]+)"/i);
+    if (match && match[1]) {
       return match[1];
     }
   }
@@ -344,12 +365,10 @@ async function fetchRssFeed(
           url: item.link || "",
           type,
           source,
-          content:
-            item.contentSnippet ||
-            item.content ||
-            (item as any).description ||
-            "",
+          content: "", // HTMLコンテントは格納しない
           thumbnail: extractThumbnail(item),
+          rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
+          rssUrl: url, // RSSフィードのURL
         })) || []
     );
   } catch (error) {
@@ -381,6 +400,8 @@ async function fetchScrapedFeed(
         source,
         content: "", // スクレイピングではcontentは空文字列
         thumbnail: undefined, // スクレイピングではサムネイルは未対応
+        rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
+        rssUrl: url, // スクレイピング元のURL
       }));
   } catch (error) {
     console.error(`Failed to scrape feed from ${url}:`, error);

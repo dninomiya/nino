@@ -23,6 +23,7 @@
     "@workspace/lib": "workspace:*",
     "@workspace/registry": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "ai": "^5.0.72",
     "budoux": "^0.7.0",
     "date-fns": "^4.1.0",
     "feed": "^5.1.0",

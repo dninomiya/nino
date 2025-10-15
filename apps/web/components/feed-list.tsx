@@ -8,12 +8,27 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { RecencyDate } from "@/components/recency-date";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { ArrowUpRight, Newspaper } from "lucide-react";
+import {
+  ArrowUpRight,
+  Newspaper,
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  Rss,
+  FileText,
+} from "lucide-react";
 
 const typeIconsMap: Record<string, React.ElementType> = {
   リリース: SiGithub,
@@ -25,6 +40,7 @@ const typeIconsMap: Record<string, React.ElementType> = {
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
+  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const filteredFeedItems = useMemo(() => {
     return feedItems.filter((item) => {
@@ -67,26 +83,73 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <RecencyDate date={item.date} />
             </CardDescription>
           </CardHeader>
-          {item.thumbnail && (
-            <div className="px-6 pb-4">
-              <img
-                src={item.thumbnail}
-                alt={item.title}
-                className="w-full rounded-md"
-                onError={(e) => {
-                  // 画像読み込みエラー時は非表示にする
-                  e.currentTarget.style.display = "none";
+          {item.type !== "releases" &&
+            item.thumbnail &&
+            item.thumbnail.trim() !== "" && (
+              <div className="px-6 pb-4">
+                <img
+                  src={item.thumbnail}
+                  alt={item.title}
+                  className="w-full rounded-md"
+                  onError={(e) => {
+                    // 画像読み込みエラー時は非表示にする
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              </div>
+            )}
+          <CardContent>
+            <p className="text-sm text-muted-foreground">AI要約</p>
+          </CardContent>
+
+          <CardFooter className="flex gap-2">
+            {/* RSSフィードへのリンク */}
+            {item.rssUrl && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(item.rssUrl, "_blank")}
+                className="flex items-center gap-2"
+              >
+                <Rss className="size-4" />
+                RSS
+              </Button>
+            )}
+
+            {/* 原文表示の開閉ボタン */}
+            {item.rawXml && (
+              <Collapsible
+                open={expandedItems.has(index)}
+                onOpenChange={(open) => {
+                  const newExpanded = new Set(expandedItems);
+                  if (open) {
+                    newExpanded.add(index);
+                  } else {
+                    newExpanded.delete(index);
+                  }
+                  setExpandedItems(newExpanded);
                 }}
-              />
-            </div>
-          )}
-          {item.content && (
-            <CardContent>
-              <p className="text-sm text-muted-foreground overflow-hidden whitespace-pre-wrap">
-                {item.content}
-              </p>
-            </CardContent>
-          )}
+              >
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <FileText className="size-4" />
+                    {expandedItems.has(index) ? "閉じる" : "原文"}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2">
+                  <div className="bg-muted p-3 rounded-md">
+                    <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
+                      {item.rawXml}
+                    </pre>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+          </CardFooter>
         </Card>
       ))}
     </div>
