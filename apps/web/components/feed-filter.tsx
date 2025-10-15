@@ -10,10 +10,27 @@ import {
   getAvailableTechnologies,
 } from "@/lib/feed";
 import { useMemo } from "react";
+import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
+import { Newspaper } from "lucide-react";
 
 interface FeedFilterProps {
   feedItems: FeedItem[];
 }
+
+// タイプに応じたアイコンを取得する関数
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case "リリース":
+      return <SiGithub className="w-4 h-4" />;
+    case "ニュース":
+    case "変更履歴":
+      return <Newspaper className="w-4 h-4" />;
+    case "動画":
+      return <SiYoutube className="w-4 h-4" />;
+    default:
+      return null;
+  }
+};
 
 export function FeedFilter({ feedItems }: FeedFilterProps) {
   const [types, setTypes] = useQueryState(
@@ -103,9 +120,12 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                 htmlFor={`type-${type}`}
                 className="flex items-center justify-between w-full"
               >
-                <span>{typeLabels[type] || type}</span>
+                <div className="flex items-center gap-2">
+                  {getTypeIcon(type)}
+                  <span>{typeLabels[type] || type}</span>
+                </div>
                 <span className="text-sm text-muted-foreground ml-2">
-                  ({typeCounts[type] || 0})
+                  {typeCounts[type] || 0}
                 </span>
               </Label>
             </div>
@@ -131,7 +151,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
               >
                 <span>{technology}</span>
                 <span className="text-sm text-muted-foreground ml-2">
-                  ({sourceCounts[technology] || 0})
+                  {sourceCounts[technology] || 0}
                 </span>
               </Label>
             </div>
