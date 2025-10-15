@@ -3,6 +3,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { CodeProvider } from "@/registry/blocks/codes";
 import { RegistryProvider } from "./registry-provider";
 import { getRegistryDocMetas } from "@/lib/registry";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export async function Providers({ children }: { children: React.ReactNode }) {
   const registryDocMetas = await getRegistryDocMetas();
@@ -17,7 +18,7 @@ export async function Providers({ children }: { children: React.ReactNode }) {
     >
       <CodeProvider>
         <RegistryProvider registryDocMetas={registryDocMetas}>
-          {children}
+          <NuqsAdapter>{children}</NuqsAdapter>
         </RegistryProvider>
       </CodeProvider>
     </NextThemesProvider>

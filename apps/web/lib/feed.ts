@@ -1,6 +1,8 @@
 import "server-only";
 import Parser from "rss-parser";
 import { isAfter, subDays } from "date-fns";
+import { LucideIcon } from "lucide-react";
+import { SiNextdotjs } from "@icons-pack/react-simple-icons";
 
 type FeedConfig =
   | { method: "rss"; url: string; category: string }
@@ -17,12 +19,14 @@ type FeedConfig =
 
 type Collection = {
   name: string;
+  icon: LucideIcon;
   feeds: FeedConfig[];
 };
 
 const collections: Collection[] = [
   {
     name: "Next.js",
+    icon: SiNextdotjs,
     feeds: [
       {
         method: "rss",
