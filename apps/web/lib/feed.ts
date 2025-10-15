@@ -276,6 +276,7 @@ export type FeedItem = {
   thumbnail?: string;
   rawXml?: string;
   rssUrl?: string;
+  summary?: string;
 };
 
 const parser = new Parser({
@@ -336,6 +337,14 @@ function extractThumbnail(item: any): string | undefined {
     const match = item.contentSnippet.match(/<img[^>]+src="([^">]+)"/i);
     if (match && match[1]) {
       return match[1];
+    }
+  }
+
+  // 6. YouTubeの場合は動画IDからサムネイルを生成
+  if (item.link && item.link.includes("youtube.com/watch")) {
+    const videoIdMatch = item.link.match(/[?&]v=([^&]+)/);
+    if (videoIdMatch && videoIdMatch[1]) {
+      return `https://img.youtube.com/vi/${videoIdMatch[1]}/maxresdefault.jpg`;
     }
   }
 

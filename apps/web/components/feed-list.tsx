@@ -1,34 +1,27 @@
 "use client";
 
-import { FeedItem, getCollectionByName, typeLabels } from "@/lib/feed";
-import { useQueryState } from "nuqs";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { useMemo, useState } from "react";
+import { RecencyDate } from "@/components/recency-date";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { RecencyDate } from "@/components/recency-date";
+import { YouTubeVideo } from "@/components/youtube-video";
+import { FeedItem, getCollectionByName, typeLabels } from "@/lib/feed";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import {
-  ArrowUpRight,
-  Newspaper,
-  ChevronDown,
-  ChevronRight,
-  ExternalLink,
-  Rss,
-  FileText,
-} from "lucide-react";
+import { ArrowUpRight, FileText, Newspaper, Rss } from "lucide-react";
+import { useQueryState } from "nuqs";
+import { useMemo, useState } from "react";
 
 const typeIconsMap: Record<string, React.ElementType> = {
   リリース: SiGithub,
@@ -83,23 +76,32 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <RecencyDate date={item.date} />
             </CardDescription>
           </CardHeader>
-          {item.type !== "releases" &&
-            item.thumbnail &&
-            item.thumbnail.trim() !== "" && (
-              <div className="px-6 pb-4">
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="w-full rounded-md"
-                  onError={(e) => {
-                    // 画像読み込みエラー時は非表示にする
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              </div>
-            )}
           <CardContent>
-            <p className="text-sm text-muted-foreground">AI要約</p>
+            {item.type !== "releases" && (
+              <>
+                {item.type === "youtube" ? (
+                  <YouTubeVideo
+                    url={item.url}
+                    title={item.title}
+                    thumbnail={item.thumbnail}
+                  />
+                ) : item.thumbnail && item.thumbnail.trim() !== "" ? (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    className="w-full rounded-md"
+                    onError={(e) => {
+                      // 画像読み込みエラー時は非表示にする
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : null}
+              </>
+            )}
+
+            {item.summary && (
+              <p className="text-sm text-muted-foreground">{item.summary}</p>
+            )}
           </CardContent>
 
           <CardFooter className="flex gap-2">
@@ -143,7 +145,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
                 <CollapsibleContent className="mt-2">
                   <div className="bg-muted p-3 rounded-md">
                     <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
-                      {item.rawXml}
+                      {JSON.stringify(item, null, 2)}
                     </pre>
                   </div>
                 </CollapsibleContent>
