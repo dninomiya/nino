@@ -15,8 +15,8 @@ export const generateStaticParams = async () => {
 };
 
 // Image generation
-export default async function Image({ params }: { params: { slug: string } }) {
-  const doc = await getDocMeta(params.slug);
+export default async function Image({ params }: { params: { id: string } }) {
+  const doc = await getDocMeta(params.id);
 
   return new ImageResponse(
     (
