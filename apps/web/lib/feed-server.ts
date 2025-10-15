@@ -271,30 +271,29 @@ async function fetchScrapedFeed(
 }
 
 export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
-  const allItems: FeedItem[] = [];
-
-  for (const collection of collections) {
-    for (const feed of collection.feeds) {
+  // 全てのフィード取得タスクを並列で実行
+  const feedPromises = collections.flatMap((collection) =>
+    collection.feeds.map((feed) => {
       if (feed.method === "rss") {
-        const items = await fetchRssFeed(
-          feed.url,
-          feed.type,
-          collection.name,
-          days
-        );
-        allItems.push(...items);
+        return fetchRssFeed(feed.url, feed.type, collection.name, days);
       } else if (feed.method === "scrape") {
-        const items = await fetchScrapedFeed(
+        return fetchScrapedFeed(
           feed.url,
           feed.type,
           collection.name,
           feed.selector,
           days
         );
-        allItems.push(...items);
       }
-    }
-  }
+      return Promise.resolve([]);
+    })
+  );
+
+  // 全てのフィードを並列で取得
+  const feedResults = await Promise.all(feedPromises);
+
+  // 結果を平坦化
+  const allItems = feedResults.flat();
 
   // 日付順（新しい順）でソート
   return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
