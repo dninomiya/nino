@@ -36,6 +36,7 @@ type FeedConfig =
 type Collection = {
   name: string;
   icon: LucideIcon;
+  category: string;
   feeds: FeedConfig[];
 };
 
@@ -43,6 +44,7 @@ const collections: Collection[] = [
   {
     name: "Next.js",
     icon: SiNextdotjs,
+    category: "フレームワーク",
     feeds: [
       {
         method: "rss",
@@ -59,6 +61,7 @@ const collections: Collection[] = [
   {
     name: "Vercel",
     icon: SiVercel,
+    category: "SaaS/BaaS",
     feeds: [
       {
         method: "rss",
@@ -75,6 +78,7 @@ const collections: Collection[] = [
   {
     name: "React",
     icon: SiReact,
+    category: "フレームワーク",
     feeds: [
       {
         method: "rss",
@@ -96,6 +100,7 @@ const collections: Collection[] = [
   {
     name: "Resend",
     icon: SiResend,
+    category: "SaaS/BaaS",
     feeds: [
       {
         method: "rss",
@@ -112,6 +117,7 @@ const collections: Collection[] = [
   {
     name: "Better Auth",
     icon: SiGithub,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -123,6 +129,7 @@ const collections: Collection[] = [
   {
     name: "Turso",
     icon: SiTurso,
+    category: "SaaS/BaaS",
     feeds: [
       {
         method: "rss",
@@ -139,6 +146,7 @@ const collections: Collection[] = [
   {
     name: "Raycast",
     icon: SiRaycast,
+    category: "ツール",
     feeds: [
       {
         method: "rss",
@@ -155,6 +163,7 @@ const collections: Collection[] = [
   {
     name: "Notion",
     icon: SiNotion,
+    category: "ツール",
     feeds: [
       {
         method: "rss",
@@ -166,6 +175,7 @@ const collections: Collection[] = [
   {
     name: "Drizzle",
     icon: SiDrizzle,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -177,6 +187,7 @@ const collections: Collection[] = [
   {
     name: "Stripe",
     icon: SiStripe,
+    category: "SaaS/BaaS",
     feeds: [
       {
         method: "rss",
@@ -188,6 +199,7 @@ const collections: Collection[] = [
   {
     name: "nuqs",
     icon: SiGithub,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -204,6 +216,7 @@ const collections: Collection[] = [
   {
     name: "React Hook Form",
     icon: SiReacthookform,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -215,6 +228,7 @@ const collections: Collection[] = [
   {
     name: "shadcn/ui",
     icon: SiGithub,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -226,6 +240,7 @@ const collections: Collection[] = [
   {
     name: "Tailwind CSS",
     icon: SiTailwindcss,
+    category: "ライブラリ",
     feeds: [
       {
         method: "rss",
@@ -360,6 +375,14 @@ export const typeLabels: Record<string, string> = {
   youtube: "動画",
 };
 
+// カテゴリの表示順序
+export const categoryOrder = [
+  "フレームワーク",
+  "ライブラリ",
+  "ツール",
+  "SaaS/BaaS",
+];
+
 export function getAvailableTypes(): string[] {
   const types = new Set<string>();
   collections.forEach((collection) => {
@@ -375,4 +398,24 @@ export function getAvailableTypes(): string[] {
   });
 
   return Array.from(types);
+}
+
+// カテゴリごとに技術をグループ化する関数
+export function getTechnologiesByCategory(): Record<string, string[]> {
+  const grouped: Record<string, string[]> = {};
+
+  collections.forEach((collection) => {
+    const category = collection.category;
+    if (!grouped[category]) {
+      grouped[category] = [];
+    }
+    grouped[category].push(collection.name);
+  });
+
+  return grouped;
+}
+
+// 技術名からコレクション情報を取得する関数
+export function getCollectionByName(name: string): Collection | undefined {
+  return collections.find((collection) => collection.name === name);
 }

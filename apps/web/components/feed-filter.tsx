@@ -8,6 +8,9 @@ import {
   typeLabels,
   getAvailableTypes,
   getAvailableTechnologies,
+  getTechnologiesByCategory,
+  categoryOrder,
+  getCollectionByName,
 } from "@/lib/feed";
 import { useMemo } from "react";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
@@ -32,6 +35,16 @@ const getTypeIcon = (type: string) => {
   }
 };
 
+// 技術に応じたアイコンを取得する関数
+const getTechnologyIcon = (technology: string) => {
+  const collection = getCollectionByName(technology);
+  if (collection) {
+    const IconComponent = collection.icon;
+    return <IconComponent className="w-4 h-4" />;
+  }
+  return null;
+};
+
 export function FeedFilter({ feedItems }: FeedFilterProps) {
   const [types, setTypes] = useQueryState(
     "type",
@@ -47,6 +60,9 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
   // 定義済みのソースを取得（0件のものも含む）
   const availableTechnologies = getAvailableTechnologies();
+
+  // カテゴリごとに技術をグループ化
+  const technologiesByCategory = getTechnologiesByCategory();
 
   // 各タイプの件数を計算（現在のソースフィルターを考慮）
   const typeCounts = useMemo(() => {
@@ -135,27 +151,41 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
       <div className="space-y-3">
         <h3>技術</h3>
-        <div className="space-y-2">
-          {availableTechnologies.map((technology) => (
-            <div key={technology} className="flex items-center gap-3">
-              <Checkbox
-                id={`source-${technology}`}
-                checked={sources?.includes(technology)}
-                onCheckedChange={(checked) => {
-                  toggleSource(technology, checked as boolean);
-                }}
-              />
-              <Label
-                htmlFor={`source-${technology}`}
-                className="flex items-center justify-between w-full"
-              >
-                <span>{technology}</span>
-                <span className="text-sm text-muted-foreground ml-2">
-                  {sourceCounts[technology] || 0}
-                </span>
-              </Label>
-            </div>
-          ))}
+        <div className="space-y-4">
+          {categoryOrder.map((category) => {
+            const technologies = technologiesByCategory[category];
+            if (!technologies || technologies.length === 0) return null;
+
+            return (
+              <div key={category} className="space-y-2">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  {category}
+                </h4>
+                <div className="space-y-2 ml-2">
+                  {technologies.map((technology) => (
+                    <div key={technology} className="flex items-center gap-3">
+                      <Checkbox
+                        id={`source-${technology}`}
+                        checked={sources?.includes(technology)}
+                        onCheckedChange={(checked) => {
+                          toggleSource(technology, checked as boolean);
+                        }}
+                      />
+                      <Label
+                        htmlFor={`source-${technology}`}
+                        className="flex items-center justify-between w-full"
+                      >
+                        <span>{technology}</span>
+                        <span className="text-sm text-muted-foreground ml-2">
+                          {sourceCounts[technology] || 0}
+                        </span>
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
