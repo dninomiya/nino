@@ -11,7 +11,7 @@ export const formatReadingTime = (ms: number) => {
   }
 };
 
-export const formatDateByRecency = (dateString: string) => {
+export const formatDateByRecency = (dateString: string | Date | number) => {
   const date = new Date(dateString);
   // 何日まえか
   const diffDays = differenceInDays(new Date(), date);

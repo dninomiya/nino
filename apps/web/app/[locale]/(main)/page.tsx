@@ -1,13 +1,24 @@
+export const revalidate = 14400; // 4 hours
+
+import { RecencyDate } from "@/components/recency-date";
 import { getFeedItems } from "@/lib/feed";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
 export default async function Page() {
-  const feedItems = await getFeedItems(7);
+  const feedItems = isDevelopment ? [] : await getFeedItems(7);
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">過去7日間の更新</h1>
+      <div className="mb-8 space-y-2">
+        <h1 className="text-3xl font-bold">過去7日間の更新</h1>
+        <p className="text-sm text-muted-foreground mb-4">
+          最終更新: <RecencyDate date={Date.now()} />
+        </p>
+      </div>
+
       {feedItems.length === 0 ? (
         <p className="text-muted-foreground">更新情報はありません</p>
       ) : (
