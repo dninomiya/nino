@@ -51,8 +51,8 @@ export default async function Image({
     process.cwd(),
     "../../packages/ui/src/blocks/logo/logo.jpg"
   );
-  const logoBuffer = await readFile(logoPath);
-  const logoBase64 = `data:image/jpeg;base64,${logoBuffer.toString("base64")}`;
+  const logoData = await readFile(logoPath);
+  const logoSrc = Uint8Array.from(logoData).buffer;
 
   return new ImageResponse(
     (
@@ -66,13 +66,16 @@ export default async function Image({
         </div>
         <div tw="flex items-center mt-14">
           <img
-            src={logoBase64}
+            // @ts-expect-error Satori accepts ArrayBuffer/typed arrays for <img src> at runtime
+            src={logoSrc}
             width={36}
             height={36}
             tw="rounded-lg"
             alt="Logo"
           />
-          <span tw="ml-2 text-3xl text-neutral-500 font-medium">{author}</span>
+          <span tw="ml-3 text-3xl -mt-1.5 text-neutral-500 font-medium">
+            {author}
+          </span>
         </div>
       </div>
     ),
