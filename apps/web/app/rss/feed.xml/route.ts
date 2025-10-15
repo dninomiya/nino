@@ -1,3 +1,5 @@
+export const dynamic = "force-static";
+
 import { Feed } from "feed";
 import { getDocMetas } from "@/lib/docs";
 import { getRegistryDocMetas } from "@/lib/registry";
