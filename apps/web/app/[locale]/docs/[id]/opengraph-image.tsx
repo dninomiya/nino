@@ -3,6 +3,7 @@ import { DocMeta, getDocMeta, getDocMetas } from "@/lib/docs";
 import { readFile } from "fs/promises";
 import { loadDefaultJapaneseParser } from "budoux";
 import { join } from "path";
+import { routing } from "@/i18n/routing";
 
 export const size = {
   width: 1200,
@@ -11,7 +12,10 @@ export const size = {
 
 export async function generateStaticParams() {
   const docs = (await getDocMetas()) as DocMeta[];
-  return docs.map((doc) => ({ id: doc.id }));
+  const localeParams = routing.locales.map((locale) => ({ locale }));
+  return localeParams.flatMap((locale) =>
+    docs.map((doc) => ({ locale, id: doc.id }))
+  );
 }
 
 async function loadGoogleFont(font: string, text: string) {

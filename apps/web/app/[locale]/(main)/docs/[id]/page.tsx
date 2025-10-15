@@ -8,13 +8,13 @@ import { ClockFading, RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
 import path from "path";
 
-// export const generateMetadata = async ({
-//   params,
-// }: PageProps<"/[locale]/docs/[id]">) => {
-//   const id = (await params).id;
-//   const doc = await getDocMeta(id);
-//   return { title: doc?.title };
-// };
+export const generateMetadata = async ({
+  params,
+}: PageProps<"/[locale]/docs/[id]">) => {
+  const id = (await params).id;
+  const doc = await getDocMeta(id);
+  return { title: doc?.title };
+};
 
 export const generateStaticParams = async () => {
   const docs = await getDocMetas();
