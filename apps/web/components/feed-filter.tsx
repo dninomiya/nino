@@ -3,7 +3,12 @@
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { FeedItem, typeLabels } from "@/lib/feed";
+import {
+  FeedItem,
+  typeLabels,
+  getAvailableTypes,
+  getAvailableTechnologies,
+} from "@/lib/feed";
 import { useMemo } from "react";
 
 interface FeedFilterProps {
@@ -20,23 +25,11 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
     parseAsArrayOf(parseAsString)
   );
 
-  // 実際のフィードアイテムから利用可能なタイプを取得
-  const availableTypes = useMemo(() => {
-    const types = new Set<string>();
-    feedItems.forEach((item) => {
-      types.add(item.type);
-    });
-    return Array.from(types);
-  }, [feedItems]);
+  // 定義済みのタイプを取得（0件のものも含む）
+  const availableTypes = getAvailableTypes();
 
-  // 実際のフィードアイテムから利用可能なソースを取得
-  const availableTechnologies = useMemo(() => {
-    const sources = new Set<string>();
-    feedItems.forEach((item) => {
-      sources.add(item.source);
-    });
-    return Array.from(sources);
-  }, [feedItems]);
+  // 定義済みのソースを取得（0件のものも含む）
+  const availableTechnologies = getAvailableTechnologies();
 
   // 各タイプの件数を計算（現在のソースフィルターを考慮）
   const typeCounts = useMemo(() => {

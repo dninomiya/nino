@@ -365,9 +365,14 @@ export function getAvailableTypes(): string[] {
   collections.forEach((collection) => {
     collection.feeds.forEach((feed) => {
       if (feed.method === "rss") {
-        types.add(feed.type);
+        // 英語のタイプを日本語にマッピング
+        const japaneseType = typeLabels[feed.type];
+        if (japaneseType) {
+          types.add(japaneseType);
+        }
       }
     });
   });
+
   return Array.from(types);
 }
