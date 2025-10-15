@@ -12,7 +12,7 @@ import path from "path";
 export const generateMetadata = async ({
   params,
 }: PageProps<"/[locale]/docs/[id]">) => {
-  const { id, locale } = await params;
+  const { id } = await params;
   const doc = await getDocMeta(id);
   return {
     title: doc?.title,
