@@ -53,6 +53,9 @@ importers:
       '@workspace/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@workspace/lib':
         specifier: workspace:*
         version: link:../../packages/lib
@@ -71,6 +74,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      drizzle-orm:
+        specifier: ^0.44.6
+        version: 0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(kysely@0.28.7)
       feed:
         specifier: ^5.1.0
         version: 5.1.0
@@ -104,6 +110,9 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       swr:
         specifier: ^2.3.6
         version: 2.3.6(react@19.2.0)

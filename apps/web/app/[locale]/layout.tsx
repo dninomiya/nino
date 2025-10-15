@@ -9,6 +9,7 @@ import { APP_NAME } from "@workspace/lib/constants";
 import { setLocale } from "@/i18n/set-locale";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { Toaster } from "@workspace/ui/components/sonner";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -50,6 +51,7 @@ export default async function RootLayout({
           </NextIntlClientProvider>
         </Providers>
         <Analytics />
+        <Toaster />
       </body>
     </html>
   );

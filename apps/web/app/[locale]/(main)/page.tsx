@@ -1,16 +1,12 @@
-export const revalidate = 14400; // 4 hours
-
 import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
-import { getFeedItems } from "@/lib/feed-server";
-import { mockFeedItems } from "@/mock/feed";
+import { FetchFeedButton } from "@/components/fetch-feed-button";
 import { RecencyDate } from "@/components/recency-date";
+import { getFeedItemsFromDB } from "@/lib/feed-server";
 import { Suspense } from "react";
 
-const isDevelopment = process.env.NODE_ENV === "development";
-
 export default async function Page() {
-  const feedItems = isDevelopment ? mockFeedItems : await getFeedItems(7);
+  const feedItems = await getFeedItemsFromDB(7);
 
   return (
     <div className="flex gap-10 container py-10">
@@ -30,7 +26,10 @@ export default async function Page() {
         </div>
 
         {feedItems.length === 0 ? (
-          <p className="text-muted-foreground">更新情報はありません</p>
+          <div>
+            <p className="text-muted-foreground">更新情報はありません</p>
+            <FetchFeedButton />
+          </div>
         ) : (
           <Suspense>
             <FeedList feedItems={feedItems} />

@@ -5,6 +5,9 @@ import { isAfter, subDays } from "date-fns";
 import { collections, type FeedItem } from "./feed";
 import { generateObject } from "ai";
 import { z } from "zod";
+import { db } from "@workspace/db";
+import { feedItems } from "@workspace/db/schemas/feed";
+import { eq, and, desc, gte } from "drizzle-orm";
 
 // タグの定義
 export const TAGS = {
@@ -297,4 +300,76 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
 
   // 日付順（新しい順）でソート
   return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+// DB に feed データを保存する関数（upsert）
+export async function saveFeedItemsToDB(items: FeedItem[]): Promise<void> {
+  try {
+    for (const item of items) {
+      await db
+        .insert(feedItems)
+        .values({
+          url: item.url,
+          date: item.date,
+          title: item.title,
+          type: item.type,
+          source: item.source,
+          content: item.content || null,
+          thumbnail: item.thumbnail || null,
+          rawXml: item.rawXml || null,
+          rssUrl: item.rssUrl || null,
+          summary: item.summary || null,
+          tags: item.tags ? JSON.stringify(item.tags) : null,
+        })
+        .onConflictDoUpdate({
+          target: [feedItems.url, feedItems.date],
+          set: {
+            title: item.title,
+            type: item.type,
+            source: item.source,
+            content: item.content || null,
+            thumbnail: item.thumbnail || null,
+            rawXml: item.rawXml || null,
+            rssUrl: item.rssUrl || null,
+            summary: item.summary || null,
+            tags: item.tags ? JSON.stringify(item.tags) : null,
+          },
+        });
+    }
+  } catch (error) {
+    console.error("Failed to save feed items to DB:", error);
+    throw error;
+  }
+}
+
+// DB から feed データを取得する関数
+export async function getFeedItemsFromDB(
+  days: number = 7
+): Promise<FeedItem[]> {
+  try {
+    const cutoffDate = subDays(new Date(), days);
+
+    const items = await db
+      .select()
+      .from(feedItems)
+      .where(gte(feedItems.date, cutoffDate))
+      .orderBy(desc(feedItems.date));
+
+    return items.map((item: any) => ({
+      date: item.date,
+      title: item.title,
+      url: item.url,
+      type: item.type,
+      source: item.source,
+      content: item.content || undefined,
+      thumbnail: item.thumbnail || undefined,
+      rawXml: item.rawXml || undefined,
+      rssUrl: item.rssUrl || undefined,
+      summary: item.summary || undefined,
+      tags: item.tags ? JSON.parse(item.tags) : undefined,
+    }));
+  } catch (error) {
+    console.error("Failed to get feed items from DB:", error);
+    throw error;
+  }
 }
