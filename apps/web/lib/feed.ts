@@ -150,13 +150,18 @@ const collections: Collection[] = [
     feeds: [
       {
         method: "rss",
-        url: "https://www.raycast.com/blog/rss",
+        url: "https://www.raycast.com/rss/feed.xml",
         type: "blog",
       },
       {
         method: "rss",
-        url: "https://www.raycast.com/changelog/rss",
+        url: "https://www.raycast.com/changelog/feed.xml",
         type: "changelog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCPvOHaaP9E6FqSqG1NMV_Hw",
+        type: "youtube",
       },
     ],
   },
@@ -254,7 +259,7 @@ const collections: Collection[] = [
       },
       {
         method: "rss",
-        url: "https://tailwindcss.com/changelog/feed.xml",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCOe-8z68tgw9ioqVvYM4ddQ",
         type: "youtube",
       },
     ],
