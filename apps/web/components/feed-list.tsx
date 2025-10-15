@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -22,15 +23,17 @@ const typeIconsMap: Record<string, React.ElementType> = {
 };
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
-  const [types, setTypes] = useQueryState("type");
-  const [sources, setSources] = useQueryState("source");
+  const [types] = useQueryState("type");
+  const [sources] = useQueryState("source");
 
   const filteredFeedItems = useMemo(() => {
     return feedItems.filter((item) => {
       let match = true;
 
       if (types && types?.length > 0) {
-        match = types.includes(item.type);
+        // 英語→日本語マッピングを考慮
+        const itemTypeInJapanese = typeLabels[item.type];
+        match = itemTypeInJapanese ? types.includes(itemTypeInJapanese) : false;
       }
 
       if (sources && sources?.length > 0) {
@@ -63,6 +66,13 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <RecencyDate date={item.date} />
             </CardDescription>
           </CardHeader>
+          {item.content && (
+            <CardContent>
+              <p className="text-sm text-muted-foreground overflow-hidden whitespace-pre-wrap">
+                {item.content}
+              </p>
+            </CardContent>
+          )}
         </Card>
       ))}
     </div>

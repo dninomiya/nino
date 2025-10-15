@@ -2,115 +2,243 @@ import type { FeedItem } from "@/lib/feed";
 
 export const mockFeedItems: FeedItem[] = [
   {
+    date: new Date("2025-10-15T08:13:15.000Z"),
+    title: "shadcn 3.4.1",
+    url: "https://github.com/shadcn-ui/ui/releases/tag/shadcn%403.4.1",
+    type: "releases",
+    source: "shadcn/ui",
+    content:
+      "Patch Changes\n#8420 40c3ff513a88ca8e6f02bf798a7cf73b88401024 Thanks @zbeyens! - Fix support for universal registry items that only have dependencies without files\n#8459 7cd019ad3652a0e98770b89032b7a161edfda805 Thanks @shadcn! - add support for color as var\n#8451 b83023034a301b41fa18045af0d9bd787e415aa5 Thanks @diegohaz! - fix adding registry item with CSS at-property",
+  },
+  {
     date: new Date("2025-10-14T23:36:19.000Z"),
     title: "v16.0.0-canary.5",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.5",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\nfeat: using @next/rspack-core: #84221\nUpgrade React from ead92181-20251010 to d7215b49-20251013: #84850\nTurbopack build: Switch to using workerthreads for process: #84818\n[Cache Components] Dev - restart render on cache miss: #84088\nUpdate font data: #84785\nFix build compile mode if pages dir does not exist in Next.js 16: #84783\nimprove next config schema validation errors: #84847\nUpgrade React from d7215b49-20251013 to 56e84692-20251014: #84860\nwarnOnce for Middleware deprecation: #84862\nAdd codemod for Middleware API to Proxy API: #84824\nDeprecate Middleware API and add Proxy API: #84764\nremove clientParamParsing configuration & bundle it with cacheComponents: #84763\nremove dynamicIO flag: #84872\nBump eslint-plugin-react to 7.37.0: #84876\nMisc Changes\ndocs: soft 404's, Suspense and loading.tsx: #83867\n[turbopack] Discuss Core Web vitals in our bundle size gap docs: #84837\n[turbopack] document missing webpack loader features: #84849\n[turbopack] fix typo in docs: #84868\n[turbopack] Remove the implementation of TaskInput from AutoSet: #84867\nCredits\nHuge thanks to @SyMind, @icyJoseph, @timneutkens, @lubieowoce, @vercel-release-bot, @greguintow, @huozhi, @devjiwonchoi, @lukesandberg, and @ztanner for helping!",
   },
   {
     date: new Date("2025-10-14T18:14:00.000Z"),
     title: "v6.1.3",
     url: "https://github.com/resend/resend-node/releases/tag/v6.1.3",
-    type: "リリース",
+    type: "releases",
     source: "Resend",
+    content: "chore: bump version (#678)",
+  },
+  {
+    date: new Date("2025-10-14T13:00:00.000Z"),
+    title: "Anomaly alerts now in public beta",
+    url: "https://vercel.com/changelog/anomaly-alerts-now-in-public-beta",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "Teams using  can now receive alerts when anomalies are detected in their applications to help quickly identify, investigate and resolve unexpected behavior.Observability Plus\nAlerts help monitor your app in real-time by surfacing unexpected changes in usage or error patterns:\nView alerts directly in your dashboard, or subscribe via email, Slack or webhooks to get notified wherever your team works.,\nAlerts are available public beta for Pro and Enterprise customers with Observability Plus.\n or learn more about .Try it outAlerts\nRead more\n\n unusual patterns in your application metrics, such as edge requests or function duration.Usage anomalies:\n\n abnormal error patterns, such as sudden spikes in 5XX responses on a specific routeError anomalies:",
   },
   {
     date: new Date("2025-10-14T00:00:00.000Z"),
     title: "Introducing stablecoin payments for subscriptions",
     url: "https://stripe.com/blog/introducing-stablecoin-payments-for-subscriptions",
-    type: "ニュース",
+    type: "blog",
     source: "Stripe",
+    content:
+      "As businesses expand globally, stablecoins can help them reach a broader international audience more cost-effectively. Now we’re extending these benefits to subscription-based businesses by launching recurring payments with stablecoins.",
   },
   {
     date: new Date("2025-10-13T23:37:59.000Z"),
     title: "v16.0.0-canary.4",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.4",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\nUse ESLint Flat Config: #84800\nfix missing flight-router-state-tree header normalization: #84718\nWrite .next/dev/types/**/*.d.ts to default tsconfig: #84747\nUpgrade React from 9724e3e6-20251008 to ead92181-20251010: #84793\n[mcp] capture next config schema errors: #84832\nExample Changes\n[docs] fix(with-supabase): Update README env variables: #84745\nMisc Changes\nUpdate test/CNA templates React version to 19.2.0: #84736\nTurbopack: use the same serialization method for lookup as for storing: #84765\nTurbopack: update petgraph: #84757\n[turbopack] Issue 'too many matches' warning for DirAssets also: #84768\nRevert \"Fix flakey overlay feedback test\": #84819\n[test]: de-flake client-cache.original.test.ts: #84831\n[ci]: set NEXT_TEST_VERSION to release tag for deploy tests: #84840\nCredits\nHuge thanks to @eps1lon, @devjiwonchoi, @CarloQuick, @sokra, @lukesandberg, @ztanner, and @huozhi for helping!",
   },
   {
     date: new Date("2025-10-13T17:45:32.000Z"),
     title: "v1.4.0-beta.10",
     url: "https://github.com/better-auth/better-auth/releases/tag/v1.4.0-beta.10",
-    type: "リリース",
+    type: "releases",
     source: "Better Auth",
+    content:
+      "🐞 Bug Fixes\nImport node:async_hooks directly  -  by @himself65 in #5198 (0717e)\nUndeclared variable reference on docs  -  by @Kinfe123 in #5235 (6d6df)\nArgument where of type TwoFactorWhereUniqueInput needs at least one of id arguments  -  by @AlexStrNik in #5180 (2dab4)\nMobile ai search responsiveness  -  by @Kinfe123 in #5269 (08d95)\nadapter: Missing data type transformation on where clauses  -  by @ping-maxwell in #5158 (4b136)\nemail-otp: Email-verification doesn't trigger session signal  -  by @ping-maxwell in #5219 (ff89e)\norganization: Certain parameters not showing in client types  -  by @ping-maxwell in #5214 (d382d)\npasskey: Wrong Session type being used on passkey  -  by @ouwargui in #5204 (fb2c6)\ntwo-factor: Backup codes shouldn't be encrypted twice  -  by @Bekacru in #5202 (13018)\n    View changes on GitHub",
   },
   {
     date: new Date("2025-10-13T17:15:14.000Z"),
     title: "v15.5.5",
     url: "https://github.com/vercel/next.js/releases/tag/v15.5.5",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Note\nThis release is backporting bug fixes. It does not include all pending features/changes on canary.\nCore Changes\nSplit code-frame into separate compiled package (#84238)\nAdd deprecation warning to Runtime config (#84650)\nfix: unstable_cache should perform blocking revalidation during ISR revalidation (#84716)\nfeat: experimental.middlewareClientMaxBodySize body cloning limit  (#84722)\nfix: missing next/link types with typedRoutes (#84779)\nMisc Changes\ndocs: early October improvements and fixes (#84334)\nCredits\nHuge thanks to @devjiwonchoi, @ztanner, and @icyJoseph for helping!",
+  },
+  {
+    date: new Date("2025-10-13T09:54:00.000Z"),
+    title: "Community Session: Black Friday Readiness Planning",
+    url: "https://www.youtube.com/watch?v=t9FD96Whv78",
+    type: "changelog",
+    source: "Vercel",
+    content: "",
   },
   {
     date: new Date("2025-10-12T23:46:44.000Z"),
     title: "v16.0.0-canary.3",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.3",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\nUpgrade React from 3025aa39-20251007 to 9724e3e6-20251008: #84642\nRemove unused eslint-disable directives: #84797\nMisc Changes\n[cna] Preserve existing config option when enabling React Compiler: #84663\nPrevent failing types-and-precompiled from corrupting terminal output: #84799\nCredits\nHuge thanks to @eps1lon for helping!",
   },
   {
     date: new Date("2025-10-11T23:45:58.000Z"),
     title: "v16.0.0-canary.2",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.2",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Misc Changes\nUpdate Rspack production test manifest: #84729\nUpdate Rspack development test manifest: #84730\nfix: release next-rspack ci: #84673\nCredits\nHuge thanks to @vercel-release-bot and @SyMind for helping!",
   },
   {
     date: new Date("2025-10-10T23:43:12.000Z"),
     title: "v16.0.0-canary.1",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.1",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      'Core Changes\nVersion gate migration docs link: #84740\n[Cache Components] Allow hiding logs after abort: #84579\nLog Compiled proxy in ...: #84746\nMisc Changes\n[next-upgrade] misc: update comment: #84727\nTurbopack: use vector instead of hash map: #84696\nRevert "docs: nav_title for long unbroken words (#84233)": #84346\n[turbopack] tweak the doc on the inner graph optimization: #84752\n[turbopack] Fix a few references to caching configuration as it is no longer canary guarded: #84761\nAdd 16.0.0-beta.0 to next/third-parties peerDeps: #84741\n[eslint-plugin] Remove eslint-v8 testing: #84721\nCredits\nHuge thanks to @devjiwonchoi, @mischnic, @icyJoseph, @gnoff, and @lukesandberg for helping!',
   },
   {
     date: new Date("2025-10-10T22:51:58.000Z"),
     title: "Version 7.65.0",
     url: "https://github.com/react-hook-form/react-hook-form/releases/tag/v7.65.0",
-    type: "リリース",
+    type: "releases",
     source: "React Hook Form",
+    content:
+      "🧿 feat: <Watch /> component (#12986)\nimport { useForm, Watch } from 'react-hook-form';\n\nconst App = () => {\n  const { register, control } = useForm();\n\n  return (\n    <div>\n      <form>\n        <input {...register('foo')} />\n        <input {...register('bar')} />\n      </form>\n      {/* re-render only when value of `foo` changes */}\n      <Watch\n        control={control}\n        names={['foo']}\n        render={([foo]) => <span>{foo}</span>}\n      />\n    </div>\n  );\n};\n\n🐞 fix: respect parent-provided useFieldArray rules (#13082) (#13083\ngetDirtyFields submit fields with null values when using useForm (#13079)\nthanks to @tesseractjh, @Han5991 & @jonathanarnault",
+  },
+  {
+    date: new Date("2025-10-10T13:00:00.000Z"),
+    title: "Expanded Role-Based Access Control (RBAC) for Enterprise teams",
+    url: "https://vercel.com/changelog/expanded-role-based-access-control-rbac-for-enterprise-teams",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "Vercel’s Role-Based Access Control (RBAC) system now supports multiple roles per user and introduces extended permissions for finer-grained access control across Enterprise teams.\nWhat’s new:\nThe new extended permissions include:\nExtended permissions apply when paired with a compatible team role.\n\nLearn more in the Role-Based Access Control documentation.\nRead more\n\n Assign multiple roles to a single user within Enterprise teams.Multi-role support:\n\n A new team role dedicated to managing security and compliance settings.Security role:\n\n Add granular capabilities that layer on top of team and project roles for precise control.Extended permissions:\n\n Access Groups now support team roles and extended permissions in Directory Sync mappings.Access groups integration:\n\n\n Create new projects.Create Project:\n\n Deploy, rollback, and promote to production.Full Production Deployment:\n\n View usage, prices, and invoices (read-only).Usage Viewer:\n\n Install and manage integrations and storage.Integration Manager:\n\n Create and manage project environments.Environment Manager:\n\n Create and manage environment variables.Environment Variable Manager:",
+  },
+  {
+    date: new Date("2025-10-10T13:00:00.000Z"),
+    title: "Zero-configuration Flask backends",
+    url: "https://vercel.com/changelog/zero-configuration-flask-backends",
+    type: "blog",
+    source: "Vercel",
+    content:
+      ", one of the most popular  web application frameworks, can now be deployed instantly on Vercel with no configuration changes needed.FlaskPython\nVercel's  now recognizes and deeply understands Flask applications. This update removes the need for redirects in  or using the  folder. framework-defined infrastructurevercel.json/api\nBackends on Vercel use  with  by default. This means your Flask app will automatically scale up and down based on traffic, and you only pay for time where your code is actively using CPU.Fluid computeActive CPU pricing\n or visit the .Deploy Flask on VercelFlask on Vercel documentation\nRead more",
   },
   {
     date: new Date("2025-10-10T05:02:08.000Z"),
     title: "v16.0.0-canary.0",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-canary.0",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\ndocs: Add more details to useLightningcss docs: #84581\nMisc Changes\nRspack: Fix lockfile test on rspack: #84707\n[turbopack] Emit a warning when there are too many matches from a FileSourceReference: #84701\nUpdate beta tag: #84725\n[next-codemod] fix: Set codemod version to the first introduced version: #84726\nCredits\nHuge thanks to @bgw, @lukesandberg, @ijjk, and @devjiwonchoi for helping!",
   },
   {
     date: new Date("2025-10-10T03:45:04.000Z"),
     title: "v16.0.0-beta.0",
     url: "https://github.com/vercel/next.js/releases/tag/v16.0.0-beta.0",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      'Tip\nCheck out our Next v16 beta Blog Post to learn more about this release.\nCore Changes\nDevelopment: Don\'t import app-router / hot-reloader through next/link in application code: #83656\nRemove clientParamParsing requirement from RDC for Navigations: #83661\nUpgrade React from 6b70072c-20250909 to 886b3d36-20250910: #83650\nTurbopack: Use readFileSync / writeFileSync for manifest writing: #83694\nUpgrade React from 886b3d36-20250910 to f3a80361-20250911: #83696\nDon\'t create client-side debug channel if the feature is disabled: #83699\nfix: dev should produce the correct default fallback regex to match builds/Turbopack: #83701\n[devtool] fix overlay styles are missing: #83721\nRevert "Remove clientParamParsing requirement from RDC for Navigations": #83725\nOnly enable unhandledRejection filtering when opted in: #83726\nFix index data route for adapter build-complete: #83730\nRemove leading underscore for unhandledRejection envvar: #83732\nUpgrade React from f3a80361-20250911 to 93d7aa69-20250912: #83729\nUpgrade React from 93d7aa69-20250912 to 8a8e9a7e-20250912: #83742\nFix reentrancy of unhandledRejection filtering: #83741\nFix type for unhandled rejection handler process.removeListener: #83748\n[OTel] fix: Root span name should not include high cardinality URL: #75416\nTurbopack: Remove matchers.reload() call on each request: #83720\n[Breaking] Flat config as default in @next/eslint-plugin-next: #83763\nfix: Rspack splitChunks.chunks regex: #83670\nRevert "Turbopack: Remove matchers.reload() call on each request": #83819\nfix: unstable_cache should perform blocking revalidation during ISR revalidation: #83820\nfix(Rspack): resolve HMR unresponsiveness or unexpected full reload & update dev snapshot: #83480\nAllow next.config.mts for Node.js native TS resolver: #83556\nchore: Ensure Import Trace starts in a newline: #83638\nDevelopment: Remove matchers.reload() on each request: #83829\nUpgrade React from 8a8e9a7e-20250912 to 5e0c951b-20250916: #83850\nBump typescript 5.9.2: #83833\nAllow headers, rewrites and redirects to be defined as sync functions: #83743\nTurbopack: Optimize addedRoutes and removedRoutes calculation: #83840\n[next-config-ts] Set Node.js native TS loader fallback flag to process.env: #83832\nDevelopment: Clarify TypescriptStatus in watcher: #83857\nUpgrade sharp dependency to version ^0.34.4: #83892\nUpgrade React from 5e0c951b-20250916 to 128abcfa-20250917: #83906\nAdd native ts resolver docs link to transpile-config: #83914\nOTel: use srcPage for templates when next.route is unavailable: #83911\nRemove inline CSS sourcemaps from next-devtools: #83917\nDevelopment: Move all TypeScript related work in watcher together: #83912\n[Cache Components] Allow sync IO inside console methods : #83843\nUpgrade React from 128abcfa-20250917 to 84af9085-20250917: #83959\nBuild: Add .next/trace-build with high level trace: #83949\nRemove force writing **/*.mts to tsconfig: #83967\nfeat: Isolate dev build from prod: #83961\nRemove JS size reporting from next build: #83815\nDocs/workspace setup: #83490\nTurbopack: support import ... with {type: "bytes"}: #83896\nfix: error overlay not closing when backdrop clicked: #83981\nUpgrade React from 84af9085-20250917 to d415fd3e-20250919: #84003\nfix: worker logs should still support color: #84024\nUpdate font data: #84005\nAllow passing port to next internal trace: #83907\nTurbopack: error when importing Typescript in node_modules: #83990\nTurbopack: Deterministic builds (prerender-manifest, .next/package.json, ./next/postcss.js): #84081\nTurbopack: Fix babel-loader (allowing built-in or manual configuration): #82676\n[Cache Components] allow using headers() in runtime prefetches: #83838\n[Breaking] Remove deprecated publicRuntimeConfig and serverRuntimeConfig: #83944\nTurbopack: mode to disable tracing: #83683\nbabel-loader: Fix a few issues with config caching: #83973\nTurbopack: Merge babel-loader and react-compiler configuration logic to avoid running babel twice: #83502\n[breaking]: enable router scroll optimization by default: #84102\nFix layout for ssgPageRoutes in the file tree: #84104\nTurbopack: Remove useless \'default\' built-in webpack loader condition: #84111\nFix: Client should auto reload after server restarts: #83971\ntrace-build: Add missing spans: #84080\nDevelopment: Remove TypeScript from the hot path during bootup: #84090\nGuide users to experimental.cacheComponents config: #84121\nDevelopment: Only load webpack when used: #84123\nTurbopack: Skip loading webpack plugin: #84125\nDevelopment: Only load createEnvDefinitions when used: #83935\nBREAKING CHANGE!: bump default images.minimumCacheTTL from 1 min to 4 hours: #84105\nFeat: Add Model Context Protocol (MCP) server to Next.js dev server: #84100\nUpgrade React from d415fd3e-20250919 to 1eca9a27-20250922: #84093\nTurbopack: Remove the deprecated .turbo config object: #84109\nFlag excess properties in Next.js config with TypeScript: #84069\ndocs: update Security section to direct disclosures : #84156\nci: Enable experimental.isolatedDevBuild for test-experimental-dev: #84099\n[turbopack] Ensure React Compiler options are based dev vs prod: #84062\nEnable anonymous function naming in React Compiler: #84070\nRevert "[Breaking] Remove deprecated publicRuntimeConfig and serverRuntimeConfig (#83944)": #84167\nFix double comma in build manifest: #84131\n[turbopack] set app dir only to true when no pages entries detected: #84144\nSplit code-frame into separate compiled package: #84174\nrefactor: separate forward browser logs utils: #84151\nUpgrade React from 1eca9a27-20250922 to e2332183-20250924: #84189\n[Cache Components] default to filtering unhandledRejection after abort: #84192\nfix: prevent URL mutation in router rewrites: #83963\nfix(server): fix pages router resume router matching: #84158\nFeat: get_errors MCP endpoint: #84161\nAdd internal environment variable for enabling React Compiler: #84176\n[devtools] Disable React\'s default Transition indicator: #84202\nUpgrade React from e2332183-20250924 to b0c1dc01-20250925: #84248\nFeat: get_page_metadata MCP endpoint: #84211\nfeat: capture logs into logging file during development: #84183\nbabel-loader: Avoid calling expensive isReactCompilerRequired check when we must run Babel anyways: #84103\n[mcp] expose logging: #84226\nMove config.turbopack.moduleIds to config.experimental.turbopackModuleIds: #84230\nShow invalid default export errors during prerendering: #84242\nfix: make sure caller exists in babel preset: #84154\n[mcp] allow to enable mcp server through env var: #84278\nfix(metadata): make formatDetection respect true/false properly: #83924\nUpgrade React from b0c1dc01-20250925 to df38ac9a-20250926: #84276\nAdd a --webpack flag and default --turbopack to true: #84216\nfix: Update URL resolution logic to handle search parameters on root path /?foo=bar: #78262\n[Breaking] Remove deprecated sync access to Dynamic APIs: #84179\nMove config.turbopack.moduleIds to config.experimental.turbopackModuleIds: #84230\nShow invalid default export errors during prerendering: #84242\nfix: make sure caller exists in babel preset: #84154\n[mcp] allow to enable mcp server through env var: #84278\nfix(metadata): make formatDetection respect true/false properly: #83924\nUpgrade React from b0c1dc01-20250925 to df38ac9a-20250926: #84276\nAdd a --webpack flag and default --turbopack to true: #84216\nfix: Update URL resolution logic to handle search parameters on root path /?foo=bar: #78262\n[Breaking] Remove deprecated sync access to Dynamic APIs: #84179\nTurbopack: only write merged manifests when they have been changed: #84261\nTurbopack: add separate turbopackPersistentCachingForBuild/ForDev flags: #84215\nRevert "Add a --webpack flag and default --turbopack to true (#84216)": #84348\nUpgrade React from df38ac9a-20250926 to d15d7fd7-20250929: #84347\nMark React Compiler integration as stable: #84220\n[cna] Add reactCompiler option: #82251\nTurbopack: remove canary version check for turbopackPersistentCachingForDev: #84277\n[turbopack] Add support for debug_ids: #84319\nRevert "Revert "Add a --webpack flag and default --turbopack to true (#84216)"": #84351\n[Breaking] Remove AMP codemod: #84356\n[Breaking] Remove deprecated built-in AMP: #84312\nauto-enable clientParamParsing and clientSegmentCache w/ cacheComponents: #84250\n[mcp] get server action tool: #84382\nRevert "Revert "Revert "Add a --webpack flag and default --turbopack to true (#84216)""": #84389\nUpdate otel test assertions and pages span_name: #84393\n[Breaking] Bump minimum TypeScript version to 5.1.0: #84384\nUpgrade React from d15d7fd7-20250929 to ef889445-20250930: #84383\n[Breaking] Remove deprecated unstable_rootParams: #84373\n[metadata] remove falsy dynamicParams approach: #84405\nfix: next rspack binding NextExternalsPlugin: #84303\nDevelopment: Skip route matching when there is an existing match: #84227\nRevert "auto-enable clientParamParsing and clientSegmentCache w/ cacheComponents": #84419\nUpgrade React from ef889445-20250930 to 548235db-20251001: #84416\n[Breaking] Update default browserslist config: #84401\nUpgrade React from 548235db-20251001 to 1bd1f01f-20251001: #84417\nAllow metadataBase to be a string URL in addition to URL instance: #84297\nUpgrade React from 1bd1f01f-20251001 to 86181134-20251001: #84427\n[mcp] logging file should be reset for each session: #84425\nRevert "Revert "Revert "Revert "Add a --webpack flag and default --turbopack to true (#84216)"""": #84394\nOptimize isMetadataRoute function: #84409\n[ci]: split clientSegmentCache test runners off from experimental: #84440\n[Cache Components] Fix caching in generateMetadata/generateViewport: #84228\nUpgrade React from 86181134-20251001 to a757cb76-20251002: #84463\n[segment cache]: fix trailingSlash handling with output: export: #84465\nperf: Use a more aggressive retry loop for recursiveDelete: #84444\n[Cache Components] Dim logs after prerender aborts: #84153\ntelemetry track mcp server usage: #84471\nsimplify the way we check for turbopack config to ensure we support an empty turbopack object: #84494\nperf: Use synchronous IO when cleaning distDir in next dev and next build: #84472\nMake turbopack the default bundler for custom servers: #84281\n[segment cache]: fix interception route handling: #84497\nUpgrade React from a757cb76-20251002 to 85c427d8-20251003: #84496\n[segment cache]: collectSegmentData should respect experimental.staleTime config: #84520\nFix potential race condition with request ID in dev mode: #84532\n[test] Enable reactDebugChannel for experimental test shards: #84533\nSimplify Metadata components: #84527\nImplement the updated prerender API shape: #84254\nUpgrade React from 85c427d8-20251003 to 4fdf7cf2-20251003: #84499\nUpgrade React from 4fdf7cf2-20251003 to c7862584-20251006: #84573\nfix(Turbopack): Add better error messaging for when we can\'t determine Next.js root: #83918\nAllow silencing unhandled rejection filter warnings and improve debugging: #84572\n[MCP] Fix: Do not dedup by URL for MCP get_page_metadata: #84564\nGuard createDebugChannel import by feature flag: #84604\nBuild: Add time to logline of every step: #84602\nUpgrade React from c7862584-20251006 to a4eb2dfa-20251006: #84589\n[Cache Components] Schedule work on timeouts: #84344\n[dev] Define request ID for RSC requests on the client: #84605\nfix(cache-tags): add /index to implicit tags and adjust revalidatePath(): #84586\nBuild: Highlight TypeScript and ESLint being run clearer: #84606\n[Breaking] Bump sass-loader to v16: #84387\nUpdate cases for build complete with adapters: #84361\nTurbopack: delete .next folder before throwing due to "pages/app directory must be in the same folder": #84553\n[mcp] change get-project-path to get-project-metadata: #84619\nfeat(next/image)!: deprecate and warn on images.domains config: #84625\nfeat(next/legacy/image)!: deprecate and warn on next/legacy/image usage: #84622\nTurbopack: improve errors/warnings for turbopack messages: #84552\nTurbopack: rename turbopackPersistentCachingForXXX to turbopackFileSystemCacheForXXX: #84632\n[Segment Cache] Add refresh URL to reused default segments: #84627\n[Segment Cache] Fix tests related to optimistic loading state reuse: #84498\nUpgrade React from a4eb2dfa-20251006 to 3025aa39-20251007: #84613\n[breaking]: enable clientSegmentCache by default: #84643\nfeat: Acquire a lockfile on distDir in next dev and next build: #84428\nAdd deprecation warning to Runtime config: #84168\n[middleware]: add upper bound to cloneBodyStream: #84539\nRemove automatic linting from build: #83136\nRe-enable legacyBehavior and passHref on Link: #84500\n[cna] Use stable React Compiler: #84660\nAdd codemod for middleware to proxy: #84127\nFix dynamic catchall parameter interpolation in parallel routes: #84279\nfeat(breaking): Hard Deprecate PPR Configuration: #84280\nDeprecate middleware and recommend proxy: #84119\nPut native TS resolver for next config under --experimental-next-config-strip-types flag: #84675\nFix interception route rewrites for nested dynamic routes: #84413\nfix: strip NEXTSEP from interpolated pathnames: #84430\nchore: Remove useless symlink resolution logic in recursive-delete.js: #84582\nbreaking(next/image)!: remove 16px from default images.imageSizes config: #84647\nadd Statsig Node Core package to Server External Packages: #84157\nRemove bailed out SSG routes from the list of SSG: #83861\nRevert "[Breaking] Skip Next.js internal routes /_next in middleware": #84697\nBump eslint-plugin-react-hooks to v7: #84669\nAdd refresh API to next/cache: #84666\n[Breaking] Require images.localPatterns for query in Image src: #84406\n[Breaking] feat(next/image)!: add support for images.dangerouslyAllowLocalIP and images.maximumRedirects: #84676\nAdd new updateTag API and new signature for revalidateTag: #83822\nAdd validation for missing default.js in parallel routes: #84702\nmisc: allow beta to be triggered: #84713\nFix tags check for expired/stale: #84717\ntweak middlewareClientMaxBodySize handling: #84712\nExample Changes\ndocs: Convert relative imports to @ aliases in examples: #83813\nchore: add example with oxlint: #83842\nfix: correct typo \'incomming\' to \'incoming\' in with-mqtt-js example: #83887\nchore: improve oxlint example: #83898\ndocs: update Dockerfile to use node:lts-alpine instead of node:18-alpine: #84229\nUse Array.from to avoid @ts-ignore when copying i18n.locales: #82148\nexamples: Remove AMP example: #84355\nMisc Changes\nTurbopack: remove css_environment from Environment: #83487\nTurbopack: Don\'t add client_runtime_entries to Route Handler compilation: #83655\nTurbopack: Only load capsize-font-metrics once: #83654\n[CI] Fix GitHub Actions matrix configuration for React versions: #83677\nfix(Turbopack): Enable scope hoisting for large files or module counts: #83399\n[turbopack] Lazily construct resolved::Requests for EsmAssetReference: #83662\nUpdate content-security-policy.mdx, fix development environment error: #83665\ntests: disable flaky deployment test while investigating upstream: #83705\n[test] Update snapshots for Rspack + React 18: #83712\nDocs/sep paper cuts: #83689\n[Turbopack] Remove ssr-data module context: #83626\nCI: use KV for test timing data: #83745\nEmit build error when \'use cache\' directive is misspelled: #83756\ndocs(metadata): align default function export name with file name: #83796\n[turbopack] Remove the should_track_children parameter of the turbo tasks backend: #83258\ndocs(data-security): add bun package manager example: #83735\nUpdate next-intlayer reference in i18n doc: #83761\nUpdate Rspack production test manifest: #83790\nUpdate Rspack development test manifest: #83791\nTurbopack: chunking debugging utilities: #83801\nRemoved link to maintain text consistency: #83644\nTurbopack: rename some fields in fs: #83808\nTurbopack: validate CSS without computing all paths: #83810\n[test] Disable flaky navigation test: #83828\ndocs: Type narrowing using LayoutProps, PageProps: #83692\ndocs: implications of mutating cookies in server actions: #83691\nOnly retry if canary fails on required jobs: #83851\ndocs: Fix self-referential link to Middleware in middleware.mdx: #83854\nUpdate Rspack production test manifest: #83826\nUpdate generate-metadata.mdx: #81853\nTurbopack: remove lazy invalidated tasks: #83845\nTurbopack: remove Backend TaskState: #83846\nTurbopack: don\'t recompute empty parse results: #83883\nTurbopack: delete broken hmr benchmark: #83882\nTurbopack: only generate error string in error case: #83884\ndocs: the as prop is still available in Pages Router: #83864\nTurbopack: map_module_batch: #83885\nTurbopack: Change run once signature to avoid exposing TaskId: #83844\ndocs: Update command to use npx for tracing files: #83903\nTurbopack: ModuleGraphRef: #83890\nUpdate Rspack development test manifest: #83876\nTurbopack: make graph traversal sync: #83891\nchore: Fix test snapshot: #83901\nUpdate Rspack production test manifest: #83877\ndocs: add next.config.ts Node.js native resolver: #83561\nTurbopack: add turbo_tasks::run to run in turbo tasks scope without a task: #83847\nTurbopack: fix double codegen of some merged modules: #83886\nTurbopack: add traces to merged module computation: #83908\nTurbopack: RuleCondition support resourceQuery contains: #83468\nfix: add the missing comma in the document example: #83932\nTurbopack: Document the reasons for the current design of parse_segment_config_from_source: #83919\nTurbopack: extract parse_source_map_comment: #83938\nTurbopack: enable nodelay for node.js pool socket: #83942\nfeat: next-rspack-binding: #82811\nOnly send notification if canary fails on required jobs: #83953\nTurbopack: allow to read State from turbo_tasks::run: #83955\nFix conclusion check for retry_test workflow: #83960\nAdd Descope to Auth libraries list: #83968\n[turbopack] Track task durations in the task_statistics file: #83522\n[turbopack] Remove the issue_path feature and related functionality: #83920\nTurbopack: use turbo_tasks::run in next.js to avoid task memory leak: #83848\nUpdate Rspack production test manifest: #83934\nUpdate Rspack development test manifest: #83933\nTurbopack: add test case that checks memory leak: #83849\nTurbopack: read project strongly consistent in project_update: #83974\nFix output comparison when checking conclusion of required jobs: #83986\nTurbopack: JsAnalyzer parse AssignExpr: #83962\nTurbopack: less eager manifest generation: #83736\nTurbopack: use depth as priority for merged module info: #83909\nTurbopack: "connect" tasks in turbo_tasks::run too: #83975\nUpdate Rspack production test manifest: #83979\nUpdate Rspack development test manifest: #83980\nTurbopack: Make transient tasks root tasks too when called in turbo_tasks::run: #83976\nTurbopack: trace state changes: #83977\n[turbopack] cleanup analyzer: #83983\n[Turbopack] Fix AST traversal for this in function default parameters: #83746\n[turbopack] Consolodate logic for visiting functions to simplify state management: #82763\n[turbopack] Track the scope in which variables are assigned: #82845\n[turbopack] Set liveness of exports based on assignment analysis: #82802\nTurbopack: trace all state changes: #84053\ndocs: We have dropped the CORS example linked: #84065\ndocs: add pageExtensions note to Middleware and clarify default filename: #84045\nFix TypeScript type error in example code: #84041\nTurbopack: fix test case and update project_update to turbo_tasks::run too: #83978\nTurbopack: run tests with multiple threads: #84074\nTurbopack: flush Node.js worker IPC on error: #84077\nTurbopack: parallelize scope hoisting computation: #83904\nAdd test for JS resource size on navigation: #83731\nUpdate Rspack development test manifest: #84061\nUpdate Rspack production test manifest: #84060\nTurbopack: Document automatic Babel config support: #84002\ndocs: Fix the title/path of the turbopack page on pages router: #84001\nTurbopack: remove references from ChunkData: #84076\nTurbopack: include availability hash in the ident of evaluated chunks groups: #84082\n[turbopack] s/analyse/analyze/g: #84112\n[Turbopack] avoid attaching referenced output assets to chunks: #75933\nfix(docs): Fix links in UPGRADING.md: #84114\ndocs: improve dynamic routes example in project structure page: #84086\ndocs: onRequestError request header type: #83988\nTurbopack: Improve persistent caching test case: #83205\nTurbopack: add more details to the graph panic: #84126\ndocs: Cookies store access is async: #83987\nBump Rust to nightly-2025-09-21: #83415\nUpgrade CodSpeed action and add analyzer benchmarks: #84135\nTurbopack: fix run_once when returning error: #84142\n[turbopack] Conditionally collect affecting sources: #83921\nTurbopack: slightly improve resolve_source_map_sources: #84147\nTurbopack: RawEcmascriptModule: #81806\nTurbopack: add more details to the graph panic: #84143\ntest: split app-middleware test per describe: #84130\nUpdate Rspack development test manifest: #84117\nscript: improve release log generation: #83686\nTurbopack: split task_execution_completed into multiple methods: #84170\nTurbopack: only generate field if spans are enabled: #84184\nTurbopack: support more dynamic request with import map: #84178\n[turbopack] defer a value_to_string operation until we need it: #84188\nUpdate Rspack production test manifest: #84165\nRevert "[turbopack] Set liveness of exports based on assignment ana…: #84207\nTurbopack: increase retry duration, reduce busy looping when there is other work: #84171\nTurbopack: Try to avoid block_in_place in scope: #84172\n[turbopack] Remove some bitmap clones: #84193\nTurbopack: lazier manifests, part deux: #84191\nTurbopack: avoid panic on updating output when a task was cancelled: #84214\ndocs: nav_title for long unbroken words: #84233\nTurbopack: Use RawValue for mappings inside SourceMapJson: #84208\nUpdate Rspack development test manifest: #84218\nTurbopack: fix NFT of readFileSync of relative path: #84155\nTurbopack: improve references benchmark: #84223\nUpdate Rspack production test manifest: #84217\nTurbopack: drop ASTs when only tracing: #84185\ndocs: Include more detailed instructions on excluding from common AV solutions, including macOS Gatekeeper: #84206\nTurbopack: trace fs-extra calls: #84246\n[test] Overhaul Undefined default export test suite: #84235\nTurbopack: Scope with work queue: #84225\n[test] Make Undefined default export an e2e test suite: #84240\n[turbopack] Conditionally create pages router data endpoints.: #84194\nTurbopack: parallel connect children: #84173\nTurbopack: count turbo_tasks::run as foreground tasks to avoid being idle: #84245\nTurbopack: make persistent caching log line more clear: #84262\nTurbopack: make tracing nicer: #84263\ndocs:Small improvement on the contribution guide for clarity: #84200\nTurbopack: Remove not-very-useful "Finished writing to disk in" log line: #84244\nTurbopack: follow up changes from parallel children: #84219\n[turbopack] Simplify take_issues and peek issues: #84199\nUpdate Rspack development test manifest: #84260\nUpdate Rspack production test manifest: #84259\nTurbopack: Scope with work queue: #84225\n[test] Make Undefined default export an e2e test suite: #84240\n[turbopack] Conditionally create pages router data endpoints.: #84194\nTurbopack: parallel connect children: #84173\nTurbopack: count turbo_tasks::run as foreground tasks to avoid being idle: #84245\nTurbopack: make persistent caching log line more clear: #84262\nTurbopack: make tracing nicer: #84263\ndocs:Small improvement on the contribution guide for clarity: #84200\nTurbopack: Remove not-very-useful "Finished writing to disk in" log line: #84244\nTurbopack: follow up changes from parallel children: #84219\n[turbopack] Simplify take_issues and peek issues: #84199\nUpdate Rspack development test manifest: #84260\nUpdate Rspack production test manifest: #84259\n[test] Ignore pnpm update notifier: #84328\n[test] Stop downloading unused test browsers when generating PR stats: #84329\ndocs: remove repeated to: #84325\nTurbopack: Use more robust logic for absolute and percent-encoded URLs in source maps received from loaders: #84255\nTurbopack: only replace edge dynamic calls in dev: #84354\n[turbopack] Remove a bunch of dead code from the source map implementation: #84318\nTurbopack: prevent duplicate NFT modules: #84369\ndocs: Remove AMP docs: #84357\ndocs: Type helpers don\'t need to be imported: #84265\nTurbopack: Add docs for debugIds option: #84375\nRemove references to size metrics in next build from our docs: #83823\nBump to swc v42: #83477\nTurbopack: skip invalidating a task on cell/output change when the dependency is outdated: #84376\nTurbopack: trace module.createRequire: #84335\nUpdate failing e2e deploy tests: #84395\nTurbopack: Webpack loader this.fs.readFile: #83313\nImprove tests: #84374\nRevamp Next.js boilerplate: #81945\nAdd test for twoslash: #84267\nDocs/project structure polish: #84386\nBump to swc v44: #84420\nTurbopack: don\'t fail for parse errors in tracing: #84408\nUpdate Rspack development test manifest: #84365\nUpdate Rspack production test manifest: #84366\n[ci]: remove PPR-specific CI jobs: #84439\ndocs: Verbose troubleshooting for unconfigured hosts: #84271\nUpdate Rspack production test manifest: #84398\nAdd gt-next to i18n list: #84396\n[ci]: fix build-output-prerender to support segment cache env: #84467\n[ci]: fix app-static snapshots with clientSegmentCache: #84468\nTurbopack: Only benchmark file IO on next dev: #84474\nTurbopack: improve incremental build performance when deployment id changes: #84460\nfix: Missing link in Lazy Loading docs: #84473\ndocs: simplify streaming metadata: #84253\nmake withRspack idempotent: #84482\nTurbopack: Use strongly consistent reads in random_change unit test: #84505\nUpdate Rspack development test manifest: #84480\nUpdate Rspack production test manifest: #84481\n[ci]: remove test from segment cache manifest: #84507\n[ci]: de-flake client cache test: #84517\nRevert "Turbopack: skip invalidating a task on cell/output change when the dependency is outdated": #84526\nnext mcp router\nRevert "next mcp router"\ntest: Use nextTestSetup in scss tests: #84501\n[turbopack[ Use the configured hasher to implementh Hash for AutoMap and AutoSet: #84542\nTurbopack: debug ids for server chunks: #84557\nCI: Enable experimental.isolatedDevBuild for test-unit: #84559\n[test]: convert prefetching tests to be segmentCache compatible: #84521\nCI: Enable experimental.isolatedDevBuild for test-prod: #84556\nAdd .next/dev/types to CNA templates tsconfig include: #84566\nCI: Enable experimental.isolatedDevBuild for test-integration: #84558\nUpdate Rspack development test manifest: #84548\nAdd a webpack flag to create next app.  Ensure that if you set it or decline turbopack we set the --webpack flag on the generated project: #84476\nUpdate Rspack production test manifest: #84549\nCI: Enable experimental.isolatedDevBuild for test-dev: #84562\n[test] Unflake static image test: #84535\nTurbopack: Lower the IO concurrency limit in CI tests: #84508\nAdd documentation for experimental adapters handling: #83737\nTurbopack: improve next/dynamic eventual consistentcy: #84560\nfix hidden errors in router-act: #84603\nfix(cna): use correct postcss plugins syntax: #79949\nTurbopack: absolute requests in webpack loader: #84575\nUpdate Rspack development test manifest: #84592\nUpdate Rspack production test manifest: #84593\nTurbopack: Remove workaround in hyper for rustc miscompilation bug on macos intel: #84578\nTurbopack: add manual worker count override: #84454\nTurbopack: don\'t ignore TS parse errors: #84597\nAdd middleware to routes order doc: #84618\n[create-next-app]: prompt to use recommended options: #84570\nUpdate labeler: #84623\nTurbopack: use mmap advise to help the OS preloading: #84379\nTurbopack: skip invalidating a task on cell/output change when the dependency is outdated: #84551\nTurbopack: follow-up changes from untracked tracing: #84629\nTurbopack: sourcemaps for JSON modules: #84611\nTurbopack: avoid race condition when updating cells: #84598\ndocs: update core documentation for Turbopack as default bundler: #84282\nUpdate Rspack development test manifest: #84631\n[turbopack] Only send the filesystem caching timing messages for slow events: #84646\ndocs: experimental.isolatedDevBuild: #84656\ndocs: add note clarifying project root in monorepo: #84628\nFix flakey overlay feedback test: #84662\n[ci]: update flake detection to only run in Turbopack: #84659\n[ci]: move router-act to top level testing utils: #84653\n[tests]: de-flake client-cache.parallel-routes.test.ts: #84655\n[create-next-app]: add eslint to default template: #84661\nUpdate Rspack production test manifest: #84630\n[test] Assert on stable error codes: #84671\nTurbopack: convert HashMap to IndexMap for deterministic tasks: #84641\nAdd note about $ACTION_ properties, remove reference to .entries(): #84459\nFix typo on welcome page: #84715\nCredits\nHuge thanks to @@mischnic, @@timneutkens, @@unstubbable, @@wyattjoh, @@Cy-Tek, @@lukesandberg, @@OoMNoO, @@ztanner, @@icyJoseph, @@huozhi, @@gnoff, @@ijjk, @@povilasv, @@dwrth, @@obendev, @@aymericzip, @@devjiwonchoi, @@SyMind, @@vercel-release-bot, @@Shireee, @@eps1lon, @@dharun36, @@kachkaev, @@bgw, @@yousefdawood7, @@TheAlexLichter, @@sokra, @@ericx0099, @@leerob, @@Copilot, @@fireairforce, @@fufuShih, @@anvibanga, @@hayes, @@Milancen123, @@martinfrancois, @@lubieowoce, @@gaojude, @@lachlanjc, @@liketiger, @@styfle, @@aaronbrown-vercel, @@Samii2383, @@FelipeChicaiza, @@kevva, @@m1abdullahh, @@F7b5, @@Anshuman71, @@RobertFent, @@poteto, @@chloe-yan, @@sireesha-siri, @@brian-lou, @@joao4xz, @@stefanprobst, @@samselikoff, @@acdlite, @@gwkline, @@bgub, @@brock-statsig, @@karlhorky, and @@feedthejim for helping!',
   },
   {
     date: new Date("2025-10-10T00:52:13.000Z"),
     title: "v15.6.0-canary.57",
     url: "https://github.com/vercel/next.js/releases/tag/v15.6.0-canary.57",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\nFix tags check for expired/stale: #84717\ntweak middlewareClientMaxBodySize handling: #84712\nMisc Changes\nFix typo on welcome page: #84715\nCredits\nHuge thanks to @samselikoff, @ijjk, and @ztanner for helping!",
   },
   {
     date: new Date("2025-10-09T23:58:34.000Z"),
     title: "v15.6.0-canary.56",
     url: "https://github.com/vercel/next.js/releases/tag/v15.6.0-canary.56",
-    type: "リリース",
+    type: "releases",
     source: "Next.js",
+    content:
+      "Core Changes\nmisc: allow beta to be triggered: #84713\nCredits\nHuge thanks to @feedthejim for helping!",
   },
   {
     date: new Date("2025-10-09T22:24:15.000Z"),
     title: "v1.4.0-beta.9",
     url: "https://github.com/better-auth/better-auth/releases/tag/v1.4.0-beta.9",
-    type: "リリース",
+    type: "releases",
     source: "Better Auth",
+    content:
+      "🐞 Bug Fixes\nEnsure falsy values are valid default values  -  by @ocherry341 in #5182 (03d62)\nclient:\n\nMissing isRefetching type in react useSession  -  by @ThibautCuchet in #5166 (af4a4)\ndocs:\n\nAnchor link scrolling with conflict prevention  -  by @Kinfe123 in #5186 (91778)\ngitlab:\n\nFix the token endpoint  -  by @Tobix99 in #5147 (589df)\npasskey:\n\nAtom listeners not working  -  by @ping-maxwell in #5096 (57fcd)\nPasskey breaks with throw: true  -  by @ping-maxwell and Bereket Engida in #5079 (ba86d)\ntwo-factor:\n\nReturn parsed array in viewBackupCodes  -  by @ahmed-abdat in #5174 (255fb)\n    View changes on GitHub",
   },
   {
     date: new Date("2025-10-09T20:00:00.000Z"),
     title: "Next.js 16 (beta)",
     url: "https://nextjs.org/blog/next-16-beta",
-    type: "ニュース",
+    type: "blog",
     source: "Next.js",
+    content:
+      "Next.js 16 beta includes stable Turbopack, file system caching, React Compiler support, smarter routing, new caching APIs, and React 19.2 features.",
+  },
+  {
+    date: new Date("2025-10-09T13:00:00.000Z"),
+    title: "Server rendering benchmarks: Fluid Compute and Cloudflare Workers",
+    url: "https://vercel.com/blog/fluid-compute-benchmark-results",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "Independent developer  recently published  comparing server-side rendering performance between  and Cloudflare Workers. The tests measured 100 iterations across Next.js, React, SvelteKit, and other frameworks.Theo Brownecomprehensive benchmarksFluid compute\nThe results showed that for compute-bound tasks, Fluid compute performed 1.2 to 5 times faster than Cloudflare Workers, with more consistent response times.\nRead more",
+  },
+  {
+    date: new Date("2025-10-09T13:00:00.000Z"),
+    title: "ChatGPT apps support on Vercel",
+    url: "https://vercel.com/changelog/chatgpt-apps-support-on-vercel",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "You can now build and deploy  directly on Vercel, with full support for modern web frameworks.ChatGPT apps\nChatGPT apps let you integrate custom UI components and functionality within ChatGPT, deployed and served by Vercel. \nFrameworks like  can now power these experiences using the Model Context Protocol (MCP), running natively inside the OpenAI sandbox rather than in a nested iframe. Check out our .Next.jsNext.js template\nBuild your ChatGPT apps with:\nGet started by building and deploying ChatGPT apps on Vercel using , , and .Next.jsApps SDKmcp-handler\n\nRead more\n\n\nNext.js features like server-side rendering (SSR) and React Server Components\n\nVercel platform capabilities such as preview deployments, instant rollback, and a seamless dev-to-production pipeline",
+  },
+  {
+    date: new Date("2025-10-09T13:00:00.000Z"),
+    title: "Block Vercel deployment promotions with Github Actions",
+    url: "https://vercel.com/changelog/block-vercel-deployment-promotions-with-github-actions",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "You can now block a deployment from being promoted to production until selected GitHub Actions complete successfully.\nOn Vercel, every deployment starts in a preview environment, this feature ensures that only verified builds that pass tests or other automated checks are released to production.\nDeployment Checks are available for all projects connected to GitHub repositories.\nConfigure them in your  or learn more in .project settingsthe docs\nRead more",
+  },
+  {
+    date: new Date("2025-10-09T01:08:01.000Z"),
+    title: "React Conf 2025 Day 2",
+    url: "https://www.youtube.com/watch?v=p9OcztRyDl0",
+    type: "youtube",
+    source: "React",
+    content: "",
+  },
+  {
+    date: new Date("2025-10-09T00:00:00.000Z"),
+    title: "Introducing Real-Time Data with Materialized Views in Turso",
+    url: "https://turso.tech/blog/introducing-real-time-data-with-materialized-views-in-turso",
+    type: "blog",
+    source: "Turso",
+    content: "",
+  },
+  {
+    date: new Date("2025-10-08T13:00:00.000Z"),
+    title:
+      "New Domains Registrar API for domain search, pricing, purchase, and management",
+    url: "https://vercel.com/changelog/new-domains-registrar-api-for-domain-search-pricing-purchase-and-management",
+    type: "blog",
+    source: "Vercel",
+    content:
+      "You can now programmatically search, price, buy, renew, and transfer domains with Vercel’s new , complementing the new in-product .Domains Registrar APIDomains experience\nThe API provides endpoints for:\nExplore the .API docs\nRead more\n\n list supported TLDs; get TLD and per-domain pricing.Catalog & pricing:\n\n check single or bulk availability.Availability:\n\n buy domains (including bulk) and fetch order status by ID.Orders & purchases:\n\n retrieve auth codes, transfer in, and track transfer status.Transfers:\n\n renew, toggle auto-renewal, update nameservers, and fetch TLD-specific contact schemas.Management:",
   },
 ];

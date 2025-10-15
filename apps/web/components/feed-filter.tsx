@@ -69,8 +69,9 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
     const counts: Record<string, number> = {};
     availableTypes.forEach((type) => {
       counts[type] = feedItems.filter((item) => {
-        // タイプが一致するかチェック
-        if (item.type !== type) return false;
+        // タイプが一致するかチェック（英語→日本語マッピングを考慮）
+        const itemTypeInJapanese = typeLabels[item.type];
+        if (!itemTypeInJapanese || itemTypeInJapanese !== type) return false;
 
         // ソースフィルターが設定されている場合、それも考慮
         if (sources && sources.length > 0) {

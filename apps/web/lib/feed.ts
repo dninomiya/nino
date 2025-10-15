@@ -267,6 +267,7 @@ export type FeedItem = {
   url: string;
   type: string;
   source: string;
+  content?: string;
 };
 
 const parser = new Parser();
@@ -294,6 +295,8 @@ async function fetchRssFeed(
           url: item.link || "",
           type,
           source,
+          content:
+            item.contentSnippet || item.content || item.description || "",
         })) || []
     );
   } catch (error) {
@@ -323,6 +326,7 @@ async function fetchScrapedFeed(
         url: item.url,
         type,
         source,
+        content: "", // スクレイピングではcontentは空文字列
       }));
   } catch (error) {
     console.error(`Failed to scrape feed from ${url}:`, error);
