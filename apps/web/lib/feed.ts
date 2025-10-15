@@ -1,4 +1,3 @@
-import "server-only";
 import Parser from "rss-parser";
 import { isAfter, subDays } from "date-fns";
 import { LucideIcon } from "lucide-react";
@@ -21,12 +20,12 @@ type FeedConfig =
   | {
       method: "rss";
       url: string;
-      category: "releases" | "blog" | "changelog" | "youtube";
+      type: "releases" | "blog" | "changelog" | "youtube";
     }
   | {
       method: "scrape";
       url: string;
-      category: string;
+      type: string;
       selector: (html: string) => Array<{
         title: string;
         url: string;
@@ -48,12 +47,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/vercel/next.js/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://nextjs.org/feed.xml",
-        category: "blog",
+        type: "blog",
       },
     ],
   },
@@ -64,12 +63,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://vercel.com/atom",
-        category: "blog",
+        type: "blog",
       },
       {
         method: "rss",
         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCLq8gNoee7oXM7MvTdjyQvA",
-        category: "changelog",
+        type: "changelog",
       },
     ],
   },
@@ -80,17 +79,17 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/facebook/react/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://react.dev/rss.xml",
-        category: "blog",
+        type: "blog",
       },
       {
         method: "rss",
         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC1hOCRBN2mnXgN5reSoO3pQ",
-        category: "youtube",
+        type: "youtube",
       },
     ],
   },
@@ -101,12 +100,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/resend/resend-node/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC0FkhoSz2kYqHVBk4L0QYIg",
-        category: "youtube",
+        type: "youtube",
       },
     ],
   },
@@ -117,7 +116,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/better-auth/better-auth/releases.atom",
-        category: "releases",
+        type: "releases",
       },
     ],
   },
@@ -128,12 +127,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/tursodatabase/libsql/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://turso.tech/blog/feed.xml",
-        category: "blog",
+        type: "blog",
       },
     ],
   },
@@ -144,12 +143,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://www.raycast.com/blog/rss",
-        category: "blog",
+        type: "blog",
       },
       {
         method: "rss",
         url: "https://www.raycast.com/changelog/rss",
-        category: "changelog",
+        type: "changelog",
       },
     ],
   },
@@ -160,7 +159,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://www.notion.com/ja/releases/rss.xml",
-        category: "releases",
+        type: "releases",
       },
     ],
   },
@@ -171,7 +170,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/drizzle-team/drizzle-orm/releases.atom",
-        category: "releases",
+        type: "releases",
       },
     ],
   },
@@ -182,7 +181,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://stripe.com/blog/feed.rss",
-        category: "blog",
+        type: "blog",
       },
     ],
   },
@@ -193,12 +192,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/47ng/nuqs/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://nuqs.dev/blog/rss.xml",
-        category: "blog",
+        type: "blog",
       },
     ],
   },
@@ -209,7 +208,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/react-hook-form/react-hook-form/releases.atom",
-        category: "releases",
+        type: "releases",
       },
     ],
   },
@@ -220,7 +219,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/shadcn-ui/ui/releases.atom",
-        category: "releases",
+        type: "releases",
       },
     ],
   },
@@ -231,17 +230,17 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/tailwindlabs/tailwindcss/releases.atom",
-        category: "releases",
+        type: "releases",
       },
       {
         method: "rss",
         url: "https://tailwindcss.com/feeds/feed.xml",
-        category: "blog",
+        type: "blog",
       },
       {
         method: "rss",
         url: "https://tailwindcss.com/changelog/feed.xml",
-        category: "youtube",
+        type: "youtube",
       },
     ],
   },
@@ -251,7 +250,7 @@ export type FeedItem = {
   date: Date;
   title: string;
   url: string;
-  category: string;
+  type: string;
   source: string;
 };
 
@@ -259,7 +258,7 @@ const parser = new Parser();
 
 async function fetchRssFeed(
   url: string,
-  category: string,
+  type: string,
   source: string,
   days: number
 ): Promise<FeedItem[]> {
@@ -278,7 +277,7 @@ async function fetchRssFeed(
           date: new Date(item.isoDate || item.pubDate || ""),
           title: item.title || "No title",
           url: item.link || "",
-          category,
+          type,
           source,
         })) || []
     );
@@ -290,7 +289,7 @@ async function fetchRssFeed(
 
 async function fetchScrapedFeed(
   url: string,
-  category: string,
+  type: string,
   source: string,
   selector: (html: string) => Array<{ title: string; url: string; date: Date }>,
   days: number
@@ -307,7 +306,7 @@ async function fetchScrapedFeed(
         date: item.date,
         title: item.title,
         url: item.url,
-        category,
+        type,
         source,
       }));
   } catch (error) {
@@ -324,7 +323,7 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
       if (feed.method === "rss") {
         const items = await fetchRssFeed(
           feed.url,
-          feed.category,
+          feed.type,
           collection.name,
           days
         );
@@ -332,7 +331,7 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
       } else if (feed.method === "scrape") {
         const items = await fetchScrapedFeed(
           feed.url,
-          feed.category,
+          feed.type,
           collection.name,
           feed.selector,
           days
@@ -344,4 +343,20 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
 
   // 日付順（新しい順）でソート
   return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+export function getAvailableTechnologies(): string[] {
+  return collections.map((collection) => collection.name);
+}
+
+export function getAvailableTypes(): string[] {
+  const types = new Set<string>();
+  collections.forEach((collection) => {
+    collection.feeds.forEach((feed) => {
+      if (feed.method === "rss") {
+        types.add(feed.type);
+      }
+    });
+  });
+  return Array.from(types);
 }

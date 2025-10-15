@@ -21,7 +21,7 @@ import {
 } from "@icons-pack/react-simple-icons";
 import { ArrowUpRight, Newspaper } from "lucide-react";
 
-const categoryIconsMap: Record<string, React.ElementType> = {
+const typeIconsMap: Record<string, React.ElementType> = {
   リリース: SiGithub,
   ニュース: Newspaper,
 };
@@ -35,15 +35,15 @@ const serviceIconsMap: Record<string, React.ElementType> = {
 };
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
-  const [categories, setCategories] = useQueryState("category");
+  const [types, setTypes] = useQueryState("type");
   const [sources, setSources] = useQueryState("source");
 
   const filteredFeedItems = useMemo(() => {
     return feedItems.filter((item) => {
       let match = true;
 
-      if (categories && categories?.length > 0) {
-        match = categories.includes(item.category);
+      if (types && types?.length > 0) {
+        match = types.includes(item.type);
       }
 
       if (sources && sources?.length > 0) {
@@ -52,7 +52,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
 
       return match;
     });
-  }, [feedItems, categories, sources]);
+  }, [feedItems, types, sources]);
 
   return (
     <div className="space-y-4">
@@ -60,7 +60,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
         <Card key={`${item.url}-${index}`}>
           <CardHeader className="flex-1">
             <div className="flex items-center gap-2">
-              <IconBadge category={item.category} />
+              <IconBadge type={item.type} />
               <Badge variant="outline">
                 <ServiceIcon service={item.source} />
                 {item.source}
@@ -82,13 +82,13 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   );
 }
 
-function IconBadge({ category }: { category: string }) {
-  const Icon = categoryIconsMap[category];
+function IconBadge({ type }: { type: string }) {
+  const Icon = typeIconsMap[type];
 
   return (
     <Badge variant="outline">
       {Icon && <Icon className="size-4" />}
-      {category}
+      {type}
     </Badge>
   );
 }

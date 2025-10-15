@@ -10,5 +10,13 @@
   },
   "InviteNino": {
     "label": "採用"
+  },
+  "FeedFilter": {
+    "typeLabel": "Content Type",
+    "sourceLabel": "Technology",
+    "releases": "Releases",
+    "news": "News",
+    "changelog": "Changelog",
+    "youtube": "Videos"
   }
 }
