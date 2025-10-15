@@ -56,6 +56,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
                 {item.source}
               </Badge>
             </div>
+
             <CardTitle>
               <a href={item.url} target="_blank" className="hover:underline">
                 {item.title}
@@ -66,6 +67,19 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <RecencyDate date={item.date} />
             </CardDescription>
           </CardHeader>
+          {item.thumbnail && (
+            <div className="px-6 pb-4">
+              <img
+                src={item.thumbnail}
+                alt={item.title}
+                className="w-full rounded-md"
+                onError={(e) => {
+                  // 画像読み込みエラー時は非表示にする
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            </div>
+          )}
           {item.content && (
             <CardContent>
               <p className="text-sm text-muted-foreground overflow-hidden whitespace-pre-wrap">

@@ -273,9 +273,53 @@ export type FeedItem = {
   type: string;
   source: string;
   content?: string;
+  thumbnail?: string;
 };
 
-const parser = new Parser();
+const parser = new Parser({
+  customFields: {
+    item: [
+      ["enclosure", "enclosure", { keepArray: true }],
+      ["media:thumbnail", "mediaThumbnail"],
+    ],
+  },
+});
+
+// サムネイル画像を抽出する関数
+function extractThumbnail(item: any): string | undefined {
+  // 1. media:thumbnailから取得
+  if (item.mediaThumbnail?.$?.url) {
+    return item.mediaThumbnail.$.url;
+  }
+
+  // 2. enclosureから画像を取得
+  if (item.enclosure && Array.isArray(item.enclosure)) {
+    const imageEnclosure = item.enclosure.find((enc: any) =>
+      enc.$?.type?.startsWith("image/")
+    );
+    if (imageEnclosure?.$?.url) {
+      return imageEnclosure.$.url;
+    }
+  }
+
+  // 3. description内の画像から抽出
+  if ((item as any).description) {
+    const match = (item as any).description.match(/<img[^>]+src="([^">]+)"/i);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  // 4. content内の画像から抽出
+  if (item.content) {
+    const match = item.content.match(/<img[^>]+src="([^">]+)"/i);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  return undefined;
+}
 
 async function fetchRssFeed(
   url: string,
@@ -301,7 +345,11 @@ async function fetchRssFeed(
           type,
           source,
           content:
-            item.contentSnippet || item.content || item.description || "",
+            item.contentSnippet ||
+            item.content ||
+            (item as any).description ||
+            "",
+          thumbnail: extractThumbnail(item),
         })) || []
     );
   } catch (error) {
@@ -332,6 +380,7 @@ async function fetchScrapedFeed(
         type,
         source,
         content: "", // スクレイピングではcontentは空文字列
+        thumbnail: undefined, // スクレイピングではサムネイルは未対応
       }));
   } catch (error) {
     console.error(`Failed to scrape feed from ${url}:`, error);
