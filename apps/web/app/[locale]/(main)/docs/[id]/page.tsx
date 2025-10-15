@@ -16,9 +16,6 @@ export const generateMetadata = async ({
   const doc = await getDocMeta(id);
   return {
     title: doc?.title,
-    openGraph: {
-      images: [`/${locale}/docs/${id}/opengraph-image`],
-    },
   } satisfies Metadata;
 };
 
