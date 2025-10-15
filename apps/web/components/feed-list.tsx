@@ -24,9 +24,16 @@ import {
   TAG_LABELS,
 } from "@/lib/feed";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { ArrowUpRight, FileText, Newspaper, Rss } from "lucide-react";
+import {
+  ArrowUpRight,
+  FileText,
+  Newspaper,
+  Rss,
+  RefreshCw,
+} from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const typeIconsMap: Record<string, React.ElementType> = {
   リリース: SiGithub,
@@ -40,6 +47,9 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [sources] = useQueryState("source");
   const [tags] = useQueryState("tags");
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+  const [regeneratingItems, setRegeneratingItems] = useState<Set<string>>(
+    new Set()
+  );
 
   const filteredFeedItems = useMemo(() => {
     return feedItems.filter((item) => {
@@ -64,6 +74,45 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
       return match;
     });
   }, [feedItems, types, sources, tags]);
+
+  const handleRegenerateSummary = async (item: FeedItem) => {
+    const itemKey = `${item.url}-${item.date.getTime()}`;
+
+    try {
+      setRegeneratingItems((prev) => new Set(prev).add(itemKey));
+
+      const response = await fetch("/api/regenerate-summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: item.url,
+          date: item.date.toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("要約の再生成に失敗しました");
+      }
+
+      const result = await response.json();
+
+      toast.success("要約を再生成しました");
+
+      // ページをリフレッシュして新しいデータを表示
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to regenerate summary:", error);
+      toast.error("要約の再生成に失敗しました");
+    } finally {
+      setRegeneratingItems((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(itemKey);
+        return newSet;
+      });
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -129,7 +178,25 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
             )}
           </CardContent>
 
-          <CardFooter className="flex gap-2">
+          <CardFooter className="flex gap-2 flex-wrap">
+            {/* 要約再生成ボタン */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleRegenerateSummary(item)}
+              disabled={regeneratingItems.has(
+                `${item.url}-${item.date.getTime()}`
+              )}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw
+                className={`size-4 ${regeneratingItems.has(`${item.url}-${item.date.getTime()}`) ? "animate-spin" : ""}`}
+              />
+              {regeneratingItems.has(`${item.url}-${item.date.getTime()}`)
+                ? "生成中..."
+                : "要約を生成"}
+            </Button>
+
             {/* RSSフィードへのリンク */}
             {item.rssUrl && (
               <Button
