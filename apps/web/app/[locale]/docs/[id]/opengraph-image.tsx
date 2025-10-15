@@ -12,10 +12,10 @@ export const size = {
 
 export async function generateStaticParams() {
   const docs = (await getDocMetas()) as DocMeta[];
-  const localeParams = routing.locales.map((locale) => ({ locale }));
-  return localeParams.flatMap((locale) =>
+  const params = routing.locales.flatMap((locale) =>
     docs.map((doc) => ({ locale, id: doc.id }))
   );
+  return params;
 }
 
 async function loadGoogleFont(font: string, text: string) {

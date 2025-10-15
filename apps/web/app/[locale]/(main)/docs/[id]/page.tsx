@@ -5,15 +5,21 @@ import { getDocMeta, getDocMetas } from "@/lib/docs";
 import { formatDateByRecency, formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
 import { ClockFading, RefreshCw } from "lucide-react";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import path from "path";
 
 export const generateMetadata = async ({
   params,
 }: PageProps<"/[locale]/docs/[id]">) => {
-  const id = (await params).id;
+  const { id, locale } = await params;
   const doc = await getDocMeta(id);
-  return { title: doc?.title };
+  return {
+    title: doc?.title,
+    openGraph: {
+      images: [`/${locale}/docs/${id}/opengraph-image`],
+    },
+  } satisfies Metadata;
 };
 
 export const generateStaticParams = async () => {
