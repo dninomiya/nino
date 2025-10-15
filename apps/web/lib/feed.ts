@@ -453,10 +453,6 @@ export function getAvailableTechnologies(): string[] {
 }
 
 export const typeLabels: Record<string, string> = {
-  リリース: "リリース",
-  ニュース: "ニュース",
-  変更履歴: "変更履歴",
-  動画: "動画",
   releases: "リリース",
   blog: "ニュース",
   changelog: "変更履歴",
