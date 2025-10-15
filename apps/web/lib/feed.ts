@@ -32,7 +32,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://nextjs.org/feed.xml",
-        category: "ブログ",
+        category: "ニュース",
       },
     ],
   },
@@ -82,7 +82,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://www.raycast.com/blog/rss",
-        category: "ブログ",
+        category: "ニュース",
       },
     ],
   },
@@ -91,8 +91,8 @@ const collections: Collection[] = [
     feeds: [
       {
         method: "rss",
-        url: "https://www.notion.so/blog/rss",
-        category: "ブログ",
+        url: "https://www.notion.com/ja/releases/rss.xml",
+        category: "ニュース",
       },
     ],
   },
@@ -112,7 +112,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://stripe.com/blog/feed.rss",
-        category: "ブログ",
+        category: "ニュース",
       },
     ],
   },
@@ -157,7 +157,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://tailwindcss.com/feeds/feed.xml",
-        category: "ブログ",
+        category: "ニュース",
       },
     ],
   },
