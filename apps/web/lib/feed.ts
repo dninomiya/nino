@@ -1,5 +1,4 @@
-import Parser from "rss-parser";
-import { isAfter, subDays } from "date-fns";
+// 型定義とクライアントサイド用の関数のみを含むファイル
 import { LucideIcon } from "lucide-react";
 import {
   SiNextdotjs,
@@ -40,7 +39,7 @@ type Collection = {
   feeds: FeedConfig[];
 };
 
-const collections: Collection[] = [
+export const collections: Collection[] = [
   {
     name: "Next.js",
     icon: SiNextdotjs,
@@ -277,176 +276,8 @@ export type FeedItem = {
   rawXml?: string;
   rssUrl?: string;
   summary?: string;
+  tags?: string[];
 };
-
-const parser = new Parser({
-  customFields: {
-    item: [
-      ["enclosure", "enclosure", { keepArray: true }],
-      ["media:thumbnail", "mediaThumbnail"],
-    ],
-  },
-});
-
-// サムネイル画像を抽出する関数
-function extractThumbnail(item: any): string | undefined {
-  // 1. media:thumbnailから取得
-  if (item.mediaThumbnail?.$?.url) {
-    return item.mediaThumbnail.$.url;
-  }
-
-  // 2. enclosureから画像を取得（複数の構造に対応）
-  if (item.enclosure) {
-    // 配列の場合
-    if (Array.isArray(item.enclosure)) {
-      const imageEnclosure = item.enclosure.find((enc: any) => {
-        const type = enc.$?.type || enc.type;
-        return type && type.startsWith("image/");
-      });
-      if (imageEnclosure) {
-        return imageEnclosure.$?.url || imageEnclosure.url;
-      }
-    }
-    // 単一オブジェクトの場合
-    else if (item.enclosure.$?.type?.startsWith("image/")) {
-      return item.enclosure.$.url;
-    } else if (item.enclosure.type?.startsWith("image/")) {
-      return item.enclosure.url;
-    }
-  }
-
-  // 3. description内の画像から抽出
-  const description = (item as any).description;
-  if (description) {
-    const match = description.match(/<img[^>]+src="([^">]+)"/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-  }
-
-  // 4. content内の画像から抽出
-  if (item.content) {
-    const match = item.content.match(/<img[^>]+src="([^">]+)"/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-  }
-
-  // 5. contentSnippet内の画像から抽出
-  if (item.contentSnippet) {
-    const match = item.contentSnippet.match(/<img[^>]+src="([^">]+)"/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-  }
-
-  // 6. YouTubeの場合は動画IDからサムネイルを生成
-  if (item.link && item.link.includes("youtube.com/watch")) {
-    const videoIdMatch = item.link.match(/[?&]v=([^&]+)/);
-    if (videoIdMatch && videoIdMatch[1]) {
-      return `https://img.youtube.com/vi/${videoIdMatch[1]}/maxresdefault.jpg`;
-    }
-  }
-
-  return undefined;
-}
-
-async function fetchRssFeed(
-  url: string,
-  type: string,
-  source: string,
-  days: number
-): Promise<FeedItem[]> {
-  try {
-    const feed = await parser.parseURL(url);
-    const cutoffDate = subDays(new Date(), days);
-
-    return (
-      feed.items
-        ?.filter((item) => {
-          if (!item.isoDate && !item.pubDate) return false;
-          const itemDate = new Date(item.isoDate || item.pubDate || "");
-          return isAfter(itemDate, cutoffDate);
-        })
-        .map((item) => ({
-          date: new Date(item.isoDate || item.pubDate || ""),
-          title: item.title || "No title",
-          url: item.link || "",
-          type,
-          source,
-          content: "", // HTMLコンテントは格納しない
-          thumbnail: extractThumbnail(item),
-          rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
-          rssUrl: url, // RSSフィードのURL
-        })) || []
-    );
-  } catch (error) {
-    console.error(`Failed to fetch RSS feed from ${url}:`, error);
-    return [];
-  }
-}
-
-async function fetchScrapedFeed(
-  url: string,
-  type: string,
-  source: string,
-  selector: (html: string) => Array<{ title: string; url: string; date: Date }>,
-  days: number
-): Promise<FeedItem[]> {
-  try {
-    const response = await fetch(url);
-    const html = await response.text();
-    const items = selector(html);
-    const cutoffDate = subDays(new Date(), days);
-
-    return items
-      .filter((item) => isAfter(item.date, cutoffDate))
-      .map((item) => ({
-        date: item.date,
-        title: item.title,
-        url: item.url,
-        type,
-        source,
-        content: "", // スクレイピングではcontentは空文字列
-        thumbnail: undefined, // スクレイピングではサムネイルは未対応
-        rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
-        rssUrl: url, // スクレイピング元のURL
-      }));
-  } catch (error) {
-    console.error(`Failed to scrape feed from ${url}:`, error);
-    return [];
-  }
-}
-
-export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
-  const allItems: FeedItem[] = [];
-
-  for (const collection of collections) {
-    for (const feed of collection.feeds) {
-      if (feed.method === "rss") {
-        const items = await fetchRssFeed(
-          feed.url,
-          feed.type,
-          collection.name,
-          days
-        );
-        allItems.push(...items);
-      } else if (feed.method === "scrape") {
-        const items = await fetchScrapedFeed(
-          feed.url,
-          feed.type,
-          collection.name,
-          feed.selector,
-          days
-        );
-        allItems.push(...items);
-      }
-    }
-  }
-
-  // 日付順（新しい順）でソート
-  return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
-}
 
 export function getAvailableTechnologies(): string[] {
   return collections.map((collection) => collection.name);
@@ -457,6 +288,22 @@ export const typeLabels: Record<string, string> = {
   blog: "ニュース",
   changelog: "変更履歴",
   youtube: "動画",
+};
+
+// タグの日本語ラベルマップ（feed-server.tsからインポート）
+export const TAG_LABELS: Record<string, string> = {
+  feature: "機能追加",
+  event: "イベント",
+  bugfix: "バグ修正",
+  "big-news": "ビッグニュース",
+  release: "リリース",
+  update: "アップデート",
+  announcement: "お知らせ",
+  tutorial: "チュートリアル",
+  documentation: "ドキュメント",
+  security: "セキュリティ",
+  performance: "パフォーマンス",
+  "breaking-change": "破壊的変更",
 };
 
 // カテゴリの表示順序

@@ -2,7 +2,7 @@ export const revalidate = 14400; // 4 hours
 
 import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
-import { getFeedItems } from "@/lib/feed";
+import { getFeedItems } from "@/lib/feed-server";
 import { mockFeedItems } from "@/mock/feed";
 import { RecencyDate } from "@/components/recency-date";
 import { Suspense } from "react";

@@ -17,7 +17,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { YouTubeVideo } from "@/components/youtube-video";
-import { FeedItem, getCollectionByName, typeLabels } from "@/lib/feed";
+import {
+  FeedItem,
+  getCollectionByName,
+  typeLabels,
+  TAG_LABELS,
+} from "@/lib/feed";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
 import { ArrowUpRight, FileText, Newspaper, Rss } from "lucide-react";
 import { useQueryState } from "nuqs";
@@ -33,6 +38,7 @@ const typeIconsMap: Record<string, React.ElementType> = {
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
+  const [tags] = useQueryState("tags");
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const filteredFeedItems = useMemo(() => {
@@ -49,21 +55,36 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
         match = sources.includes(item.source);
       }
 
+      if (tags && tags?.length > 0 && item.tags) {
+        // タグフィルタリング
+        const hasMatchingTag = item.tags.some((tag) => tags.includes(tag));
+        match = match && hasMatchingTag;
+      }
+
       return match;
     });
-  }, [feedItems, types, sources]);
+  }, [feedItems, types, sources, tags]);
 
   return (
     <div className="space-y-4">
       {filteredFeedItems.map((item, index) => (
         <Card key={`${item.url}-${index}`}>
           <CardHeader className="flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <IconBadge type={item.type} />
               <Badge variant="outline">
                 <ServiceIcon service={item.source} />
                 {item.source}
               </Badge>
+              {item.tags && item.tags.length > 0 && (
+                <div className="flex gap-1 flex-wrap">
+                  {item.tags.map((tag) => (
+                    <Badge key={tag} variant="secondary" className="text-xs">
+                      {TAG_LABELS[tag] || tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
 
             <CardTitle>
@@ -100,7 +121,11 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
             )}
 
             {item.summary && (
-              <p className="text-sm text-muted-foreground">{item.summary}</p>
+              <div className="mt-3 p-3 bg-muted/50 rounded-md">
+                <p className="text-sm text-foreground leading-relaxed">
+                  {item.summary}
+                </p>
+              </div>
             )}
           </CardContent>
 
