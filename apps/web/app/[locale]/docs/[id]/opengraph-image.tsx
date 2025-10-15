@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getDocMeta, getDocMetas } from "@/lib/docs";
+import { DocMeta, getDocMeta, getDocMetas } from "@/lib/docs";
 import { readFile } from "fs/promises";
 import { loadDefaultJapaneseParser } from "budoux";
 import { join } from "path";
@@ -9,12 +9,10 @@ export const size = {
   height: 630,
 };
 
-export const dynamic = "force-static";
-
-export const generateStaticParams = async () => {
-  const docs = await getDocMetas();
+export async function generateStaticParams() {
+  const docs = (await getDocMetas()) as DocMeta[];
   return docs.map((doc) => ({ id: doc.id }));
-};
+}
 
 async function loadGoogleFont(font: string, text: string) {
   const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
@@ -40,7 +38,7 @@ export default async function Image({
 }) {
   const id = (await params).id;
   const doc = await getDocMeta(id);
-  const title = "logo.jpgをOG画像に配置しました";
+  const title = doc.title;
 
   const parser = loadDefaultJapaneseParser();
   const parsedTitle = parser.parse(title);
@@ -80,8 +78,6 @@ export default async function Image({
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
       fonts: [
         {
           name: "Noto Sans JP",
