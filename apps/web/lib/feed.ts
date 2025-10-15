@@ -14,10 +14,11 @@ import {
   SiStripe,
   SiReacthookform,
   SiTailwindcss,
+  SiVercel,
 } from "@icons-pack/react-simple-icons";
 
 type FeedConfig =
-  | { method: "rss"; url: string; category: string }
+  | { method: "rss"; url: string; category: "releases" | "blog" | "changelog" }
   | {
       method: "scrape";
       url: string;
@@ -43,12 +44,24 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/vercel/next.js/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
       {
         method: "rss",
         url: "https://nextjs.org/feed.xml",
-        category: "ニュース",
+        category: "blog",
+      },
+    ],
+  },
+  // add vercel
+  {
+    name: "Vercel",
+    icon: SiVercel,
+    feeds: [
+      {
+        method: "rss",
+        url: "https://vercel.com/atom",
+        category: "blog",
       },
     ],
   },
@@ -59,12 +72,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/facebook/react/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
       {
         method: "rss",
         url: "https://react.dev/rss.xml",
-        category: "ニュース",
+        category: "blog",
       },
     ],
   },
@@ -75,7 +88,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/resend/resend-node/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
     ],
   },
@@ -86,7 +99,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/better-auth/better-auth/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
     ],
   },
@@ -97,7 +110,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/tursodatabase/libsql/releases.atom",
-        category: "リリース",
+        category: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://turso.tech/blog/feed.xml",
+        category: "blog",
       },
     ],
   },
@@ -108,7 +126,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://www.raycast.com/blog/rss",
-        category: "ニュース",
+        category: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.raycast.com/changelog/rss",
+        category: "changelog",
       },
     ],
   },
@@ -119,7 +142,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://www.notion.com/ja/releases/rss.xml",
-        category: "ニュース",
+        category: "releases",
       },
     ],
   },
@@ -130,7 +153,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/drizzle-team/drizzle-orm/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
     ],
   },
@@ -141,7 +164,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://stripe.com/blog/feed.rss",
-        category: "ニュース",
+        category: "blog",
       },
     ],
   },
@@ -152,7 +175,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/47ng/nuqs/releases.atom",
-        category: "リリース",
+        category: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://nuqs.dev/blog/rss.xml",
+        category: "blog",
       },
     ],
   },
@@ -163,7 +191,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/react-hook-form/react-hook-form/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
     ],
   },
@@ -174,7 +202,7 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/shadcn-ui/ui/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
     ],
   },
@@ -185,12 +213,12 @@ const collections: Collection[] = [
       {
         method: "rss",
         url: "https://github.com/tailwindlabs/tailwindcss/releases.atom",
-        category: "リリース",
+        category: "releases",
       },
       {
         method: "rss",
         url: "https://tailwindcss.com/feeds/feed.xml",
-        category: "ニュース",
+        category: "blog",
       },
     ],
   },
