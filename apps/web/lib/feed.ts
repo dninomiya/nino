@@ -2,7 +2,19 @@ import "server-only";
 import Parser from "rss-parser";
 import { isAfter, subDays } from "date-fns";
 import { LucideIcon } from "lucide-react";
-import { SiNextdotjs } from "@icons-pack/react-simple-icons";
+import {
+  SiNextdotjs,
+  SiReact,
+  SiResend,
+  SiGithub,
+  SiTurso,
+  SiRaycast,
+  SiNotion,
+  SiDrizzle,
+  SiStripe,
+  SiReacthookform,
+  SiTailwindcss,
+} from "@icons-pack/react-simple-icons";
 
 type FeedConfig =
   | { method: "rss"; url: string; category: string }
@@ -42,16 +54,23 @@ const collections: Collection[] = [
   },
   {
     name: "React",
+    icon: SiReact,
     feeds: [
       {
         method: "rss",
         url: "https://github.com/facebook/react/releases.atom",
         category: "リリース",
       },
+      {
+        method: "rss",
+        url: "https://react.dev/rss.xml",
+        category: "ニュース",
+      },
     ],
   },
   {
     name: "Resend",
+    icon: SiResend,
     feeds: [
       {
         method: "rss",
@@ -62,6 +81,7 @@ const collections: Collection[] = [
   },
   {
     name: "Better Auth",
+    icon: SiGithub,
     feeds: [
       {
         method: "rss",
@@ -72,6 +92,7 @@ const collections: Collection[] = [
   },
   {
     name: "Turso",
+    icon: SiTurso,
     feeds: [
       {
         method: "rss",
@@ -82,6 +103,7 @@ const collections: Collection[] = [
   },
   {
     name: "Raycast",
+    icon: SiRaycast,
     feeds: [
       {
         method: "rss",
@@ -92,6 +114,7 @@ const collections: Collection[] = [
   },
   {
     name: "Notion",
+    icon: SiNotion,
     feeds: [
       {
         method: "rss",
@@ -102,6 +125,7 @@ const collections: Collection[] = [
   },
   {
     name: "Drizzle",
+    icon: SiDrizzle,
     feeds: [
       {
         method: "rss",
@@ -112,6 +136,7 @@ const collections: Collection[] = [
   },
   {
     name: "Stripe",
+    icon: SiStripe,
     feeds: [
       {
         method: "rss",
@@ -122,6 +147,7 @@ const collections: Collection[] = [
   },
   {
     name: "nuqs",
+    icon: SiGithub,
     feeds: [
       {
         method: "rss",
@@ -132,6 +158,7 @@ const collections: Collection[] = [
   },
   {
     name: "React Hook Form",
+    icon: SiReacthookform,
     feeds: [
       {
         method: "rss",
@@ -142,6 +169,7 @@ const collections: Collection[] = [
   },
   {
     name: "shadcn/ui",
+    icon: SiGithub,
     feeds: [
       {
         method: "rss",
@@ -152,6 +180,7 @@ const collections: Collection[] = [
   },
   {
     name: "Tailwind CSS",
+    icon: SiTailwindcss,
     feeds: [
       {
         method: "rss",
