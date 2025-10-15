@@ -18,7 +18,11 @@ import {
 } from "@icons-pack/react-simple-icons";
 
 type FeedConfig =
-  | { method: "rss"; url: string; category: "releases" | "blog" | "changelog" }
+  | {
+      method: "rss";
+      url: string;
+      category: "releases" | "blog" | "changelog" | "youtube";
+    }
   | {
       method: "scrape";
       url: string;
@@ -53,7 +57,6 @@ const collections: Collection[] = [
       },
     ],
   },
-  // add vercel
   {
     name: "Vercel",
     icon: SiVercel,
@@ -62,6 +65,11 @@ const collections: Collection[] = [
         method: "rss",
         url: "https://vercel.com/atom",
         category: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCLq8gNoee7oXM7MvTdjyQvA",
+        category: "changelog",
       },
     ],
   },
@@ -79,6 +87,11 @@ const collections: Collection[] = [
         url: "https://react.dev/rss.xml",
         category: "blog",
       },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC1hOCRBN2mnXgN5reSoO3pQ",
+        category: "youtube",
+      },
     ],
   },
   {
@@ -89,6 +102,11 @@ const collections: Collection[] = [
         method: "rss",
         url: "https://github.com/resend/resend-node/releases.atom",
         category: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC0FkhoSz2kYqHVBk4L0QYIg",
+        category: "youtube",
       },
     ],
   },
@@ -219,6 +237,11 @@ const collections: Collection[] = [
         method: "rss",
         url: "https://tailwindcss.com/feeds/feed.xml",
         category: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://tailwindcss.com/changelog/feed.xml",
+        category: "youtube",
       },
     ],
   },
