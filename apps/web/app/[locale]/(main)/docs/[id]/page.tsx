@@ -4,7 +4,7 @@ import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
 import { formatDateByRecency, formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
-import { Calendar, Clock, RefreshCw } from "lucide-react";
+import { Clock, RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
 import path from "path";
 
@@ -55,7 +55,7 @@ export default async function DocsPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`更新日: ${metadata.updatedAt}`}
               >
-                <RefreshCw className="size-4" />
+                <RefreshCw className="size-3.5" />
                 {formatDateByRecency(metadata.updatedAt)}
               </p>
               ・
@@ -63,7 +63,7 @@ export default async function DocsPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`読了目安: ${formatReadingTime(post.readingTime.time)}`}
               >
-                <Clock className="size-4" />
+                <Clock className="size-3.5" />
                 {formatReadingTime(post.readingTime.time)}
               </p>
             </div>

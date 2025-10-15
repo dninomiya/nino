@@ -2,7 +2,9 @@ import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
+import { formatDateByRecency } from "@/lib/util";
 import { readFileSync } from "fs";
+import { RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
 import path from "path";
 
@@ -39,7 +41,25 @@ export default async function RegistryPage({
     <div className="flex">
       <MDXContent>
         <div className="flex items-center justify-between gap-2 not-prose">
-          <h1 className="text-4xl font-bold">{metadata.title}</h1>
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold">{metadata.title}</h1>
+            <div className="flex gap-1 flex-wrap">
+              <p
+                className="text-muted-foreground text-sm flex items-center gap-1.5"
+                title={`作成日: ${metadata.createdAt}`}
+              >
+                {formatDateByRecency(metadata.createdAt)}
+              </p>
+              ・
+              <p
+                className="text-muted-foreground text-sm flex items-center gap-1.5"
+                title={`更新日: ${metadata.updatedAt}`}
+              >
+                <RefreshCw className="size-3.5" />
+                {formatDateByRecency(metadata.updatedAt)}
+              </p>
+            </div>
+          </div>
           <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
         </div>
 
