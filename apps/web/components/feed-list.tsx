@@ -1,6 +1,6 @@
 "use client";
 
-import { FeedItem } from "@/lib/feed";
+import { FeedItem, getCollectionByName, typeLabels } from "@/lib/feed";
 import { useQueryState } from "nuqs";
 import {
   Card,
@@ -11,27 +11,14 @@ import {
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { RecencyDate } from "@/components/recency-date";
-import {
-  SiGithub,
-  SiNextdotjs,
-  SiReact,
-  SiResend,
-  SiBetterauth,
-  SiTurso,
-} from "@icons-pack/react-simple-icons";
+import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
 import { ArrowUpRight, Newspaper } from "lucide-react";
 
 const typeIconsMap: Record<string, React.ElementType> = {
   リリース: SiGithub,
   ニュース: Newspaper,
-};
-
-const serviceIconsMap: Record<string, React.ElementType> = {
-  "Next.js": SiNextdotjs,
-  React: SiReact,
-  Resend: SiResend,
-  "Better Auth": SiBetterauth,
-  Turso: SiTurso,
+  変更履歴: Newspaper,
+  動画: SiYoutube,
 };
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
@@ -84,21 +71,23 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
 
 function IconBadge({ type }: { type: string }) {
   const Icon = typeIconsMap[type];
+  const displayType = typeLabels[type] || type;
 
   return (
     <Badge variant="outline">
       {Icon && <Icon className="size-4" />}
-      {type}
+      {displayType}
     </Badge>
   );
 }
 
 function ServiceIcon({ service }: { service: string }) {
-  const Icon = serviceIconsMap[service];
+  const collection = getCollectionByName(service);
 
-  if (!Icon) {
+  if (!collection) {
     return null;
   }
 
-  return <Icon />;
+  const Icon = collection.icon;
+  return <Icon className="size-4" />;
 }

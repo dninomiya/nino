@@ -175,7 +175,10 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                         htmlFor={`source-${technology}`}
                         className="flex items-center justify-between w-full"
                       >
-                        <span>{technology}</span>
+                        <div className="flex items-center gap-2">
+                          {getTechnologyIcon(technology)}
+                          <span>{technology}</span>
+                        </div>
                         <span className="text-sm text-muted-foreground ml-2">
                           {sourceCounts[technology] || 0}
                         </span>
