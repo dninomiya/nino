@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchFeedItems } from "@/actions";
+import { fetchFeedItems } from "@/actions/feed";
 import { toast } from "sonner";
 
 export function FetchFeedButton() {

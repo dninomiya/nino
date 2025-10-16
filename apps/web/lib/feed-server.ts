@@ -481,7 +481,7 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
   return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
-// DB に feed データを保存する関数（既存データはスキップ）
+// DB に feed データを保存する関数（既存データの要約が空の場合は更新）
 export async function saveFeedItemsToDB(items: FeedItem[]): Promise<void> {
   try {
     for (const item of items) {
@@ -492,8 +492,31 @@ export async function saveFeedItemsToDB(items: FeedItem[]): Promise<void> {
         .where(and(eq(feedItems.url, item.url), eq(feedItems.date, item.date)))
         .limit(1);
 
-      // 既存データがある場合はスキップ
       if (existingItem.length > 0) {
+        const existing = existingItem[0];
+
+        // 既存データの要約が空で、新しいデータに要約がある場合は更新
+        const hasEmptySummary =
+          !existing?.summary || existing.summary.trim() === "";
+        const hasNewSummary = item.summary && item.summary.trim() !== "";
+
+        if (hasEmptySummary && hasNewSummary) {
+          await db
+            .update(feedItems)
+            .set({
+              title: item.title,
+              summary: item.summary,
+              tags: item.tags ? JSON.stringify(item.tags) : null,
+              content: item.content || null,
+              thumbnail: item.thumbnail || null,
+              rawXml: item.rawXml || null,
+              rssUrl: item.rssUrl || null,
+            })
+            .where(
+              and(eq(feedItems.url, item.url), eq(feedItems.date, item.date))
+            );
+        }
+        // 既存データに要約がある場合はスキップ
         continue;
       }
 
