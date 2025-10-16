@@ -12,7 +12,7 @@ export type FeedConfig =
   | {
       method: "scrape";
       url: string;
-      type: string;
+      type: FeedType;
       selector: (html: string) => Array<{
         title: string;
         url: string;

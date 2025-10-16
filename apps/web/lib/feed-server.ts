@@ -7,7 +7,7 @@ import { isAfter, subDays } from "date-fns";
 import { desc, gte, eq, and, or, isNull, ne } from "drizzle-orm";
 import Parser from "rss-parser";
 import { z } from "zod";
-import { collections, type FeedItem } from "./feed";
+import { collections, type FeedItem, type FeedType } from "./feed";
 
 // タグの定義
 export const TAGS = {
@@ -221,7 +221,7 @@ ${availableTags}
 
 async function fetchRssFeed(
   url: string,
-  type: string,
+  type: FeedType,
   source: string,
   days: number
 ): Promise<FeedItem[]> {
@@ -256,7 +256,7 @@ async function fetchRssFeed(
 
 async function fetchScrapedFeed(
   url: string,
-  type: string,
+  type: FeedType,
   source: string,
   selector: (html: string) => Array<{ title: string; url: string; date: Date }>,
   days: number
