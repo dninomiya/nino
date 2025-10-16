@@ -6,6 +6,7 @@ import { sendDiscordWebhook, formatDiscordMessage } from "@workspace/discord";
 import { generateObject } from "ai";
 import { isAfter, subDays } from "date-fns";
 import { desc, gte, eq, and, or, isNull, ne } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import Parser from "rss-parser";
 import { z } from "zod";
 import { collections, type FeedItem, type FeedType } from "./feed";
@@ -399,6 +400,11 @@ export async function fetchAndSaveNewFeedItems(
     console.log(
       `Processed ${newItems.length} new feed items (${nonYoutubeItems.length} with summaries)`
     );
+
+    // ページを revalidate
+    revalidatePath("/");
+    revalidatePath("/ja");
+    revalidatePath("/en");
   } catch (error) {
     console.error("Failed to fetch and save new feed items:", error);
     throw error;

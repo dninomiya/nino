@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { fetchAndSaveNewFeedItems } from "@/lib/feed-server";
 
 export async function GET(request: NextRequest) {
@@ -39,11 +38,6 @@ export async function GET(request: NextRequest) {
 
     // Feed データを収集・保存
     await fetchAndSaveNewFeedItems(7);
-
-    // ページを revalidate
-    revalidatePath("/");
-    revalidatePath("/ja");
-    revalidatePath("/en");
 
     console.log(`Feed collection completed.`);
 
