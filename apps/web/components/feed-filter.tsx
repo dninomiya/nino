@@ -1,6 +1,6 @@
 "use client";
 
-import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
+import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -47,15 +47,11 @@ const getTechnologyIcon = (technology: string) => {
 };
 
 export function FeedFilter({ feedItems }: FeedFilterProps) {
-  const [types, setTypes] = useQueryState(
-    "type",
-    parseAsArrayOf(parseAsString)
-  );
-  const [sources, setSources] = useQueryState(
-    "source",
-    parseAsArrayOf(parseAsString)
-  );
-  const [tags, setTags] = useQueryState("tags", parseAsArrayOf(parseAsString));
+  const [filters, setFilters] = useQueryStates({
+    type: parseAsArrayOf(parseAsString).withDefault([]),
+    source: parseAsArrayOf(parseAsString).withDefault([]),
+    tags: parseAsArrayOf(parseAsString).withDefault([]),
+  });
 
   // 定義済みのタイプを取得（0件のものも含む）
   const availableTypes = getAvailableTypes();
@@ -87,13 +83,15 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
         if (!itemTypeInJapanese || itemTypeInJapanese !== type) return false;
 
         // ソースフィルターが設定されている場合、それも考慮
-        if (sources && sources.length > 0) {
-          if (!sources.includes(item.source)) return false;
+        if (filters.source && filters.source.length > 0) {
+          if (!filters.source.includes(item.source)) return false;
         }
 
         // タグフィルターが設定されている場合、それも考慮
-        if (tags && tags.length > 0 && item.tags) {
-          const hasMatchingTag = item.tags.some((tag) => tags.includes(tag));
+        if (filters.tags && filters.tags.length > 0 && item.tags) {
+          const hasMatchingTag = item.tags.some((tag) =>
+            filters.tags.includes(tag)
+          );
           if (!hasMatchingTag) return false;
         }
 
@@ -101,7 +99,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       }).length;
     });
     return counts;
-  }, [feedItems, availableTypes, sources, tags]);
+  }, [feedItems, availableTypes, filters.source, filters.tags]);
 
   // 各ソースの件数を計算（現在のタイプ・タグフィルターを考慮）
   const sourceCounts = useMemo(() => {
@@ -112,15 +110,17 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
         if (item.source !== source) return false;
 
         // タイプフィルターが設定されている場合、それも考慮
-        if (types && types.length > 0) {
+        if (filters.type && filters.type.length > 0) {
           const itemTypeInJapanese = typeLabels[item.type];
-          if (!itemTypeInJapanese || !types.includes(itemTypeInJapanese))
+          if (!itemTypeInJapanese || !filters.type.includes(itemTypeInJapanese))
             return false;
         }
 
         // タグフィルターが設定されている場合、それも考慮
-        if (tags && tags.length > 0 && item.tags) {
-          const hasMatchingTag = item.tags.some((tag) => tags.includes(tag));
+        if (filters.tags && filters.tags.length > 0 && item.tags) {
+          const hasMatchingTag = item.tags.some((tag) =>
+            filters.tags.includes(tag)
+          );
           if (!hasMatchingTag) return false;
         }
 
@@ -128,7 +128,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       }).length;
     });
     return counts;
-  }, [feedItems, availableTechnologies, types, tags]);
+  }, [feedItems, availableTechnologies, filters.type, filters.tags]);
 
   // 各タグの件数を計算（現在のタイプ・ソースフィルターを考慮）
   const tagCounts = useMemo(() => {
@@ -139,45 +139,48 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
         if (!item.tags || !item.tags.includes(tag)) return false;
 
         // タイプフィルターが設定されている場合、それも考慮
-        if (types && types.length > 0) {
+        if (filters.type && filters.type.length > 0) {
           const itemTypeInJapanese = typeLabels[item.type];
-          if (!itemTypeInJapanese || !types.includes(itemTypeInJapanese))
+          if (!itemTypeInJapanese || !filters.type.includes(itemTypeInJapanese))
             return false;
         }
 
         // ソースフィルターが設定されている場合、それも考慮
-        if (sources && sources.length > 0) {
-          if (!sources.includes(item.source)) return false;
+        if (filters.source && filters.source.length > 0) {
+          if (!filters.source.includes(item.source)) return false;
         }
 
         return true;
       }).length;
     });
     return counts;
-  }, [feedItems, availableTags, types, sources]);
+  }, [feedItems, availableTags, filters.type, filters.source]);
 
   const toggleType = (type: string, checked: boolean) => {
-    if (checked) {
-      setTypes([...(types || []), type]);
-    } else {
-      setTypes(types?.filter((t) => t !== type) || []);
-    }
+    const currentTypes = filters.type;
+    const newTypes = checked
+      ? [...currentTypes, type]
+      : currentTypes.filter((t) => t !== type);
+
+    setFilters({ type: newTypes });
   };
 
   const toggleSource = (source: string, checked: boolean) => {
-    if (checked) {
-      setSources([...(sources || []), source]);
-    } else {
-      setSources(sources?.filter((s) => s !== source) || []);
-    }
+    const currentSources = filters.source;
+    const newSources = checked
+      ? [...currentSources, source]
+      : currentSources.filter((s) => s !== source);
+
+    setFilters({ source: newSources });
   };
 
   const toggleTag = (tag: string, checked: boolean) => {
-    if (checked) {
-      setTags([...(tags || []), tag]);
-    } else {
-      setTags(tags?.filter((t) => t !== tag) || []);
-    }
+    const currentTags = filters.tags;
+    const newTags = checked
+      ? [...currentTags, tag]
+      : currentTags.filter((t) => t !== tag);
+
+    setFilters({ tags: newTags });
   };
 
   return (
@@ -189,7 +192,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
             <div key={type} className="flex items-center gap-3">
               <Checkbox
                 id={`type-${type}`}
-                checked={types?.includes(type)}
+                checked={filters.type?.includes(type)}
                 onCheckedChange={(checked) => {
                   toggleType(type, checked as boolean);
                 }}
@@ -228,7 +231,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                     <div key={technology} className="flex items-center gap-3">
                       <Checkbox
                         id={`source-${technology}`}
-                        checked={sources?.includes(technology)}
+                        checked={filters.source?.includes(technology)}
                         onCheckedChange={(checked) => {
                           toggleSource(technology, checked as boolean);
                         }}
@@ -262,7 +265,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
               <div key={tag} className="flex items-center gap-3">
                 <Checkbox
                   id={`tag-${tag}`}
-                  checked={tags?.includes(tag)}
+                  checked={filters.tags?.includes(tag)}
                   onCheckedChange={(checked) => {
                     toggleTag(tag, checked as boolean);
                   }}
