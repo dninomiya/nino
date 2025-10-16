@@ -34,7 +34,8 @@ export default async function Page() {
       </div>
       <div className="flex-1 py-10">
         <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold">過去7日間の更新</h1>
+          <h1 className="text-3xl font-bold">フィード</h1>
+          <p>一次ソースの最新ニュースをお届けします。</p>
           <p className="text-sm text-muted-foreground mb-4">
             最終更新: <RecencyDate date={Date.now()} />
           </p>
