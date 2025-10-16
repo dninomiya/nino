@@ -1,13 +1,20 @@
 import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
-import { FetchFeedButton } from "@/components/fetch-feed-button";
 import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { RegenerateMissingSummariesButton } from "@/components/regenerate-missing-summaries-button";
 import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@workspace/ui/components/empty";
+import {
   getFeedItemsFromDB,
   getItemsWithMissingSummary,
 } from "@/lib/feed-server";
+import { RefreshCw } from "lucide-react";
 import { Suspense } from "react";
 
 export default async function Page() {
@@ -39,10 +46,28 @@ export default async function Page() {
         </div>
 
         {feedItems.length === 0 ? (
-          <div>
-            <p className="text-muted-foreground">更新情報はありません</p>
-            <FetchFeedButton />
-          </div>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <RefreshCw />
+              </EmptyMedia>
+              <EmptyTitle>更新情報はありません</EmptyTitle>
+              <EmptyDescription>
+                過去7日間に更新されたフィードアイテムがありません。
+                {process.env.NODE_ENV === "development" && (
+                  <>
+                    <br />
+                    開発環境では手動でフィードを更新できます。
+                  </>
+                )}
+              </EmptyDescription>
+            </EmptyHeader>
+            {process.env.NODE_ENV === "development" && (
+              <div className="mt-4">
+                <RefreshFeedButton />
+              </div>
+            )}
+          </Empty>
         ) : (
           <Suspense>
             <FeedList feedItems={feedItems} />
