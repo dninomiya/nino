@@ -1,5 +1,3 @@
-// 型定義とクライアントサイド用の関数のみを含むファイル
-import { LucideIcon } from "lucide-react";
 import {
   SiNextdotjs,
   SiReact,
@@ -13,38 +11,10 @@ import {
   SiReacthookform,
   SiTailwindcss,
   SiVercel,
-  SiYoutube,
 } from "@icons-pack/react-simple-icons";
-import { Newspaper } from "lucide-react";
+import { FeedCollection } from "./types";
 
-// Feedタイプの定義
-export type FeedType = "releases" | "blog" | "changelog" | "youtube";
-
-type FeedConfig =
-  | {
-      method: "rss";
-      url: string;
-      type: FeedType;
-    }
-  | {
-      method: "scrape";
-      url: string;
-      type: string;
-      selector: (html: string) => Array<{
-        title: string;
-        url: string;
-        date: Date;
-      }>;
-    };
-
-type Collection = {
-  name: string;
-  icon: LucideIcon;
-  category: string;
-  feeds: FeedConfig[];
-};
-
-export const collections: Collection[] = [
+export const collections: FeedCollection[] = [
   {
     name: "Next.js",
     icon: SiNextdotjs,
@@ -269,119 +239,3 @@ export const collections: Collection[] = [
     ],
   },
 ];
-
-export type FeedItem = {
-  date: Date;
-  title: string;
-  url: string;
-  type: FeedType;
-  source: string;
-  content?: string;
-  thumbnail?: string;
-  rawXml?: string;
-  rssUrl?: string;
-  summary?: string;
-  tags?: string[];
-};
-
-export function getAvailableTechnologies(): string[] {
-  return collections.map((collection) => collection.name);
-}
-
-// フィードタイプのマッピング（ラベルとアイコンを一元化）
-export const feedTypeMapping = {
-  releases: {
-    label: "リリース",
-    icon: SiGithub,
-  },
-  blog: {
-    label: "ニュース",
-    icon: Newspaper,
-  },
-  changelog: {
-    label: "変更履歴",
-    icon: Newspaper,
-  },
-  youtube: {
-    label: "YouTube",
-    icon: SiYoutube,
-  },
-} as const;
-
-// 後方互換性のためのtypeLabels
-export const typeLabels: Record<FeedType, string> = {
-  releases: feedTypeMapping.releases.label,
-  blog: feedTypeMapping.blog.label,
-  changelog: feedTypeMapping.changelog.label,
-  youtube: feedTypeMapping.youtube.label,
-};
-
-// タグの日本語ラベルマップ（feed-server.tsからインポート）
-export const TAG_LABELS: Record<string, string> = {
-  feature: "機能追加",
-  event: "イベント",
-  bugfix: "バグ修正",
-  "big-news": "ビッグニュース",
-  release: "リリース",
-  update: "アップデート",
-  announcement: "お知らせ",
-  tutorial: "チュートリアル",
-  documentation: "ドキュメント",
-  security: "セキュリティ",
-  performance: "パフォーマンス",
-  "breaking-change": "破壊的変更",
-};
-
-// カテゴリの表示順序
-export const categoryOrder = [
-  "フレームワーク",
-  "ライブラリ",
-  "ツール",
-  "SaaS/BaaS",
-];
-
-export function getAvailableTypes(): FeedType[] {
-  const types = new Set<FeedType>();
-  collections.forEach((collection) => {
-    collection.feeds.forEach((feed) => {
-      if (feed.method === "rss") {
-        types.add(feed.type);
-      }
-    });
-  });
-
-  return Array.from(types);
-}
-
-// カテゴリごとに技術をグループ化する関数
-export function getTechnologiesByCategory(): Record<string, string[]> {
-  const grouped: Record<string, string[]> = {};
-
-  collections.forEach((collection) => {
-    const category = collection.category;
-    if (!grouped[category]) {
-      grouped[category] = [];
-    }
-    grouped[category].push(collection.name);
-  });
-
-  return grouped;
-}
-
-// 技術のマッピング（ラベルとアイコンを一元化）
-export const techMapping = collections.reduce(
-  (acc, collection) => {
-    acc[collection.name] = {
-      label: collection.name,
-      icon: collection.icon,
-      category: collection.category,
-    };
-    return acc;
-  },
-  {} as Record<string, { label: string; icon: LucideIcon; category: string }>
-);
-
-// 技術名からコレクション情報を取得する関数
-export function getCollectionByName(name: string): Collection | undefined {
-  return collections.find((collection) => collection.name === name);
-}
