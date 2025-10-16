@@ -2,7 +2,8 @@
 export const DISCORD_WEBHOOK_URLS = {
   admin:
     "https://discord.com/api/webhooks/1208588091091193966/rBr3nn9bj1L8NUdQlMK27SL2IcaPIrC-5fjKBqj_upDvoE1TTQkOKIht8BoUmijArryL",
-  // 将来的に追加可能
+  techNews:
+    "https://discord.com/api/webhooks/1428317946861846598/jirnzbsZFXWduVSksv-4zOyCeyxcXDifyDPoXNJvO-ahvi1ik5Qfcn6OegnkDQPvxE-d",
 } as const;
 
 // チャンネルの型

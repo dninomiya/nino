@@ -663,6 +663,11 @@ export async function sendDiscordNotification(
   // メッセージをフォーマットして送信
   if (sections.length > 0) {
     const message = formatDiscordMessage(sections);
-    await sendDiscordWebhook("admin", message);
+    const isDev = process.env.NODE_ENV === "development";
+    if (isDev) {
+      await sendDiscordWebhook("admin", message);
+    } else {
+      await sendDiscordWebhook("techNews", message);
+    }
   }
 }
