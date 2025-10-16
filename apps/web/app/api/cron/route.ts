@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchAndSaveNewFeedItems } from "@/lib/feed-server";
+import { SCHEDULES } from "./schedule";
+import { executeSchedules } from "./helper";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,42 +15,49 @@ export async function GET(request: NextRequest) {
     }
 
     // 現在時刻を日本時間（JST）に変換
-    const now = new Date();
-    const jstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
-    const hour = jstNow.getUTCHours();
-    const minute = jstNow.getUTCMinutes();
+    const jstNow = new Date(Date.now() + 9 * 60 * 60 * 1000); // UTC+9
 
-    // 日本時間で6, 10, 14, 18時かつ0-1分の範囲内かチェック
-    const targetHours = [6, 10, 14, 18];
-    const shouldRun = targetHours.includes(hour) && minute <= 1;
+    console.log(`Checking schedules at JST ${jstNow.toISOString()}`);
 
-    if (!shouldRun) {
+    // スケジュールを実行
+    const { executed, results } = await executeSchedules(SCHEDULES, jstNow);
+
+    if (executed === 0) {
       return NextResponse.json({
-        message: "Not time to run feed collection",
+        message: "No matching schedules found",
         currentTime: {
-          hour,
-          minute,
+          hour: jstNow.getUTCHours(),
+          minute: jstNow.getUTCMinutes(),
           jst: jstNow.toISOString(),
         },
       });
     }
 
-    console.log(`Starting feed collection at JST ${jstNow.toISOString()}`);
+    // 結果をログ出力
+    const successCount = results.filter((r) => r.success).length;
+    const failureCount = results.filter((r) => !r.success).length;
 
-    // Feed データを収集・保存
-    await fetchAndSaveNewFeedItems(7);
+    console.log(
+      `Executed ${executed} actions: ${successCount} successful, ${failureCount} failed`
+    );
 
-    console.log(`Feed collection completed.`);
+    if (failureCount > 0) {
+      const errors = results.filter((r) => !r.success).map((r) => r.error);
+      console.error("Failed actions:", errors);
+    }
 
     return NextResponse.json({
-      message: "Feed collection completed successfully",
+      message: `Executed ${executed} actions successfully`,
+      executed,
+      successCount,
+      failureCount,
       timestamp: jstNow.toISOString(),
     });
   } catch (error) {
     console.error("Cron job failed:", error);
     return NextResponse.json(
       {
-        error: "Feed collection failed",
+        error: "Cron execution failed",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
