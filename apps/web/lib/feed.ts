@@ -287,7 +287,7 @@ export const typeLabels: Record<string, string> = {
   releases: "リリース",
   blog: "ニュース",
   changelog: "変更履歴",
-  youtube: "動画",
+  youtube: "YouTube",
 };
 
 // タグの日本語ラベルマップ（feed-server.tsからインポート）
