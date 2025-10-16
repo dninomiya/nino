@@ -26,6 +26,7 @@ import {
 import { YouTubeVideo } from "@/components/youtube-video";
 import {
   FeedItem,
+  FeedType,
   getCollectionByName,
   TAG_LABELS,
   typeLabels,
@@ -35,11 +36,11 @@ import { ArrowUpRight, Newspaper, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 
-const typeIconsMap: Record<string, React.ElementType> = {
-  リリース: SiGithub,
-  ニュース: Newspaper,
-  変更履歴: Newspaper,
-  動画: SiYoutube,
+const typeIconsMap: Record<FeedType, React.ElementType> = {
+  releases: SiGithub,
+  blog: Newspaper,
+  changelog: Newspaper,
+  youtube: SiYoutube,
 };
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
@@ -53,13 +54,12 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
       let match = true;
 
       if (types && types?.length > 0) {
-        // 英語→日本語マッピングを考慮
-        const itemTypeInJapanese = typeLabels[item.type];
-        match = itemTypeInJapanese ? types.includes(itemTypeInJapanese) : false;
+        // 直接英語値で比較
+        match = types.includes(item.type);
       }
 
       if (sources && sources?.length > 0) {
-        match = sources.includes(item.source);
+        match = match && sources.includes(item.source);
       }
 
       if (tags && tags?.length > 0 && item.tags) {
@@ -196,9 +196,9 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   );
 }
 
-function IconBadge({ type }: { type: string }) {
+function IconBadge({ type }: { type: FeedType }) {
   const Icon = typeIconsMap[type];
-  const displayType = typeLabels[type] || type;
+  const displayType = typeLabels[type];
 
   return (
     <Badge variant="outline">

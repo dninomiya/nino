@@ -15,11 +15,14 @@ import {
   SiVercel,
 } from "@icons-pack/react-simple-icons";
 
+// Feedタイプの定義
+export type FeedType = "releases" | "blog" | "changelog" | "youtube";
+
 type FeedConfig =
   | {
       method: "rss";
       url: string;
-      type: "releases" | "blog" | "changelog" | "youtube";
+      type: FeedType;
     }
   | {
       method: "scrape";
@@ -269,7 +272,7 @@ export type FeedItem = {
   date: Date;
   title: string;
   url: string;
-  type: string;
+  type: FeedType;
   source: string;
   content?: string;
   thumbnail?: string;
@@ -283,7 +286,7 @@ export function getAvailableTechnologies(): string[] {
   return collections.map((collection) => collection.name);
 }
 
-export const typeLabels: Record<string, string> = {
+export const typeLabels: Record<FeedType, string> = {
   releases: "リリース",
   blog: "ニュース",
   changelog: "変更履歴",
@@ -314,16 +317,12 @@ export const categoryOrder = [
   "SaaS/BaaS",
 ];
 
-export function getAvailableTypes(): string[] {
-  const types = new Set<string>();
+export function getAvailableTypes(): FeedType[] {
+  const types = new Set<FeedType>();
   collections.forEach((collection) => {
     collection.feeds.forEach((feed) => {
       if (feed.method === "rss") {
-        // 英語のタイプを日本語にマッピング
-        const japaneseType = typeLabels[feed.type];
-        if (japaneseType) {
-          types.add(japaneseType);
-        }
+        types.add(feed.type);
       }
     });
   });

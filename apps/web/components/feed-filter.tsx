@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   FeedItem,
+  FeedType,
   typeLabels,
   getAvailableTypes,
   getAvailableTechnologies,
@@ -22,14 +23,14 @@ interface FeedFilterProps {
 }
 
 // タイプに応じたアイコンを取得する関数
-const getTypeIcon = (type: string) => {
+const getTypeIcon = (type: FeedType) => {
   switch (type) {
-    case "リリース":
+    case "releases":
       return <SiGithub className="w-4 h-4" />;
-    case "ニュース":
-    case "変更履歴":
+    case "blog":
+    case "changelog":
       return <Newspaper className="w-4 h-4" />;
-    case "動画":
+    case "youtube":
       return <SiYoutube className="w-4 h-4" />;
     default:
       return null;
@@ -75,12 +76,11 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
   // 各タイプの件数を計算（現在のソース・タグフィルターを考慮）
   const typeCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
+    const counts: Partial<Record<FeedType, number>> = {};
     availableTypes.forEach((type) => {
       counts[type] = feedItems.filter((item) => {
-        // タイプが一致するかチェック（英語→日本語マッピングを考慮）
-        const itemTypeInJapanese = typeLabels[item.type];
-        if (!itemTypeInJapanese || itemTypeInJapanese !== type) return false;
+        // タイプが一致するかチェック
+        if (item.type !== type) return false;
 
         // ソースフィルターが設定されている場合、それも考慮
         if (filters.source && filters.source.length > 0) {
@@ -111,9 +111,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
         // タイプフィルターが設定されている場合、それも考慮
         if (filters.type && filters.type.length > 0) {
-          const itemTypeInJapanese = typeLabels[item.type];
-          if (!itemTypeInJapanese || !filters.type.includes(itemTypeInJapanese))
-            return false;
+          if (!filters.type.includes(item.type)) return false;
         }
 
         // タグフィルターが設定されている場合、それも考慮
@@ -140,9 +138,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
         // タイプフィルターが設定されている場合、それも考慮
         if (filters.type && filters.type.length > 0) {
-          const itemTypeInJapanese = typeLabels[item.type];
-          if (!itemTypeInJapanese || !filters.type.includes(itemTypeInJapanese))
-            return false;
+          if (!filters.type.includes(item.type)) return false;
         }
 
         // ソースフィルターが設定されている場合、それも考慮
@@ -156,7 +152,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
     return counts;
   }, [feedItems, availableTags, filters.type, filters.source]);
 
-  const toggleType = (type: string, checked: boolean) => {
+  const toggleType = (type: FeedType, checked: boolean) => {
     const currentTypes = filters.type;
     const newTypes = checked
       ? [...currentTypes, type]
@@ -203,7 +199,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
               >
                 <div className="flex items-center gap-2">
                   {getTypeIcon(type)}
-                  <span>{typeLabels[type] || type}</span>
+                  <span>{typeLabels[type]}</span>
                 </div>
                 <span className="text-sm text-muted-foreground ml-2">
                   {typeCounts[type] || 0}
