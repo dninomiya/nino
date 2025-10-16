@@ -47,6 +47,18 @@ const summarySchema = z.object({
   tags: z.array(z.string()).optional(),
 });
 
+// バッチ処理用のスキーマ
+const batchSummarySchema = z.object({
+  summaries: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      summary: z.string(),
+      tags: z.array(z.string()).optional(),
+    })
+  ),
+});
+
 const parser = new Parser({
   customFields: {
     item: [
@@ -117,6 +129,94 @@ function extractThumbnail(item: any): string | undefined {
   }
 
   return undefined;
+}
+
+// バッチ要約生成の共通関数
+export async function generateBatchSummaries(
+  items: Array<{
+    id: string;
+    title: string;
+    content: string;
+  }>
+): Promise<
+  Array<{
+    id: string;
+    title: string;
+    summary: string;
+    tags: string[];
+  }>
+> {
+  if (items.length === 0) {
+    return [];
+  }
+
+  try {
+    const availableTags = [
+      "feature: 新機能の追加や機能拡張",
+      "event: イベント、カンファレンス、ワークショップ",
+      "bugfix: バグ修正、不具合対応",
+      "big-news: 大きなニュース、重要な発表",
+      "release: 新バージョンリリース",
+      "update: アップデート、改善",
+      "announcement: お知らせ、告知",
+      "tutorial: チュートリアル、ガイド",
+      "documentation: ドキュメント更新",
+      "security: セキュリティ関連",
+      "performance: パフォーマンス改善",
+      "breaking-change: 破壊的変更",
+    ].join("\n");
+
+    // アイテムの情報を構造化
+    const itemsInfo = items
+      .map(
+        (item, index) =>
+          `記事${index + 1}:
+ID: ${item.id}
+タイトル: ${item.title}
+内容: ${item.content}`
+      )
+      .join("\n\n");
+
+    const prompt = `以下の技術記事を分析して、それぞれの記事について以下の3つを生成してください：
+
+1. より分かりやすい日本語のタイトル（元のタイトルを改善）
+2. 記事の要約（2-3文で簡潔に日本語で）
+3. 適切なタグ（1-3個選択）
+
+${itemsInfo}
+
+利用可能なタグ:
+${availableTags}
+
+注意事項：
+- 各記事について、IDに対応する結果を返してください
+- タイトルは日本語で、技術的な内容を分かりやすく表現してください
+- 要約は日本語で、記事の要点を簡潔にまとめてください
+- タグは記事の内容に最も適したものを選択してください
+- 結果は配列形式で、各要素にid、title、summary、tagsを含めてください`;
+
+    const result = await generateObject({
+      model: "google/gemini-2.5-flash-lite",
+      prompt,
+      schema: batchSummarySchema,
+    });
+
+    return result.object.summaries.map((summary) => ({
+      id: summary.id,
+      title: summary.title,
+      summary: summary.summary,
+      tags: summary.tags || [],
+    }));
+  } catch (error) {
+    console.error("Failed to generate batch summaries:", error);
+    // エラーの場合は元のタイトルと空の要約を返す
+    return items.map((item) => ({
+      id: item.id,
+      title: item.title,
+      summary: "",
+      tags: [],
+    }));
+  }
 }
 
 // AIによるタイトル、要約、タグ自動生成関数
@@ -204,39 +304,65 @@ async function fetchRssFeed(
         return isAfter(itemDate, cutoffDate);
       }) || [];
 
-    const itemsWithGeneratedContent = await Promise.all(
-      filteredItems.map(async (item) => {
-        // YouTubeの場合は要約生成をスキップ
-        if (type === "youtube") {
-          return {
-            date: new Date(item.isoDate || item.pubDate || ""),
-            title: item.title || "",
-            url: item.link || "",
-            type,
-            source,
-            thumbnail: extractThumbnail(item),
-            rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
-            rssUrl: url, // RSSフィードのURL
-            summary: "", // YouTubeは要約対象外
-            tags: [], // YouTubeは要約対象外
-          };
-        }
+    // YouTube以外のアイテムをフィルタリング
+    const nonYoutubeItems = filteredItems.filter((item) => type !== "youtube");
+    const youtubeItems = filteredItems.filter((item) => type === "youtube");
 
-        const generatedContent = await generateContentForItem(item);
+    // YouTubeアイテムは要約生成をスキップ
+    const youtubeItemsWithGeneratedContent = youtubeItems.map((item) => ({
+      date: new Date(item.isoDate || item.pubDate || ""),
+      title: item.title || "",
+      url: item.link || "",
+      type,
+      source,
+      thumbnail: extractThumbnail(item),
+      rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
+      rssUrl: url, // RSSフィードのURL
+      summary: "", // YouTubeは要約対象外
+      tags: [], // YouTubeは要約対象外
+    }));
+
+    // 非YouTubeアイテムをバッチで要約生成
+    let nonYoutubeItemsWithGeneratedContent: FeedItem[] = [];
+    if (nonYoutubeItems.length > 0) {
+      const batchItems = nonYoutubeItems.map((item, index) => {
+        const content =
+          item.contentSnippet ||
+          item.content ||
+          (item as any).description ||
+          "";
+        return {
+          id: `${item.link}_${new Date(item.isoDate || item.pubDate || "").getTime()}`,
+          title: item.title || "",
+          content,
+        };
+      });
+
+      const summaries = await generateBatchSummaries(batchItems);
+
+      nonYoutubeItemsWithGeneratedContent = nonYoutubeItems.map((item) => {
+        const itemId = `${item.link}_${new Date(item.isoDate || item.pubDate || "").getTime()}`;
+        const summary = summaries.find((s) => s.id === itemId);
+
         return {
           date: new Date(item.isoDate || item.pubDate || ""),
-          title: generatedContent.title,
+          title: summary?.title || item.title || "",
           url: item.link || "",
           type,
           source,
           thumbnail: extractThumbnail(item),
           rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
           rssUrl: url, // RSSフィードのURL
-          summary: generatedContent.summary,
-          tags: generatedContent.tags,
+          summary: summary?.summary || "",
+          tags: summary?.tags || [],
         };
-      })
-    );
+      });
+    }
+
+    const itemsWithGeneratedContent = [
+      ...nonYoutubeItemsWithGeneratedContent,
+      ...youtubeItemsWithGeneratedContent,
+    ];
 
     return itemsWithGeneratedContent;
   } catch (error) {
@@ -262,29 +388,45 @@ async function fetchScrapedFeed(
       isAfter(item.date, cutoffDate)
     );
 
-    const itemsWithGeneratedContent = await Promise.all(
-      filteredItems.map(async (item) => {
-        // YouTubeの場合は要約生成をスキップ（スクレイピングでYouTubeがある場合）
-        if (type === "youtube") {
-          return {
-            date: item.date,
-            title: item.title,
-            url: item.url,
-            type,
-            source,
-            content: "", // スクレイピングではcontentは空文字列
-            thumbnail: undefined, // スクレイピングではサムネイルは未対応
-            rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
-            rssUrl: url, // スクレイピング元のURL
-            summary: "", // YouTubeは要約対象外
-            tags: [], // YouTubeは要約対象外
-          };
-        }
+    // YouTube以外のアイテムをフィルタリング
+    const nonYoutubeItems = filteredItems.filter((item) => type !== "youtube");
+    const youtubeItems = filteredItems.filter((item) => type === "youtube");
 
-        const generatedContent = await generateContentForItem(item);
+    // YouTubeアイテムは要約生成をスキップ（スクレイピングでYouTubeがある場合）
+    const youtubeItemsWithGeneratedContent = youtubeItems.map((item) => ({
+      date: item.date,
+      title: item.title,
+      url: item.url,
+      type,
+      source,
+      content: "", // スクレイピングではcontentは空文字列
+      thumbnail: undefined, // スクレイピングではサムネイルは未対応
+      rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
+      rssUrl: url, // スクレイピング元のURL
+      summary: "", // YouTubeは要約対象外
+      tags: [], // YouTubeは要約対象外
+    }));
+
+    // 非YouTubeアイテムをバッチで要約生成
+    let nonYoutubeItemsWithGeneratedContent: FeedItem[] = [];
+    if (nonYoutubeItems.length > 0) {
+      const batchItems = nonYoutubeItems.map((item, index) => {
+        return {
+          id: `${item.url}_${item.date.getTime()}`,
+          title: item.title,
+          content: "", // スクレイピングではcontentは空文字列
+        };
+      });
+
+      const summaries = await generateBatchSummaries(batchItems);
+
+      nonYoutubeItemsWithGeneratedContent = nonYoutubeItems.map((item) => {
+        const itemId = `${item.url}_${item.date.getTime()}`;
+        const summary = summaries.find((s) => s.id === itemId);
+
         return {
           date: item.date,
-          title: generatedContent.title,
+          title: summary?.title || item.title,
           url: item.url,
           type,
           source,
@@ -292,11 +434,16 @@ async function fetchScrapedFeed(
           thumbnail: undefined, // スクレイピングではサムネイルは未対応
           rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
           rssUrl: url, // スクレイピング元のURL
-          summary: generatedContent.summary,
-          tags: generatedContent.tags,
+          summary: summary?.summary || "",
+          tags: summary?.tags || [],
         };
-      })
-    );
+      });
+    }
+
+    const itemsWithGeneratedContent = [
+      ...nonYoutubeItemsWithGeneratedContent,
+      ...youtubeItemsWithGeneratedContent,
+    ];
 
     return itemsWithGeneratedContent;
   } catch (error) {
@@ -434,6 +581,99 @@ export async function getItemsWithMissingSummary(): Promise<FeedItem[]> {
     }));
   } catch (error) {
     console.error("Failed to get items with missing summary:", error);
+    throw error;
+  }
+}
+
+// 欠損した要約をバッチで再生成
+export async function regenerateMissingSummariesInBatch(): Promise<{
+  successCount: number;
+  totalCount: number;
+  errors: string[];
+}> {
+  try {
+    // summaryが空のアイテムを取得（YouTube除外）
+    const itemsWithMissingSummary = await getItemsWithMissingSummary();
+
+    if (itemsWithMissingSummary.length === 0) {
+      return {
+        successCount: 0,
+        totalCount: 0,
+        errors: [],
+      };
+    }
+
+    // バッチサイズを設定（AIの制限を考慮）
+    const batchSize = 10;
+    let successCount = 0;
+    const errors: string[] = [];
+
+    // バッチごとに処理
+    for (let i = 0; i < itemsWithMissingSummary.length; i += batchSize) {
+      const batch = itemsWithMissingSummary.slice(i, i + batchSize);
+
+      try {
+        // バッチ用のデータを準備
+        const batchItems = batch.map((item, index) => {
+          let content = "";
+          try {
+            const rawData = JSON.parse(item.rawXml || "{}");
+            content =
+              rawData.contentSnippet ||
+              rawData.content ||
+              rawData.description ||
+              "";
+          } catch {
+            content = "";
+          }
+
+          return {
+            id: `${item.url}_${item.date.getTime()}`,
+            title: item.title,
+            content,
+          };
+        });
+
+        // バッチ要約生成
+        const summaries = await generateBatchSummaries(batchItems);
+
+        // DBを更新
+        for (const summary of summaries) {
+          const [url, timestamp] = summary.id.split("_");
+          if (!url || !timestamp) {
+            console.error(`Invalid summary id: ${summary.id}`);
+            continue;
+          }
+          const date = new Date(parseInt(timestamp));
+
+          await db
+            .update(feedItems)
+            .set({
+              title: summary.title,
+              summary: summary.summary,
+              tags: summary.tags ? JSON.stringify(summary.tags) : null,
+            })
+            .where(and(eq(feedItems.url, url), eq(feedItems.date, date)));
+
+          successCount++;
+        }
+      } catch (error) {
+        console.error(`Failed to process batch ${i}-${i + batchSize}:`, error);
+        const batchErrors = batch.map(
+          (item) =>
+            `${item.title}: ${error instanceof Error ? error.message : "Unknown error"}`
+        );
+        errors.push(...batchErrors);
+      }
+    }
+
+    return {
+      successCount,
+      totalCount: itemsWithMissingSummary.length,
+      errors,
+    };
+  } catch (error) {
+    console.error("Failed to regenerate missing summaries in batch:", error);
     throw error;
   }
 }
