@@ -3,6 +3,7 @@ import { FeedList } from "@/components/feed-list";
 import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { RegenerateMissingSummariesButton } from "@/components/regenerate-missing-summaries-button";
+import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
 import {
   Empty,
   EmptyHeader,
@@ -42,6 +43,9 @@ export default async function Page() {
             <RegenerateMissingSummariesButton
               missingCount={itemsWithMissingSummary.length}
             />
+            {process.env.NODE_ENV === "development" && (
+              <TestDiscordNotificationButton />
+            )}
           </div>
         </div>
 

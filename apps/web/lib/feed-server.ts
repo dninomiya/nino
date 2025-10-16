@@ -632,7 +632,7 @@ export async function regenerateMissingSummariesInBatch(): Promise<{
 }
 
 // Discord通知を送信する関数
-async function sendDiscordNotification(items: FeedItem[]): Promise<void> {
+export async function sendDiscordNotification(items: FeedItem[]): Promise<void> {
   // 技術（source）ごとにグループ化
   const groupedBySource = items.reduce(
     (acc, item) => {
