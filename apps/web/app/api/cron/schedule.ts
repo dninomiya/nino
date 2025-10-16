@@ -26,4 +26,10 @@ export const SCHEDULES: Schedule[] = [
       await fetchAndSaveNewFeedItems();
     },
   },
+  {
+    when: { time: "00:00", day: "everyday" },
+    action: async () => {
+      await fetchAndSaveNewFeedItems();
+    },
+  },
 ];
