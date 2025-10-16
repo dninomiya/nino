@@ -1,13 +1,13 @@
 import "server-only";
 
-import Parser from "rss-parser";
-import { isAfter, subDays } from "date-fns";
-import { collections, type FeedItem } from "./feed";
-import { generateObject } from "ai";
-import { z } from "zod";
 import { db } from "@workspace/db";
 import { feedItems } from "@workspace/db/schemas/feed";
-import { eq, and, desc, gte } from "drizzle-orm";
+import { generateObject } from "ai";
+import { isAfter, subDays } from "date-fns";
+import { desc, gte, eq, and, or, isNull, ne } from "drizzle-orm";
+import Parser from "rss-parser";
+import { z } from "zod";
+import { collections, type FeedItem } from "./feed";
 
 // タグの定義
 export const TAGS = {
@@ -127,7 +127,7 @@ async function generateContentForItem(item: any): Promise<{
 }> {
   try {
     const content =
-      item.content || item.contentSnippet || item.description || "";
+      item.contentSnippet || item.content || item.description || "";
     const originalTitle = item.title || "";
 
     // タイトルとコンテンツからタイトル、要約、タグを生成
@@ -206,6 +206,22 @@ async function fetchRssFeed(
 
     const itemsWithGeneratedContent = await Promise.all(
       filteredItems.map(async (item) => {
+        // YouTubeの場合は要約生成をスキップ
+        if (type === "youtube") {
+          return {
+            date: new Date(item.isoDate || item.pubDate || ""),
+            title: item.title || "",
+            url: item.link || "",
+            type,
+            source,
+            thumbnail: extractThumbnail(item),
+            rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
+            rssUrl: url, // RSSフィードのURL
+            summary: "", // YouTubeは要約対象外
+            tags: [], // YouTubeは要約対象外
+          };
+        }
+
         const generatedContent = await generateContentForItem(item);
         return {
           date: new Date(item.isoDate || item.pubDate || ""),
@@ -213,7 +229,6 @@ async function fetchRssFeed(
           url: item.link || "",
           type,
           source,
-          content: "", // HTMLコンテントは格納しない
           thumbnail: extractThumbnail(item),
           rawXml: JSON.stringify(item, null, 2), // アイテムの詳細データをJSON形式で保存
           rssUrl: url, // RSSフィードのURL
@@ -249,6 +264,23 @@ async function fetchScrapedFeed(
 
     const itemsWithGeneratedContent = await Promise.all(
       filteredItems.map(async (item) => {
+        // YouTubeの場合は要約生成をスキップ（スクレイピングでYouTubeがある場合）
+        if (type === "youtube") {
+          return {
+            date: item.date,
+            title: item.title,
+            url: item.url,
+            type,
+            source,
+            content: "", // スクレイピングではcontentは空文字列
+            thumbnail: undefined, // スクレイピングではサムネイルは未対応
+            rawXml: JSON.stringify(item, null, 2), // スクレイピングアイテムの詳細データ
+            rssUrl: url, // スクレイピング元のURL
+            summary: "", // YouTubeは要約対象外
+            tags: [], // YouTubeは要約対象外
+          };
+        }
+
         const generatedContent = await generateContentForItem(item);
         return {
           date: item.date,
@@ -302,39 +334,36 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
   return allItems.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
-// DB に feed データを保存する関数（upsert）
+// DB に feed データを保存する関数（既存データはスキップ）
 export async function saveFeedItemsToDB(items: FeedItem[]): Promise<void> {
   try {
     for (const item of items) {
-      await db
-        .insert(feedItems)
-        .values({
-          url: item.url,
-          date: item.date,
-          title: item.title,
-          type: item.type,
-          source: item.source,
-          content: item.content || null,
-          thumbnail: item.thumbnail || null,
-          rawXml: item.rawXml || null,
-          rssUrl: item.rssUrl || null,
-          summary: item.summary || null,
-          tags: item.tags ? JSON.stringify(item.tags) : null,
-        })
-        .onConflictDoUpdate({
-          target: [feedItems.url, feedItems.date],
-          set: {
-            title: item.title,
-            type: item.type,
-            source: item.source,
-            content: item.content || null,
-            thumbnail: item.thumbnail || null,
-            rawXml: item.rawXml || null,
-            rssUrl: item.rssUrl || null,
-            summary: item.summary || null,
-            tags: item.tags ? JSON.stringify(item.tags) : null,
-          },
-        });
+      // 既存データがあるかチェック
+      const existingItem = await db
+        .select()
+        .from(feedItems)
+        .where(and(eq(feedItems.url, item.url), eq(feedItems.date, item.date)))
+        .limit(1);
+
+      // 既存データがある場合はスキップ
+      if (existingItem.length > 0) {
+        continue;
+      }
+
+      // 新規データのみinsert
+      await db.insert(feedItems).values({
+        url: item.url,
+        date: item.date,
+        title: item.title,
+        type: item.type,
+        source: item.source,
+        content: item.content || null,
+        thumbnail: item.thumbnail || null,
+        rawXml: item.rawXml || null,
+        rssUrl: item.rssUrl || null,
+        summary: item.summary || null,
+        tags: item.tags ? JSON.stringify(item.tags) : null,
+      });
     }
   } catch (error) {
     console.error("Failed to save feed items to DB:", error);
@@ -370,6 +399,126 @@ export async function getFeedItemsFromDB(
     }));
   } catch (error) {
     console.error("Failed to get feed items from DB:", error);
+    throw error;
+  }
+}
+
+// summaryが空のアイテムを取得（YouTube除外）
+export async function getItemsWithMissingSummary(): Promise<FeedItem[]> {
+  try {
+    const items = await db
+      .select()
+      .from(feedItems)
+      .where(
+        and(
+          // summaryが空またはnull
+          or(eq(feedItems.summary, ""), isNull(feedItems.summary)),
+          // YouTube以外
+          ne(feedItems.type, "youtube")
+        )
+      )
+      .orderBy(desc(feedItems.date));
+
+    return items.map((item: any) => ({
+      date: item.date,
+      title: item.title,
+      url: item.url,
+      type: item.type,
+      source: item.source,
+      content: item.content || undefined,
+      thumbnail: item.thumbnail || undefined,
+      rawXml: item.rawXml || undefined,
+      rssUrl: item.rssUrl || undefined,
+      summary: item.summary || undefined,
+      tags: item.tags ? JSON.parse(item.tags) : undefined,
+    }));
+  } catch (error) {
+    console.error("Failed to get items with missing summary:", error);
+    throw error;
+  }
+}
+
+// 指定アイテムの要約を再生成
+export async function regenerateSummaryForItem(
+  url: string,
+  date: Date
+): Promise<void> {
+  try {
+    // DB からフィードアイテムを取得
+    const [item] = await db
+      .select()
+      .from(feedItems)
+      .where(and(eq(feedItems.url, url), eq(feedItems.date, date)))
+      .limit(1);
+
+    if (!item) {
+      throw new Error("Feed item not found");
+    }
+
+    // AI による要約生成
+    const availableTags = [
+      "feature: 新機能の追加や機能拡張",
+      "event: イベント、カンファレンス、ワークショップ",
+      "bugfix: バグ修正、不具合対応",
+      "big-news: 大きなニュース、重要な発表",
+      "release: 新バージョンリリース",
+      "update: アップデート、改善",
+      "announcement: お知らせ、告知",
+      "tutorial: チュートリアル、ガイド",
+      "documentation: ドキュメント更新",
+      "security: セキュリティ関連",
+      "performance: パフォーマンス改善",
+      "breaking-change: 破壊的変更",
+    ].join("\n");
+
+    // rawXml からコンテンツを抽出
+    let content = "";
+    try {
+      const rawData = JSON.parse(item.rawXml || "{}");
+      content = rawData.contentSnippet || rawData.description || "";
+    } catch {
+      content = "";
+    }
+
+    const contentPreview = content.substring(0, 1000);
+    const prompt =
+      "以下の技術記事のタイトルと内容を分析して、以下の3つを生成してください：\n\n" +
+      "1. より分かりやすい日本語のタイトル（元のタイトルを改善）\n" +
+      "2. 記事の要約（2-3文で簡潔に日本語で）\n" +
+      "3. 適切なタグ（1-3個選択）\n\n" +
+      "元のタイトル: " +
+      item.title +
+      "\n" +
+      "内容: " +
+      contentPreview +
+      "...\n\n" +
+      "利用可能なタグ:\n" +
+      availableTags +
+      "\n\n" +
+      "注意事項：\n" +
+      "- タイトルは日本語で、技術的な内容を分かりやすく表現してください\n" +
+      "- 要約は日本語で、記事の要点を簡潔にまとめてください\n" +
+      "- タグは記事の内容に最も適したものを選択してください";
+
+    const result = await generateObject({
+      model: "google/gemini-2.5-flash-lite",
+      prompt,
+      schema: summarySchema,
+    });
+
+    // DB を更新
+    await db
+      .update(feedItems)
+      .set({
+        title: result.object.title || item.title,
+        summary: result.object.summary || "",
+        tags: result.object.tags
+          ? JSON.stringify(result.object.tags)
+          : item.tags,
+      })
+      .where(and(eq(feedItems.url, url), eq(feedItems.date, date)));
+  } catch (error) {
+    console.error("Failed to regenerate summary:", error);
     throw error;
   }
 }

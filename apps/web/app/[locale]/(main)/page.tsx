@@ -2,11 +2,16 @@ import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
 import { FetchFeedButton } from "@/components/fetch-feed-button";
 import { RecencyDate } from "@/components/recency-date";
-import { getFeedItemsFromDB } from "@/lib/feed-server";
+import { RegenerateMissingSummariesButton } from "@/components/regenerate-missing-summaries-button";
+import {
+  getFeedItemsFromDB,
+  getItemsWithMissingSummary,
+} from "@/lib/feed-server";
 import { Suspense } from "react";
 
 export default async function Page() {
   const feedItems = await getFeedItemsFromDB(7);
+  const itemsWithMissingSummary = await getItemsWithMissingSummary();
 
   return (
     <div className="flex gap-10 container py-10">
@@ -23,6 +28,9 @@ export default async function Page() {
           <p className="text-sm text-muted-foreground mb-4">
             最終更新: <RecencyDate date={Date.now()} />
           </p>
+          <RegenerateMissingSummariesButton
+            missingCount={itemsWithMissingSummary.length}
+          />
         </div>
 
         {feedItems.length === 0 ? (
