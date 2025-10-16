@@ -14,10 +14,93 @@ import {
   categoryOrder,
   TAG_LABELS,
 } from "@/lib/feed";
-import { useMemo } from "react";
+import { useMemo, ReactNode } from "react";
 
 interface FeedFilterProps {
   feedItems: FeedItem[];
+}
+
+// 共通化されたセクションコンポーネント
+interface FilterSectionProps {
+  title: string;
+  children: ReactNode;
+}
+
+function FilterSection({ title, children }: FilterSectionProps) {
+  return (
+    <div className="space-y-3">
+      <h3>{title}</h3>
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+// 共通化されたフィルター項目コンポーネント
+interface FilterItemProps {
+  id: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  icon?: ReactNode;
+  label: string;
+  count: number;
+}
+
+function FilterItem({
+  id,
+  checked,
+  onCheckedChange,
+  icon,
+  label,
+  count,
+}: FilterItemProps) {
+  return (
+    <div className="flex items-center gap-3">
+      <Checkbox
+        id={id}
+        checked={checked}
+        onCheckedChange={(checked) => onCheckedChange(checked as boolean)}
+      />
+      <Label htmlFor={id} className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-2">
+          {icon}
+          <span>{label}</span>
+        </div>
+        <span className="text-sm text-muted-foreground ml-2 tabular-nums">
+          {count}
+        </span>
+      </Label>
+    </div>
+  );
+}
+
+// カテゴリ別セクションコンポーネント
+interface CategorySectionProps {
+  title: string;
+  children: ReactNode;
+}
+
+function CategorySection({ title, children }: CategorySectionProps) {
+  return (
+    <div className="space-y-3">
+      <h3>{title}</h3>
+      <div className="space-y-4">{children}</div>
+    </div>
+  );
+}
+
+// カテゴリグループコンポーネント
+interface CategoryGroupProps {
+  category: string;
+  children: ReactNode;
+}
+
+function CategoryGroup({ category, children }: CategoryGroupProps) {
+  return (
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-muted-foreground">{category}</h4>
+      <div className="space-y-2 ml-2">{children}</div>
+    </div>
+  );
 }
 
 // タイプに応じたアイコンを取得する関数
@@ -174,106 +257,58 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-3">
-        <h3>情報タイプ</h3>
-        <div className="space-y-2">
-          {availableTypes.map((type) => (
-            <div key={type} className="flex items-center gap-3">
-              <Checkbox
-                id={`type-${type}`}
-                checked={filters.type?.includes(type)}
-                onCheckedChange={(checked) => {
-                  toggleType(type, checked as boolean);
-                }}
-              />
-              <Label
-                htmlFor={`type-${type}`}
-                className="flex items-center justify-between w-full"
-              >
-                <div className="flex items-center gap-2">
-                  {getTypeIcon(type)}
-                  <span>{feedTypeMapping[type].label}</span>
-                </div>
-                <span className="text-sm text-muted-foreground ml-2 tabular-nums">
-                  {typeCounts[type] || 0}
-                </span>
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
+      <FilterSection title="情報タイプ">
+        {availableTypes.map((type) => (
+          <FilterItem
+            key={type}
+            id={`type-${type}`}
+            checked={filters.type?.includes(type)}
+            onCheckedChange={(checked) => toggleType(type, checked)}
+            icon={getTypeIcon(type)}
+            label={feedTypeMapping[type].label}
+            count={typeCounts[type] || 0}
+          />
+        ))}
+      </FilterSection>
 
-      <div className="space-y-3">
-        <h3>技術</h3>
-        <div className="space-y-4">
-          {categoryOrder.map((category) => {
-            const technologies = technologiesByCategory[category];
-            if (!technologies || technologies.length === 0) return null;
+      <CategorySection title="技術">
+        {categoryOrder.map((category) => {
+          const technologies = technologiesByCategory[category];
+          if (!technologies || technologies.length === 0) return null;
 
-            return (
-              <div key={category} className="space-y-2">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  {category}
-                </h4>
-                <div className="space-y-2 ml-2">
-                  {technologies.map((technology) => (
-                    <div key={technology} className="flex items-center gap-3">
-                      <Checkbox
-                        id={`source-${technology}`}
-                        checked={filters.source?.includes(technology)}
-                        onCheckedChange={(checked) => {
-                          toggleSource(technology, checked as boolean);
-                        }}
-                      />
-                      <Label
-                        htmlFor={`source-${technology}`}
-                        className="flex items-center justify-between w-full"
-                      >
-                        <div className="flex items-center gap-2">
-                          {getTechnologyIcon(technology)}
-                          <span>
-                            {techMapping[technology]?.label || technology}
-                          </span>
-                        </div>
-                        <span className="text-sm text-muted-foreground ml-2 tabular-nums">
-                          {sourceCounts[technology] || 0}
-                        </span>
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+          return (
+            <CategoryGroup key={category} category={category}>
+              {technologies.map((technology) => (
+                <FilterItem
+                  key={technology}
+                  id={`source-${technology}`}
+                  checked={filters.source?.includes(technology)}
+                  onCheckedChange={(checked) =>
+                    toggleSource(technology, checked)
+                  }
+                  icon={getTechnologyIcon(technology)}
+                  label={techMapping[technology]?.label || technology}
+                  count={sourceCounts[technology] || 0}
+                />
+              ))}
+            </CategoryGroup>
+          );
+        })}
+      </CategorySection>
 
       {availableTags.length > 0 && (
-        <div className="space-y-3">
-          <h3>タグ</h3>
-          <div className="space-y-2">
-            {availableTags.map((tag) => (
-              <div key={tag} className="flex items-center gap-3">
-                <Checkbox
-                  id={`tag-${tag}`}
-                  checked={filters.tags?.includes(tag)}
-                  onCheckedChange={(checked) => {
-                    toggleTag(tag, checked as boolean);
-                  }}
-                />
-                <Label
-                  htmlFor={`tag-${tag}`}
-                  className="flex items-center justify-between w-full"
-                >
-                  <span>{TAG_LABELS[tag] || tag}</span>
-                  <span className="text-sm text-muted-foreground ml-2 tabular-nums">
-                    {tagCounts[tag] || 0}
-                  </span>
-                </Label>
-              </div>
-            ))}
-          </div>
-        </div>
+        <FilterSection title="タグ">
+          {availableTags.map((tag) => (
+            <FilterItem
+              key={tag}
+              id={`tag-${tag}`}
+              checked={filters.tags?.includes(tag)}
+              onCheckedChange={(checked) => toggleTag(tag, checked)}
+              label={TAG_LABELS[tag] || tag}
+              count={tagCounts[tag] || 0}
+            />
+          ))}
+        </FilterSection>
       )}
     </div>
   );

@@ -26,8 +26,8 @@ export async function testDiscordNotification() {
       success: true,
       message: `Discord通知を送信しました（${latestItems.length}件のアイテム）`,
       itemCount: latestItems.length,
-      items: latestItems.map((item) => ({
-        id: item.id,
+      items: latestItems.map((item, index) => ({
+        id: `${item.source}-${index}`,
         title: item.title,
         source: item.source,
         url: item.url,
