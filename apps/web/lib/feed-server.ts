@@ -652,6 +652,7 @@ export async function sendDiscordNotification(
           title: source,
           summary: summary,
           link: item.url,
+          type: item.type,
         };
       });
 

@@ -43,7 +43,12 @@ export async function sendDiscordWebhook(
 
 // Discord用メッセージフォーマッター
 export function formatDiscordMessage(
-  sections: Array<{ title: string; summary: string; link: string }>
+  sections: Array<{
+    title: string;
+    summary: string;
+    link: string;
+    type?: string;
+  }>
 ): string {
   if (sections.length === 0) {
     return "";
@@ -60,10 +65,12 @@ export function formatDiscordMessage(
   const header = `📢 ${jstString}の最新ニュースです！\n\n`;
 
   const formattedSections = sections
-    .map(
-      (section) =>
-        `**${section.title}**:\n${section.summary}\n<${section.link}>`
-    )
+    .map((section) => {
+      // YouTube動画の場合は<>で挟まない
+      const link =
+        section.type === "youtube" ? section.link : `<${section.link}>`;
+      return `**${section.title}**:\n${section.summary}\n${link}`;
+    })
     .join("\n\n");
 
   return header + formattedSections;
