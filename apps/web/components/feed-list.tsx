@@ -69,22 +69,18 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
     <div className="space-y-4">
       {filteredFeedItems.map((item, index) => (
         <Card key={`${item.url}-${index}`}>
-          <CardHeader className="flex-1">
+          <CardHeader>
             <div className="flex items-center gap-2 flex-wrap">
               <IconBadge type={item.type} />
               <Badge variant="outline">
                 <ServiceIcon service={item.source} />
                 {item.source}
               </Badge>
-              {item.tags && item.tags.length > 0 && (
-                <div className="flex gap-1 flex-wrap">
-                  {item.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      {TAG_LABELS[tag] || tag}
-                    </Badge>
-                  ))}
-                </div>
-              )}
+              {item.tags?.map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                  {TAG_LABELS[tag] || tag}
+                </Badge>
+              ))}
             </div>
 
             <CardTitle>
@@ -121,59 +117,53 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
             )}
 
             {item.summary && (
-              <div>
-                <div className="text-sm text-foreground leading-relaxed">
-                  <p>{item.summary}</p>
-                  {item.rawXml && (
-                    <Collapsible
-                      open={expandedItems.has(index)}
-                      onOpenChange={(open) => {
-                        const newExpanded = new Set(expandedItems);
-                        if (open) {
-                          newExpanded.add(index);
-                        } else {
-                          newExpanded.delete(index);
-                        }
-                        setExpandedItems(newExpanded);
-                      }}
-                    >
-                      <CollapsibleTrigger asChild>
-                        <Button variant="link" size="sm" className="mt-1">
-                          {expandedItems.has(index) ? "閉じる" : "原文をみる"}
-                        </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="mt-2">
-                        <div className="bg-muted p-3 rounded-md">
-                          <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
-                            {(() => {
-                              try {
-                                const rawData = JSON.parse(item.rawXml || "{}");
-                                return `${rawData.title || item.title}\n\n${rawData.contentSnippet || rawData.description || ""}`;
-                              } catch {
-                                return item.rawXml || "";
-                              }
-                            })()}
-                          </pre>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  )}
-                </div>
+              <div className="leading-relaxed">
+                <p>{item.summary}</p>
+                {item.rawXml && (
+                  <Collapsible
+                    open={expandedItems.has(index)}
+                    onOpenChange={(open) => {
+                      const newExpanded = new Set(expandedItems);
+                      if (open) {
+                        newExpanded.add(index);
+                      } else {
+                        newExpanded.delete(index);
+                      }
+                      setExpandedItems(newExpanded);
+                    }}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button variant="link" size="sm" className="mt-1">
+                        {expandedItems.has(index) ? "閉じる" : "原文をみる"}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2">
+                      <div className="bg-muted p-3 rounded-md">
+                        <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
+                          {(() => {
+                            try {
+                              const rawData = JSON.parse(item.rawXml || "{}");
+                              return `${rawData.title || item.title}\n\n${rawData.contentSnippet || rawData.description || ""}`;
+                            } catch {
+                              return item.rawXml || "";
+                            }
+                          })()}
+                        </pre>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
               </div>
             )}
           </CardContent>
 
           <CardFooter className="flex gap-2 flex-wrap">
-            {/* RSSフィードへのリンク */}
             {item.rssUrl && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open(item.rssUrl, "_blank")}
-                className="flex items-center gap-2"
-              >
-                <Rss className="size-4" />
-                RSS
+              <Button variant="outline" size="sm" asChild>
+                <a href={item.rssUrl} target="_blank">
+                  <Rss className="size-4" />
+                  RSS
+                </a>
               </Button>
             )}
           </CardFooter>

@@ -2,6 +2,7 @@ import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
 import { FetchFeedButton } from "@/components/fetch-feed-button";
 import { RecencyDate } from "@/components/recency-date";
+import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { RegenerateMissingSummariesButton } from "@/components/regenerate-missing-summaries-button";
 import {
   getFeedItemsFromDB,
@@ -28,9 +29,12 @@ export default async function Page() {
           <p className="text-sm text-muted-foreground mb-4">
             最終更新: <RecencyDate date={Date.now()} />
           </p>
-          <RegenerateMissingSummariesButton
-            missingCount={itemsWithMissingSummary.length}
-          />
+          <div className="flex gap-2 flex-wrap">
+            <RefreshFeedButton />
+            <RegenerateMissingSummariesButton
+              missingCount={itemsWithMissingSummary.length}
+            />
+          </div>
         </div>
 
         {feedItems.length === 0 ? (
