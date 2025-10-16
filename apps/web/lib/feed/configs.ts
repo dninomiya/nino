@@ -11,8 +11,15 @@ import {
   SiReacthookform,
   SiTailwindcss,
   SiVercel,
+  SiOpenai,
+  SiGoogle,
+  SiGooglechrome,
+  SiExpo,
+  SiSwr,
+  SiTurborepo,
 } from "@icons-pack/react-simple-icons";
 import { FeedCollection } from "./types";
+import { Code, MousePointer2 } from "lucide-react";
 
 export const collections: FeedCollection[] = [
   {
@@ -235,6 +242,183 @@ export const collections: FeedCollection[] = [
         method: "rss",
         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCOe-8z68tgw9ioqVvYM4ddQ",
         type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "OpenAI",
+    icon: SiOpenai,
+    category: "AI",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://openai.com/news/rss.xml",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A",
+        type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "Anthropic",
+    icon: SiGithub,
+    category: "AI",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://rsshub.app/anthropic/news",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA",
+        type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "xAI",
+    icon: SiGithub,
+    category: "AI",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://x.ai/blog/rss.xml",
+        type: "blog",
+      },
+    ],
+  },
+  {
+    name: "Google AI",
+    icon: SiGoogle,
+    category: "AI",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://blog.google/products/gemini/rss/",
+        type: "blog",
+      },
+    ],
+  },
+  {
+    name: "Cursor",
+    icon: MousePointer2,
+    category: "ツール",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://cursor.com/rss.xml",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UC6YYHJzM6PhZ2Yey9BQiUaw",
+        type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "Chrome",
+    icon: SiGooglechrome,
+    category: "ツール",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://blog.google/products/chrome/rss/",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://developer.chrome.com/static/blog/feed.xml",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCnUYZLuoy1rq1aVMwx4aTzw",
+        type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "Expo",
+    icon: SiExpo,
+    category: "モバイル",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/expo/expo/commits/main/CHANGELOG.md.atom",
+        type: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://blog.expo.dev/feed",
+        type: "blog",
+      },
+    ],
+  },
+  {
+    name: "React Native",
+    icon: SiReact,
+    category: "モバイル",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/facebook/react-native/releases.atom",
+        type: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://reactnative.dev/blog/atom.xml",
+        type: "blog",
+      },
+    ],
+  },
+  {
+    name: "Visual Studio Code",
+    icon: Code,
+    category: "ツール",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/microsoft/vscode/releases.atom",
+        type: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://code.visualstudio.com/feed.xml",
+        type: "blog",
+      },
+    ],
+  },
+  {
+    name: "SWR",
+    icon: SiSwr,
+    category: "ライブラリ",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/vercel/swr/releases.atom",
+        type: "releases",
+      },
+    ],
+  },
+  {
+    name: "Turborepo",
+    icon: SiTurborepo,
+    category: "ツール",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/vercel/turborepo/releases.atom",
+        type: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://turborepo.com/feed.xml",
+        type: "blog",
       },
     ],
   },

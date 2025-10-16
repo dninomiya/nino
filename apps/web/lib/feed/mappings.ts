@@ -44,6 +44,8 @@ export const categoryOrder = [
   "ライブラリ",
   "ツール",
   "SaaS/BaaS",
+  "AI",
+  "モバイル",
 ];
 
 // 技術のマッピング（ラベルとアイコンを一元化）
