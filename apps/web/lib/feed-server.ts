@@ -2,6 +2,7 @@ import "server-only";
 
 import { db } from "@workspace/db";
 import { feedItems } from "@workspace/db/schemas/feed";
+import { sendDiscordWebhook, formatDiscordMessage } from "@workspace/discord";
 import { generateObject } from "ai";
 import { isAfter, subDays } from "date-fns";
 import { desc, gte, eq, and, or, isNull, ne } from "drizzle-orm";
@@ -385,6 +386,16 @@ export async function fetchAndSaveNewFeedItems(
     // 5. DB保存
     await saveFeedItemsToDB(newItems);
 
+    // 6. Discord通知（新規アイテムがある場合のみ）
+    if (newItems.length > 0) {
+      try {
+        await sendDiscordNotification(newItems);
+      } catch (error) {
+        console.error("Failed to send Discord notification:", error);
+        // Discord通知の失敗は処理を止めない
+      }
+    }
+
     console.log(
       `Processed ${newItems.length} new feed items (${nonYoutubeItems.length} with summaries)`
     );
@@ -611,5 +622,56 @@ export async function regenerateMissingSummariesInBatch(): Promise<{
   } catch (error) {
     console.error("Failed to regenerate missing summaries in batch:", error);
     throw error;
+  }
+}
+
+// Discord通知を送信する関数
+async function sendDiscordNotification(items: FeedItem[]): Promise<void> {
+  // 技術（source）ごとにグループ化
+  const groupedBySource = items.reduce(
+    (acc, item) => {
+      if (!acc[item.source]) {
+        acc[item.source] = [];
+      }
+      acc[item.source]!.push(item);
+      return acc;
+    },
+    {} as Record<string, FeedItem[]>
+  );
+
+  // 各技術のセクションを生成
+  const sections = Object.entries(groupedBySource).map(
+    ([source, sourceItems]) => {
+      // タグを収集して重複排除
+      const allTags = sourceItems
+        .flatMap((item) => item.tags || [])
+        .filter((tag, index, arr) => arr.indexOf(tag) === index);
+
+      // タグを日本語ラベルに変換
+      const tagLabels = allTags.map((tag) => TAG_LABELS[tag]).filter(Boolean);
+
+      // 関連リンクを生成
+      const links = sourceItems.map((item) => `- ${item.url}`).join("\n");
+
+      // セクション内容を構築
+      let content = "";
+      if (tagLabels.length > 0) {
+        content += tagLabels.map((label) => `- ${label}`).join("\n");
+      }
+      if (links) {
+        content += "\n関連リンク:\n" + links;
+      }
+
+      return {
+        title: source,
+        content: content.trim(),
+      };
+    }
+  );
+
+  // メッセージをフォーマットして送信
+  if (sections.length > 0) {
+    const message = formatDiscordMessage(sections);
+    await sendDiscordWebhook("admin", message);
   }
 }

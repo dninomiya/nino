@@ -22,6 +22,7 @@
     "@vercel/analytics": "^1.5.0",
     "@workspace/auth": "workspace:*",
     "@workspace/db": "workspace:*",
+    "@workspace/discord": "workspace:*",
     "@workspace/lib": "workspace:*",
     "@workspace/registry": "workspace:*",
     "@workspace/ui": "workspace:*",
