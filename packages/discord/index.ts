@@ -49,10 +49,20 @@ export function formatDiscordMessage(
     return "";
   }
 
-  const header = "新しいニュースです！\n";
+  // 日本時間で現在の日時を取得
+  const now = new Date();
+  const jstString = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(now);
+
+  const header = `📢 ${jstString}の最新ニュースです！\n\n`;
+
   const formattedSections = sections
     .map(
-      (section) => `${section.title}:\n${section.summary}\n<${section.link}>`
+      (section) =>
+        `**${section.title}**:\n${section.summary}\n<${section.link}>`
     )
     .join("\n\n");
 
