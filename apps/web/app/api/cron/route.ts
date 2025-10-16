@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { getFeedItems, saveFeedItemsToDB } from "@/lib/feed-server";
+import { fetchAndSaveNewFeedItems } from "@/lib/feed-server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,22 +37,18 @@ export async function GET(request: NextRequest) {
 
     console.log(`Starting feed collection at JST ${jstNow.toISOString()}`);
 
-    // Feed データを収集
-    const feedItems = await getFeedItems(7);
-
-    // DB に保存
-    await saveFeedItemsToDB(feedItems);
+    // Feed データを収集・保存
+    await fetchAndSaveNewFeedItems(7);
 
     // ページを revalidate
     revalidatePath("/");
     revalidatePath("/ja");
     revalidatePath("/en");
 
-    console.log(`Feed collection completed. Found ${feedItems.length} items.`);
+    console.log(`Feed collection completed.`);
 
     return NextResponse.json({
       message: "Feed collection completed successfully",
-      itemCount: feedItems.length,
       timestamp: jstNow.toISOString(),
     });
   } catch (error) {
