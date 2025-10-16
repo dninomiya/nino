@@ -16,6 +16,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyMedia,
+} from "@workspace/ui/components/empty";
 import { YouTubeVideo } from "@/components/youtube-video";
 import {
   FeedItem,
@@ -24,7 +31,7 @@ import {
   typeLabels,
 } from "@/lib/feed";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { ArrowUpRight, Newspaper, Rss } from "lucide-react";
+import { ArrowUpRight, Newspaper, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 
@@ -64,6 +71,22 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
       return match;
     });
   }, [feedItems, types, sources, tags]);
+
+  if (filteredFeedItems.length === 0) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <SearchX />
+          </EmptyMedia>
+          <EmptyTitle>該当する結果が見つかりません</EmptyTitle>
+          <EmptyDescription>
+            現在のフィルター条件に一致するフィードアイテムがありません。フィルターを調整して再度お試しください。
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
 
   return (
     <div className="space-y-4">
