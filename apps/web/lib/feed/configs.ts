@@ -286,18 +286,18 @@ export const collections: FeedCollection[] = [
       },
     ],
   },
-  {
-    name: "xAI",
-    icon: SiGithub,
-    category: "AI",
-    feeds: [
-      {
-        method: "rss",
-        url: "https://x.ai/blog/rss.xml",
-        type: "blog",
-      },
-    ],
-  },
+  // {
+  //   name: "xAI",
+  //   icon: SiGithub,
+  //   category: "AI",
+  //   feeds: [
+  //     {
+  //       method: "rss",
+  //       url: "https://x.ai/blog/rss.xml",
+  //       type: "blog",
+  //     },
+  //   ],
+  // },
   {
     name: "Google AI",
     icon: SiGoogle,
