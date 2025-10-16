@@ -17,7 +17,7 @@ jobs:
           npm install -g pnpm
           pnpm install
       - name: Apply migrations
-        run: cd packages/drizzle && pnpm migrate
+        run: cd packages/db && pnpm migrate
         env:
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
