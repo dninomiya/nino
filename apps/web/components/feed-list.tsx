@@ -100,7 +100,11 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
             </div>
 
             <CardTitle>
-              <a href={item.url} target="_blank" className="hover:underline">
+              <a
+                href={item.url}
+                target="_blank"
+                className="hover:underline leading-relaxed"
+              >
                 {item.title}
                 <ArrowUpRight className="size-4 align-baseline ml-1 inline text-muted-foreground" />
               </a>

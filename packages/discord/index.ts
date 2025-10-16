@@ -51,7 +51,9 @@ export function formatDiscordMessage(
 
   const header = "新しいニュースです！\n";
   const formattedSections = sections
-    .map((section) => `${section.title}:\n${section.summary}\n${section.link}`)
+    .map(
+      (section) => `${section.title}:\n${section.summary}\n<${section.link}>`
+    )
     .join("\n\n");
 
   return header + formattedSections;

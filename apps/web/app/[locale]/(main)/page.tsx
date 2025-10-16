@@ -25,7 +25,7 @@ export default async function Page() {
   return (
     <div className="flex gap-4 container items-start">
       <div className="sticky top-header">
-        <div className="w-64 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10 pr-6">
+        <div className="w-80 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10 pr-6">
           <h2 className="mb-6">絞り込み</h2>
           <Suspense>
             <FeedFilter feedItems={feedItems} />

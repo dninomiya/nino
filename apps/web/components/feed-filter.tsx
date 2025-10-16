@@ -194,7 +194,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                   {getTypeIcon(type)}
                   <span>{feedTypeMapping[type].label}</span>
                 </div>
-                <span className="text-sm text-muted-foreground ml-2">
+                <span className="text-sm text-muted-foreground ml-2 tabular-nums">
                   {typeCounts[type] || 0}
                 </span>
               </Label>
@@ -235,7 +235,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                             {techMapping[technology]?.label || technology}
                           </span>
                         </div>
-                        <span className="text-sm text-muted-foreground ml-2">
+                        <span className="text-sm text-muted-foreground ml-2 tabular-nums">
                           {sourceCounts[technology] || 0}
                         </span>
                       </Label>
@@ -266,7 +266,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                   className="flex items-center justify-between w-full"
                 >
                   <span>{TAG_LABELS[tag] || tag}</span>
-                  <span className="text-sm text-muted-foreground ml-2">
+                  <span className="text-sm text-muted-foreground ml-2 tabular-nums">
                     {tagCounts[tag] || 0}
                   </span>
                 </Label>
