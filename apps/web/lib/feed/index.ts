@@ -7,7 +7,6 @@ export { collections } from "./configs";
 // マッピングとラベルのエクスポート
 export {
   feedTypeMapping,
-  typeLabels,
   TAG_LABELS,
   categoryOrder,
   techMapping,

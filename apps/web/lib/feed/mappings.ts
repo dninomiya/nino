@@ -1,7 +1,5 @@
-import { LucideIcon } from "lucide-react";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { Newspaper } from "lucide-react";
-import { FeedType } from "./types";
+import { LucideIcon, Newspaper } from "lucide-react";
 import { collections } from "./configs";
 
 // フィードタイプのマッピング（ラベルとアイコンを一元化）
@@ -23,14 +21,6 @@ export const feedTypeMapping = {
     icon: SiYoutube,
   },
 } as const;
-
-// 後方互換性のためのtypeLabels
-export const typeLabels: Record<FeedType, string> = {
-  releases: feedTypeMapping.releases.label,
-  blog: feedTypeMapping.blog.label,
-  changelog: feedTypeMapping.changelog.label,
-  youtube: feedTypeMapping.youtube.label,
-};
 
 // タグの日本語ラベルマップ
 export const TAG_LABELS: Record<string, string> = {
