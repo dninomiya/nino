@@ -13,7 +13,9 @@ import {
   SiReacthookform,
   SiTailwindcss,
   SiVercel,
+  SiYoutube,
 } from "@icons-pack/react-simple-icons";
+import { Newspaper } from "lucide-react";
 
 // Feedタイプの定義
 export type FeedType = "releases" | "blog" | "changelog" | "youtube";
@@ -286,11 +288,32 @@ export function getAvailableTechnologies(): string[] {
   return collections.map((collection) => collection.name);
 }
 
+// フィードタイプのマッピング（ラベルとアイコンを一元化）
+export const feedTypeMapping = {
+  releases: {
+    label: "リリース",
+    icon: SiGithub,
+  },
+  blog: {
+    label: "ニュース",
+    icon: Newspaper,
+  },
+  changelog: {
+    label: "変更履歴",
+    icon: Newspaper,
+  },
+  youtube: {
+    label: "YouTube",
+    icon: SiYoutube,
+  },
+} as const;
+
+// 後方互換性のためのtypeLabels
 export const typeLabels: Record<FeedType, string> = {
-  releases: "リリース",
-  blog: "ニュース",
-  changelog: "変更履歴",
-  youtube: "YouTube",
+  releases: feedTypeMapping.releases.label,
+  blog: feedTypeMapping.blog.label,
+  changelog: feedTypeMapping.changelog.label,
+  youtube: feedTypeMapping.youtube.label,
 };
 
 // タグの日本語ラベルマップ（feed-server.tsからインポート）
@@ -344,6 +367,19 @@ export function getTechnologiesByCategory(): Record<string, string[]> {
 
   return grouped;
 }
+
+// 技術のマッピング（ラベルとアイコンを一元化）
+export const techMapping = collections.reduce(
+  (acc, collection) => {
+    acc[collection.name] = {
+      label: collection.name,
+      icon: collection.icon,
+      category: collection.category,
+    };
+    return acc;
+  },
+  {} as Record<string, { label: string; icon: LucideIcon; category: string }>
+);
 
 // 技術名からコレクション情報を取得する関数
 export function getCollectionByName(name: string): Collection | undefined {

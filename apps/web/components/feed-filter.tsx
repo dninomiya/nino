@@ -6,17 +6,15 @@ import { Label } from "@/components/ui/label";
 import {
   FeedItem,
   FeedType,
-  typeLabels,
+  feedTypeMapping,
+  techMapping,
   getAvailableTypes,
   getAvailableTechnologies,
   getTechnologiesByCategory,
   categoryOrder,
-  getCollectionByName,
   TAG_LABELS,
 } from "@/lib/feed";
 import { useMemo } from "react";
-import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { Newspaper } from "lucide-react";
 
 interface FeedFilterProps {
   feedItems: FeedItem[];
@@ -24,24 +22,19 @@ interface FeedFilterProps {
 
 // タイプに応じたアイコンを取得する関数
 const getTypeIcon = (type: FeedType) => {
-  switch (type) {
-    case "releases":
-      return <SiGithub className="w-4 h-4" />;
-    case "blog":
-    case "changelog":
-      return <Newspaper className="w-4 h-4" />;
-    case "youtube":
-      return <SiYoutube className="w-4 h-4" />;
-    default:
-      return null;
+  const mapping = feedTypeMapping[type];
+  if (mapping) {
+    const IconComponent = mapping.icon;
+    return <IconComponent className="w-4 h-4" />;
   }
+  return null;
 };
 
 // 技術に応じたアイコンを取得する関数
 const getTechnologyIcon = (technology: string) => {
-  const collection = getCollectionByName(technology);
-  if (collection) {
-    const IconComponent = collection.icon;
+  const mapping = techMapping[technology];
+  if (mapping) {
+    const IconComponent = mapping.icon;
     return <IconComponent className="w-4 h-4" />;
   }
   return null;
@@ -199,7 +192,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
               >
                 <div className="flex items-center gap-2">
                   {getTypeIcon(type)}
-                  <span>{typeLabels[type]}</span>
+                  <span>{feedTypeMapping[type].label}</span>
                 </div>
                 <span className="text-sm text-muted-foreground ml-2">
                   {typeCounts[type] || 0}
@@ -238,7 +231,9 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
                       >
                         <div className="flex items-center gap-2">
                           {getTechnologyIcon(technology)}
-                          <span>{technology}</span>
+                          <span>
+                            {techMapping[technology]?.label || technology}
+                          </span>
                         </div>
                         <span className="text-sm text-muted-foreground ml-2">
                           {sourceCounts[technology] || 0}

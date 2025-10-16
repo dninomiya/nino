@@ -29,19 +29,12 @@ import {
   FeedType,
   getCollectionByName,
   TAG_LABELS,
-  typeLabels,
+  feedTypeMapping,
+  techMapping,
 } from "@/lib/feed";
-import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { ArrowUpRight, Newspaper, Rss, SearchX } from "lucide-react";
+import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
-
-const typeIconsMap: Record<FeedType, React.ElementType> = {
-  releases: SiGithub,
-  blog: Newspaper,
-  changelog: Newspaper,
-  youtube: SiYoutube,
-};
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
@@ -197,24 +190,24 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
 }
 
 function IconBadge({ type }: { type: FeedType }) {
-  const Icon = typeIconsMap[type];
-  const displayType = typeLabels[type];
+  const mapping = feedTypeMapping[type];
+  const Icon = mapping.icon;
 
   return (
     <Badge variant="outline">
       {Icon && <Icon className="size-4" />}
-      {displayType}
+      {mapping.label}
     </Badge>
   );
 }
 
 function ServiceIcon({ service }: { service: string }) {
-  const collection = getCollectionByName(service);
+  const mapping = techMapping[service];
 
-  if (!collection) {
+  if (!mapping) {
     return null;
   }
 
-  const Icon = collection.icon;
+  const Icon = mapping.icon;
   return <Icon className="size-4" />;
 }
