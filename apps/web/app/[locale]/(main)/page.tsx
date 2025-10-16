@@ -40,12 +40,11 @@ export default async function Page() {
             最終更新: <RecencyDate date={Date.now()} />
           </p>
           <div className="flex gap-2 flex-wrap">
-            <RefreshFeedButton />
-            <RegenerateMissingSummariesButton
-              missingCount={itemsWithMissingSummary.length}
-            />
             {process.env.NODE_ENV === "development" && (
-              <TestDiscordNotificationButton />
+              <>
+                <TestDiscordNotificationButton />
+                <RefreshFeedButton />
+              </>
             )}
           </div>
         </div>
