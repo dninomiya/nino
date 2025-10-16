@@ -5,25 +5,25 @@ export const SCHEDULES: Schedule[] = [
   {
     when: { time: "06:00", day: "everyday" },
     action: async () => {
-      await fetchAndSaveNewFeedItems(7);
+      await fetchAndSaveNewFeedItems();
     },
   },
   {
     when: { time: "10:00", day: "everyday" },
     action: async () => {
-      await fetchAndSaveNewFeedItems(7);
+      await fetchAndSaveNewFeedItems();
     },
   },
   {
     when: { time: "14:00", day: "everyday" },
     action: async () => {
-      await fetchAndSaveNewFeedItems(7);
+      await fetchAndSaveNewFeedItems();
     },
   },
   {
     when: { time: "18:00", day: "everyday" },
     action: async () => {
-      await fetchAndSaveNewFeedItems(7);
+      await fetchAndSaveNewFeedItems();
     },
   },
 ];

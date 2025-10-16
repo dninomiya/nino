@@ -2,10 +2,10 @@ import "server-only";
 
 import { db } from "@workspace/db";
 import { feedItems } from "@workspace/db/schemas/feed";
-import { sendDiscordWebhook, formatDiscordMessage } from "@workspace/discord";
+import { formatDiscordMessage, sendDiscordWebhook } from "@workspace/discord";
 import { generateObject } from "ai";
-import { isAfter, subDays } from "date-fns";
-import { desc, gte, eq, and, or, isNull, ne } from "drizzle-orm";
+import { subDays } from "date-fns";
+import { and, desc, eq, gte, isNull, ne, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import Parser from "rss-parser";
 import { z } from "zod";
@@ -224,21 +224,14 @@ ${availableTags}
 async function fetchRssFeed(
   url: string,
   type: FeedType,
-  source: string,
-  days: number
+  source: string
 ): Promise<FeedItem[]> {
   try {
     const feed = await parser.parseURL(url);
-    const cutoffDate = subDays(new Date(), days);
 
-    const filteredItems =
-      feed.items?.filter((item) => {
-        if (!item.isoDate && !item.pubDate) return false;
-        const itemDate = new Date(item.isoDate || item.pubDate || "");
-        return isAfter(itemDate, cutoffDate);
-      }) || [];
+    const allItems = feed.items || [];
 
-    return filteredItems.map((item) => ({
+    return allItems.map((item) => ({
       date: new Date(item.isoDate || item.pubDate || ""),
       title: item.title || "",
       url: item.link || "",
@@ -260,20 +253,14 @@ async function fetchScrapedFeed(
   url: string,
   type: FeedType,
   source: string,
-  selector: (html: string) => Array<{ title: string; url: string; date: Date }>,
-  days: number
+  selector: (html: string) => Array<{ title: string; url: string; date: Date }>
 ): Promise<FeedItem[]> {
   try {
     const response = await fetch(url);
     const html = await response.text();
     const items = selector(html);
-    const cutoffDate = subDays(new Date(), days);
 
-    const filteredItems = items.filter((item) =>
-      isAfter(item.date, cutoffDate)
-    );
-
-    return filteredItems.map((item) => ({
+    return items.map((item) => ({
       date: item.date,
       title: item.title,
       url: item.url,
@@ -291,19 +278,18 @@ async function fetchScrapedFeed(
   }
 }
 
-export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
+export async function getFeedItems(): Promise<FeedItem[]> {
   // 全てのフィード取得タスクを並列で実行
   const feedPromises = collections.flatMap((collection) =>
     collection.feeds.map((feed) => {
       if (feed.method === "rss") {
-        return fetchRssFeed(feed.url, feed.type, collection.name, days);
+        return fetchRssFeed(feed.url, feed.type, collection.name);
       } else if (feed.method === "scrape") {
         return fetchScrapedFeed(
           feed.url,
           feed.type,
           collection.name,
-          feed.selector,
-          days
+          feed.selector
         );
       }
       return Promise.resolve([]);
@@ -321,9 +307,7 @@ export async function getFeedItems(days: number = 7): Promise<FeedItem[]> {
 }
 
 // 新しい共通関数: RSS取得からDB保存までを最適化
-export async function fetchAndSaveNewFeedItems(
-  days: number = 7
-): Promise<void> {
+export async function fetchAndSaveNewFeedItems(): Promise<void> {
   try {
     // 1. DBから最新アイテムの日時を取得（1クエリのみ）
     const latestItem = await db
@@ -332,10 +316,10 @@ export async function fetchAndSaveNewFeedItems(
       .orderBy(desc(feedItems.date))
       .limit(1);
 
-    const cutoffDate = latestItem[0]?.date || subDays(new Date(), days);
+    const cutoffDate = latestItem[0]?.date || new Date(0); // 1970年1月1日をフォールバック
 
     // 2. RSSフィードを取得（summary生成なし）
-    const allItems = await getFeedItems(days);
+    const allItems = await getFeedItems();
 
     // 3. 最新日時より新しいアイテムのみフィルタ
     const newItems = allItems.filter((item) => item.date > cutoffDate);
