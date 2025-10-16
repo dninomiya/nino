@@ -20,11 +20,11 @@ import { YouTubeVideo } from "@/components/youtube-video";
 import {
   FeedItem,
   getCollectionByName,
-  typeLabels,
   TAG_LABELS,
+  typeLabels,
 } from "@/lib/feed";
 import { SiGithub, SiYoutube } from "@icons-pack/react-simple-icons";
-import { ArrowUpRight, FileText, Newspaper, Rss } from "lucide-react";
+import { ArrowUpRight, Newspaper, Rss } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 
@@ -97,7 +97,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <RecencyDate date={item.date} />
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             {item.type !== "releases" && (
               <>
                 {item.type === "youtube" ? (
@@ -121,10 +121,44 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
             )}
 
             {item.summary && (
-              <div className="mt-3 p-3 bg-muted/50 rounded-md">
-                <p className="text-sm text-foreground leading-relaxed">
-                  {item.summary}
-                </p>
+              <div>
+                <div className="text-sm text-foreground leading-relaxed">
+                  <p>{item.summary}</p>
+                  {item.rawXml && (
+                    <Collapsible
+                      open={expandedItems.has(index)}
+                      onOpenChange={(open) => {
+                        const newExpanded = new Set(expandedItems);
+                        if (open) {
+                          newExpanded.add(index);
+                        } else {
+                          newExpanded.delete(index);
+                        }
+                        setExpandedItems(newExpanded);
+                      }}
+                    >
+                      <CollapsibleTrigger asChild>
+                        <Button variant="link" size="sm" className="mt-1">
+                          {expandedItems.has(index) ? "閉じる" : "原文をみる"}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-2">
+                        <div className="bg-muted p-3 rounded-md">
+                          <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
+                            {(() => {
+                              try {
+                                const rawData = JSON.parse(item.rawXml || "{}");
+                                return `${rawData.title || item.title}\n\n${rawData.contentSnippet || rawData.description || ""}`;
+                              } catch {
+                                return item.rawXml || "";
+                              }
+                            })()}
+                          </pre>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  )}
+                </div>
               </div>
             )}
           </CardContent>
@@ -141,40 +175,6 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
                 <Rss className="size-4" />
                 RSS
               </Button>
-            )}
-
-            {/* 原文表示の開閉ボタン */}
-            {item.rawXml && (
-              <Collapsible
-                open={expandedItems.has(index)}
-                onOpenChange={(open) => {
-                  const newExpanded = new Set(expandedItems);
-                  if (open) {
-                    newExpanded.add(index);
-                  } else {
-                    newExpanded.delete(index);
-                  }
-                  setExpandedItems(newExpanded);
-                }}
-              >
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <FileText className="size-4" />
-                    {expandedItems.has(index) ? "閉じる" : "原文"}
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-2">
-                  <div className="bg-muted p-3 rounded-md">
-                    <pre className="text-xs overflow-auto max-h-96 whitespace-pre-wrap">
-                      {JSON.stringify(item, null, 2)}
-                    </pre>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
             )}
           </CardFooter>
         </Card>
