@@ -17,6 +17,8 @@ import {
   SiExpo,
   SiSwr,
   SiTurborepo,
+  SiDiscord,
+  SiLucide,
 } from "@icons-pack/react-simple-icons";
 import { FeedCollection } from "./types";
 import { Code, MousePointer2 } from "lucide-react";
@@ -53,6 +55,11 @@ export const collections: FeedCollection[] = [
         method: "rss",
         url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCLq8gNoee7oXM7MvTdjyQvA",
         type: "changelog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCLq8gNoee7oXM7MvTdjyQvA",
+        type: "youtube",
       },
     ],
   },
@@ -419,6 +426,35 @@ export const collections: FeedCollection[] = [
         method: "rss",
         url: "https://turborepo.com/feed.xml",
         type: "blog",
+      },
+    ],
+  },
+  {
+    name: "Discord",
+    icon: SiDiscord,
+    category: "ツール",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://discord.com/blog/rss.xml",
+        type: "blog",
+      },
+      {
+        method: "rss",
+        url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCZ5XnGb-3t7jCkXdawN2tkA",
+        type: "youtube",
+      },
+    ],
+  },
+  {
+    name: "Lucide",
+    icon: SiLucide,
+    category: "ライブラリ",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/lucide-icons/lucide/releases.atom",
+        type: "releases",
       },
     ],
   },
