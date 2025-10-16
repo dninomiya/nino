@@ -43,7 +43,7 @@ export async function sendDiscordWebhook(
 
 // Discord用メッセージフォーマッター
 export function formatDiscordMessage(
-  sections: Array<{ title: string; content: string }>
+  sections: Array<{ title: string; summary: string; link: string }>
 ): string {
   if (sections.length === 0) {
     return "";
@@ -51,7 +51,7 @@ export function formatDiscordMessage(
 
   const header = "新しいニュースです！\n";
   const formattedSections = sections
-    .map((section) => `${section.title}:\n${section.content}`)
+    .map((section) => `${section.title}:\n${section.summary}\n${section.link}`)
     .join("\n\n");
 
   return header + formattedSections;

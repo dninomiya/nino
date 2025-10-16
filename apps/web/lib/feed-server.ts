@@ -632,7 +632,9 @@ export async function regenerateMissingSummariesInBatch(): Promise<{
 }
 
 // Discord通知を送信する関数
-export async function sendDiscordNotification(items: FeedItem[]): Promise<void> {
+export async function sendDiscordNotification(
+  items: FeedItem[]
+): Promise<void> {
   // 技術（source）ごとにグループ化
   const groupedBySource = items.reduce(
     (acc, item) => {
@@ -646,34 +648,32 @@ export async function sendDiscordNotification(items: FeedItem[]): Promise<void> 
   );
 
   // 各技術のセクションを生成
-  const sections = Object.entries(groupedBySource).map(
-    ([source, sourceItems]) => {
-      // タグを収集して重複排除
-      const allTags = sourceItems
-        .flatMap((item) => item.tags || [])
-        .filter((tag, index, arr) => arr.indexOf(tag) === index);
+  const sections = Object.entries(groupedBySource)
+    .map(([source, sourceItems]) => {
+      // 各アイテムごとにセクションを生成
+      const itemSections = sourceItems.map((item) => {
+        // AIが生成したsummaryを使用、なければタグラベルから生成
+        let summary = item.summary;
 
-      // タグを日本語ラベルに変換
-      const tagLabels = allTags.map((tag) => TAG_LABELS[tag]).filter(Boolean);
+        if (!summary) {
+          // タグを日本語ラベルに変換
+          const tagLabels = (item.tags || [])
+            .map((tag) => TAG_LABELS[tag])
+            .filter(Boolean);
 
-      // 関連リンクを生成
-      const links = sourceItems.map((item) => `- ${item.url}`).join("\n");
+          summary = tagLabels.length > 0 ? tagLabels.join(", ") : "更新情報";
+        }
 
-      // セクション内容を構築
-      let content = "";
-      if (tagLabels.length > 0) {
-        content += tagLabels.map((label) => `- ${label}`).join("\n");
-      }
-      if (links) {
-        content += "\n関連リンク:\n" + links;
-      }
+        return {
+          title: source,
+          summary: summary,
+          link: item.url,
+        };
+      });
 
-      return {
-        title: source,
-        content: content.trim(),
-      };
-    }
-  );
+      return itemSections;
+    })
+    .flat();
 
   // メッセージをフォーマットして送信
   if (sections.length > 0) {
