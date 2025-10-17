@@ -51,7 +51,7 @@ export const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="flex flex-col gap-3">
           <Logo />
-          <p className="text-sm text-muted-foreground">Web Developer.</p>
+          <p className="text-sm text-muted-foreground">Developer.</p>
           <div className="flex gap-2">
             {authorLinks.map((link) => (
               <Button variant="ghost" asChild size="icon" key={link.label}>
