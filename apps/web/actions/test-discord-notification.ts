@@ -19,9 +19,6 @@ export async function testDiscordNotification() {
     // Discord通知を送信
     await sendDiscordNotification(latestItems);
 
-    // ページを再検証
-    revalidatePath("/");
-
     return {
       success: true,
       message: `Discord通知を送信しました（${latestItems.length}件のアイテム）`,
