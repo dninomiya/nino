@@ -33,6 +33,7 @@ export function GlobalSearch() {
   const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("LocaleSwitcher");
+  const tGlobalSearch = useTranslations("GlobalSearch");
 
   const handleLocaleChange = (nextLocale: Locale) => {
     startTransition(() => {
@@ -67,7 +68,7 @@ export function GlobalSearch() {
         className="w-48 justify-start font-normal hidden xl:flex"
       >
         <SearchIcon />
-        <span className="mr-auto">検索...</span>
+        <span className="mr-auto">{tGlobalSearch("searchPlaceholder")}</span>
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </Button>
@@ -78,13 +79,13 @@ export function GlobalSearch() {
         className="xl:hidden"
       >
         <SearchIcon />
-        <span className="sr-only">検索</span>
+        <span className="sr-only">{tGlobalSearch("searchLabel")}</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="検索..." />
+        <CommandInput placeholder={tGlobalSearch("searchPlaceholder")} />
         <CommandList>
-          <CommandEmpty>検索結果がありません。</CommandEmpty>
-          <CommandGroup heading="レジストリ">
+          <CommandEmpty>{tGlobalSearch("noResults")}</CommandEmpty>
+          <CommandGroup heading={tGlobalSearch("registry")}>
             {registryDocMetas.map((meta) => (
               <CommandItem
                 key={meta.title}
@@ -98,18 +99,18 @@ export function GlobalSearch() {
             ))}
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="テーマ">
+          <CommandGroup heading={tGlobalSearch("theme")}>
             <CommandItem
               onSelect={() => {
                 setTheme("light");
               }}
             >
               <Sun />
-              <span>ライト</span>
+              <span>{tGlobalSearch("light")}</span>
               <small className="text-muted-foreground">Light</small>
               {theme === "light" && (
                 <Badge variant="outline" className="ml-auto">
-                  現在
+                  {tGlobalSearch("current")}
                 </Badge>
               )}
             </CommandItem>
@@ -119,11 +120,11 @@ export function GlobalSearch() {
               }}
             >
               <Moon />
-              <span>ダーク</span>
+              <span>{tGlobalSearch("dark")}</span>
               <small className="text-muted-foreground">Dark</small>
               {theme === "dark" && (
                 <Badge variant="outline" className="ml-auto">
-                  現在
+                  {tGlobalSearch("current")}
                 </Badge>
               )}
             </CommandItem>
@@ -133,17 +134,20 @@ export function GlobalSearch() {
               }}
             >
               <Monitor />
-              <span>システム</span>
+              <span>{tGlobalSearch("system")}</span>
               <small className="text-muted-foreground">System</small>
               {theme === "system" && (
                 <Badge variant="outline" className="ml-auto">
-                  現在
+                  {tGlobalSearch("current")}
                 </Badge>
               )}
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="言語" aria-busy={isPending}>
+          <CommandGroup
+            heading={tGlobalSearch("language")}
+            aria-busy={isPending}
+          >
             {routing.locales.map((locale) => (
               <CommandItem
                 key={locale}
@@ -153,7 +157,7 @@ export function GlobalSearch() {
                 <span>{t("locale", { locale })}</span>
                 {currentLocale === locale && (
                   <Badge variant="outline" className="ml-auto">
-                    現在
+                    {tGlobalSearch("current")}
                   </Badge>
                 )}
               </CommandItem>

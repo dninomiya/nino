@@ -18,5 +18,17 @@
     "news": "News",
     "changelog": "Changelog",
     "youtube": "Videos"
+  },
+  "GlobalSearch": {
+    "searchPlaceholder": "Search...",
+    "searchLabel": "Search",
+    "noResults": "No results found.",
+    "registry": "Registry",
+    "theme": "Theme",
+    "language": "Language",
+    "current": "Current",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

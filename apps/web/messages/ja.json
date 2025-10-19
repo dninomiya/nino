@@ -18,5 +18,17 @@
     "news": "ニュース",
     "changelog": "変更履歴",
     "youtube": "YouTube"
+  },
+  "GlobalSearch": {
+    "searchPlaceholder": "検索...",
+    "searchLabel": "検索",
+    "noResults": "検索結果がありません。",
+    "registry": "レジストリ",
+    "theme": "テーマ",
+    "language": "言語",
+    "current": "現在",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム"
   }
 }
