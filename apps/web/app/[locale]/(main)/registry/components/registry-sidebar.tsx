@@ -15,6 +15,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { registries, gettingStartedItems } from "@/lib/registry";
+import { useTranslations } from "next-intl";
 
 const getRegistryItems = (type: string) => {
   return registries
@@ -36,19 +37,20 @@ export function RegistrySidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const t = useTranslations("RegistrySidebar");
 
   const data = {
     navGroup: [
       {
-        title: "Getting Started",
+        title: t("gettingStarted"),
         items: getGettingStartedItems(),
       },
       {
-        title: "Blocks",
+        title: t("blocks"),
         items: getRegistryItems("registry:block"),
       },
       {
-        title: "Libraries",
+        title: t("libraries"),
         items: getRegistryItems("registry:lib"),
       },
     ],
@@ -60,7 +62,7 @@ export function RegistrySidebar({
       {...props}
     >
       <SidebarHeader>
-        <div className="px-1 text-sm pt-3">レジストリ</div>
+        <div className="px-1 text-sm pt-3">{t("title")}</div>
       </SidebarHeader>
       <SidebarContent>
         {data.navGroup.map((group) => (

@@ -34,9 +34,26 @@
   "DocsListPage": {
     "title": "Documentation"
   },
+  "DocsDetailPage": {
+    "copyMarkdown": "Copy Markdown",
+    "createdAt": "Created: {date}",
+    "updatedAt": "Updated: {date}",
+    "readingTime": "Reading time: {time}"
+  },
   "RegistryPage": {
     "title": "Registry",
     "blocks": "Blocks"
+  },
+  "RegistrySidebar": {
+    "title": "Registry",
+    "gettingStarted": "Getting Started",
+    "blocks": "Blocks",
+    "libraries": "Libraries"
+  },
+  "RegistryDetailPage": {
+    "copyMarkdown": "Copy Markdown",
+    "createdAt": "Created: {date}",
+    "updatedAt": "Updated: {date}"
   },
   "MainNav": {
     "docs": "Docs",

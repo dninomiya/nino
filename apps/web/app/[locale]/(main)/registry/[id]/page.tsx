@@ -7,6 +7,7 @@ import { readFileSync } from "fs";
 import { RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
 import path from "path";
+import { getTranslations } from "next-intl/server";
 
 export const generateMetadata = async ({
   params,
@@ -32,6 +33,7 @@ export default async function RegistryPage({
     path.join(process.cwd(), `app/[locale]/(main)/registry/${id}/doc.mdx`),
     "utf-8"
   );
+  const t = await getTranslations("RegistryDetailPage");
 
   if (!metadata) {
     notFound();
@@ -46,21 +48,21 @@ export default async function RegistryPage({
             <div className="flex gap-1 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`作成日: ${metadata.createdAt}`}
+                title={t("createdAt", { date: metadata.createdAt })}
               >
                 {formatDateByRecency(metadata.createdAt)}
               </p>
               ・
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`更新日: ${metadata.updatedAt}`}
+                title={t("updatedAt", { date: metadata.updatedAt })}
               >
                 <RefreshCw className="size-3.5" />
                 {formatDateByRecency(metadata.updatedAt)}
               </p>
             </div>
           </div>
-          <CopyButon value={markdownString}>マークダウンをコピー</CopyButon>
+          <CopyButon value={markdownString}>{t("copyMarkdown")}</CopyButon>
         </div>
 
         <Content />
