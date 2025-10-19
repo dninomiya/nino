@@ -31,7 +31,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { ja } from "date-fns/locale";
 import { ArrowLeft, FlaskConical, Home, Users2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 const MAX_PERFORMANCE_ENVIRONMENT = [
   {

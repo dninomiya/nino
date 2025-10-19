@@ -317,7 +317,7 @@ export const collections: FeedCollection[] = [
     feeds: [
       {
         method: "rss",
-        url: "https://cursor.com/rss.xml",
+        url: "https://cursor.com/atom.xml",
         type: "blog",
       },
       {

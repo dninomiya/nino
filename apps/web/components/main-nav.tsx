@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/navigation-menu";
 import { Archive, ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export async function MainNav() {
   const t = await getTranslations("MainNav");
@@ -67,14 +67,14 @@ export async function MainNav() {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link
+            <a
               href="https://nino.plus"
               target="_blank"
               className="flex-row items-center gap-2"
             >
               {t("membership")}
               <ArrowUpRight className="size-4" />
-            </Link>
+            </a>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
@@ -91,7 +91,7 @@ function ListItem({
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
-        <Link href={href} target="_blank">
+        <a href={href} target="_blank">
           <div className="text-sm leading-none font-medium">
             {title}
             <ArrowUpRight className="size-3.5 ml-1 inline align-top" />
@@ -99,7 +99,7 @@ function ListItem({
           <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
             {children}
           </p>
-        </Link>
+        </a>
       </NavigationMenuLink>
     </li>
   );

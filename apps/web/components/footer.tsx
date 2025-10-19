@@ -1,6 +1,6 @@
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Button } from "@workspace/ui/components/button";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   SiX,
   SiZenn,

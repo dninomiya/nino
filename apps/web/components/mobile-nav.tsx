@@ -9,12 +9,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "@/i18n/navigation";
 import { archive, links, tools } from "@/lib/nav";
 import { NINO_PLUS_URL } from "@workspace/lib/constants";
-import { link } from "fs";
 import { ArrowUpRight, Menu } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
 
 export async function MobileNav() {
   const t = await getTranslations("MainNav");
@@ -40,13 +39,17 @@ export async function MobileNav() {
             <DropdownMenuSubContent>
               {tools.map((tool) => (
                 <DropdownMenuItem key={tool.href} asChild>
-                  <Link href={tool.href}>{t(tool.labelKey as any)}</Link>
+                  <a href={tool.href} target="_blank">
+                    {t(tool.labelKey as any)}
+                  </a>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
               {archive.map((archive) => (
                 <DropdownMenuItem key={archive.href} asChild>
-                  <Link href={archive.href}>{t("archive")}</Link>
+                  <a href={archive.href} target="_blank">
+                    {t("archive")}
+                  </a>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuSubContent>

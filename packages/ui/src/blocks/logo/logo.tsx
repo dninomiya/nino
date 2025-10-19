@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Download } from "lucide-react";
 import { useState } from "react";
 
