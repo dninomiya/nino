@@ -9,7 +9,9 @@
     "system": "System"
   },
   "InviteNino": {
-    "label": "採用"
+    "label": "Contact",
+    "title": "Invite Nino",
+    "profile": "Profile"
   },
   "FeedFilter": {
     "typeLabel": "Content Type",
@@ -18,5 +20,58 @@
     "news": "News",
     "changelog": "Changelog",
     "youtube": "Videos"
+  },
+  "MainNav": {
+    "tools": "Tools",
+    "archive": "Archive",
+    "membership": "Membership"
+  },
+  "MobileNav": {
+    "menu": "Menu",
+    "tools": "Tools"
+  },
+  "FeedList": {
+    "noResults": "No matching results found",
+    "noResultsDescription": "No feed items match the current filter conditions. Please adjust the filters and try again.",
+    "viewOriginal": "View Original",
+    "close": "Close"
+  },
+  "RefreshFeedButton": {
+    "fetching": "Fetching latest data...",
+    "fetchingButton": "Fetching...",
+    "success": "Latest data retrieved",
+    "error": "Failed to retrieve data",
+    "refreshButton": "Refresh to Latest Data"
+  },
+  "RegenerateMissingSummariesButton": {
+    "noMissing": "No items with missing summaries",
+    "generating": "Generating {count} summaries...",
+    "generatingButton": "Generating...",
+    "success": "Generated {count} summaries",
+    "error": "Failed to regenerate summaries",
+    "button": "Resolve Missing Summaries ({count} items)"
+  },
+  "TestDiscordNotificationButton": {
+    "sending": "Sending...",
+    "success": "Notification sent for {count} items",
+    "error": "Failed to send notification",
+    "unexpectedError": "An unexpected error occurred",
+    "button": "Discord Notification Test"
+  },
+  "GlobalSearch": {
+    "search": "Search...",
+    "searchLabel": "Search",
+    "noResults": "No search results.",
+    "registry": "Registry",
+    "theme": "Theme",
+    "language": "Language",
+    "current": "Current"
+  },
+  "CodeBlock": {
+    "terminal": "Terminal"
+  },
+  "CodePreview": {
+    "preview": "Preview",
+    "code": "Code"
   }
 }

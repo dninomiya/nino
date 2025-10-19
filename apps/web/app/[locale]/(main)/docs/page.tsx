@@ -16,7 +16,7 @@ export default async function DocsListPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {docs.map((doc) => (
           <Link key={doc.id} href={`/docs/${doc.id}`}>
-            <Card className="h-full hover:border-primary transition-colors cursor-pointer">
+            <Card>
               <CardHeader>
                 <CardTitle>{doc.title}</CardTitle>
               </CardHeader>

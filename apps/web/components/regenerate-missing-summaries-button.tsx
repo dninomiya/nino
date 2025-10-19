@@ -6,6 +6,7 @@ import { RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface RegenerateMissingSummariesButtonProps {
   missingCount: number;
@@ -16,16 +17,17 @@ export function RegenerateMissingSummariesButton({
 }: RegenerateMissingSummariesButtonProps) {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const router = useRouter();
+  const t = useTranslations("RegenerateMissingSummariesButton");
 
   const handleRegenerateMissing = async () => {
     if (missingCount === 0) {
-      toast.info("要約が欠損しているアイテムはありません");
+      toast.info(t("noMissing"));
       return;
     }
 
     try {
       setIsRegenerating(true);
-      toast.info(`${missingCount}件の要約を生成開始します...`);
+      toast.info(t("generating", { count: missingCount }));
 
       const response = await fetch("/api/regenerate-missing-summaries", {
         method: "POST",
@@ -35,21 +37,21 @@ export function RegenerateMissingSummariesButton({
       });
 
       if (!response.ok) {
-        throw new Error("要約の再生成に失敗しました");
+        throw new Error(t("error"));
       }
 
       const result = await response.json();
 
       if (result.success) {
-        toast.success(`${result.regeneratedCount}件の要約を生成しました`);
+        toast.success(t("success", { count: result.regeneratedCount }));
         // ページをリフレッシュして新しいデータを表示
         router.refresh();
       } else {
-        throw new Error(result.error || "要約の再生成に失敗しました");
+        throw new Error(result.error || t("error"));
       }
     } catch (error) {
       console.error("Failed to regenerate missing summaries:", error);
-      toast.error("要約の再生成に失敗しました");
+      toast.error(t("error"));
     } finally {
       setIsRegenerating(false);
     }
@@ -67,7 +69,9 @@ export function RegenerateMissingSummariesButton({
       className="flex items-center gap-2"
     >
       <RefreshCw className={`size-4 ${isRegenerating ? "animate-spin" : ""}`} />
-      {isRegenerating ? "生成中..." : `要約の欠損を解決 (${missingCount}件)`}
+      {isRegenerating
+        ? t("generatingButton")
+        : t("button", { count: missingCount })}
     </Button>
   );
 }

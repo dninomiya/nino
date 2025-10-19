@@ -5,9 +5,11 @@ import { Button } from "@workspace/ui/components/button";
 import { MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { testDiscordNotification } from "@/actions/test-discord-notification";
+import { useTranslations } from "next-intl";
 
 export function TestDiscordNotificationButton() {
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("TestDiscordNotificationButton");
 
   const handleTestNotification = () => {
     startTransition(async () => {
@@ -16,17 +18,17 @@ export function TestDiscordNotificationButton() {
 
         if (result.success) {
           toast.success(result.message, {
-            description: `${result.itemCount}件のアイテムで通知を送信しました`,
+            description: t("success", { count: result.itemCount }),
           });
         } else {
-          toast.error("通知の送信に失敗しました", {
+          toast.error(t("error"), {
             description: result.message,
           });
         }
       } catch (error) {
         console.error("Discord通知テストエラー:", error);
-        toast.error("通知の送信に失敗しました", {
-          description: "予期しないエラーが発生しました",
+        toast.error(t("error"), {
+          description: t("unexpectedError"),
         });
       }
     });
@@ -40,7 +42,7 @@ export function TestDiscordNotificationButton() {
       size="sm"
     >
       <MessageSquare className="h-4 w-4 mr-2" />
-      {isPending ? "送信中..." : "Discord通知テスト"}
+      {isPending ? t("sending") : t("button")}
     </Button>
   );
 }

@@ -23,11 +23,11 @@ export async function InviteNino() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Invite Nino</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
 
         <Link href="/profile">
-          <Button>プロフィール</Button>
+          <Button>{t("profile")}</Button>
         </Link>
       </DialogContent>
     </Dialog>

@@ -13,8 +13,11 @@ import { archive, links, tools } from "@/lib/nav";
 import { NINO_PLUS_URL } from "@workspace/lib/constants";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function MobileNav() {
+  const t = useTranslations("MobileNav");
+
   return (
     <>
       {/* Dialog trigger button */}
@@ -22,7 +25,7 @@ export function MobileNav() {
         <DropdownMenuTrigger asChild>
           <Button className="xl:hidden p-2" size="icon" variant="ghost">
             <Menu />
-            <span className="sr-only">メニュー</span>
+            <span className="sr-only">{t("menu")}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
@@ -32,7 +35,7 @@ export function MobileNav() {
             </DropdownMenuItem>
           ))}
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>ツール</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>{t("tools")}</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               {tools.map((tool) => (
                 <DropdownMenuItem key={tool.href} asChild>

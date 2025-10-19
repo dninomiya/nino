@@ -6,24 +6,26 @@ import { Download, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export function RefreshFeedButton() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const router = useRouter();
+  const t = useTranslations("RefreshFeedButton");
 
   const handleRefresh = async () => {
     try {
       setIsRefreshing(true);
-      toast.info("最新データを取得中...");
+      toast.info(t("fetching"));
 
       await fetchFeedItems();
 
-      toast.success("最新データを取得しました");
+      toast.success(t("success"));
       // ページをリフレッシュして新しいデータを表示
       router.refresh();
     } catch (error) {
       console.error("Failed to refresh feed:", error);
-      toast.error("データの取得に失敗しました");
+      toast.error(t("error"));
     } finally {
       setIsRefreshing(false);
     }
@@ -37,7 +39,7 @@ export function RefreshFeedButton() {
       className="flex items-center gap-2"
     >
       <RefreshCcw className={`size-4 ${isRefreshing ? "animate-spin" : ""}`} />
-      {isRefreshing ? "取得中..." : "最新データに更新"}
+      {isRefreshing ? t("fetchingButton") : t("refreshButton")}
     </Button>
   );
 }
