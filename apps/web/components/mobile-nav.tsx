@@ -40,15 +40,15 @@ export async function MobileNav() {
               {tools.map((tool) => (
                 <DropdownMenuItem key={tool.href} asChild>
                   <a href={tool.href} target="_blank">
-                    {t(tool.labelKey as any)}
+                    {t(`${tool.labelKey}.label` as any)}
                   </a>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              {archive.map((archive) => (
-                <DropdownMenuItem key={archive.href} asChild>
-                  <a href={archive.href} target="_blank">
-                    {t("archive")}
+              {archive.map((archiveItem) => (
+                <DropdownMenuItem key={archiveItem.href} asChild>
+                  <a href={archiveItem.href} target="_blank">
+                    {t(`${archiveItem.labelKey}.label` as any)}
                   </a>
                 </DropdownMenuItem>
               ))}
