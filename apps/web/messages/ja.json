@@ -34,8 +34,10 @@
   "DocsListPage": {
     "title": "ドキュメント"
   },
+  "Common": {
+    "copyMarkdown": "マークダウンをコピー"
+  },
   "DocsDetailPage": {
-    "copyMarkdown": "マークダウンをコピー",
     "createdAt": "作成日: {date}",
     "updatedAt": "更新日: {date}",
     "readingTime": "読了目安: {time}"
@@ -51,7 +53,6 @@
     "libraries": "ライブラリ"
   },
   "RegistryDetailPage": {
-    "copyMarkdown": "マークダウンをコピー",
     "createdAt": "作成日: {date}",
     "updatedAt": "更新日: {date}"
   },

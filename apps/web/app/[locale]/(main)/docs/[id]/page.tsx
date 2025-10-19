@@ -37,6 +37,7 @@ export default async function DocsPage({
     "utf-8"
   );
   const t = await getTranslations("DocsDetailPage");
+  const tCommon = await getTranslations("Common");
 
   if (!metadata) {
     notFound();
@@ -75,7 +76,9 @@ export default async function DocsPage({
               </p>
             </div>
           </div>
-          <CopyButon value={markdownString}>{t("copyMarkdown")}</CopyButon>
+          <CopyButon value={markdownString}>
+            {tCommon("copyMarkdown")}
+          </CopyButon>
         </div>
 
         <Content />

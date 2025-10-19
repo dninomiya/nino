@@ -34,8 +34,10 @@
   "DocsListPage": {
     "title": "Documentation"
   },
+  "Common": {
+    "copyMarkdown": "Copy Markdown"
+  },
   "DocsDetailPage": {
-    "copyMarkdown": "Copy Markdown",
     "createdAt": "Created: {date}",
     "updatedAt": "Updated: {date}",
     "readingTime": "Reading time: {time}"
@@ -51,7 +53,6 @@
     "libraries": "Libraries"
   },
   "RegistryDetailPage": {
-    "copyMarkdown": "Copy Markdown",
     "createdAt": "Created: {date}",
     "updatedAt": "Updated: {date}"
   },
