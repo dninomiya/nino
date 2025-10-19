@@ -1,6 +1,8 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { setLocale } from "@/i18n/set-locale";
 import { registries } from "@/lib/registry";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 const getRegistryItems = (type: string) => {
   return Promise.all(
@@ -18,15 +20,20 @@ const getRegistryItems = (type: string) => {
   );
 };
 
-export default async function RegistryPage() {
+export default async function RegistryPage({
+  params,
+}: PageProps<"/[locale]/registry">) {
+  await setLocale(params);
+  const t = await getTranslations("RegistryPage");
+
   const items = await getRegistryItems("registry:block");
 
   return (
     <div className="p-8">
-      <h1 className="text-4xl font-bold">Registry</h1>
+      <h1 className="text-4xl font-bold">{t("title")}</h1>
 
       <section className="py-10 space-y-6">
-        <h2 className="text-2xl font-bold">Blocks</h2>
+        <h2 className="text-2xl font-bold">{t("blocks")}</h2>
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {items.map((item) => (
             <Card key={item.name} className="relative">

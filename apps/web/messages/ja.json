@@ -31,6 +31,13 @@
     "dark": "ダーク",
     "system": "システム"
   },
+  "DocsListPage": {
+    "title": "ドキュメント"
+  },
+  "RegistryPage": {
+    "title": "レジストリ",
+    "blocks": "ブロック"
+  },
   "MainNav": {
     "docs": "ドキュメント",
     "registry": "レジストリ",

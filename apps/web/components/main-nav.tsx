@@ -1,7 +1,7 @@
-"use client";
-
 import * as React from "react";
 
+import { Separator } from "@/components/ui/separator";
+import { archive, links, tools } from "@/lib/nav";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,13 +12,11 @@ import {
   navigationMenuTriggerStyle,
 } from "@workspace/ui/components/navigation-menu";
 import { Archive, ArrowUpRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
-import { archive, links, tools } from "@/lib/nav";
-import { useTranslations } from "next-intl";
 
-export function MainNav() {
-  const t = useTranslations("MainNav");
+export async function MainNav() {
+  const t = await getTranslations("MainNav");
 
   return (
     <NavigationMenu viewport={false} className="hidden xl:block">
