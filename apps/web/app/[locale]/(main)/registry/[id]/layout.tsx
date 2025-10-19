@@ -1,13 +1,17 @@
 import { RegistrySidebar } from "@/app/[locale]/(main)/registry/components/registry-sidebar";
-import { Button } from "@/components/ui/button";
+import { setLocale } from "@/i18n/set-locale";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
-import { MenuIcon } from "lucide-react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+  params,
+}: LayoutProps<"/[locale]/registry/[id]">) {
+  await setLocale(params);
+
   return (
     <SidebarProvider>
       <RegistrySidebar />

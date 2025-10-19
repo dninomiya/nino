@@ -3,10 +3,8 @@ import { FeedList } from "@/components/feed-list";
 import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
-import {
-  getFeedItemsFromDB,
-  getItemsWithMissingSummary,
-} from "@/lib/feed-server";
+import { setLocale } from "@/i18n/set-locale";
+import { getFeedItemsFromDB } from "@/lib/feed-server";
 import {
   Empty,
   EmptyDescription,
@@ -17,9 +15,9 @@ import {
 import { RefreshCw } from "lucide-react";
 import { Suspense } from "react";
 
-export default async function Page() {
+export default async function Page({ params }: PageProps<"/[locale]">) {
+  await setLocale(params);
   const feedItems = await getFeedItemsFromDB(7);
-  const itemsWithMissingSummary = await getItemsWithMissingSummary();
 
   return (
     <div className="xl:flex gap-4 container items-start">

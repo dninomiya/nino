@@ -1,11 +1,13 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { setLocale } from "@/i18n/set-locale";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params,
+}: LayoutProps<"/[locale]">) {
+  await setLocale(params);
+
   return (
     <div>
       <Header />

@@ -7,10 +7,14 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { getTranslations } from "next-intl/server";
+import { setLocale } from "@/i18n/set-locale";
 
-export default async function DocsListPage() {
+export default async function DocsListPage({
+  params,
+}: PageProps<"/[locale]/docs">) {
   const docs = await getDocMetas();
   const t = await getTranslations("DocsListPage");
+  await setLocale(params);
 
   return (
     <div className="container mx-auto py-10">
