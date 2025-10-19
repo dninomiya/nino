@@ -9,9 +9,7 @@
     "system": "システム"
   },
   "InviteNino": {
-    "label": "連絡する",
-    "title": "Ninoを招待",
-    "profile": "プロフィール"
+    "label": "連絡する"
   },
   "FeedFilter": {
     "typeLabel": "情報タイプ",
@@ -20,58 +18,5 @@
     "news": "ニュース",
     "changelog": "変更履歴",
     "youtube": "YouTube"
-  },
-  "MainNav": {
-    "tools": "ツール",
-    "archive": "アーカイブ",
-    "membership": "メンバーシップ"
-  },
-  "MobileNav": {
-    "menu": "メニュー",
-    "tools": "ツール"
-  },
-  "FeedList": {
-    "noResults": "該当する結果が見つかりません",
-    "noResultsDescription": "現在のフィルター条件に一致するフィードアイテムがありません。フィルターを調整して再度お試しください。",
-    "viewOriginal": "原文をみる",
-    "close": "閉じる"
-  },
-  "RefreshFeedButton": {
-    "fetching": "最新データを取得中...",
-    "fetchingButton": "取得中...",
-    "success": "最新データを取得しました",
-    "error": "データの取得に失敗しました",
-    "refreshButton": "最新データに更新"
-  },
-  "RegenerateMissingSummariesButton": {
-    "noMissing": "要約が欠損しているアイテムはありません",
-    "generating": "{count}件の要約を生成開始します...",
-    "generatingButton": "生成中...",
-    "success": "{count}件の要約を生成しました",
-    "error": "要約の再生成に失敗しました",
-    "button": "要約の欠損を解決 ({count}件)"
-  },
-  "TestDiscordNotificationButton": {
-    "sending": "送信中...",
-    "success": "{count}件のアイテムで通知を送信しました",
-    "error": "通知の送信に失敗しました",
-    "unexpectedError": "予期しないエラーが発生しました",
-    "button": "Discord通知テスト"
-  },
-  "GlobalSearch": {
-    "search": "検索...",
-    "searchLabel": "検索",
-    "noResults": "検索結果がありません。",
-    "registry": "レジストリ",
-    "theme": "テーマ",
-    "language": "言語",
-    "current": "現在"
-  },
-  "CodeBlock": {
-    "terminal": "ターミナル"
-  },
-  "CodePreview": {
-    "preview": "プレビュー",
-    "code": "コード"
   }
 }

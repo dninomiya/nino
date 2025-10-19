@@ -35,14 +35,12 @@ import {
 import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
   const [tags] = useQueryState("tags");
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
-  const t = useTranslations("FeedList");
 
   const filteredFeedItems = useMemo(() => {
     return feedItems.filter((item) => {
@@ -74,8 +72,10 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
           <EmptyMedia variant="icon">
             <SearchX />
           </EmptyMedia>
-          <EmptyTitle>{t("noResults")}</EmptyTitle>
-          <EmptyDescription>{t("noResultsDescription")}</EmptyDescription>
+          <EmptyTitle>該当する結果が見つかりません</EmptyTitle>
+          <EmptyDescription>
+            現在のフィルター条件に一致するフィードアイテムがありません。フィルターを調整して再度お試しください。
+          </EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -154,9 +154,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
                   >
                     <CollapsibleTrigger asChild>
                       <Button variant="link" size="sm" className="mt-1">
-                        {expandedItems.has(index)
-                          ? t("close")
-                          : t("viewOriginal")}
+                        {expandedItems.has(index) ? "閉じる" : "原文をみる"}
                       </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-2">

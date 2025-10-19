@@ -33,7 +33,6 @@ export function GlobalSearch() {
   const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("LocaleSwitcher");
-  const tGlobal = useTranslations("GlobalSearch");
 
   const handleLocaleChange = (nextLocale: Locale) => {
     startTransition(() => {
@@ -68,7 +67,7 @@ export function GlobalSearch() {
         className="w-48 justify-start font-normal hidden xl:flex"
       >
         <SearchIcon />
-        <span className="mr-auto">{tGlobal("search")}</span>
+        <span className="mr-auto">検索...</span>
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </Button>
@@ -79,13 +78,13 @@ export function GlobalSearch() {
         className="xl:hidden"
       >
         <SearchIcon />
-        <span className="sr-only">{tGlobal("searchLabel")}</span>
+        <span className="sr-only">検索</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder={tGlobal("search")} />
+        <CommandInput placeholder="検索..." />
         <CommandList>
-          <CommandEmpty>{tGlobal("noResults")}</CommandEmpty>
-          <CommandGroup heading={tGlobal("registry")}>
+          <CommandEmpty>検索結果がありません。</CommandEmpty>
+          <CommandGroup heading="レジストリ">
             {registryDocMetas.map((meta) => (
               <CommandItem
                 key={meta.title}
