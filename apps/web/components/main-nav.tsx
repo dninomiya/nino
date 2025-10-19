@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/navigation-menu";
 import { Archive, ArrowUpRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 
 export async function MainNav() {
   const t = await getTranslations("MainNav");

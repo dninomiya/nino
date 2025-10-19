@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { setLocale } from "@/i18n/set-locale";
 import { registries } from "@/lib/registry";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 const getRegistryItems = (type: string) => {

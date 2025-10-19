@@ -1,5 +1,3 @@
-type MainNavKey = keyof (typeof import("../messages/ja.json"))["MainNav"];
-
 export const links = [
   { href: "/docs", labelKey: "docs" },
   { href: "/registry", labelKey: "registry" },

@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
 import { usePathname } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { registries, gettingStartedItems } from "@/lib/registry";
 import { useTranslations } from "next-intl";
 

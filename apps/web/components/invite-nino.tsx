@@ -8,7 +8,7 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { Send } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 
 export async function InviteNino() {
   const t = await getTranslations("InviteNino");

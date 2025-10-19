@@ -9,7 +9,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { archive, links, tools } from "@/lib/nav";
 import { NINO_PLUS_URL } from "@workspace/lib/constants";
 import { ArrowUpRight, Menu } from "lucide-react";
