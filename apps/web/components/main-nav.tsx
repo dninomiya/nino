@@ -15,8 +15,11 @@ import { Archive, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { archive, links, tools } from "@/lib/nav";
+import { useTranslations } from "next-intl";
 
 export function MainNav() {
+  const t = useTranslations("MainNav");
+
   return (
     <NavigationMenu viewport={false} className="hidden xl:block">
       <NavigationMenuList>
@@ -26,34 +29,38 @@ export function MainNav() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={link.href}>{link.label}</Link>
+              <Link href={link.href}>{t(link.labelKey as any)}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>ツール</NavigationMenuTrigger>
+          <NavigationMenuTrigger>{t("tools")}</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               {tools.map((tool) => (
-                <ListItem key={tool.label} title={tool.label} href={tool.href}>
-                  {tool.description}
+                <ListItem
+                  key={tool.labelKey}
+                  title={t(`${tool.labelKey}.label` as any)}
+                  href={tool.href}
+                >
+                  {t(`${tool.labelKey}.description` as any)}
                 </ListItem>
               ))}
             </ul>
             <Separator className="my-4" />
             <h3 className="text-sm flex items-center font-semibold mb-2 px-2 text-muted-foreground">
               <Archive className="size-4 mr-2" />
-              アーカイブ
+              {t("archive")}
             </h3>
             <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {archive.map((archive) => (
+              {archive.map((archiveItem) => (
                 <ListItem
-                  key={archive.label}
-                  title={archive.label}
-                  href={archive.href}
+                  key={archiveItem.labelKey}
+                  title={t(`${archiveItem.labelKey}.label` as any)}
+                  href={archiveItem.href}
                 >
-                  {archive.description}
+                  {t(`${archiveItem.labelKey}.description` as any)}
                 </ListItem>
               ))}
             </ul>
@@ -67,7 +74,7 @@ export function MainNav() {
               target="_blank"
               className="flex-row items-center gap-2"
             >
-              メンバーシップ
+              {t("membership")}
               <ArrowUpRight className="size-4" />
             </Link>
           </NavigationMenuLink>

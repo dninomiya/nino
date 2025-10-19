@@ -30,5 +30,52 @@
     "light": "ライト",
     "dark": "ダーク",
     "system": "システム"
+  },
+  "MainNav": {
+    "docs": "ドキュメント",
+    "registry": "レジストリ",
+    "tools": "ツール",
+    "membership": "メンバーシップ",
+    "archive": "アーカイブ",
+    "toolhub": {
+      "label": "ToolHub",
+      "description": "ツールのリンク集"
+    },
+    "reactGuide": {
+      "label": "React Guide",
+      "description": "React ガイド"
+    },
+    "nextjsRenderingGuide": {
+      "label": "Next.js レンダリングガイド",
+      "description": "Next.js のレンダリングガイド"
+    },
+    "stripeGuide": {
+      "label": "Stripe ビギナーズガイド",
+      "description": "Stripe のビギナーズガイド"
+    },
+    "nextjsRoutingGuide": {
+      "label": "Next.js ルーティングガイド",
+      "description": "Next.js の特殊なルーティングのデモ"
+    },
+    "hub": {
+      "label": "Hub",
+      "description": "Webアプリの実装デモ"
+    },
+    "formGuide": {
+      "label": "ふぉーむがいど",
+      "description": "フォーム実装のベストプラクティス"
+    },
+    "stopEnterSubmit": {
+      "label": "Stop Enter Submit",
+      "description": "Enterキーでの誤送信防止を啓蒙ツール"
+    },
+    "treeToImage": {
+      "label": "Tree to Image",
+      "description": "ファイルツリーの画像化ツール"
+    },
+    "ninoPlusOld": {
+      "label": "nino+ 1.0",
+      "description": "メンタープラットフォーム"
+    }
   }
 }

@@ -30,5 +30,52 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "MainNav": {
+    "docs": "Docs",
+    "registry": "Registry",
+    "tools": "Tools",
+    "membership": "Membership",
+    "archive": "Archive",
+    "toolhub": {
+      "label": "ToolHub",
+      "description": "Tool links collection"
+    },
+    "reactGuide": {
+      "label": "React Guide",
+      "description": "React guide"
+    },
+    "nextjsRenderingGuide": {
+      "label": "Next.js Rendering Guide",
+      "description": "Next.js rendering guide"
+    },
+    "stripeGuide": {
+      "label": "Stripe Beginner's Guide",
+      "description": "Stripe beginner's guide"
+    },
+    "nextjsRoutingGuide": {
+      "label": "Next.js Routing Guide",
+      "description": "Next.js special routing demo"
+    },
+    "hub": {
+      "label": "Hub",
+      "description": "Web app implementation demo"
+    },
+    "formGuide": {
+      "label": "Form Guide",
+      "description": "Form implementation best practices"
+    },
+    "stopEnterSubmit": {
+      "label": "Stop Enter Submit",
+      "description": "Tool to prevent accidental submission with Enter key"
+    },
+    "treeToImage": {
+      "label": "Tree to Image",
+      "description": "File tree image generation tool"
+    },
+    "ninoPlusOld": {
+      "label": "nino+ 1.0",
+      "description": "Mentor platform"
+    }
   }
 }
