@@ -31,7 +31,7 @@ export async function MobileNav() {
         <DropdownMenuContent align="start">
           {links.map((link) => (
             <DropdownMenuItem key={link.href} asChild>
-              <Link href={link.href}>{t(link.labelKey as any)}</Link>
+              <Link href={link.href}>{t(link.labelKey)}</Link>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSub>
@@ -40,7 +40,7 @@ export async function MobileNav() {
               {tools.map((tool) => (
                 <DropdownMenuItem key={tool.href} asChild>
                   <a href={tool.href} target="_blank">
-                    {t(`${tool.labelKey}.label` as any)}
+                    {t(`${tool.labelKey}.label`)}
                   </a>
                 </DropdownMenuItem>
               ))}
@@ -48,7 +48,7 @@ export async function MobileNav() {
               {archive.map((archiveItem) => (
                 <DropdownMenuItem key={archiveItem.href} asChild>
                   <a href={archiveItem.href} target="_blank">
-                    {t(`${archiveItem.labelKey}.label` as any)}
+                    {t(`${archiveItem.labelKey}.label`)}
                   </a>
                 </DropdownMenuItem>
               ))}

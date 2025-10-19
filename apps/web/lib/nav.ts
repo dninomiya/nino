@@ -1,7 +1,9 @@
+type MainNavKey = keyof (typeof import("../messages/ja.json"))["MainNav"];
+
 export const links = [
   { href: "/docs", labelKey: "docs" },
   { href: "/registry", labelKey: "registry" },
-];
+] as const;
 
 export const tools = [
   {
@@ -40,11 +42,11 @@ export const tools = [
     href: "https://dninomiya.github.io/tree-to-image/",
     labelKey: "treeToImage",
   },
-];
+] as const;
 
 export const archive = [
   {
     href: "https://nino-plus-old.vercel.app/",
     labelKey: "ninoPlusOld",
   },
-];
+] as const;

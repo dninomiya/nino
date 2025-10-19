@@ -27,7 +27,7 @@ export async function MainNav() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={link.href}>{t(link.labelKey as any)}</Link>
+              <Link href={link.href}>{t(link.labelKey)}</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
@@ -39,10 +39,10 @@ export async function MainNav() {
               {tools.map((tool) => (
                 <ListItem
                   key={tool.labelKey}
-                  title={t(`${tool.labelKey}.label` as any)}
+                  title={t(`${tool.labelKey}.label`)}
                   href={tool.href}
                 >
-                  {t(`${tool.labelKey}.description` as any)}
+                  {t(`${tool.labelKey}.description`)}
                 </ListItem>
               ))}
             </ul>
@@ -55,10 +55,10 @@ export async function MainNav() {
               {archive.map((archiveItem) => (
                 <ListItem
                   key={archiveItem.labelKey}
-                  title={t(`${archiveItem.labelKey}.label` as any)}
+                  title={t(`${archiveItem.labelKey}.label`)}
                   href={archiveItem.href}
                 >
-                  {t(`${archiveItem.labelKey}.description` as any)}
+                  {t(`${archiveItem.labelKey}.description`)}
                 </ListItem>
               ))}
             </ul>

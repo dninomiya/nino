@@ -98,7 +98,7 @@ function extractThumbnail(item: any): string | undefined {
   }
 
   // 3. description内の画像から抽出
-  const description = (item as any).description;
+  const description = item.description;
   if (description) {
     const match = description.match(/<img[^>]+src="([^">]+)"/i);
     if (match && match[1]) {
