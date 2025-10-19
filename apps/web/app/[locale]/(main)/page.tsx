@@ -22,8 +22,8 @@ export default async function Page() {
   const itemsWithMissingSummary = await getItemsWithMissingSummary();
 
   return (
-    <div className="flex gap-4 container items-start">
-      <div className="sticky top-header">
+    <div className="xl:flex gap-4 container items-start">
+      <div className="sticky top-header hidden xl:block">
         <div className="w-80 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10 pr-6">
           <h2 className="mb-6">絞り込み</h2>
           <Suspense>

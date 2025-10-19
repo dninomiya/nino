@@ -47,7 +47,7 @@ const authorLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="py-10 lg:px-8 border-t">
+    <footer className="py-10 px-4 lg:px-8 border-t">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="flex flex-col gap-3">
           <Logo />

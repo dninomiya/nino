@@ -6,3 +6,5 @@ export const AUTHOR_ZENN_URL = "https://zenn.dev/nino";
 export const AUTHOR_YOUTUBE_URL = "https://www.youtube.com/@dninomiya";
 export const AUTHOR_DISCORD_URL =
   "https://discord.com/channels/760351462239895574/1215264754902368266";
+
+export const NINO_PLUS_URL = "https://nino.plus";

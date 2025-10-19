@@ -38,11 +38,11 @@ export default async function RegistryPage({
   }
 
   return (
-    <div className="flex">
+    <div className="flex px-4">
       <MDXContent>
-        <div className="flex items-center justify-between gap-2 not-prose">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 not-prose">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold">{metadata.title}</h1>
+            <h1 className="text-3xl xl:text-4xl font-bold">{metadata.title}</h1>
             <div className="flex gap-1 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"

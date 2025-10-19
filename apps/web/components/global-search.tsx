@@ -64,12 +64,21 @@ export function GlobalSearch() {
       <Button
         onClick={() => setOpen(true)}
         variant="outline"
-        className="w-48 justify-start font-normal"
+        className="w-48 justify-start font-normal hidden xl:flex"
       >
         <SearchIcon />
         <span className="mr-auto">検索...</span>
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
+      </Button>
+      <Button
+        onClick={() => setOpen(true)}
+        variant="ghost"
+        size="icon"
+        className="xl:hidden"
+      >
+        <SearchIcon />
+        <span className="sr-only">検索</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="検索..." />
