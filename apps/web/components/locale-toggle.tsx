@@ -11,27 +11,21 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { Languages } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { useDictionary, useI18n } from "./i18n-provider";
 
 export default function LocaleToggle() {
-  const router = useRouter();
   const pathname = usePathname();
   const { locale } = useI18n();
-  const [isPending, startTransition] = useTransition();
   const t = useDictionary("Langulage");
 
   const handleChange = (nextLocale: Locale) => {
-    startTransition(() => {
-      router.replace(`/${nextLocale}${pathname}`);
-    });
+    location.href = `/${nextLocale}${pathname}`;
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" disabled={isPending} size="icon">
+        <Button variant="ghost" size="icon">
           <Languages />
           <span className="sr-only">{locale === "ja" ? t.ja : t.en}</span>
         </Button>
