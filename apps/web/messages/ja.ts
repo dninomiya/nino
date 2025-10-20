@@ -54,6 +54,15 @@ export default {
     blocks: "ブロック",
     libraries: "ライブラリ",
   },
+  MainPage: {
+    filterTitle: "絞り込み",
+    feedTitle: "フィード",
+    feedDescription: "一次ソースの最新ニュースをお届けします。",
+    lastUpdated: "最終更新",
+    noUpdates: "更新情報はありません",
+    noUpdatesDescription: "過去7日間に更新されたフィードアイテムがありません。",
+    noUpdatesDevNote: "開発環境では手動でフィードを更新できます。",
+  },
   MainNav: {
     docs: "ドキュメント",
     registry: "レジストリ",

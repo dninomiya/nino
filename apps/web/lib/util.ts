@@ -1,5 +1,6 @@
 import { differenceInDays, format, formatDistanceToNow } from "date-fns";
-import { ja } from "date-fns/locale";
+import { enUS, ja } from "date-fns/locale";
+import { Locale } from "./i18n/locale";
 
 export const formatReadingTime = (ms: number) => {
   const minutes = Math.floor(ms / 60000);
@@ -11,13 +12,19 @@ export const formatReadingTime = (ms: number) => {
   }
 };
 
-export const formatDateByRecency = (dateString: string | Date | number) => {
+export const formatDateByRecency = (
+  dateString: string | Date | number,
+  locale: Locale
+) => {
   const date = new Date(dateString);
   // 何日まえか
   const diffDays = differenceInDays(new Date(), date);
 
   if (diffDays < 5) {
-    return formatDistanceToNow(date, { addSuffix: true, locale: ja });
+    return formatDistanceToNow(date, {
+      addSuffix: true,
+      locale: locale === "ja" ? ja : enUS,
+    });
   }
 
   return format(date, "yyyy年MM月dd日");

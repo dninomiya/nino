@@ -56,6 +56,16 @@ export default {
     blocks: "Blocks",
     libraries: "Libraries",
   },
+  MainPage: {
+    filterTitle: "Filter",
+    feedTitle: "Feed",
+    feedDescription: "Latest news from primary sources.",
+    lastUpdated: "Last updated",
+    noUpdates: "No updates available",
+    noUpdatesDescription: "No feed items have been updated in the past 7 days.",
+    noUpdatesDevNote:
+      "In development environment, you can manually refresh the feed.",
+  },
   MainNav: {
     docs: "Docs",
     registry: "Registry",

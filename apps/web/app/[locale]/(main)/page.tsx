@@ -4,6 +4,7 @@ import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
 import { getFeedItemsFromDB } from "@/lib/feed-server";
+import { getMessage } from "@/lib/i18n/server";
 import {
   Empty,
   EmptyDescription,
@@ -16,12 +17,13 @@ import { Suspense } from "react";
 
 export default async function Page() {
   const feedItems = await getFeedItemsFromDB(7);
+  const t = await getMessage("MainPage");
 
   return (
     <div className="xl:flex gap-4 container items-start">
       <div className="sticky top-header hidden xl:block">
         <div className="w-80 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10 pr-6">
-          <h2 className="mb-6">絞り込み</h2>
+          <h2 className="mb-6">{t.filterTitle}</h2>
           <Suspense>
             <FeedFilter feedItems={feedItems} />
           </Suspense>
@@ -29,10 +31,10 @@ export default async function Page() {
       </div>
       <div className="flex-1 py-10">
         <div className="mb-8 space-y-2">
-          <h1 className="text-3xl font-bold">フィード</h1>
-          <p>一次ソースの最新ニュースをお届けします。</p>
+          <h1 className="text-3xl font-bold">{t.feedTitle}</h1>
+          <p>{t.feedDescription}</p>
           <p className="text-sm text-muted-foreground mb-4">
-            最終更新: <RecencyDate date={Date.now()} />
+            {t.lastUpdated}: <RecencyDate date={Date.now()} />
           </p>
           <div className="flex gap-2 flex-wrap">
             {process.env.NODE_ENV === "development" && (
@@ -50,13 +52,13 @@ export default async function Page() {
               <EmptyMedia variant="icon">
                 <RefreshCw />
               </EmptyMedia>
-              <EmptyTitle>更新情報はありません</EmptyTitle>
+              <EmptyTitle>{t.noUpdates}</EmptyTitle>
               <EmptyDescription>
-                過去7日間に更新されたフィードアイテムがありません。
+                {t.noUpdatesDescription}
                 {process.env.NODE_ENV === "development" && (
                   <>
                     <br />
-                    開発環境では手動でフィードを更新できます。
+                    {t.noUpdatesDevNote}
                   </>
                 )}
               </EmptyDescription>
