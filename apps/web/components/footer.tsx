@@ -16,6 +16,7 @@ import {
   APP_NAME,
   AUTHOR_DISCORD_URL,
 } from "@workspace/lib/constants";
+import { getCurrentLocale } from "@/lib/i18n/server";
 
 const authorLinks = [
   {
@@ -46,11 +47,14 @@ const authorLinks = [
 ];
 
 export const Footer = () => {
+  const locale = getCurrentLocale();
+
   return (
     <footer className="py-10 px-4 lg:px-8 border-t">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="flex flex-col gap-3">
           <Logo />
+          <p>{locale}</p>
           <p className="text-sm text-muted-foreground">Developer.</p>
           <div className="flex gap-2">
             {authorLinks.map((link) => (
