@@ -4,6 +4,7 @@ import { Languages, Monitor, Moon, SearchIcon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
+import { Locale, locales } from "@/lib/i18n/locale";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -16,35 +17,22 @@ import {
   CommandSeparator,
 } from "@workspace/ui/components/command";
 import { Kbd } from "@workspace/ui/components/kbd";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useI18n, useMessage } from "./i18n-provider";
 import { useRegistry } from "./registry-provider";
-import { useMessage, useI18n } from "./i18n-provider";
-import { Locale, locales } from "@/lib/i18n/locale";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const params = useParams();
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
-  const [isPending, startTransition] = useTransition();
   const t = useMessage("GlobalSearch");
   const langT = useMessage("Language");
   const { locale: currentLocale } = useI18n();
 
   const handleLocaleChange = (nextLocale: Locale) => {
-    startTransition(() => {
-      router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
-        // are used in combination with a given `pathname`. Since the two will
-        // always match for the current route, we can skip runtime checks.
-        { pathname, params },
-        { locale: nextLocale }
-      );
-    });
-    setOpen(false);
+    location.href = `/${nextLocale}${pathname}`;
   };
 
   React.useEffect(() => {
@@ -143,7 +131,7 @@ export function GlobalSearch() {
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading={t["language"]} aria-busy={isPending}>
+          <CommandGroup heading={t["language"]}>
             {locales.map((locale) => (
               <CommandItem
                 key={locale}
