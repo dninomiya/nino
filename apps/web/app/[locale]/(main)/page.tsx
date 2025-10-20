@@ -23,9 +23,9 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
-      <div className="xl:flex gap-4 container items-start">
+      <div className="xl:flex gap-10 items-start px-4 xl:px-6">
         <div className="sticky top-header hidden xl:block">
-          <div className="w-80 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10 pr-6">
+          <div className="w-80 overflow-y-auto h-[calc(100dvh-theme(spacing.header))] py-10">
             <h2 className="mb-6">{t.filterTitle}</h2>
             <Suspense>
               <FeedFilter feedItems={feedItems} />
@@ -77,6 +77,15 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
               <FeedList feedItems={feedItems} />
             </Suspense>
           )}
+        </div>
+        <div className="hidden xl:block w-80 py-10">
+          <a
+            className="twitter-timeline"
+            href="https://twitter.com/d151005?ref_src=twsrc%5Etfw"
+          >
+            Tweets by d151005
+          </a>{" "}
+          <script async src="https://platform.twitter.com/widgets.js"></script>
         </div>
       </div>
       <Footer />

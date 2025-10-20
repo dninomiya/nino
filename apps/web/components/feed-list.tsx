@@ -157,7 +157,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-full rounded-md"
+                    className="w-full rounded-md border"
                     onError={(e) => {
                       // 画像読み込みエラー時は非表示にする
                       e.currentTarget.style.display = "none";
