@@ -30,6 +30,12 @@ export default {
     changelog: "変更履歴",
     youtube: "YouTube",
   },
+  FeedTypes: {
+    releases: "リリース",
+    blog: "ニュース",
+    changelog: "変更履歴",
+    youtube: "YouTube",
+  },
   Categories: {
     framework: "フレームワーク",
     saas: "SaaS/BaaS",

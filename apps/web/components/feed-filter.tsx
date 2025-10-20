@@ -155,10 +155,22 @@ const getTagLabel = (tag: string, tTags: any) => {
   return tagMap[tag] || tag;
 };
 
+// フィードタイプ名を翻訳する関数
+const getFeedTypeLabel = (type: string, tFeedTypes: any) => {
+  const typeMap: Record<string, string> = {
+    releases: tFeedTypes.releases,
+    blog: tFeedTypes.blog,
+    changelog: tFeedTypes.changelog,
+    youtube: tFeedTypes.youtube,
+  };
+  return typeMap[type] || type;
+};
+
 export function FeedFilter({ feedItems }: FeedFilterProps) {
   const t = useDictionary("FeedFilter");
   const tCategories = useDictionary("Categories");
   const tTags = useDictionary("Tags");
+  const tFeedTypes = useDictionary("FeedTypes");
   const [filters, setFilters] = useQueryStates({
     type: parseAsArrayOf(parseAsString).withDefault([]),
     source: parseAsArrayOf(parseAsString).withDefault([]),
@@ -300,7 +312,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
             checked={filters.type?.includes(type)}
             onCheckedChange={(checked) => toggleType(type, checked)}
             icon={getTypeIcon(type)}
-            label={feedTypeMapping[type].label}
+            label={getFeedTypeLabel(type, tFeedTypes)}
             count={typeCounts[type] || 0}
           />
         ))}

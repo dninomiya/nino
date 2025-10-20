@@ -32,6 +32,12 @@ export default {
     changelog: "Changelog",
     youtube: "Videos",
   },
+  FeedTypes: {
+    releases: "Releases",
+    blog: "News",
+    changelog: "Changelog",
+    youtube: "YouTube",
+  },
   Categories: {
     framework: "Framework",
     saas: "SaaS/BaaS",

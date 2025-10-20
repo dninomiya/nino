@@ -5,19 +5,15 @@ import { collections } from "./configs";
 // フィードタイプのマッピング（ラベルとアイコンを一元化）
 export const feedTypeMapping = {
   releases: {
-    label: "リリース",
     icon: SiGithub,
   },
   blog: {
-    label: "ニュース",
     icon: Newspaper,
   },
   changelog: {
-    label: "変更履歴",
     icon: Newspaper,
   },
   youtube: {
-    label: "YouTube",
     icon: SiYoutube,
   },
 } as const;
