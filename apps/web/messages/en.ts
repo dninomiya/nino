@@ -65,6 +65,7 @@ export default {
     searchLabel: "Search",
     noResults: "No results found.",
     registry: "Registry",
+    docs: "Documentation",
     theme: "Theme",
     language: "Language",
     current: "Current",

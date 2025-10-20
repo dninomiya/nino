@@ -63,6 +63,7 @@ export default {
     searchLabel: "検索",
     noResults: "検索結果がありません。",
     registry: "レジストリ",
+    docs: "ドキュメント",
     theme: "テーマ",
     language: "言語",
     current: "現在",

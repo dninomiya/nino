@@ -20,6 +20,7 @@ import { Kbd } from "@workspace/ui/components/kbd";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n, useMessage } from "./i18n-provider";
 import { useRegistry } from "./registry-provider";
+import { useDoc } from "./doc-provider";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
@@ -27,6 +28,7 @@ export function GlobalSearch() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
+  const { docMetas } = useDoc();
   const t = useMessage("GlobalSearch");
   const langT = useMessage("Language");
   const { locale: currentLocale } = useI18n();
@@ -79,6 +81,20 @@ export function GlobalSearch() {
                 onSelect={() => {
                   setOpen(false);
                   router.push(`/registry/${meta.name}`);
+                }}
+              >
+                <span>{meta.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandSeparator />
+          <CommandGroup heading={t["docs"]}>
+            {docMetas.map((meta) => (
+              <CommandItem
+                key={meta.id}
+                onSelect={() => {
+                  setOpen(false);
+                  router.push(`/docs/${meta.id}`);
                 }}
               >
                 <span>{meta.title}</span>
