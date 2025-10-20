@@ -1,10 +1,8 @@
-// このファイルは自動生成されます。手動で編集しないでください。
-
-import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import * as authSchema from "../schemas/auth.js";
-import * as feedSchema from "../schemas/feed.js";
-import * as statusSchema from "../schemas/status.js";
+import * as authSchema from "../schemas/auth";
+import * as feedSchema from "../schemas/feed";
+import * as statusSchema from "../schemas/status";
+import { z } from "zod";
 
 // Auth Schema Zod Schemas
 export const insertUserSchema = createInsertSchema(authSchema.users);

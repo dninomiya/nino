@@ -219,13 +219,13 @@ importers:
         version: 0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8))(zod@3.25.76)
+        version: 0.8.3(drizzle-orm@0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8))(zod@4.1.12)
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@workspace/typescript-config':
         specifier: workspace:*
@@ -11428,10 +11428,10 @@ snapshots:
       better-sqlite3: 12.4.1
       kysely: 0.28.8
 
-  drizzle-zod@0.8.3(drizzle-orm@0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8))(zod@3.25.76):
+  drizzle-zod@0.8.3(drizzle-orm@0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8))(zod@4.1.12):
     dependencies:
       drizzle-orm: 0.44.6(@libsql/client@0.15.15)(@opentelemetry/api@1.9.0)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(kysely@0.28.8)
-      zod: 3.25.76
+      zod: 4.1.12
 
   dunder-proto@1.0.1:
     dependencies:
