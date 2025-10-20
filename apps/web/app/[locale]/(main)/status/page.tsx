@@ -16,6 +16,7 @@ import {
   type NormalizedStatus,
 } from "@workspace/db/schemas/status";
 import type { ProviderName } from "@/lib/status";
+import { providers } from "@/lib/status";
 
 // 型定義
 type StatusLatest = typeof statusLatest.$inferSelect;
@@ -23,6 +24,12 @@ type StatusEvent = typeof statusEvents.$inferSelect;
 
 // StatusLatestにlinkプロパティを追加した型
 type StatusLatestWithLink = StatusLatest & { link?: string };
+
+// プロバイダー名からリンクを取得する関数
+function getProviderLink(providerName: ProviderName): string {
+  const provider = providers.find((p) => p.name === providerName);
+  return provider?.link || "#";
+}
 
 // ステータスを日本語に変換する関数
 function getStatusText(status: NormalizedStatus) {
@@ -106,7 +113,10 @@ export default async function StatusPage() {
               )}
               <CardFooter>
                 <Button variant="outline" size="sm" asChild>
-                  <a href={p.link || "#"} target="_blank">
+                  <a
+                    href={getProviderLink(p.provider as ProviderName)}
+                    target="_blank"
+                  >
                     詳細
                     <ArrowUpRight />
                   </a>

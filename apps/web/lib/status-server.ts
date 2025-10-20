@@ -230,8 +230,9 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
     }
 
     const message = `【ステータス更新】${summary}\n<${item.link ?? ""}>`;
+    const isDev = process.env.NODE_ENV === "development";
     try {
-      await sendDiscordWebhook("status", message);
+      await sendDiscordWebhook(isDev ? "admin" : "status", message);
     } catch (e) {
       console.error("Failed to send discord status update", e);
     }
