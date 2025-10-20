@@ -22,7 +22,14 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@sentry/cli"
+      "@sentry/cli",
+      "@tailwindcss/oxide",
+      "better-sqlite3",
+      "core-js-pure",
+      "esbuild",
+      "msw",
+      "sharp",
+      "unrs-resolver"
     ]
   }
 }
