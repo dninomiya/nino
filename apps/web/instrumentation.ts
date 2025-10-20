@@ -2,21 +2,21 @@ import * as Sentry from "@sentry/nextjs";
 import { sendDiscordWebhook } from "@workspace/discord";
 
 export async function register(err: Error | undefined) {
-  try {
-    if (err) {
-      const errorMessage =
-        `🚨 **アプリケーションエラーが発生しました**\n\n` +
-        `**エラー詳細:**\n` +
-        `\`\`\`\n${err.message || "Unknown error"}\n\`\`\`\n` +
-        `**スタックトレース:**\n` +
-        `\`\`\`\n${err.stack || "No stack trace available"}\n\`\`\`\n` +
-        `**発生時刻:** ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}`;
+  // try {
+  //   if (err) {
+  //     const errorMessage =
+  //       `🚨 **アプリケーションエラーが発生しました**\n\n` +
+  //       `**エラー詳細:**\n` +
+  //       `\`\`\`\n${err.message || "Unknown error"}\n\`\`\`\n` +
+  //       `**スタックトレース:**\n` +
+  //       `\`\`\`\n${err.stack || "No stack trace available"}\n\`\`\`\n` +
+  //       `**発生時刻:** ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}`;
 
-      await sendDiscordWebhook("log", errorMessage);
-    }
-  } catch (discordError) {
-    console.error("Failed to send error to Discord:", discordError);
-  }
+  //     await sendDiscordWebhook("log", errorMessage);
+  //   }
+  // } catch (discordError) {
+  //   console.error("Failed to send error to Discord:", discordError);
+  // }
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./sentry.server.config");
