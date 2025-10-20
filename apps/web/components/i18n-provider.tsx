@@ -6,6 +6,7 @@ import {
   NestedKeyOfMessages,
   NestedValueOfMessages,
 } from "@/types/message";
+import { getNestedValue } from "@/lib/i18n/utils";
 import { createContext, use } from "react";
 
 const I18nContext = createContext<{
@@ -36,17 +37,5 @@ export const useMessage = <K extends NestedKeyOfMessages>(
   key: K
 ): NestedValueOfMessages<K> => {
   const { dictionary } = useI18n();
-
-  const keys = key.split(".") as (keyof MessagesSchema)[];
-  let result: unknown = dictionary;
-
-  for (const k of keys) {
-    if (result && typeof result === "object" && k in result) {
-      result = (result as Record<string, unknown>)[k];
-    } else {
-      throw new Error(`Key ${k} not found in dictionary`);
-    }
-  }
-
-  return result as NestedValueOfMessages<K>;
+  return getNestedValue(dictionary, key);
 };

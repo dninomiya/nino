@@ -1,7 +1,7 @@
 import { MessagesSchema } from "@/types/message";
 
 export default {
-  Langulage: {
+  Language: {
     ja: "Japanese",
     en: "English",
   },

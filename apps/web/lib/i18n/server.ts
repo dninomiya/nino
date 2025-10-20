@@ -2,45 +2,53 @@ import "server-only";
 
 import { defaultLocale, Locale, locales } from "./locale";
 import { cache } from "react";
+import { AsyncLocalStorage } from "async_hooks";
 import {
   MessagesSchema,
   NestedKeyOfMessages,
   NestedValueOfMessages,
 } from "@/types/message";
+import {
+  getNestedValue,
+  getMessageWithFallback as getMessageWithFallbackUtil,
+} from "./utils";
 
-let _currentLocale: Locale | null = null;
+// AsyncLocalStorageを使用してリクエストごとのlocaleを管理
+const localeStorage = new AsyncLocalStorage<Locale>();
 
 export const setCurrentLocale = (locale: string) => {
   if (!locales.includes(locale as Locale)) {
     throw new Error(`Invalid locale: ${locale}`);
   }
 
-  _currentLocale = locale as Locale;
+  localeStorage.enterWith(locale as Locale);
 };
 
 export const getCurrentLocale = cache(() => {
-  return _currentLocale || defaultLocale;
+  return localeStorage.getStore() || defaultLocale;
 });
 
-export const getDiscionaly = async (): Promise<MessagesSchema> => {
-  const messages = await import(`../../messages/${getCurrentLocale()}.ts`);
+export const getDictionary = async (): Promise<MessagesSchema> => {
+  const locale = getCurrentLocale();
+  const messages = await import(`../../messages/${locale}.ts`);
   return messages.default;
 };
 
 export const getMessage = async <K extends NestedKeyOfMessages>(
   key: K
 ): Promise<NestedValueOfMessages<K>> => {
-  const dictionary = await getDiscionaly();
-  const keys = key.split(".") as (keyof MessagesSchema)[];
-  let result: unknown = dictionary;
+  const dictionary = await getDictionary();
+  return getNestedValue(dictionary, key);
+};
 
-  for (const k of keys) {
-    if (result && typeof result === "object" && k in result) {
-      result = (result as Record<string, unknown>)[k];
-    } else {
-      throw new Error(`Key ${k} not found in dictionary`);
-    }
-  }
-
-  return result as NestedValueOfMessages<K>;
+export const getMessageWithFallback = async <K extends NestedKeyOfMessages>(
+  key: K
+): Promise<NestedValueOfMessages<K>> => {
+  const dictionary = await getDictionary();
+  const fallbackDictionary = await import(`../../messages/${defaultLocale}.ts`);
+  return getMessageWithFallbackUtil(
+    dictionary,
+    fallbackDictionary.default,
+    key
+  );
 };

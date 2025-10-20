@@ -16,7 +16,7 @@ import { useMessage, useI18n } from "./i18n-provider";
 export default function LocaleToggle() {
   const pathname = usePathname();
   const { locale } = useI18n();
-  const t = useMessage("Langulage");
+  const t = useMessage("Language");
 
   const handleChange = (nextLocale: Locale) => {
     location.href = `/${nextLocale}${pathname}`;
