@@ -1,7 +1,18 @@
+import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
 import Link from "next/link";
+
+export const generateMetadata = async ({
+  params,
+}: PageProps<"/[locale]/registry">) => {
+  await setCurrentLocaleFromParams(params);
+  const t = await getMessage("RegistryPage");
+  return {
+    title: t.title,
+  };
+};
 
 const getRegistryItems = (type: string) => {
   return Promise.all(
@@ -25,41 +36,44 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
   const t = await getMessage("RegistryPage");
 
   return (
-    <div className="p-8">
-      <h1 className="text-4xl font-bold">{t.title}</h1>
+    <>
+      <div className="p-8">
+        <h1 className="text-4xl font-bold">{t.title}</h1>
 
-      <section className="py-10 space-y-6">
-        <h2 className="text-2xl font-bold">{t.blocks}</h2>
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <Card key={item.name} className="relative">
-              <CardContent>
-                <div
-                  className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20"
-                  style={{
-                    backgroundImage: `
+        <section className="py-10 space-y-6">
+          <h2 className="text-2xl font-bold">{t.blocks}</h2>
+          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {items.map((item) => (
+              <Card key={item.name} className="relative">
+                <CardContent>
+                  <div
+                    className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20"
+                    style={{
+                      backgroundImage: `
                       linear-gradient(to right, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),
                       linear-gradient(to bottom, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px)
                     `,
-                    backgroundSize: "20px 20px",
-                    backgroundPosition: "5px 5px",
-                  }}
-                >
-                  <item.preview />
-                </div>
-              </CardContent>
-              <CardHeader>
-                <CardTitle>
-                  <Link href={`/registry/${item.name}`}>
-                    {item.title}
-                    <span className="absolute inset-0" />
-                  </Link>
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </section>
-    </div>
+                      backgroundSize: "20px 20px",
+                      backgroundPosition: "5px 5px",
+                    }}
+                  >
+                    <item.preview />
+                  </div>
+                </CardContent>
+                <CardHeader>
+                  <CardTitle>
+                    <Link href={`/registry/${item.name}`}>
+                      {item.title}
+                      <span className="absolute inset-0" />
+                    </Link>
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
   );
 }

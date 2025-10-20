@@ -1,4 +1,5 @@
 import { CopyButon } from "@/components/copy-markdown-button";
+import { Footer } from "@/components/footer";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
@@ -49,44 +50,47 @@ export default async function DocsPage({
   }
 
   return (
-    <div>
-      <MDXContent>
-        <div className="flex items-center justify-between gap-2 not-prose">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold">{metadata.title}</h1>
-            <div className="flex gap-1 flex-wrap">
-              <p
-                className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`${tCommon.createdAt}: ${metadata.createdAt}`}
-              >
-                {formatDateByRecency(metadata.createdAt, locale)}
-              </p>
-              ・
-              <p
-                className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
-              >
-                <RefreshCw className="size-3.5" />
-                {formatDateByRecency(metadata.updatedAt, locale)}
-              </p>
-              ・
-              <p
-                className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time, locale)}`}
-              >
-                <ClockFading className="size-3.5" />
-                {formatReadingTime(post.readingTime.time, locale)}
-              </p>
+    <>
+      <div>
+        <MDXContent>
+          <div className="flex items-center justify-between gap-2 not-prose">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold">{metadata.title}</h1>
+              <div className="flex gap-1 flex-wrap">
+                <p
+                  className="text-muted-foreground text-sm flex items-center gap-1.5"
+                  title={`${tCommon.createdAt}: ${metadata.createdAt}`}
+                >
+                  {formatDateByRecency(metadata.createdAt, locale)}
+                </p>
+                ・
+                <p
+                  className="text-muted-foreground text-sm flex items-center gap-1.5"
+                  title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
+                >
+                  <RefreshCw className="size-3.5" />
+                  {formatDateByRecency(metadata.updatedAt, locale)}
+                </p>
+                ・
+                <p
+                  className="text-muted-foreground text-sm flex items-center gap-1.5"
+                  title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time, locale)}`}
+                >
+                  <ClockFading className="size-3.5" />
+                  {formatReadingTime(post.readingTime.time, locale)}
+                </p>
+              </div>
             </div>
+            <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
           </div>
-          <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
-        </div>
 
-        <Content />
-      </MDXContent>
-      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header)-theme(spacing.4))] px-6 py-10 overflow-auto">
-        <TableOfContents />
-      </aside>
-    </div>
+          <Content />
+        </MDXContent>
+        <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header)-theme(spacing.4))] px-6 py-10 overflow-auto">
+          <TableOfContents />
+        </aside>
+      </div>
+      <Footer />
+    </>
   );
 }

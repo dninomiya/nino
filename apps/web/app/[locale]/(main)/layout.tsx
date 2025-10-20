@@ -12,7 +12,6 @@ export default async function MainLayout({
     <div>
       <Header />
       <div className="pt-header">{children}</div>
-      <Footer />
     </div>
   );
 }

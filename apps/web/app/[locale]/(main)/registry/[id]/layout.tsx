@@ -5,6 +5,7 @@ import {
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import { Footer } from "@/components/footer";
 
 export default async function Layout({
   children,
@@ -21,6 +22,8 @@ export default async function Layout({
           メニュー
         </div>
         {children}
+
+        <Footer />
       </SidebarInset>
     </SidebarProvider>
   );
