@@ -22,6 +22,7 @@ const getRegistryItems = (type: string) => {
 export default async function RegistryPage({
   params,
 }: PageProps<"/[locale]/registry">) {
+  const paramLocale = (await params).locale;
   const t = await getMessage("RegistryPage");
   const items = await getRegistryItems("registry:block");
   const locale = getCurrentLocale();
@@ -29,7 +30,9 @@ export default async function RegistryPage({
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold">{t.title}</h1>
-      <p>{locale}</p>
+      <p>
+        {locale} / {paramLocale}
+      </p>
 
       <section className="py-10 space-y-6">
         <h2 className="text-2xl font-bold">{t.blocks}</h2>
