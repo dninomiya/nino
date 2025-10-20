@@ -27,12 +27,6 @@ export const TAGS = {
   BREAKING_CHANGE: "breaking-change",
 } as const;
 
-const summarySchema = z.object({
-  title: z.string(),
-  summary: z.string(),
-  tags: z.array(z.string()).optional(),
-});
-
 // バッチ処理用のスキーマ
 const batchSummarySchema = z.object({
   summaries: z.array(

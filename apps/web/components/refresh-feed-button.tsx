@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { fetchFeedItems } from "@/actions/feed";
-import { Download, RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";

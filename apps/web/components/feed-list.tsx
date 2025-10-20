@@ -55,6 +55,17 @@ const getTagLabel = (tag: string, tTags: any) => {
   return tagMap[tag] || tag;
 };
 
+// フィードタイプ名を翻訳する関数
+const getFeedTypeLabel = (type: string, tFeedTypes: any) => {
+  const typeMap: Record<string, string> = {
+    releases: tFeedTypes.releases,
+    blog: tFeedTypes.blog,
+    changelog: tFeedTypes.changelog,
+    youtube: tFeedTypes.youtube,
+  };
+  return typeMap[type] || type;
+};
+
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
@@ -216,11 +227,12 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
 function IconBadge({ type }: { type: FeedType }) {
   const mapping = feedTypeMapping[type];
   const Icon = mapping.icon;
+  const tFeedTypes = useDictionary("FeedTypes");
 
   return (
     <Badge variant="outline">
       {Icon && <Icon className="size-4" />}
-      {mapping.label}
+      {getFeedTypeLabel(type, tFeedTypes)}
     </Badge>
   );
 }
