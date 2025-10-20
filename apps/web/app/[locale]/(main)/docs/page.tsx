@@ -8,9 +8,7 @@ import {
 } from "@workspace/ui/components/card";
 import { getMessage } from "@/lib/i18n/server";
 
-export default async function DocsListPage({
-  params,
-}: PageProps<"/[locale]/docs">) {
+export default async function DocsListPage() {
   const docs = await getDocMetas();
   const t = await getMessage("DocsListPage");
 

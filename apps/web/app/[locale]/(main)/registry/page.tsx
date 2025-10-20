@@ -20,8 +20,8 @@ const getRegistryItems = (type: string) => {
 };
 
 export default async function RegistryPage() {
-  const t = await getMessage("RegistryPage");
   const items = await getRegistryItems("registry:block");
+  const t = await getMessage("RegistryPage");
 
   return (
     <div className="p-8">
