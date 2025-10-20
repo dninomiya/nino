@@ -78,15 +78,16 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
             </Suspense>
           )}
         </div>
-        <div className="hidden xl:block w-80 py-10">
+        {/* <div className="hidden xl:block w-80 py-10">
           <a
             className="twitter-timeline"
+            data-chrome="transparent nofooter noheader"
             href="https://twitter.com/d151005?ref_src=twsrc%5Etfw"
           >
             Tweets by d151005
           </a>{" "}
           <script async src="https://platform.twitter.com/widgets.js"></script>
-        </div>
+        </div> */}
       </div>
       <Footer />
     </>

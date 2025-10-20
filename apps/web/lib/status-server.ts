@@ -136,10 +136,36 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
       .orderBy(desc(statusLatest.updatedAt))
       .limit(1);
     const prev = latest[0];
-    const hasDiff =
-      !prev ||
-      prev.status !== item.status ||
-      (item.description && item.description !== prev.description);
+
+    // 重複チェック：同じタイトルとリンクの組み合わせで、10分以内の場合は重複とみなす
+    const whereConditions = [eq(statusEvents.provider, item.provider)];
+    if (item.title) whereConditions.push(eq(statusEvents.title, item.title));
+    if (item.link) whereConditions.push(eq(statusEvents.link, item.link));
+
+    const recentEvent = await db
+      .select()
+      .from(statusEvents)
+      .where(and(...whereConditions))
+      .orderBy(desc(statusEvents.occurredAt))
+      .limit(1);
+
+    const isDuplicate =
+      recentEvent[0] &&
+      Math.abs(
+        item.occurredAt.getTime() - recentEvent[0].occurredAt.getTime()
+      ) <
+        10 * 60 * 1000; // 10分
+
+    if (isDuplicate) {
+      console.log(
+        `Skipping duplicate notification for ${item.provider}: ${item.title}`
+      );
+      continue;
+    }
+
+    // ステータスのみで差分を判定（descriptionの変更は無視）
+    const hasDiff = !prev || prev.status !== item.status;
+
     if (hasDiff)
       diffs.push({
         item,
