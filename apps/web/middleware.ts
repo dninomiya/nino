@@ -36,5 +36,6 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|trpc|_next|_vercel|rss/|llms\\.txt|r/|.*\\..*).*)",
+  matcher:
+    "/((?!api|monitoring|trpc|_next|_vercel|rss/|llms\\.txt|r/|.*\\..*).*)",
 };
