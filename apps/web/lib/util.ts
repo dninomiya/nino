@@ -2,13 +2,13 @@ import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 import { enUS, ja } from "date-fns/locale";
 import { Locale } from "./i18n/locale";
 
-export const formatReadingTime = (ms: number) => {
+export const formatReadingTime = (ms: number, locale: Locale) => {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
   if (minutes > 0) {
-    return `${minutes}分${seconds}秒`;
+    return `${minutes}${locale === "ja" ? "分" : "m"} ${seconds}${locale === "ja" ? "秒" : "s"}`;
   } else {
-    return `${seconds}秒`;
+    return `${seconds}${locale === "ja" ? "秒" : "s"}`;
   }
 };
 

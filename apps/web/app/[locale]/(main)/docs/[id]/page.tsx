@@ -72,10 +72,10 @@ export default async function DocsPage({
               ・
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time)}`}
+                title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time, locale)}`}
               >
                 <ClockFading className="size-3.5" />
-                {formatReadingTime(post.readingTime.time)}
+                {formatReadingTime(post.readingTime.time, locale)}
               </p>
             </div>
           </div>
