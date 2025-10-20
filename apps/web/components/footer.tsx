@@ -1,22 +1,21 @@
+import {
+  SiDiscord,
+  SiGithub,
+  SiX,
+  SiYoutube,
+  SiZenn,
+} from "@icons-pack/react-simple-icons";
+import {
+  APP_NAME,
+  AUTHOR_DISCORD_URL,
+  AUTHOR_GITHUB_URL,
+  AUTHOR_X_URL,
+  AUTHOR_YOUTUBE_URL,
+  AUTHOR_ZENN_URL,
+} from "@workspace/lib/constants";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
-import {
-  SiX,
-  SiZenn,
-  SiGithub,
-  SiYoutube,
-  SiDiscord,
-} from "@icons-pack/react-simple-icons";
-import {
-  AUTHOR_X_URL,
-  AUTHOR_ZENN_URL,
-  AUTHOR_YOUTUBE_URL,
-  AUTHOR_GITHUB_URL,
-  APP_NAME,
-  AUTHOR_DISCORD_URL,
-} from "@workspace/lib/constants";
-import { getCurrentLocale } from "@/lib/i18n/server";
 
 const authorLinks = [
   {
@@ -53,7 +52,7 @@ export const Footer = () => {
         <div className="flex flex-col gap-3">
           <Logo />
           <p className="text-sm text-muted-foreground">Developer.</p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-muted-foreground">
             {authorLinks.map((link) => (
               <Button variant="ghost" asChild size="icon" key={link.label}>
                 <Link href={link.href} target="_blank">

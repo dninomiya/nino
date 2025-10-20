@@ -20,12 +20,12 @@ export const feedTypeMapping = {
 
 // カテゴリの表示順序
 export const categoryOrder = [
-  "フレームワーク",
-  "ライブラリ",
-  "ツール",
-  "SaaS/BaaS",
-  "AI",
-  "モバイル",
+  "framework",
+  "library",
+  "tool",
+  "saas",
+  "ai",
+  "mobile",
 ];
 
 // 技術のマッピング（ラベルとアイコンを一元化）
