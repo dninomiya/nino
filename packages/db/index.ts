@@ -2,6 +2,7 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql/web";
 import * as auth from "./schemas/auth";
 import * as feed from "./schemas/feed";
+import * as status from "./schemas/status";
 
 export const db = drizzle({
   connection: {
@@ -11,5 +12,6 @@ export const db = drizzle({
   schema: {
     ...auth,
     ...feed,
+    ...status,
   },
 });

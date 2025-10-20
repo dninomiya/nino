@@ -7,7 +7,7 @@
     "dev": "turso dev -f local/local.db",
     "generate": "pnpm drizzle-kit generate",
     "migrate": "pnpm drizzle-kit migrate",
-    "gmigrate": "pnpm drizzle-kit generate && pnpm drizzle-kit migrate",
+    "gm": "pnpm drizzle-kit generate && pnpm drizzle-kit migrate",
     "studio": "pnpm drizzle-kit studio"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "nanoid": "^5.1.6"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.5"
+    "drizzle-kit": "^0.31.5",
+    "@workspace/typescript-config": "workspace:*"
   }
 }

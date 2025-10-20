@@ -10,8 +10,12 @@ export type DayOfWeek =
   | "workingday"
   | "everyday";
 
+// 時刻指定 or 分間隔指定のどちらにも対応
+type FixedWhen = { type?: "fixed"; time: string; day: DayOfWeek };
+type IntervalWhen = { type: "interval"; everyMinutes: number; day: DayOfWeek };
+
 export type Schedule = {
-  when: { time: string; day: DayOfWeek };
+  when: FixedWhen | IntervalWhen;
   action: () => Promise<void>;
 };
 
@@ -44,21 +48,41 @@ export function resolveDays(day: string): number[] {
 
 // スケジュールが現在時刻にマッチするかチェック
 export function isScheduleMatch(schedule: Schedule, jstDate: Date): boolean {
-  const [scheduleHour, scheduleMinute] = schedule.when.time
-    .split(":")
-    .map(Number);
   const currentHour = jstDate.getUTCHours();
   const currentMinute = jstDate.getUTCMinutes();
   const currentDayOfWeek = jstDate.getUTCDay();
 
-  // 時刻チェック（0-1分の範囲内）
-  const timeMatch = currentHour === scheduleHour && currentMinute <= 1;
-
   // 曜日チェック
   const validDays = resolveDays(schedule.when.day);
   const dayMatch = validDays.includes(currentDayOfWeek);
+  if (!dayMatch) return false;
 
-  return timeMatch && dayMatch;
+  // 分間隔指定（"every X minutes"）
+  if ((schedule.when as IntervalWhen).type === "interval") {
+    const { everyMinutes } = schedule.when as IntervalWhen;
+    if (
+      typeof everyMinutes === "number" &&
+      everyMinutes > 0 &&
+      Number.isInteger(everyMinutes)
+    ) {
+      return currentMinute % everyMinutes === 0;
+    }
+    return false;
+  }
+
+  // 時刻指定（デフォルト）
+  const fixed = schedule.when as FixedWhen;
+  const timeMatchResult = /^(?:[01]?\d|2[0-3]):([0-5]\d)$/.exec(fixed.time);
+  // 上の正規表現だと時は 0-23, 分は 00-59 を保証
+  if (!timeMatchResult) return false;
+  const [hourStr, minuteStr] = fixed.time.split(":");
+  const scheduleHour: number = Number(hourStr);
+  const scheduleMinute: number = Number(minuteStr);
+
+  // 分単位での一致のみを判定（誤爆を避けるため厳密一致）
+  const timeMatch =
+    currentHour === scheduleHour && currentMinute === scheduleMinute;
+  return timeMatch;
 }
 
 // スケジュールを実行する関数

@@ -1,7 +1,7 @@
 import {
+  integer,
   sqliteTable,
   text,
-  integer,
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 import { id, timestamps } from "../util";
@@ -23,7 +23,5 @@ export const feedItems = sqliteTable(
     tags: text("tags"), // JSON string
     ...timestamps,
   },
-  (table) => ({
-    urlDateIdx: uniqueIndex("url_date_idx").on(table.url, table.date),
-  })
+  (t) => [uniqueIndex("feed_items_url_date_unique").on(t.url, t.date)]
 );
