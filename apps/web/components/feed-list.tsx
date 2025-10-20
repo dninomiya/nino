@@ -34,7 +34,7 @@ import {
 import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
-import { useDictionary } from "./i18n-provider";
+import { useMessage } from "./i18n-provider";
 
 // タグ名を翻訳する関数
 const getTagLabel = (tag: string, tTags: any) => {
@@ -70,7 +70,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
   const [tags] = useQueryState("tags");
-  const tTags = useDictionary("Tags");
+  const tTags = useMessage("Tags");
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const filteredFeedItems = useMemo(() => {
@@ -227,7 +227,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
 function IconBadge({ type }: { type: FeedType }) {
   const mapping = feedTypeMapping[type];
   const Icon = mapping.icon;
-  const tFeedTypes = useDictionary("FeedTypes");
+  const tFeedTypes = useMessage("FeedTypes");
 
   return (
     <Badge variant="outline">

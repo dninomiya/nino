@@ -11,12 +11,12 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { Languages } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useDictionary, useI18n } from "./i18n-provider";
+import { useMessage, useI18n } from "./i18n-provider";
 
 export default function LocaleToggle() {
   const pathname = usePathname();
   const { locale } = useI18n();
-  const t = useDictionary("Langulage");
+  const t = useMessage("Langulage");
 
   const handleChange = (nextLocale: Locale) => {
     location.href = `/${nextLocale}${pathname}`;

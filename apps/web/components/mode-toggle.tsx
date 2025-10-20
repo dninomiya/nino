@@ -10,11 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { useDictionary } from "./i18n-provider";
+import { useMessage } from "./i18n-provider";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
-  const t = useDictionary("ModeToggle");
+  const t = useMessage("ModeToggle");
 
   return (
     <DropdownMenu>

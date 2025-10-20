@@ -15,7 +15,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { registries, gettingStartedItems } from "@/lib/registry";
-import { useDictionary } from "@/components/i18n-provider";
+import { useMessage } from "@/components/i18n-provider";
 
 const getRegistryItems = (type: string) => {
   return registries
@@ -37,7 +37,7 @@ export function RegistrySidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const t = useDictionary("RegistrySidebar");
+  const t = useMessage("RegistrySidebar");
 
   const data = {
     navGroup: [

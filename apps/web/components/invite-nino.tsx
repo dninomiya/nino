@@ -8,10 +8,10 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { Send } from "lucide-react";
 import Link from "next/link";
-import { useDictionary } from "./i18n-provider";
+import { useMessage } from "./i18n-provider";
 
 export async function InviteNino() {
-  const t = useDictionary("InviteNino");
+  const t = useMessage("InviteNino");
 
   return (
     <Dialog>

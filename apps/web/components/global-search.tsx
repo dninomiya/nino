@@ -19,7 +19,7 @@ import { Kbd } from "@workspace/ui/components/kbd";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useRegistry } from "./registry-provider";
-import { useDictionary, useI18n } from "./i18n-provider";
+import { useMessage, useI18n } from "./i18n-provider";
 import { Locale, locales } from "@/lib/i18n/locale";
 
 export function GlobalSearch() {
@@ -30,8 +30,8 @@ export function GlobalSearch() {
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
   const [isPending, startTransition] = useTransition();
-  const t = useDictionary("GlobalSearch");
-  const langT = useDictionary("Langulage");
+  const t = useMessage("GlobalSearch");
+  const langT = useMessage("Langulage");
   const { locale: currentLocale } = useI18n();
 
   const handleLocaleChange = (nextLocale: Locale) => {

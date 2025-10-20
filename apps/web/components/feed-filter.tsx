@@ -13,7 +13,7 @@ import {
   getTechnologiesByCategory,
   categoryOrder,
 } from "@/lib/feed";
-import { useDictionary } from "./i18n-provider";
+import { useMessage } from "./i18n-provider";
 import { useMemo, ReactNode } from "react";
 
 interface FeedFilterProps {
@@ -167,10 +167,10 @@ const getFeedTypeLabel = (type: string, tFeedTypes: any) => {
 };
 
 export function FeedFilter({ feedItems }: FeedFilterProps) {
-  const t = useDictionary("FeedFilter");
-  const tCategories = useDictionary("Categories");
-  const tTags = useDictionary("Tags");
-  const tFeedTypes = useDictionary("FeedTypes");
+  const t = useMessage("FeedFilter");
+  const tCategories = useMessage("Categories");
+  const tTags = useMessage("Tags");
+  const tFeedTypes = useMessage("FeedTypes");
   const [filters, setFilters] = useQueryStates({
     type: parseAsArrayOf(parseAsString).withDefault([]),
     source: parseAsArrayOf(parseAsString).withDefault([]),

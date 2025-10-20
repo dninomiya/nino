@@ -32,7 +32,7 @@ export function useI18n() {
   return use(I18nContext);
 }
 
-export const useDictionary = <K extends NestedKeyOfMessages>(
+export const useMessage = <K extends NestedKeyOfMessages>(
   key: K
 ): NestedValueOfMessages<K> => {
   const { dictionary } = useI18n();
