@@ -27,6 +27,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { formatDistanceToNow } from "date-fns";
 import { ja } from "date-fns/locale";
 import { ArrowLeft, FlaskConical, Home, Users2 } from "lucide-react";
@@ -158,7 +159,9 @@ const positions = [
   },
 ];
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
+
   return (
     <div className="container max-w-3xl py-10 space-y-8">
       <div className="flex items-center gap-2">

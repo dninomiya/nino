@@ -5,11 +5,11 @@ import { RegistryProvider } from "./registry-provider";
 import { getRegistryDocMetas } from "@/lib/registry";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { I18nProvider } from "./i18n-provider";
-import { getCurrentLocale, getDiscionaly } from "@/lib/i18n/server";
+import { getCurrentLocale, getDictionary } from "@/lib/i18n/server";
 
 export async function Providers({ children }: { children: React.ReactNode }) {
   const registryDocMetas = await getRegistryDocMetas();
-  const dictionary = await getDiscionaly();
+  const dictionary = await getDictionary();
 
   return (
     <I18nProvider locale={getCurrentLocale()} dictionary={dictionary}>

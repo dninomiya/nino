@@ -4,10 +4,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 
 export default async function Layout({
   children,
+  params,
 }: LayoutProps<"/[locale]/registry/[id]">) {
+  await setCurrentLocaleFromParams(params);
+
   return (
     <SidebarProvider>
       <RegistrySidebar />

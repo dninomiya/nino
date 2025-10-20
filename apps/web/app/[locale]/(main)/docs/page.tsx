@@ -6,9 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { getMessage } from "@/lib/i18n/server";
+import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 
-export default async function DocsListPage() {
+export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
   const docs = await getDocMetas();
   const t = await getMessage("DocsListPage");
 

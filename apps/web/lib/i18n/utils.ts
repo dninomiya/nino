@@ -18,6 +18,7 @@ export function getNestedValue<K extends NestedKeyOfMessages>(
     if (result && typeof result === "object" && k in result) {
       result = (result as Record<string, unknown>)[k];
     } else {
+      console.log(k, "k");
       throw new Error(`Key ${k} not found in dictionary`);
     }
   }

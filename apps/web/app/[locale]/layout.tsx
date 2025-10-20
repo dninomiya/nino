@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { APP_NAME } from "@workspace/lib/constants";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { locales } from "@/lib/i18n/locale";
-import { setCurrentLocale } from "@/lib/i18n/server";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -37,8 +37,7 @@ export default async function RootLayout({
   params,
   children,
 }: LayoutProps<"/[locale]">) {
-  const locale = (await params).locale;
-  setCurrentLocale(locale);
+  await setCurrentLocaleFromParams(params);
 
   return (
     <html suppressHydrationWarning>

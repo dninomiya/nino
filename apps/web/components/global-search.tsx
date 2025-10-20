@@ -31,7 +31,7 @@ export function GlobalSearch() {
   const { registryDocMetas } = useRegistry();
   const [isPending, startTransition] = useTransition();
   const t = useMessage("GlobalSearch");
-  const langT = useMessage("Langulage");
+  const langT = useMessage("Language");
   const { locale: currentLocale } = useI18n();
 
   const handleLocaleChange = (nextLocale: Locale) => {

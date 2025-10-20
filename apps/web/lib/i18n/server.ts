@@ -1,31 +1,39 @@
 import "server-only";
 
-import { defaultLocale, Locale, locales } from "./locale";
-import { cache } from "react";
-import { AsyncLocalStorage } from "async_hooks";
 import {
   MessagesSchema,
   NestedKeyOfMessages,
   NestedValueOfMessages,
 } from "@/types/message";
+import { cache } from "react";
+import { defaultLocale, Locale, locales } from "./locale";
 import {
-  getNestedValue,
   getMessageWithFallback as getMessageWithFallbackUtil,
+  getNestedValue,
 } from "./utils";
 
-// AsyncLocalStorageを使用してリクエストごとのlocaleを管理
-const localeStorage = new AsyncLocalStorage<Locale>();
+let _currentLocale: Locale = defaultLocale;
 
 export const setCurrentLocale = (locale: string) => {
   if (!locales.includes(locale as Locale)) {
     throw new Error(`Invalid locale: ${locale}`);
   }
 
-  localeStorage.enterWith(locale as Locale);
+  _currentLocale = locale as Locale;
+};
+
+/**
+ * paramsからlocaleを取得して設定する共通関数
+ */
+export const setCurrentLocaleFromParams = async (
+  params: Promise<{ locale: string }>
+) => {
+  const { locale } = await params;
+  setCurrentLocale(locale);
 };
 
 export const getCurrentLocale = cache(() => {
-  return localeStorage.getStore() || defaultLocale;
+  return _currentLocale || defaultLocale;
 });
 
 export const getDictionary = async (): Promise<MessagesSchema> => {

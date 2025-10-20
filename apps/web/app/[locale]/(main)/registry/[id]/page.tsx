@@ -1,7 +1,11 @@
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
-import { getCurrentLocale, getMessage } from "@/lib/i18n/server";
+import {
+  getCurrentLocale,
+  getMessage,
+  setCurrentLocaleFromParams,
+} from "@/lib/i18n/server";
 import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
 import { formatDateByRecency } from "@/lib/util";
 import { readFileSync } from "fs";
@@ -25,6 +29,7 @@ export const generateStaticParams = async () => {
 export default async function RegistryPage({
   params,
 }: PageProps<"/[locale]/registry/[id]">) {
+  await setCurrentLocaleFromParams(params);
   const id = (await params).id;
   const post = await import(`@/app/[locale]/(main)/registry/${id}/doc.mdx`);
   const Content = post.default;

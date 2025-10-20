@@ -2,7 +2,11 @@ import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
-import { getCurrentLocale, getMessage } from "@/lib/i18n/server";
+import {
+  getCurrentLocale,
+  getMessage,
+  setCurrentLocaleFromParams,
+} from "@/lib/i18n/server";
 import { formatDateByRecency, formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
 import { ClockFading, RefreshCw } from "lucide-react";
@@ -28,6 +32,7 @@ export const generateStaticParams = async () => {
 export default async function DocsPage({
   params,
 }: PageProps<"/[locale]/docs/[id]">) {
+  await setCurrentLocaleFromParams(params);
   const id = (await params).id;
   const post = await import(`@/docs/${id}.mdx`);
   const Content = post.default;

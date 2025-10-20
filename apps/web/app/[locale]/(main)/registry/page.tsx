@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMessage } from "@/lib/i18n/server";
+import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
 import Link from "next/link";
 
@@ -19,7 +19,8 @@ const getRegistryItems = (type: string) => {
   );
 };
 
-export default async function RegistryPage() {
+export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
   const items = await getRegistryItems("registry:block");
   const t = await getMessage("RegistryPage");
 
