@@ -1,13 +1,13 @@
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
+import { getMessage } from "@/lib/i18n/server";
 import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
 import { formatDateByRecency } from "@/lib/util";
 import { readFileSync } from "fs";
 import { RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
 import path from "path";
-import { getTranslations } from "next-intl/server";
 
 export const generateMetadata = async ({
   params,
@@ -33,8 +33,7 @@ export default async function RegistryPage({
     path.join(process.cwd(), `app/[locale]/(main)/registry/${id}/doc.mdx`),
     "utf-8"
   );
-  const t = await getTranslations("RegistryDetailPage");
-  const tCommon = await getTranslations("Common");
+  const tCommon = await getMessage("Common");
 
   if (!metadata) {
     notFound();
@@ -49,23 +48,21 @@ export default async function RegistryPage({
             <div className="flex gap-1 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={t("createdAt", { date: metadata.createdAt })}
+                title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
                 {formatDateByRecency(metadata.createdAt)}
               </p>
               ・
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={t("updatedAt", { date: metadata.updatedAt })}
+                title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
               >
                 <RefreshCw className="size-3.5" />
                 {formatDateByRecency(metadata.updatedAt)}
               </p>
             </div>
           </div>
-          <CopyButon value={markdownString}>
-            {tCommon("copyMarkdown")}
-          </CopyButon>
+          <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
         </div>
 
         <Content />

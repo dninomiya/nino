@@ -1,0 +1,104 @@
+export default {
+  Common: {
+    createdAt: "作成日",
+    updatedAt: "更新日",
+    readingTime: "読了目安",
+    copyMarkdown: "マークダウンをコピー",
+  },
+  Langulage: {
+    ja: "日本語",
+    en: "英語",
+  },
+  LocaleSwitcher: {
+    locale: "言語を切り替える",
+  },
+  ModeToggle: {
+    label: "モードを切り替える",
+    light: "ライト",
+    dark: "ダーク",
+    system: "システム",
+  },
+  InviteNino: {
+    label: "連絡する",
+  },
+  FeedFilter: {
+    typeLabel: "情報タイプ",
+    sourceLabel: "技術",
+    releases: "リリース",
+    news: "ニュース",
+    changelog: "変更履歴",
+    youtube: "YouTube",
+  },
+  GlobalSearch: {
+    searchPlaceholder: "検索...",
+    searchLabel: "検索",
+    noResults: "検索結果がありません。",
+    registry: "レジストリ",
+    theme: "テーマ",
+    language: "言語",
+    current: "現在",
+    light: "ライト",
+    dark: "ダーク",
+    system: "システム",
+  },
+  DocsListPage: {
+    title: "ドキュメント",
+  },
+  RegistryPage: {
+    title: "レジストリ",
+    blocks: "ブロック",
+  },
+  RegistrySidebar: {
+    title: "レジストリ",
+    gettingStarted: "はじめに",
+    blocks: "ブロック",
+    libraries: "ライブラリ",
+  },
+  MainNav: {
+    docs: "ドキュメント",
+    registry: "レジストリ",
+    tools: "ツール",
+    membership: "メンバーシップ",
+    archive: "アーカイブ",
+    toolhub: {
+      label: "ToolHub",
+      description: "ツールのリンク集",
+    },
+    reactGuide: {
+      label: "React Guide",
+      description: "React ガイド",
+    },
+    nextjsRenderingGuide: {
+      label: "Next.js レンダリングガイド",
+      description: "Next.js のレンダリングガイド",
+    },
+    stripeGuide: {
+      label: "Stripe ビギナーズガイド",
+      description: "Stripe のビギナーズガイド",
+    },
+    nextjsRoutingGuide: {
+      label: "Next.js ルーティングガイド",
+      description: "Next.js の特殊なルーティングのデモ",
+    },
+    hub: {
+      label: "Hub",
+      description: "Webアプリの実装デモ",
+    },
+    formGuide: {
+      label: "ふぉーむがいど",
+      description: "フォーム実装のベストプラクティス",
+    },
+    stopEnterSubmit: {
+      label: "Stop Enter Submit",
+      description: "Enterキーでの誤送信防止を啓蒙ツール",
+    },
+    treeToImage: {
+      label: "Tree to Image",
+      description: "ファイルツリーの画像化ツール",
+    },
+    ninoPlusOld: {
+      label: "nino+ 1.0",
+      description: "メンタープラットフォーム",
+    },
+  },
+};

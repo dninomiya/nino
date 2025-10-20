@@ -3,7 +3,7 @@ import { DocMeta, getDocMeta, getDocMetas } from "@/lib/docs";
 import { readFile } from "fs/promises";
 import { loadDefaultJapaneseParser } from "budoux";
 import { join } from "path";
-import { routing } from "@/i18n/routing";
+import { locales } from "@/lib/i18n/locale";
 
 export const size = {
   width: 1200,
@@ -12,7 +12,7 @@ export const size = {
 
 export async function generateStaticParams() {
   const docs = (await getDocMetas()) as DocMeta[];
-  const params = routing.locales.flatMap((locale) =>
+  const params = locales.flatMap((locale) =>
     docs.map((doc) => ({ locale, id: doc.id }))
   );
   return params;

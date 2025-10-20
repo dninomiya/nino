@@ -7,18 +7,18 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Button } from "@workspace/ui/components/button";
 import { Send } from "lucide-react";
-import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { useDictionary } from "./i18n-provider";
 
 export async function InviteNino() {
-  const t = await getTranslations("InviteNino");
+  const t = useDictionary("InviteNino");
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button>
           <Send />
-          {t("label")}
+          {t.label}
         </Button>
       </DialogTrigger>
       <DialogContent>

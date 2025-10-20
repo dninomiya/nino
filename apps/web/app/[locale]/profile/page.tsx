@@ -1,5 +1,4 @@
 import { ModeToggle } from "@/components/mode-toggle";
-import { setLocale } from "@/i18n/set-locale";
 import {
   SiApple,
   SiBetterauth,
@@ -159,11 +158,7 @@ const positions = [
   },
 ];
 
-export default async function ProfilePage({
-  params,
-}: PageProps<"/[locale]/profile">) {
-  await setLocale(params);
-
+export default async function ProfilePage() {
   return (
     <div className="container max-w-3xl py-10 space-y-8">
       <div className="flex items-center gap-2">

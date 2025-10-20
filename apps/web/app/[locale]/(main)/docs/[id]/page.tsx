@@ -2,13 +2,13 @@ import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
+import { getMessage } from "@/lib/i18n/server";
 import { formatDateByRecency, formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
 import { ClockFading, RefreshCw } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import path from "path";
-import { getTranslations } from "next-intl/server";
 
 export const generateMetadata = async ({
   params,
@@ -36,8 +36,7 @@ export default async function DocsPage({
     path.join(process.cwd(), `docs/${id}.mdx`),
     "utf-8"
   );
-  const t = await getTranslations("DocsDetailPage");
-  const tCommon = await getTranslations("Common");
+  const tCommon = await getMessage("Common");
 
   if (!metadata) {
     notFound();
@@ -52,14 +51,14 @@ export default async function DocsPage({
             <div className="flex gap-1 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={t("createdAt", { date: metadata.createdAt })}
+                title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
                 {formatDateByRecency(metadata.createdAt)}
               </p>
               ・
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={t("updatedAt", { date: metadata.updatedAt })}
+                title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
               >
                 <RefreshCw className="size-3.5" />
                 {formatDateByRecency(metadata.updatedAt)}
@@ -67,18 +66,14 @@ export default async function DocsPage({
               ・
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={t("readingTime", {
-                  time: formatReadingTime(post.readingTime.time),
-                })}
+                title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time)}`}
               >
                 <ClockFading className="size-3.5" />
                 {formatReadingTime(post.readingTime.time)}
               </p>
             </div>
           </div>
-          <CopyButon value={markdownString}>
-            {tCommon("copyMarkdown")}
-          </CopyButon>
+          <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
         </div>
 
         <Content />

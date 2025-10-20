@@ -1,5 +1,4 @@
 import { RegistrySidebar } from "@/app/[locale]/(main)/registry/components/registry-sidebar";
-import { setLocale } from "@/i18n/set-locale";
 import {
   SidebarInset,
   SidebarProvider,
@@ -8,10 +7,7 @@ import {
 
 export default async function Layout({
   children,
-  params,
 }: LayoutProps<"/[locale]/registry/[id]">) {
-  await setLocale(params);
-
   return (
     <SidebarProvider>
       <RegistrySidebar />

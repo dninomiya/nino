@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -11,11 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { useTranslations } from "next-intl";
+import { useDictionary } from "./i18n-provider";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
-  const t = useTranslations("ModeToggle");
+  const t = useDictionary("ModeToggle");
 
   return (
     <DropdownMenu>
@@ -23,18 +22,18 @@ export function ModeToggle() {
         <Button variant="ghost" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-          <span className="sr-only">{t("label")}</span>
+          <span className="sr-only">{t["label"]}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          {t("light")}
+          {t["light"]}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          {t("dark")}
+          {t["dark"]}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          {t("system")}
+          {t["system"]}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

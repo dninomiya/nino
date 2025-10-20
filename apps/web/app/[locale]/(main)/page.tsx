@@ -3,7 +3,6 @@ import { FeedList } from "@/components/feed-list";
 import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
-import { setLocale } from "@/i18n/set-locale";
 import { getFeedItemsFromDB } from "@/lib/feed-server";
 import {
   Empty,
@@ -15,8 +14,7 @@ import {
 import { RefreshCw } from "lucide-react";
 import { Suspense } from "react";
 
-export default async function Page({ params }: PageProps<"/[locale]">) {
-  await setLocale(params);
+export default async function Page() {
   const feedItems = await getFeedItemsFromDB(7);
 
   return (

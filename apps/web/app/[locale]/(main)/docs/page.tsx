@@ -6,19 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { getTranslations } from "next-intl/server";
-import { setLocale } from "@/i18n/set-locale";
+import { getMessage } from "@/lib/i18n/server";
 
 export default async function DocsListPage({
   params,
 }: PageProps<"/[locale]/docs">) {
   const docs = await getDocMetas();
-  const t = await getTranslations("DocsListPage");
-  await setLocale(params);
+  const t = await getMessage("DocsListPage");
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold mb-8">{t("title")}</h1>
+      <h1 className="text-4xl font-bold mb-8">{t.title}</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {docs.map((doc) => (
           <Link key={doc.id} href={`/docs/${doc.id}`}>

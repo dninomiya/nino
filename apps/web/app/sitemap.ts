@@ -1,107 +1,78 @@
-import type { MetadataRoute } from "next";
+export const dynamic = "force-static";
+
 import { getDocMetas } from "@/lib/docs";
+import { locales } from "@/lib/i18n/locale";
 import { getRegistryDocMetas } from "@/lib/registry";
-import { baseUrl } from "@workspace/registry/lib/base-url";
-import { getPathname } from "@/i18n/navigation";
+import { baseUrl } from "@/registry/lib/base-url";
+import type { MetadataRoute } from "next";
+
+type SitemapPath = {
+  path: string;
+  lastModified: Date;
+  changeFrequency: "monthly" | "weekly" | "daily" | "hourly" | "never";
+  priority: number;
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = baseUrl();
-  const locales = ["ja", "en"];
+  const baseURL = baseUrl();
+  const staticPaths: SitemapPath[] = [
+    {
+      path: "/",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 1,
+    },
+    {
+      path: "/docs",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      path: "/registry",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      path: "/profile",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+  ];
 
-  // 静的ページのパス定義
-  const staticPaths = ["/", "/about", "/docs", "/registry"];
+  // Promise.allで並列実行
+  const [docMetas, registryDocMetas] = await Promise.all([
+    getDocMetas(),
+    getRegistryDocMetas(),
+  ]);
 
-  // 多言語対応の静的ページ
-  const localizedStaticPages = await Promise.all(
-    staticPaths.map(async (path) => {
-      const alternates: Record<string, string> = {};
-
-      // 各言語のURLを生成
-      for (const locale of locales) {
-        alternates[locale] =
-          siteUrl +
-          (await getPathname({ locale: locale as "ja" | "en", href: path }));
-      }
-
-      return {
-        url: siteUrl + (await getPathname({ locale: "ja", href: path })),
-        lastModified: new Date(),
-        changeFrequency:
-          path === "/"
-            ? ("weekly" as const)
-            : path === "/about"
-              ? ("monthly" as const)
-              : ("weekly" as const),
-        priority: path === "/" ? 1 : path === "/about" ? 0.8 : 0.9,
-        alternates: {
-          languages: alternates,
-        },
-      };
-    })
-  );
-
-  // docs の動的ページ
-  const docs = await getDocMetas();
-  const docsPages = await Promise.all(
-    docs.map(async (doc) => {
-      const alternates: Record<string, string> = {};
-
-      // 各言語のURLを生成
-      for (const locale of locales) {
-        alternates[locale] =
-          siteUrl +
-          (await getPathname({
-            locale: locale as "ja" | "en",
-            href: `/docs/${doc.id}`,
-          }));
-      }
-
-      return {
-        url:
-          siteUrl +
-          (await getPathname({ locale: "ja", href: `/docs/${doc.id}` })),
+  const docPaths = docMetas.map(
+    (doc) =>
+      ({
+        path: `/docs/${doc.id}`,
         lastModified: new Date(doc.updatedAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-        alternates: {
-          languages: alternates,
-        },
-      };
-    })
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }) satisfies SitemapPath
+  );
+  const registryPaths = registryDocMetas.map(
+    (doc) =>
+      ({
+        path: `/registry/${doc.name}`,
+        lastModified: new Date(doc.updatedAt),
+        changeFrequency: "monthly",
+        priority: 0.8,
+      }) satisfies SitemapPath
   );
 
-  // registry の動的ページ
-  const registryDocs = await getRegistryDocMetas();
-  const registryPages = await Promise.all(
-    registryDocs.map(async (registry) => {
-      const alternates: Record<string, string> = {};
+  const allItems = [...staticPaths, ...docPaths, ...registryPaths];
 
-      // 各言語のURLを生成
-      for (const locale of locales) {
-        alternates[locale] =
-          siteUrl +
-          (await getPathname({
-            locale: locale as "ja" | "en",
-            href: `/registry/${registry.name}`,
-          }));
-      }
-
-      return {
-        url:
-          siteUrl +
-          (await getPathname({
-            locale: "ja",
-            href: `/registry/${registry.name}`,
-          })),
-        lastModified: new Date(registry.updatedAt || registry.createdAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-        alternates: {
-          languages: alternates,
-        },
-      };
-    })
+  return locales.flatMap((locale) =>
+    allItems.map((item) => ({
+      url: new URL(`/${locale}/${item.path}`, baseURL).toString(),
+      ...item,
+    }))
   );
-
-  return [...localizedStaticPages, ...docsPages, ...registryPages];
 }

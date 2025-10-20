@@ -11,7 +11,7 @@ export const RecencyDate = ({ date }: { date: Date | number }) => {
   }, []);
 
   if (!client) {
-    return null;
+    return <span>&nbsp;</span>;
   }
 
   return <span>{formatDateByRecency(date)}</span>;

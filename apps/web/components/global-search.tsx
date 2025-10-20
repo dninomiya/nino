@@ -4,8 +4,6 @@ import { Languages, Monitor, Moon, SearchIcon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
-import { usePathname, useRouter } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -18,10 +16,11 @@ import {
   CommandSeparator,
 } from "@workspace/ui/components/command";
 import { Kbd } from "@workspace/ui/components/kbd";
-import { Locale, useLocale, useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useRegistry } from "./registry-provider";
+import { useDictionary, useI18n } from "./i18n-provider";
+import { Locale, locales } from "@/lib/i18n/locale";
 
 export function GlobalSearch() {
   const [open, setOpen] = React.useState(false);
@@ -30,10 +29,10 @@ export function GlobalSearch() {
   const params = useParams();
   const { theme, setTheme } = useTheme();
   const { registryDocMetas } = useRegistry();
-  const currentLocale = useLocale();
   const [isPending, startTransition] = useTransition();
-  const t = useTranslations("LocaleSwitcher");
-  const tGlobalSearch = useTranslations("GlobalSearch");
+  const t = useDictionary("GlobalSearch");
+  const langT = useDictionary("Langulage");
+  const { locale: currentLocale } = useI18n();
 
   const handleLocaleChange = (nextLocale: Locale) => {
     startTransition(() => {
@@ -68,7 +67,7 @@ export function GlobalSearch() {
         className="w-48 justify-start font-normal hidden xl:flex"
       >
         <SearchIcon />
-        <span className="mr-auto">{tGlobalSearch("searchPlaceholder")}</span>
+        <span className="mr-auto">{t["searchPlaceholder"]}</span>
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </Button>
@@ -79,13 +78,13 @@ export function GlobalSearch() {
         className="xl:hidden"
       >
         <SearchIcon />
-        <span className="sr-only">{tGlobalSearch("searchLabel")}</span>
+        <span className="sr-only">{t["searchLabel"]}</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder={tGlobalSearch("searchPlaceholder")} />
+        <CommandInput placeholder={t["searchPlaceholder"]} />
         <CommandList>
-          <CommandEmpty>{tGlobalSearch("noResults")}</CommandEmpty>
-          <CommandGroup heading={tGlobalSearch("registry")}>
+          <CommandEmpty>{t["noResults"]}</CommandEmpty>
+          <CommandGroup heading={t["registry"]}>
             {registryDocMetas.map((meta) => (
               <CommandItem
                 key={meta.title}
@@ -99,18 +98,18 @@ export function GlobalSearch() {
             ))}
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading={tGlobalSearch("theme")}>
+          <CommandGroup heading={t["theme"]}>
             <CommandItem
               onSelect={() => {
                 setTheme("light");
               }}
             >
               <Sun />
-              <span>{tGlobalSearch("light")}</span>
+              <span>{t["light"]}</span>
               <small className="text-muted-foreground">Light</small>
               {theme === "light" && (
                 <Badge variant="outline" className="ml-auto">
-                  {tGlobalSearch("current")}
+                  {t["current"]}
                 </Badge>
               )}
             </CommandItem>
@@ -120,11 +119,11 @@ export function GlobalSearch() {
               }}
             >
               <Moon />
-              <span>{tGlobalSearch("dark")}</span>
+              <span>{t["dark"]}</span>
               <small className="text-muted-foreground">Dark</small>
               {theme === "dark" && (
                 <Badge variant="outline" className="ml-auto">
-                  {tGlobalSearch("current")}
+                  {t["current"]}
                 </Badge>
               )}
             </CommandItem>
@@ -134,30 +133,27 @@ export function GlobalSearch() {
               }}
             >
               <Monitor />
-              <span>{tGlobalSearch("system")}</span>
+              <span>{t["system"]}</span>
               <small className="text-muted-foreground">System</small>
               {theme === "system" && (
                 <Badge variant="outline" className="ml-auto">
-                  {tGlobalSearch("current")}
+                  {t["current"]}
                 </Badge>
               )}
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup
-            heading={tGlobalSearch("language")}
-            aria-busy={isPending}
-          >
-            {routing.locales.map((locale) => (
+          <CommandGroup heading={t["language"]} aria-busy={isPending}>
+            {locales.map((locale) => (
               <CommandItem
                 key={locale}
                 onSelect={() => handleLocaleChange(locale as Locale)}
               >
                 <Languages />
-                <span>{t("locale", { locale })}</span>
+                <span>{langT[locale]}</span>
                 {currentLocale === locale && (
                   <Badge variant="outline" className="ml-auto">
-                    {tGlobalSearch("current")}
+                    {t["current"]}
                   </Badge>
                 )}
               </CommandItem>

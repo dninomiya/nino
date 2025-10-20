@@ -6,10 +6,9 @@ import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { Metadata } from "next";
 import { APP_NAME } from "@workspace/lib/constants";
-import { setLocale } from "@/i18n/set-locale";
-import { NextIntlClientProvider } from "next-intl";
-import { routing } from "@/i18n/routing";
 import { Toaster } from "@workspace/ui/components/sonner";
+import { locales } from "@/lib/i18n/locale";
+import { setCurrentLocale } from "@/lib/i18n/server";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -22,7 +21,7 @@ const fontMono = Geist_Mono({
 });
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return locales.map((locale) => ({ locale }));
 }
 
 export const metadata: Metadata = {
@@ -38,18 +37,15 @@ export default async function RootLayout({
   params,
   children,
 }: LayoutProps<"/[locale]">) {
-  const locale = await setLocale(params);
+  const locale = (await params).locale;
+  setCurrentLocale(locale);
 
   return (
     <html suppressHydrationWarning>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>
-          <NextIntlClientProvider locale={locale}>
-            {children}
-          </NextIntlClientProvider>
-        </Providers>
+        <Providers>{children}</Providers>
         <Analytics />
         <Toaster />
       </body>
