@@ -19,6 +19,7 @@ export const setCurrentLocale = (locale: string) => {
 };
 
 export const getCurrentLocale = cache(() => {
+  console.log(_currentLocale, "getCurrentLocale");
   return _currentLocale || defaultLocale;
 });
 

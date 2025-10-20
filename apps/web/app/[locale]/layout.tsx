@@ -38,6 +38,7 @@ export default async function RootLayout({
   children,
 }: LayoutProps<"/[locale]">) {
   const locale = (await params).locale;
+  console.log(locale, "layout");
   setCurrentLocale(locale);
 
   return (

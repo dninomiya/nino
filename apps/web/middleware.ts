@@ -32,9 +32,11 @@ export default function middleware(request: NextRequest) {
     ? cookieLocale
     : match(languages, locales, defaultLocale);
 
+  console.log(locale);
+
   return NextResponse.rewrite(new URL(`/${locale}${pathname}`, request.url));
 }
 
 export const config = {
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  matcher: "/((?!api|trpc|_next|_vercel|rss|llms\\.txt|.*\\..*).*)",
 };
