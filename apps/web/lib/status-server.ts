@@ -205,7 +205,7 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
 
     const message = `【ステータス更新】${summary}\n<${item.link ?? ""}>`;
     try {
-      await sendDiscordWebhook("techNews", message);
+      await sendDiscordWebhook("admin", message);
     } catch (e) {
       console.error("Failed to send discord status update", e);
     }
