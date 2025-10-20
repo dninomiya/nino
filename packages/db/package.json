@@ -14,10 +14,11 @@
     "@libsql/client": "^0.15.15",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
+    "drizzle-zod": "^0.8.3",
     "nanoid": "^5.1.6"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.5",
-    "@workspace/typescript-config": "workspace:*"
+    "@workspace/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.31.5"
   }
 }

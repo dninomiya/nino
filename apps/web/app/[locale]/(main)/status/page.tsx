@@ -3,10 +3,46 @@ import { debugRunStatusCron } from "./actions";
 import {
   Card,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
 import { TECHNOLOGIES } from "@workspace/lib/technologies";
+import { Button } from "@/components/ui/button";
+import { ArrowUpRight } from "lucide-react";
+import {
+  statusLatest,
+  statusEvents,
+  type NormalizedStatus,
+} from "@workspace/db/schemas/status";
+import type { ProviderName } from "@/lib/status";
+
+// 型定義
+type StatusLatest = typeof statusLatest.$inferSelect;
+type StatusEvent = typeof statusEvents.$inferSelect;
+
+// StatusLatestにlinkプロパティを追加した型
+type StatusLatestWithLink = StatusLatest & { link?: string };
+
+// ステータスを日本語に変換する関数
+function getStatusText(status: NormalizedStatus) {
+  switch (status) {
+    case "normal":
+      return "正常";
+    case "degraded":
+      return "低下";
+    case "partial":
+      return "部分障害";
+    case "major":
+      return "重大障害";
+    case "maintenance":
+      return "メンテナンス";
+    case "unknown":
+      return "不明";
+    default:
+      return status;
+  }
+}
 
 export default async function StatusPage() {
   const [latest, events] = await Promise.all([
@@ -39,7 +75,7 @@ export default async function StatusPage() {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {latest.map((p: any) => {
+        {latest.map((p: StatusLatestWithLink) => {
           const techInfo =
             TECHNOLOGIES[p.provider as keyof typeof TECHNOLOGIES];
           const IconComponent = techInfo?.icon;
@@ -55,9 +91,9 @@ export default async function StatusPage() {
                     <CardTitle className="text-base">{p.provider}</CardTitle>
                   </div>
                   <span
-                    className={`text-xs rounded px-2 py-1 border ${badgeClass(p.status)}`}
+                    className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(p.status as NormalizedStatus)}`}
                   >
-                    {p.status}
+                    {getStatusText(p.status as NormalizedStatus)}
                   </span>
                 </div>
               </CardHeader>
@@ -68,6 +104,14 @@ export default async function StatusPage() {
                   </p>
                 </CardContent>
               )}
+              <CardFooter>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={p.link || "#"} target="_blank">
+                    詳細
+                    <ArrowUpRight />
+                  </a>
+                </Button>
+              </CardFooter>
             </Card>
           );
         })}
@@ -76,15 +120,15 @@ export default async function StatusPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">直近の経緯</h2>
         <div className="space-y-3">
-          {events.map((e: any) => (
+          {events.map((e: StatusEvent) => (
             <Card key={e.id}>
               <CardHeader>
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs rounded px-2 py-1 border ${badgeClass(e.status)}`}
+                      className={`text-xs rounded px-2 py-1 border ${badgeClass(e.status as NormalizedStatus)}`}
                     >
-                      {e.status}
+                      {getStatusText(e.status as NormalizedStatus)}
                     </span>
                     <span className="text-sm text-muted-foreground">
                       {new Date(e.occurredAt).toLocaleString("ja-JP")}
@@ -121,7 +165,7 @@ export default async function StatusPage() {
   );
 }
 
-function badgeClass(status: string) {
+function badgeClass(status: NormalizedStatus) {
   switch (status) {
     case "normal":
       return "bg-green-50 text-green-700 border-green-200";
@@ -133,6 +177,8 @@ function badgeClass(status: string) {
       return "bg-red-50 text-red-700 border-red-200";
     case "maintenance":
       return "bg-blue-50 text-blue-700 border-blue-200";
+    case "unknown":
+      return "bg-gray-50 text-gray-700 border-gray-200";
     default:
       return "bg-gray-50 text-gray-700 border-gray-200";
   }
