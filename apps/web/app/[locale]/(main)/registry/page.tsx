@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { getMessage } from "@/lib/i18n/server";
+import { getCurrentLocale, getMessage } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
 import Link from "next/link";
 
@@ -24,10 +24,12 @@ export default async function RegistryPage({
 }: PageProps<"/[locale]/registry">) {
   const t = await getMessage("RegistryPage");
   const items = await getRegistryItems("registry:block");
+  const locale = getCurrentLocale();
 
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold">{t.title}</h1>
+      <p>{locale}</p>
 
       <section className="py-10 space-y-6">
         <h2 className="text-2xl font-bold">{t.blocks}</h2>
