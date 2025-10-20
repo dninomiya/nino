@@ -1,24 +1,11 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   SiApple,
-  SiBetterauth,
-  SiCloudflare,
-  SiDrizzle,
-  SiExpo,
-  SiFirebase,
   SiGithub,
-  SiNextdotjs,
   SiNotion,
-  SiReacthookform,
-  SiResend,
   SiSlack,
-  SiStripe,
-  SiSupabase,
-  SiTurborepo,
-  SiTurso,
-  SiVercel,
-  SiVitest,
 } from "@icons-pack/react-simple-icons";
+import { TECHNOLOGIES } from "@workspace/lib/constants";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -63,84 +50,6 @@ const MAX_PERFORMANCE_ENVIRONMENT = [
     icon: SiSlack,
     title: "Slack",
     description: "not Teams",
-  },
-];
-
-const FAVORITE_TECHNOLOGIES = [
-  {
-    icon: SiNextdotjs,
-    title: "Next.js",
-    description: "精通してます",
-  },
-  {
-    icon: SiDrizzle,
-    title: "Drizzle",
-    description: "ORM",
-  },
-  {
-    icon: SiTurso,
-    title: "Turso",
-    description: "DB",
-  },
-  {
-    icon: SiBetterauth,
-    title: "BetterAuth",
-    description: "認証ライブラリ",
-  },
-  {
-    icon: SiStripe,
-    title: "Stripe",
-    description: "決済ライブラリ",
-  },
-  {
-    icon: SiReacthookform,
-    title: "ReactHookForm",
-    description: "Formライブラリ",
-  },
-  {
-    icon: SiResend,
-    title: "Resend",
-    description: "メール送信BaaS",
-  },
-  {
-    icon: SiVercel,
-    title: "Vercel",
-    description: "ホスティング",
-  },
-  {
-    icon: SiSupabase,
-    title: "Supabase",
-    description: "BaaS",
-  },
-  {
-    icon: SiFirebase,
-    title: "Firebase",
-    description: "BaaS",
-  },
-  {
-    icon: SiTurborepo,
-    title: "Turborepo",
-    description: "モノリポ",
-  },
-  {
-    icon: SiVitest,
-    title: "Vitest",
-    description: "テスト",
-  },
-  {
-    icon: FlaskConical,
-    title: "Playwright",
-    description: "E2Eテスト",
-  },
-  {
-    icon: SiCloudflare,
-    title: "Cloudflare R2",
-    description: "ストレージ",
-  },
-  {
-    icon: SiExpo,
-    title: "React Native / Expo",
-    description: "モバイルアプリ開発",
   },
 ];
 
@@ -213,7 +122,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]">) {
       <section className="space-y-4">
         <h2>モダンな開発技術に精通</h2>
         <div className="flex flex-wrap gap-2">
-          {FAVORITE_TECHNOLOGIES.map((technology) => (
+          {TECHNOLOGIES.map((technology) => (
             <Tooltip key={technology.title}>
               <TooltipTrigger asChild>
                 <Badge variant="outline" key={technology.title}>

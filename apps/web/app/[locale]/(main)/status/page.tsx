@@ -1,5 +1,12 @@
 import { getLatestStatuses, getStatusEvents } from "@/lib/status-server";
 import { debugRunStatusCron } from "./actions";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { TECHNOLOGIES } from "@workspace/lib/technologies";
 
 export default async function StatusPage() {
   const [latest, events] = await Promise.all([
@@ -32,62 +39,81 @@ export default async function StatusPage() {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {latest.map((p: any) => (
-          <div key={p.provider} className="rounded-md border p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="font-medium">{p.provider}</div>
-              <span
-                className={`text-xs rounded px-2 py-1 border ${badgeClass(p.status)}`}
-              >
-                {p.status}
-              </span>
-            </div>
-            {p.description && (
-              <p className="text-sm text-muted-foreground line-clamp-3">
-                {p.description}
-              </p>
-            )}
-          </div>
-        ))}
+        {latest.map((p: any) => {
+          const techInfo =
+            TECHNOLOGIES[p.provider as keyof typeof TECHNOLOGIES];
+          const IconComponent = techInfo?.icon;
+
+          return (
+            <Card key={p.provider}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {IconComponent && (
+                      <IconComponent className="h-5 w-5 text-muted-foreground" />
+                    )}
+                    <CardTitle className="text-base">{p.provider}</CardTitle>
+                  </div>
+                  <span
+                    className={`text-xs rounded px-2 py-1 border ${badgeClass(p.status)}`}
+                  >
+                    {p.status}
+                  </span>
+                </div>
+              </CardHeader>
+              {p.description && (
+                <CardContent>
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {p.description}
+                  </p>
+                </CardContent>
+              )}
+            </Card>
+          );
+        })}
       </section>
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">直近の経緯</h2>
         <div className="space-y-3">
           {events.map((e: any) => (
-            <div key={e.id} className="rounded-md border p-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-xs rounded px-2 py-1 border ${badgeClass(e.status)}`}
-                  >
-                    {e.status}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {new Date(e.occurredAt).toLocaleString("ja-JP")}
-                  </span>
+            <Card key={e.id}>
+              <CardHeader>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs rounded px-2 py-1 border ${badgeClass(e.status)}`}
+                    >
+                      {e.status}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {new Date(e.occurredAt).toLocaleString("ja-JP")}
+                    </span>
+                  </div>
+                  {e.link && (
+                    <a
+                      className="text-sm underline"
+                      href={e.link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      詳細
+                    </a>
+                  )}
                 </div>
-                {e.link && (
-                  <a
-                    className="text-sm underline"
-                    href={e.link}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    詳細
-                  </a>
-                )}
-              </div>
-              <div className="mt-2 font-medium">
-                {e.provider}
-                {e.title ? ` - ${e.title}` : ""}
-              </div>
+                <CardTitle className="text-base">
+                  {e.provider}
+                  {e.title ? ` - ${e.title}` : ""}
+                </CardTitle>
+              </CardHeader>
               {e.description && (
-                <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
-                  {e.description}
-                </p>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {e.description}
+                  </p>
+                </CardContent>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       </section>

@@ -285,7 +285,14 @@ importers:
         specifier: ^8.39.0
         version: 8.46.1(eslint@9.38.0(jiti@2.6.1))(typescript@5.9.3)
 
-  packages/lib: {}
+  packages/lib:
+    dependencies:
+      '@icons-pack/react-simple-icons':
+        specifier: ^13.8.0
+        version: 13.8.0(react@19.2.0)
+      lucide-react:
+        specifier: ^0.546.0
+        version: 0.546.0(react@19.2.0)
 
   packages/registry:
     dependencies:
@@ -5605,6 +5612,11 @@ packages:
 
   lucide-react@0.545.0:
     resolution: {integrity: sha512-7r1/yUuflQDSt4f1bpn5ZAocyIxcTyVyBBChSVtBKn5M+392cPmI5YJMWOJKk/HUWGm5wg83chlAZtCcGbEZtw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lucide-react@0.546.0:
+    resolution: {integrity: sha512-Z94u6fKT43lKeYHiVyvyR8fT7pwCzDu7RyMPpTvh054+xahSgj4HFQ+NmflvzdXsoAjYGdCguGaFKYuvq0ThCQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -13022,6 +13034,10 @@ snapshots:
       react: 19.2.0
 
   lucide-react@0.545.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+
+  lucide-react@0.546.0(react@19.2.0):
     dependencies:
       react: 19.2.0
 
