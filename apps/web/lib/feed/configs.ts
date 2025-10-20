@@ -27,7 +27,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Next.js",
     icon: SiNextdotjs,
-    category: "フレームワーク",
+    category: "framework",
     feeds: [
       {
         method: "rss",
@@ -44,7 +44,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Vercel",
     icon: SiVercel,
-    category: "SaaS/BaaS",
+    category: "saas",
     feeds: [
       {
         method: "rss",
@@ -66,7 +66,7 @@ export const collections: FeedCollection[] = [
   {
     name: "React",
     icon: SiReact,
-    category: "フレームワーク",
+    category: "framework",
     feeds: [
       {
         method: "rss",
@@ -88,7 +88,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Resend",
     icon: SiResend,
-    category: "SaaS/BaaS",
+    category: "saas",
     feeds: [
       {
         method: "rss",
@@ -105,7 +105,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Better Auth",
     icon: SiGithub,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -117,7 +117,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Turso",
     icon: SiTurso,
-    category: "SaaS/BaaS",
+    category: "saas",
     feeds: [
       {
         method: "rss",
@@ -134,7 +134,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Raycast",
     icon: SiRaycast,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -156,7 +156,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Notion",
     icon: SiNotion,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -168,7 +168,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Drizzle",
     icon: SiDrizzle,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -180,7 +180,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Stripe",
     icon: SiStripe,
-    category: "SaaS/BaaS",
+    category: "saas",
     feeds: [
       {
         method: "rss",
@@ -192,7 +192,7 @@ export const collections: FeedCollection[] = [
   {
     name: "nuqs",
     icon: SiGithub,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -209,7 +209,7 @@ export const collections: FeedCollection[] = [
   {
     name: "React Hook Form",
     icon: SiReacthookform,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -221,7 +221,7 @@ export const collections: FeedCollection[] = [
   {
     name: "shadcn/ui",
     icon: SiGithub,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -233,7 +233,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Tailwind CSS",
     icon: SiTailwindcss,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -255,7 +255,7 @@ export const collections: FeedCollection[] = [
   {
     name: "OpenAI",
     icon: SiOpenai,
-    category: "AI",
+    category: "ai",
     feeds: [
       {
         method: "rss",
@@ -272,7 +272,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Anthropic",
     icon: SiGithub,
-    category: "AI",
+    category: "ai",
     feeds: [
       {
         method: "rss",
@@ -301,7 +301,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Google AI",
     icon: SiGoogle,
-    category: "AI",
+    category: "ai",
     feeds: [
       {
         method: "rss",
@@ -313,7 +313,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Cursor",
     icon: MousePointer2,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -330,7 +330,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Chrome",
     icon: SiGooglechrome,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -352,7 +352,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Expo",
     icon: SiExpo,
-    category: "モバイル",
+    category: "mobile",
     feeds: [
       {
         method: "rss",
@@ -369,7 +369,7 @@ export const collections: FeedCollection[] = [
   {
     name: "React Native",
     icon: SiReact,
-    category: "モバイル",
+    category: "mobile",
     feeds: [
       {
         method: "rss",
@@ -386,7 +386,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Visual Studio Code",
     icon: Code,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -403,7 +403,7 @@ export const collections: FeedCollection[] = [
   {
     name: "SWR",
     icon: SiSwr,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",
@@ -415,7 +415,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Turborepo",
     icon: SiTurborepo,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -432,7 +432,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Discord",
     icon: SiDiscord,
-    category: "ツール",
+    category: "tool",
     feeds: [
       {
         method: "rss",
@@ -449,7 +449,7 @@ export const collections: FeedCollection[] = [
   {
     name: "Lucide",
     icon: SiLucide,
-    category: "ライブラリ",
+    category: "library",
     feeds: [
       {
         method: "rss",

@@ -28,18 +28,38 @@ import {
   FeedItem,
   FeedType,
   getCollectionByName,
-  TAG_LABELS,
   feedTypeMapping,
   techMapping,
 } from "@/lib/feed";
 import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
+import { useDictionary } from "./i18n-provider";
+
+// タグ名を翻訳する関数
+const getTagLabel = (tag: string, tTags: any) => {
+  const tagMap: Record<string, string> = {
+    feature: tTags.feature,
+    event: tTags.event,
+    bugfix: tTags.bugfix,
+    "big-news": tTags.bigNews,
+    release: tTags.release,
+    update: tTags.update,
+    announcement: tTags.announcement,
+    tutorial: tTags.tutorial,
+    documentation: tTags.documentation,
+    security: tTags.security,
+    performance: tTags.performance,
+    "breaking-change": tTags.breakingChange,
+  };
+  return tagMap[tag] || tag;
+};
 
 export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [types] = useQueryState("type");
   const [sources] = useQueryState("source");
   const [tags] = useQueryState("tags");
+  const tTags = useDictionary("Tags");
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const filteredFeedItems = useMemo(() => {
@@ -94,7 +114,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               </Badge>
               {item.tags?.map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs">
-                  {TAG_LABELS[tag] || tag}
+                  {getTagLabel(tag, tTags)}
                 </Badge>
               ))}
             </div>

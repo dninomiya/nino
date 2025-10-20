@@ -12,8 +12,8 @@ import {
   getAvailableTechnologies,
   getTechnologiesByCategory,
   categoryOrder,
-  TAG_LABELS,
 } from "@/lib/feed";
+import { useDictionary } from "./i18n-provider";
 import { useMemo, ReactNode } from "react";
 
 interface FeedFilterProps {
@@ -123,7 +123,42 @@ const getTechnologyIcon = (technology: string) => {
   return null;
 };
 
+// カテゴリ名を翻訳する関数
+const getCategoryLabel = (category: string, tCategories: any) => {
+  const categoryMap: Record<string, string> = {
+    framework: tCategories.framework,
+    saas: tCategories.saas,
+    library: tCategories.library,
+    tool: tCategories.tool,
+    ai: tCategories.ai,
+    mobile: tCategories.mobile,
+  };
+  return categoryMap[category] || category;
+};
+
+// タグ名を翻訳する関数
+const getTagLabel = (tag: string, tTags: any) => {
+  const tagMap: Record<string, string> = {
+    feature: tTags.feature,
+    event: tTags.event,
+    bugfix: tTags.bugfix,
+    "big-news": tTags.bigNews,
+    release: tTags.release,
+    update: tTags.update,
+    announcement: tTags.announcement,
+    tutorial: tTags.tutorial,
+    documentation: tTags.documentation,
+    security: tTags.security,
+    performance: tTags.performance,
+    "breaking-change": tTags.breakingChange,
+  };
+  return tagMap[tag] || tag;
+};
+
 export function FeedFilter({ feedItems }: FeedFilterProps) {
+  const t = useDictionary("FeedFilter");
+  const tCategories = useDictionary("Categories");
+  const tTags = useDictionary("Tags");
   const [filters, setFilters] = useQueryStates({
     type: parseAsArrayOf(parseAsString).withDefault([]),
     source: parseAsArrayOf(parseAsString).withDefault([]),
@@ -257,7 +292,7 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
 
   return (
     <div className="space-y-6">
-      <FilterSection title="情報タイプ">
+      <FilterSection title={t.typeLabel}>
         {availableTypes.map((type) => (
           <FilterItem
             key={type}
@@ -271,13 +306,16 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
         ))}
       </FilterSection>
 
-      <CategorySection title="技術">
+      <CategorySection title={t.sourceLabel}>
         {categoryOrder.map((category) => {
           const technologies = technologiesByCategory[category];
           if (!technologies || technologies.length === 0) return null;
 
           return (
-            <CategoryGroup key={category} category={category}>
+            <CategoryGroup
+              key={category}
+              category={getCategoryLabel(category, tCategories)}
+            >
               {technologies.map((technology) => (
                 <FilterItem
                   key={technology}
@@ -297,14 +335,14 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       </CategorySection>
 
       {availableTags.length > 0 && (
-        <FilterSection title="タグ">
+        <FilterSection title={t.tagsLabel}>
           {availableTags.map((tag) => (
             <FilterItem
               key={tag}
               id={`tag-${tag}`}
               checked={filters.tags?.includes(tag)}
               onCheckedChange={(checked) => toggleTag(tag, checked)}
-              label={TAG_LABELS[tag] || tag}
+              label={getTagLabel(tag, tTags)}
               count={tagCounts[tag] || 0}
             />
           ))}

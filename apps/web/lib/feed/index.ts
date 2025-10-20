@@ -5,12 +5,7 @@ export type { FeedType, FeedConfig, FeedCollection, FeedItem } from "./types";
 export { collections } from "./configs";
 
 // マッピングとラベルのエクスポート
-export {
-  feedTypeMapping,
-  TAG_LABELS,
-  categoryOrder,
-  techMapping,
-} from "./mappings";
+export { feedTypeMapping, categoryOrder, techMapping } from "./mappings";
 
 // ユーティリティ関数のエクスポート
 export {

@@ -27,22 +27,6 @@ export const TAGS = {
   BREAKING_CHANGE: "breaking-change",
 } as const;
 
-// タグの日本語ラベルマップ
-export const TAG_LABELS: Record<string, string> = {
-  [TAGS.FEATURE]: "機能追加",
-  [TAGS.EVENT]: "イベント",
-  [TAGS.BUGFIX]: "バグ修正",
-  [TAGS.BIG_NEWS]: "ビッグニュース",
-  [TAGS.RELEASE]: "リリース",
-  [TAGS.UPDATE]: "アップデート",
-  [TAGS.ANNOUNCEMENT]: "お知らせ",
-  [TAGS.TUTORIAL]: "チュートリアル",
-  [TAGS.DOCUMENTATION]: "ドキュメント",
-  [TAGS.SECURITY]: "セキュリティ",
-  [TAGS.PERFORMANCE]: "パフォーマンス",
-  [TAGS.BREAKING_CHANGE]: "破壊的変更",
-};
-
 const summarySchema = z.object({
   title: z.string(),
   summary: z.string(),
@@ -638,9 +622,25 @@ export async function sendDiscordNotification(
         let summary = item.summary;
 
         if (!summary) {
-          // タグを日本語ラベルに変換
+          // タグを日本語ラベルに変換（ハードコード）
           const tagLabels = (item.tags || [])
-            .map((tag) => TAG_LABELS[tag])
+            .map((tag) => {
+              const tagMap: Record<string, string> = {
+                feature: "機能追加",
+                event: "イベント",
+                bugfix: "バグ修正",
+                "big-news": "ビッグニュース",
+                release: "リリース",
+                update: "アップデート",
+                announcement: "お知らせ",
+                tutorial: "チュートリアル",
+                documentation: "ドキュメント",
+                security: "セキュリティ",
+                performance: "パフォーマンス",
+                "breaking-change": "破壊的変更",
+              };
+              return tagMap[tag];
+            })
             .filter(Boolean);
 
           summary = tagLabels.length > 0 ? tagLabels.join(", ") : "更新情報";

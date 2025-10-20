@@ -22,22 +22,6 @@ export const feedTypeMapping = {
   },
 } as const;
 
-// タグの日本語ラベルマップ
-export const TAG_LABELS: Record<string, string> = {
-  feature: "機能追加",
-  event: "イベント",
-  bugfix: "バグ修正",
-  "big-news": "ビッグニュース",
-  release: "リリース",
-  update: "アップデート",
-  announcement: "お知らせ",
-  tutorial: "チュートリアル",
-  documentation: "ドキュメント",
-  security: "セキュリティ",
-  performance: "パフォーマンス",
-  "breaking-change": "破壊的変更",
-};
-
 // カテゴリの表示順序
 export const categoryOrder = [
   "フレームワーク",
