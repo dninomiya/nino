@@ -1,6 +1,8 @@
 // Webhook URLマッピング
 export const DISCORD_WEBHOOK_URLS = {
   log: "https://discord.com/api/webhooks/1429742476792430685/tCtkI5RvrGVLA6bKnC7BtfaA8IgfOMFpkfM3ts0_yWRRhS5GUwckw8ItBSUyYM3I1dLP",
+  status:
+    "https://discord.com/api/webhooks/1429829353424027718/r09KQ4ePM4YRqA6I5WsbU2n5li1htKJJ1tyV2UZj6Q3KCUvinsqFmaCKU9LavepW2lZd",
   admin:
     "https://discord.com/api/webhooks/1208588091091193966/rBr3nn9bj1L8NUdQlMK27SL2IcaPIrC-5fjKBqj_upDvoE1TTQkOKIht8BoUmijArryL",
   techNews:
