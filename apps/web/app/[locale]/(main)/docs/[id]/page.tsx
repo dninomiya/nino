@@ -2,7 +2,7 @@ import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
-import { getMessage } from "@/lib/i18n/server";
+import { getCurrentLocale, getMessage } from "@/lib/i18n/server";
 import { formatDateByRecency, formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
 import { ClockFading, RefreshCw } from "lucide-react";
@@ -37,6 +37,7 @@ export default async function DocsPage({
     "utf-8"
   );
   const tCommon = await getMessage("Common");
+  const locale = getCurrentLocale();
 
   if (!metadata) {
     notFound();
@@ -53,7 +54,7 @@ export default async function DocsPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
-                {formatDateByRecency(metadata.createdAt)}
+                {formatDateByRecency(metadata.createdAt, locale)}
               </p>
               ・
               <p
@@ -61,7 +62,7 @@ export default async function DocsPage({
                 title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
               >
                 <RefreshCw className="size-3.5" />
-                {formatDateByRecency(metadata.updatedAt)}
+                {formatDateByRecency(metadata.updatedAt, locale)}
               </p>
               ・
               <p

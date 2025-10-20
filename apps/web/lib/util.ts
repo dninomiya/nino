@@ -17,7 +17,6 @@ export const formatDateByRecency = (
   locale: Locale
 ) => {
   const date = new Date(dateString);
-  // 何日まえか
   const diffDays = differenceInDays(new Date(), date);
 
   if (diffDays < 5) {

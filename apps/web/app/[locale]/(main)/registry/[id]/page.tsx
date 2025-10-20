@@ -1,7 +1,7 @@
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
-import { getMessage } from "@/lib/i18n/server";
+import { getCurrentLocale, getMessage } from "@/lib/i18n/server";
 import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
 import { formatDateByRecency } from "@/lib/util";
 import { readFileSync } from "fs";
@@ -39,6 +39,8 @@ export default async function RegistryPage({
     notFound();
   }
 
+  const locale = getCurrentLocale();
+
   return (
     <div className="flex px-4">
       <MDXContent>
@@ -50,7 +52,7 @@ export default async function RegistryPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
-                {formatDateByRecency(metadata.createdAt)}
+                {formatDateByRecency(metadata.createdAt, locale)}
               </p>
               ・
               <p
@@ -58,7 +60,7 @@ export default async function RegistryPage({
                 title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
               >
                 <RefreshCw className="size-3.5" />
-                {formatDateByRecency(metadata.updatedAt)}
+                {formatDateByRecency(metadata.updatedAt, locale)}
               </p>
             </div>
           </div>
