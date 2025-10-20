@@ -15,3 +15,14 @@ export const db = drizzle({
     ...status,
   },
 });
+
+// スキーマのエクスポート
+export * from "./schemas/auth";
+export * from "./schemas/feed";
+export * from "./schemas/status";
+
+// 生成された型のエクスポート
+export * from "./types";
+
+// 生成されたZodスキーマのエクスポート
+export * from "./zod";
