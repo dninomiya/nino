@@ -26,6 +26,3 @@ export * from "./types";
 
 // 生成されたZodスキーマのエクスポート
 export * from "./zod";
-
-// 重複する型の明示的エクスポート
-export type { NormalizedStatus } from "./types";

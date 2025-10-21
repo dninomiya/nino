@@ -21,7 +21,6 @@ export type NewFeedItem = typeof feedSchema.feedItems.$inferInsert;
 // Status Schema Types
 export type StatusEvent = typeof statusSchema.statusEvents.$inferSelect;
 export type NewStatusEvent = typeof statusSchema.statusEvents.$inferInsert;
-export type NormalizedStatus = statusSchema.NormalizedStatus;
 
 // 全テーブルの型をまとめた型
 export type AllTables = {
