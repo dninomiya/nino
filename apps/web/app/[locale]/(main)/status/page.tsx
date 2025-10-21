@@ -32,6 +32,26 @@ function getProviderLink(providerName: ProviderName): string {
   return provider?.link || "#";
 }
 
+// ステータスに応じた絵文字を取得する関数
+function getStatusEmoji(status: NormalizedStatus) {
+  switch (status) {
+    case "normal":
+      return "✅";
+    case "degraded":
+      return "⚠️";
+    case "partial":
+      return "🟡";
+    case "major":
+      return "🚨";
+    case "maintenance":
+      return "🔧";
+    case "unknown":
+      return "❓";
+    default:
+      return "❓";
+  }
+}
+
 // ステータスを日本語に変換する関数
 function getStatusText(status: NormalizedStatus) {
   switch (status) {
@@ -137,45 +157,37 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">直近の経緯</h2>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {events.map((e: StatusEvent) => (
-            <Card key={e.id}>
-              <CardHeader>
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`text-xs rounded px-2 py-1 border ${badgeClass(e.status as NormalizedStatus)}`}
-                    >
-                      {getStatusText(e.status as NormalizedStatus)}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(e.occurredAt).toLocaleString("ja-JP")}
-                    </span>
-                  </div>
-                  {e.link && (
-                    <a
-                      className="text-sm underline"
-                      href={e.link}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      詳細
-                    </a>
-                  )}
-                </div>
-                <CardTitle className="text-base">
-                  {e.provider}
-                  {e.title ? ` - ${e.title}` : ""}
-                </CardTitle>
-              </CardHeader>
+            <div key={e.id} className="border-l-4 border-muted pl-4 py-2">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">
+                  {getStatusEmoji(e.status as NormalizedStatus)}
+                </span>
+                <span className="font-medium">
+                  {getStatusText(e.status as NormalizedStatus)}
+                </span>
+                <span className="font-semibold">{e.provider}</span>
+                <span className="text-sm text-muted-foreground">
+                  ({formatDateByRecency(e.occurredAt, locale)})
+                </span>
+                {e.link && (
+                  <a
+                    className="text-sm text-blue-600 hover:underline ml-auto"
+                    href={e.link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    詳細
+                  </a>
+                )}
+              </div>
               {e.description && (
-                <CardContent>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                    {e.description}
-                  </p>
-                </CardContent>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  {e.description}
+                </p>
               )}
-            </Card>
+            </div>
           ))}
         </div>
       </section>
