@@ -122,6 +122,7 @@ ID: ${d.id}
 
 export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
   const items = await fetchAllStatuses();
+  const now = new Date();
 
   // 差分抽出
   const diffs: Array<{
@@ -129,6 +130,13 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
     prevStatus: NormalizedStatus | "unknown";
   }> = [];
   for (const item of items) {
+    // 現在時刻以前のイベントのみを処理対象とする（将来のメンテナンス予定を除外）
+    if (item.occurredAt > now) {
+      console.log(
+        `Skipping future event for ${item.provider}: ${item.title} (occurredAt: ${item.occurredAt.toISOString()})`
+      );
+      continue;
+    }
     const latest = await db
       .select()
       .from(statusLatest)
