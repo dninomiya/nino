@@ -1,5 +1,14 @@
+import { Button } from "@/components/ui/button";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import type { ProviderName } from "@/lib/status";
+import { providers } from "@/lib/status";
 import { getLatestStatuses, getStatusEvents } from "@/lib/status-server";
-import { debugRunStatusCron } from "./actions";
+import { formatDateByRecency } from "@/lib/util";
+import {
+  statusEvents,
+  type NormalizedStatus,
+} from "@workspace/db/schemas/status";
+import { TECHNOLOGIES } from "@workspace/lib/technologies";
 import {
   Card,
   CardContent,
@@ -7,21 +16,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { TECHNOLOGIES } from "@workspace/lib/technologies";
-import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
-import {
-  statusEvents,
-  type NormalizedStatus,
-} from "@workspace/db/schemas/status";
-import type { ProviderName } from "@/lib/status";
-import { providers } from "@/lib/status";
-import { formatDateByRecency } from "@/lib/util";
-import {
-  getCurrentLocale,
-  setCurrentLocale,
-  setCurrentLocaleFromParams,
-} from "@/lib/i18n/server";
+import { debugRunStatusCron } from "./actions";
 
 // 型定義
 type StatusEvent = typeof statusEvents.$inferSelect;
@@ -81,6 +77,8 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
     }),
   ]);
 
+  const isDev = process.env.NODE_ENV === "development";
+
   return (
     <div className="container mx-auto px-4 py-6 space-y-8">
       <header className="space-y-2">
@@ -88,19 +86,21 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
         <p className="text-sm text-muted-foreground">
           直近の更新と各サービスの現在状態を表示します
         </p>
-        <form
-          action={async () => {
-            "use server";
-            await debugRunStatusCron();
-          }}
-        >
-          <button
-            type="submit"
-            className="mt-2 inline-flex items-center rounded-md border px-3 py-1 text-sm"
+        {isDev && (
+          <form
+            action={async () => {
+              "use server";
+              await debugRunStatusCron();
+            }}
           >
-            ステータス更新を手動実行
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="mt-2 inline-flex items-center rounded-md border px-3 py-1 text-sm"
+            >
+              ステータス更新を手動実行
+            </button>
+          </form>
+        )}
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -158,37 +158,50 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">直近の経緯</h2>
         <div className="space-y-4">
-          {events.map((e: StatusEvent) => (
-            <div key={e.id} className="border-l-4 border-muted pl-4 py-2">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">
-                  {getStatusEmoji(e.status as NormalizedStatus)}
-                </span>
-                <span className="font-medium">
-                  {getStatusText(e.status as NormalizedStatus)}
-                </span>
-                <span className="font-semibold">{e.provider}</span>
-                <span className="text-sm text-muted-foreground">
-                  ({formatDateByRecency(e.occurredAt, locale)})
-                </span>
-                {e.link && (
-                  <a
-                    className="text-sm text-blue-600 hover:underline ml-auto"
-                    href={e.link}
-                    target="_blank"
-                    rel="noreferrer"
+          {events.map((e: StatusEvent) => {
+            const techInfo =
+              TECHNOLOGIES[e.provider as keyof typeof TECHNOLOGIES];
+            const IconComponent = techInfo?.icon;
+
+            return (
+              <div key={e.id} className="border-l-4 border-muted pl-4 py-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    {IconComponent && (
+                      <IconComponent className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="font-semibold">{e.provider}</span>
+                  </div>
+                  <span
+                    className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(e.status as NormalizedStatus)}`}
                   >
-                    詳細
-                  </a>
+                    {getStatusText(e.status as NormalizedStatus)}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-muted-foreground">
+                      ({formatDateByRecency(e.occurredAt, locale)})
+                    </span>
+                    {e.link && (
+                      <a
+                        className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                        href={e.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        詳細
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {e.description && (
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {e.description}
+                  </p>
                 )}
               </div>
-              {e.description && (
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {e.description}
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
