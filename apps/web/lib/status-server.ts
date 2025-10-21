@@ -10,7 +10,10 @@ import {
   type NormalizedStatus,
 } from "@workspace/db/schemas/status";
 import { desc, eq, and, gte } from "drizzle-orm";
-import { sendDiscordWebhook } from "@workspace/discord";
+import {
+  sendDiscordWebhook,
+  formatStatusDiscordMessage,
+} from "@workspace/discord";
 import { providers, type ProviderName } from "./status";
 
 const parser = new Parser();
@@ -215,7 +218,13 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
     }))
   );
 
-  // 保存＆通知
+  // 保存＆通知用のデータを準備
+  const validUpdates: Array<{
+    item: FetchedItem;
+    prevStatus: NormalizedStatus | "unknown";
+    summary: string;
+  }> = [];
+
   for (const { item, prevStatus } of diffs) {
     const id = `${item.provider}_${item.occurredAt.getTime()}`;
     const summary =
@@ -230,6 +239,11 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
       continue;
     }
 
+    validUpdates.push({ item, prevStatus, summary });
+  }
+
+  // DB保存
+  for (const { item, summary } of validUpdates) {
     await db.insert(statusEvents).values({
       provider: item.provider,
       status: item.status,
@@ -239,8 +253,19 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
       raw: JSON.stringify(item.raw),
       occurredAt: item.occurredAt,
     });
+  }
 
-    const message = `【ステータス更新】${summary}\n<${item.link ?? ""}>`;
+  // Discord通知（一つのメッセージに結合）
+  if (validUpdates.length > 0) {
+    const statusUpdates = validUpdates.map(({ item, summary }) => ({
+      provider: item.provider,
+      status: item.status,
+      summary,
+      link: item.link,
+      occurredAt: item.occurredAt,
+    }));
+
+    const message = formatStatusDiscordMessage(statusUpdates);
     const isDev = process.env.NODE_ENV === "development";
     try {
       await sendDiscordWebhook(isDev ? "admin" : "status", message);

@@ -79,3 +79,68 @@ export function formatDiscordMessage(
 
   return header + formattedSections;
 }
+
+// ステータス更新用のDiscordメッセージフォーマッター
+export function formatStatusDiscordMessage(
+  statusUpdates: Array<{
+    provider: string;
+    status: string;
+    summary: string;
+    link?: string;
+    occurredAt: Date;
+  }>
+): string {
+  if (statusUpdates.length === 0) {
+    return "";
+  }
+
+  // ステータスに応じた絵文字を取得する関数
+  function getStatusEmoji(status: string): string {
+    const statusLower = status.toLowerCase();
+    if (statusLower === "normal") return "✅";
+    if (statusLower === "degraded") return "⚠️";
+    if (statusLower === "partial") return "🟡";
+    if (statusLower === "major") return "🚨";
+    if (statusLower === "maintenance") return "🔧";
+    return "❓";
+  }
+
+  // ステータスを日本語に変換する関数
+  function getStatusText(status: string): string {
+    const statusLower = status.toLowerCase();
+    if (statusLower === "normal") return "正常";
+    if (statusLower === "degraded") return "低下";
+    if (statusLower === "partial") return "部分障害";
+    if (statusLower === "major") return "重大障害";
+    if (statusLower === "maintenance") return "メンテナンス";
+    return "不明";
+  }
+
+  // 日本時間で現在の日時を取得
+  const now = new Date();
+  const jstString = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(now);
+
+  const header = `🚨 ${jstString} ステータス更新\n\n`;
+
+  const formattedUpdates = statusUpdates
+    .map((update) => {
+      const emoji = getStatusEmoji(update.status);
+      const statusText = getStatusText(update.status);
+      const timeString = update.occurredAt.toLocaleString("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      const link = update.link ? `\n<${update.link}>` : "";
+
+      return `**${emoji} ${statusText} ${update.provider}** (${timeString})\n${update.summary}${link}`;
+    })
+    .join("\n\n");
+
+  return header + formattedUpdates;
+}
