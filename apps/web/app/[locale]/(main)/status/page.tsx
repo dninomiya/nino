@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import type { ProviderName } from "@/lib/status";
 import { providers } from "@/lib/status";
 import { getLatestStatuses, getStatusEvents } from "@/lib/status-server";
@@ -49,28 +49,38 @@ function getStatusEmoji(status: NormalizedStatus) {
   }
 }
 
-// ステータスを日本語に変換する関数
-function getStatusText(status: NormalizedStatus) {
+// ステータスをテキストに変換する関数
+function getStatusText(status: NormalizedStatus, t: any) {
   switch (status) {
     case "normal":
-      return "正常";
+      return t.statusNormal;
     case "degraded":
-      return "低下";
+      return t.statusDegraded;
     case "partial":
-      return "部分障害";
+      return t.statusPartial;
     case "major":
-      return "重大障害";
+      return t.statusMajor;
     case "maintenance":
-      return "メンテナンス";
+      return t.statusMaintenance;
     case "unknown":
-      return "不明";
+      return t.statusUnknown;
     default:
       return status;
   }
 }
 
+export async function generateMetadata({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
+  const t = await getMessage("StatusPage");
+  return {
+    title: t.title,
+    description: t.description,
+  };
+}
+
 export default async function StatusPage({ params }: PageProps<"/[locale]">) {
   const locale = await setCurrentLocaleFromParams(params);
+  const t = await getMessage("StatusPage");
   const [latest, events] = await Promise.all([
     getLatestStatuses(),
     getStatusEvents({
@@ -84,10 +94,8 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
     <>
       <div className="container mx-auto px-4 py-6 space-y-8">
         <header className="space-y-2">
-          <h1 className="text-2xl font-bold">サービスステータス</h1>
-          <p className="text-sm text-muted-foreground">
-            直近の更新と各サービスの現在状態を表示します
-          </p>
+          <h1 className="text-2xl font-bold">{t.pageTitle}</h1>
+          <p className="text-sm text-muted-foreground">{t.pageDescription}</p>
           {isDev && (
             <form
               action={async () => {
@@ -99,7 +107,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                 type="submit"
                 className="mt-2 inline-flex items-center rounded-md border px-3 py-1 text-sm"
               >
-                ステータス更新を手動実行
+                {t.manualUpdateButton}
               </button>
             </form>
           )}
@@ -124,7 +132,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                     <span
                       className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(p.status as NormalizedStatus)}`}
                     >
-                      {getStatusText(p.status as NormalizedStatus)}
+                      {getStatusText(p.status as NormalizedStatus, t)}
                     </span>
                   </div>
                 </CardHeader>
@@ -141,7 +149,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                       href={getProviderLink(p.provider as ProviderName)}
                       target="_blank"
                     >
-                      詳細
+                      {t.details}
                       <ArrowUpRight />
                     </a>
                   </Button>
@@ -158,7 +166,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">直近の経緯</h2>
+          <h2 className="text-lg font-semibold">{t.recentHistory}</h2>
           <div className="space-y-4">
             {events.map((e: StatusEvent) => {
               const techInfo =
@@ -177,7 +185,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                     <span
                       className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(e.status as NormalizedStatus)}`}
                     >
-                      {getStatusText(e.status as NormalizedStatus)}
+                      {getStatusText(e.status as NormalizedStatus, t)}
                     </span>
                     <div className="flex items-center gap-1">
                       <span className="text-sm text-muted-foreground">
@@ -190,7 +198,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          詳細
+                          {t.details}
                           <ArrowUpRight className="h-3 w-3" />
                         </a>
                       )}

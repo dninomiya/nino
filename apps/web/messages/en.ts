@@ -156,4 +156,20 @@ export default {
     description: "Developer.",
     copyright: "All rights reserved.",
   },
+  StatusPage: {
+    title: "Service Status",
+    description: "Display current status and recent updates of each service",
+    pageTitle: "Service Status",
+    pageDescription:
+      "Display recent updates and current status of each service",
+    manualUpdateButton: "Manually run status update",
+    recentHistory: "Recent History",
+    details: "Details",
+    statusNormal: "Normal",
+    statusDegraded: "Degraded",
+    statusPartial: "Partial Outage",
+    statusMajor: "Major Outage",
+    statusMaintenance: "Maintenance",
+    statusUnknown: "Unknown",
+  },
 } satisfies MessagesSchema;
