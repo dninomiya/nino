@@ -143,4 +143,13 @@ export default {
       description: "Mentor platform",
     },
   },
+  Footer: {
+    linksTitle: "Links",
+    feed: "Feed",
+    status: "Status",
+    docs: "Documentation",
+    registry: "Registry",
+    description: "Developer.",
+    copyright: "All rights reserved.",
+  },
 } satisfies MessagesSchema;

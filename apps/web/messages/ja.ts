@@ -140,4 +140,13 @@ export default {
       description: "メンタープラットフォーム",
     },
   },
+  Footer: {
+    linksTitle: "リンク",
+    feed: "フィード",
+    status: "ステータス",
+    docs: "ドキュメント",
+    registry: "レジストリ",
+    description: "開発者。",
+    copyright: "All rights reserved.",
+  },
 };

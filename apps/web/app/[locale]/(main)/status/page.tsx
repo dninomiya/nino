@@ -18,6 +18,7 @@ import {
 } from "@workspace/ui/components/card";
 import { ArrowUpRight } from "lucide-react";
 import { debugRunStatusCron } from "./actions";
+import { Footer } from "@/components/footer";
 
 // 型定義
 type StatusEvent = typeof statusEvents.$inferSelect;
@@ -80,131 +81,134 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
   const isDev = process.env.NODE_ENV === "development";
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-bold">サービスステータス</h1>
-        <p className="text-sm text-muted-foreground">
-          直近の更新と各サービスの現在状態を表示します
-        </p>
-        {isDev && (
-          <form
-            action={async () => {
-              "use server";
-              await debugRunStatusCron();
-            }}
-          >
-            <button
-              type="submit"
-              className="mt-2 inline-flex items-center rounded-md border px-3 py-1 text-sm"
+    <>
+      <div className="container mx-auto px-4 py-6 space-y-8">
+        <header className="space-y-2">
+          <h1 className="text-2xl font-bold">サービスステータス</h1>
+          <p className="text-sm text-muted-foreground">
+            直近の更新と各サービスの現在状態を表示します
+          </p>
+          {isDev && (
+            <form
+              action={async () => {
+                "use server";
+                await debugRunStatusCron();
+              }}
             >
-              ステータス更新を手動実行
-            </button>
-          </form>
-        )}
-      </header>
+              <button
+                type="submit"
+                className="mt-2 inline-flex items-center rounded-md border px-3 py-1 text-sm"
+              >
+                ステータス更新を手動実行
+              </button>
+            </form>
+          )}
+        </header>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {latest.map((p: StatusEvent) => {
-          const techInfo =
-            TECHNOLOGIES[p.provider as keyof typeof TECHNOLOGIES];
-          const IconComponent = techInfo?.icon;
-
-          return (
-            <Card key={p.provider}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {IconComponent && (
-                      <IconComponent className="h-5 w-5 text-muted-foreground" />
-                    )}
-                    <CardTitle className="text-base">{p.provider}</CardTitle>
-                  </div>
-                  <span
-                    className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(p.status as NormalizedStatus)}`}
-                  >
-                    {getStatusText(p.status as NormalizedStatus)}
-                  </span>
-                </div>
-              </CardHeader>
-              {p.description && (
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-3">
-                    {p.description}
-                  </p>
-                </CardContent>
-              )}
-              <CardFooter>
-                <Button variant="outline" size="sm" asChild>
-                  <a
-                    href={getProviderLink(p.provider as ProviderName)}
-                    target="_blank"
-                  >
-                    詳細
-                    <ArrowUpRight />
-                  </a>
-                </Button>
-                <p
-                  className="text-sm text-muted-foreground ml-2"
-                  title={p.occurredAt.toISOString()}
-                >
-                  {formatDateByRecency(p.occurredAt, locale)}
-                </p>
-              </CardFooter>
-            </Card>
-          );
-        })}
-      </section>
-
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">直近の経緯</h2>
-        <div className="space-y-4">
-          {events.map((e: StatusEvent) => {
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {latest.map((p: StatusEvent) => {
             const techInfo =
-              TECHNOLOGIES[e.provider as keyof typeof TECHNOLOGIES];
+              TECHNOLOGIES[p.provider as keyof typeof TECHNOLOGIES];
             const IconComponent = techInfo?.icon;
 
             return (
-              <div key={e.id} className="border-l-4 border-muted pl-4 py-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex items-center gap-2">
-                    {IconComponent && (
-                      <IconComponent className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    <span className="font-semibold">{e.provider}</span>
-                  </div>
-                  <span
-                    className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(e.status as NormalizedStatus)}`}
-                  >
-                    {getStatusText(e.status as NormalizedStatus)}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm text-muted-foreground">
-                      ({formatDateByRecency(e.occurredAt, locale)})
+              <Card key={p.provider}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {IconComponent && (
+                        <IconComponent className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <CardTitle className="text-base">{p.provider}</CardTitle>
+                    </div>
+                    <span
+                      className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(p.status as NormalizedStatus)}`}
+                    >
+                      {getStatusText(p.status as NormalizedStatus)}
                     </span>
-                    {e.link && (
-                      <a
-                        className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
-                        href={e.link}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        詳細
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                    )}
                   </div>
-                </div>
-                {e.description && (
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                    {e.description}
-                  </p>
+                </CardHeader>
+                {p.description && (
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground line-clamp-3">
+                      {p.description}
+                    </p>
+                  </CardContent>
                 )}
-              </div>
+                <CardFooter>
+                  <Button variant="outline" size="sm" asChild>
+                    <a
+                      href={getProviderLink(p.provider as ProviderName)}
+                      target="_blank"
+                    >
+                      詳細
+                      <ArrowUpRight />
+                    </a>
+                  </Button>
+                  <p
+                    className="text-sm text-muted-foreground ml-2"
+                    title={p.occurredAt.toISOString()}
+                  >
+                    {formatDateByRecency(p.occurredAt, locale)}
+                  </p>
+                </CardFooter>
+              </Card>
             );
           })}
-        </div>
-      </section>
-    </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">直近の経緯</h2>
+          <div className="space-y-4">
+            {events.map((e: StatusEvent) => {
+              const techInfo =
+                TECHNOLOGIES[e.provider as keyof typeof TECHNOLOGIES];
+              const IconComponent = techInfo?.icon;
+
+              return (
+                <div key={e.id} className="border-l-4 border-muted pl-4 py-2">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      {IconComponent && (
+                        <IconComponent className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <span className="font-semibold">{e.provider}</span>
+                    </div>
+                    <span
+                      className={`text-xs rounded px-2 py-1 font-semibold border ${badgeClass(e.status as NormalizedStatus)}`}
+                    >
+                      {getStatusText(e.status as NormalizedStatus)}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-muted-foreground">
+                        ({formatDateByRecency(e.occurredAt, locale)})
+                      </span>
+                      {e.link && (
+                        <a
+                          className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                          href={e.link}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          詳細
+                          <ArrowUpRight className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  {e.description && (
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      {e.description}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+      <Footer />
+    </>
   );
 }
 

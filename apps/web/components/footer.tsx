@@ -1,3 +1,4 @@
+import { getMessage } from "@/lib/i18n/server";
 import {
   SiDiscord,
   SiGithub,
@@ -45,13 +46,39 @@ const authorLinks = [
   },
 ];
 
-export const Footer = () => {
+const footerLinks = [
+  {
+    titleKey: "linksTitle",
+    links: [
+      {
+        href: "/",
+        labelKey: "feed",
+      },
+      {
+        href: "/status",
+        labelKey: "status",
+      },
+      {
+        href: "/docs",
+        labelKey: "docs",
+      },
+      {
+        href: "/registry",
+        labelKey: "registry",
+      },
+    ],
+  },
+];
+
+export const Footer = async () => {
+  const t = await getMessage("Footer");
+
   return (
     <footer className="py-10 px-4 lg:px-8 border-t">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="flex flex-col gap-3">
           <Logo />
-          <p className="text-sm text-muted-foreground">Developer.</p>
+          <p className="text-sm text-muted-foreground">{t.description}</p>
           <div className="flex gap-2 text-muted-foreground">
             {authorLinks.map((link) => (
               <Button variant="ghost" asChild size="icon" key={link.label}>
@@ -64,18 +91,26 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div>
-          <h3 className="text-lg font-bold">Links</h3>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
+        {footerLinks.map((link) => (
+          <ul key={link.titleKey}>
+            <h4 className="text-lg mb-2 px-3 font-bold">
+              {t[link.titleKey as keyof typeof t]}
+            </h4>
+            {link.links.map((link) => (
+              <li key={link.href}>
+                <Button variant="link" size="sm" asChild>
+                  <Link href={link.href}>
+                    {t[link.labelKey as keyof typeof t]}
+                  </Link>
+                </Button>
+              </li>
+            ))}
           </ul>
-        </div>
+        ))}
       </div>
 
       <p className="text-sm text-muted-foreground mt-10">
-        &copy; {new Date().getFullYear()} {APP_NAME}. All rights reserved.
+        &copy; {new Date().getFullYear()} {APP_NAME}. {t.copyright}
       </p>
     </footer>
   );
