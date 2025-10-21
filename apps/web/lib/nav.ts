@@ -13,6 +13,10 @@ export const tools = [
     labelKey: "reactGuide",
   },
   {
+    href: "https://swr-guide.vercel.app/basic",
+    labelKey: "swrGuide",
+  },
+  {
     href: "https://next-dev-weld.vercel.app/dynamic-with-all",
     labelKey: "nextjsRenderingGuide",
   },
