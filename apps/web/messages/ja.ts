@@ -139,6 +139,10 @@ export default {
       label: "nino+ 1.0",
       description: "メンタープラットフォーム",
     },
+    ninoOld: {
+      label: "nino(archive)",
+      description: "旧個人サイト",
+    },
   },
   Footer: {
     linksTitle: "リンク",

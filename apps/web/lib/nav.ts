@@ -47,4 +47,8 @@ export const archive = [
     href: "https://nino-plus-old.vercel.app/",
     labelKey: "ninoPlusOld",
   },
+  {
+    href: "https://dninomiya-old.vercel.app/ja",
+    labelKey: "ninoOld",
+  },
 ] as const;

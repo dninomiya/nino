@@ -142,6 +142,10 @@ export default {
       label: "nino+ 1.0",
       description: "Mentor platform",
     },
+    ninoOld: {
+      label: "nino(archive)",
+      description: "Old personal website",
+    },
   },
   Footer: {
     linksTitle: "Links",
