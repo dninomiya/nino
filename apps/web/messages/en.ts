@@ -110,6 +110,10 @@ export default {
       label: "React Guide",
       description: "React guide",
     },
+    swrGuide: {
+      label: "SWR Guide",
+      description: "SWR guide",
+    },
     nextjsRenderingGuide: {
       label: "Next.js Rendering Guide",
       description: "Next.js rendering guide",

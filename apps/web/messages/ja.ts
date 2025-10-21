@@ -107,6 +107,10 @@ export default {
       label: "React Guide",
       description: "React ガイド",
     },
+    swrGuide: {
+      label: "SWR Guide",
+      description: "SWR ガイド",
+    },
     nextjsRenderingGuide: {
       label: "Next.js レンダリングガイド",
       description: "Next.js のレンダリングガイド",
