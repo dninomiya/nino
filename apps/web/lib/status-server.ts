@@ -74,7 +74,7 @@ async function fetchProvider(provider: {
     // 過去のイベントを日時でソートして最新10件を返す
     return pastItems
       .sort((a, b) => b.occurredAt.getTime() - a.occurredAt.getTime())
-      .slice(0, 10);
+      .slice(0, 5);
   } catch (e) {
     console.error("fetchProvider failed", provider.name, e);
     return [];
@@ -116,6 +116,11 @@ ID: ${d.id}
     .join("\n\n");
 
   const prompt = `以下のサービスステータス更新について、それぞれ1-2文で日本語要約を生成してください。出力は配列で、各要素は { id, summary } としてください。
+
+重要：以下の条件に該当するステータス更新は要約を空文字列（""）として返してください：
+- 特定の海外地域（アメリカ、ヨーロッパ、中国、韓国、東南アジアなど）でのみ発生している障害やメンテナンス
+- 海外の特定地域（Amsterdam、New York、London、Singapore、Hong Kongなど）でのみ発生している問題
+
 \n${itemsInfo}`;
 
   try {
@@ -216,6 +221,14 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
     const summary =
       summaries.find((s) => s.id === id)?.summary ??
       `${item.provider} の状態が ${prevStatus} から ${item.status} に更新。`;
+
+    // 日本に関係ない情報（空文字列の要約）はスキップ
+    if (!summary || summary.trim() === "") {
+      console.log(
+        `Skipping non-Japan related status update for ${item.provider}: ${item.title}`
+      );
+      continue;
+    }
 
     await db.insert(statusEvents).values({
       provider: item.provider,

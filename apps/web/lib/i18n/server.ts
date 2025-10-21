@@ -29,7 +29,13 @@ export const setCurrentLocaleFromParams = async (
   params: Promise<{ locale: string }>
 ) => {
   const { locale } = await params;
+
+  if (!locales.includes(locale as Locale)) {
+    throw new Error(`Invalid locale: ${locale}`);
+  }
+
   setCurrentLocale(locale);
+  return locale as Locale;
 };
 
 export const getCurrentLocale = cache(() => {

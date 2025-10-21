@@ -19,6 +19,7 @@ import {
   SiTurborepo,
   SiDiscord,
   SiLucide,
+  SiCloudflare,
 } from "@icons-pack/react-simple-icons";
 import { FeedCollection } from "./types";
 import { Code, MousePointer2 } from "lucide-react";
@@ -455,6 +456,18 @@ export const collections: FeedCollection[] = [
         method: "rss",
         url: "https://github.com/lucide-icons/lucide/releases.atom",
         type: "releases",
+      },
+    ],
+  },
+  {
+    name: "Cloudflare",
+    icon: SiCloudflare,
+    category: "saas",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://developers.cloudflare.com/changelog/rss/index.xml",
+        type: "changelog",
       },
     ],
   },

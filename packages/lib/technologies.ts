@@ -14,7 +14,7 @@ import {
   SiVercel,
   SiVitest,
 } from "@icons-pack/react-simple-icons";
-import { FlaskConical } from "lucide-react";
+import { Database, FlaskConical } from "lucide-react";
 
 export const TECHNOLOGIES = {
   "Next.js": {
@@ -91,5 +91,10 @@ export const TECHNOLOGIES = {
     icon: SiExpo,
     title: "React Native / Expo",
     description: "モバイルアプリ開発",
+  },
+  Convex: {
+    icon: Database,
+    title: "Convex",
+    description: "BaaS",
   },
 };

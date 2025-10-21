@@ -16,6 +16,12 @@ import {
 } from "@workspace/db/schemas/status";
 import type { ProviderName } from "@/lib/status";
 import { providers } from "@/lib/status";
+import { formatDateByRecency } from "@/lib/util";
+import {
+  getCurrentLocale,
+  setCurrentLocale,
+  setCurrentLocaleFromParams,
+} from "@/lib/i18n/server";
 
 // 型定義
 type StatusEvent = typeof statusEvents.$inferSelect;
@@ -46,7 +52,8 @@ function getStatusText(status: NormalizedStatus) {
   }
 }
 
-export default async function StatusPage() {
+export default async function StatusPage({ params }: PageProps<"/[locale]">) {
+  const locale = await setCurrentLocaleFromParams(params);
   const [latest, events] = await Promise.all([
     getLatestStatuses(),
     getStatusEvents({
@@ -116,6 +123,12 @@ export default async function StatusPage() {
                     <ArrowUpRight />
                   </a>
                 </Button>
+                <p
+                  className="text-sm text-muted-foreground ml-2"
+                  title={p.occurredAt.toISOString()}
+                >
+                  {formatDateByRecency(p.occurredAt, locale)}
+                </p>
               </CardFooter>
             </Card>
           );
