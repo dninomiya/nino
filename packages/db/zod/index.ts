@@ -26,13 +26,6 @@ export const insertFeedItemSchema = createInsertSchema(feedSchema.feedItems);
 export const selectFeedItemSchema = createSelectSchema(feedSchema.feedItems);
 
 // Status Schema Zod Schemas
-export const insertStatusLatestSchema = createInsertSchema(
-  statusSchema.statusLatest
-);
-export const selectStatusLatestSchema = createSelectSchema(
-  statusSchema.statusLatest
-);
-
 export const insertStatusEventSchema = createInsertSchema(
   statusSchema.statusEvents
 );
@@ -56,7 +49,6 @@ export const updateSessionSchema = insertSessionSchema.partial();
 export const updateAccountSchema = insertAccountSchema.partial();
 export const updateVerificationSchema = insertVerificationSchema.partial();
 export const updateFeedItemSchema = insertFeedItemSchema.partial();
-export const updateStatusLatestSchema = insertStatusLatestSchema.partial();
 export const updateStatusEventSchema = insertStatusEventSchema.partial();
 
 // 型エクスポート
@@ -70,8 +62,6 @@ export type InsertVerificationSchema = z.infer<typeof insertVerificationSchema>;
 export type SelectVerificationSchema = z.infer<typeof selectVerificationSchema>;
 export type InsertFeedItemSchema = z.infer<typeof insertFeedItemSchema>;
 export type SelectFeedItemSchema = z.infer<typeof selectFeedItemSchema>;
-export type InsertStatusLatestSchema = z.infer<typeof insertStatusLatestSchema>;
-export type SelectStatusLatestSchema = z.infer<typeof selectStatusLatestSchema>;
 export type InsertStatusEventSchema = z.infer<typeof insertStatusEventSchema>;
 export type SelectStatusEventSchema = z.infer<typeof selectStatusEventSchema>;
 export type NormalizedStatusSchema = z.infer<typeof normalizedStatusSchema>;

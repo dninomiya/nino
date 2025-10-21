@@ -29,6 +29,13 @@
       "when": 1760959363929,
       "tag": "0003_mature_darkstar",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1761009819179,
+      "tag": "0004_wakeful_doomsday",
+      "breakpoints": true
     }
   ]
 }

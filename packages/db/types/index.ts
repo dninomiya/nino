@@ -19,8 +19,6 @@ export type FeedItem = typeof feedSchema.feedItems.$inferSelect;
 export type NewFeedItem = typeof feedSchema.feedItems.$inferInsert;
 
 // Status Schema Types
-export type StatusLatest = typeof statusSchema.statusLatest.$inferSelect;
-export type NewStatusLatest = typeof statusSchema.statusLatest.$inferInsert;
 export type StatusEvent = typeof statusSchema.statusEvents.$inferSelect;
 export type NewStatusEvent = typeof statusSchema.statusEvents.$inferInsert;
 export type NormalizedStatus = statusSchema.NormalizedStatus;
@@ -32,7 +30,6 @@ export type AllTables = {
   accounts: Account;
   verifications: Verification;
   feedItems: FeedItem;
-  statusLatest: StatusLatest;
   statusEvents: StatusEvent;
 };
 
@@ -42,7 +39,6 @@ export type AllNewTables = {
   accounts: NewAccount;
   verifications: NewVerification;
   feedItems: NewFeedItem;
-  statusLatest: NewStatusLatest;
   statusEvents: NewStatusEvent;
 };
 

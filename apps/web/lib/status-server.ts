@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 import { db } from "@workspace/db";
 import {
   statusEvents,
-  statusLatest,
   type NormalizedStatus,
 } from "@workspace/db/schemas/status";
 import { desc, eq, and, gte } from "drizzle-orm";
@@ -137,11 +136,12 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
       );
       continue;
     }
+    // status_eventsから各プロバイダーの最新レコードを取得
     const latest = await db
       .select()
-      .from(statusLatest)
-      .where(eq(statusLatest.provider, item.provider))
-      .orderBy(desc(statusLatest.updatedAt))
+      .from(statusEvents)
+      .where(eq(statusEvents.provider, item.provider))
+      .orderBy(desc(statusEvents.occurredAt))
       .limit(1);
     const prev = latest[0];
 
@@ -213,30 +213,6 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
       occurredAt: item.occurredAt,
     });
 
-    const latest = await db
-      .select()
-      .from(statusLatest)
-      .where(eq(statusLatest.provider, item.provider))
-      .orderBy(desc(statusLatest.updatedAt))
-      .limit(1);
-    if (latest[0]) {
-      await db
-        .update(statusLatest)
-        .set({
-          status: item.status,
-          description: summary,
-          raw: JSON.stringify(item.raw),
-        })
-        .where(eq(statusLatest.provider, item.provider));
-    } else {
-      await db.insert(statusLatest).values({
-        provider: item.provider,
-        status: item.status,
-        description: summary,
-        raw: JSON.stringify(item.raw),
-      });
-    }
-
     const message = `【ステータス更新】${summary}\n<${item.link ?? ""}>`;
     const isDev = process.env.NODE_ENV === "development";
     try {
@@ -246,15 +222,32 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
     }
   }
 
-  revalidatePath("/[locale]/(main)/status");
+  revalidatePath("/[locale]/(main)/status", "page");
   return { changed: diffs.length };
 }
 
 export async function getLatestStatuses() {
-  return await db
-    .select()
-    .from(statusLatest)
-    .orderBy(desc(statusLatest.updatedAt));
+  // 各プロバイダーの最新イベントを取得
+  const providers = await db
+    .selectDistinct({ provider: statusEvents.provider })
+    .from(statusEvents);
+
+  const latestStatuses = [];
+  for (const { provider } of providers) {
+    const latest = await db
+      .select()
+      .from(statusEvents)
+      .where(eq(statusEvents.provider, provider))
+      .orderBy(desc(statusEvents.occurredAt))
+      .limit(1);
+    if (latest[0]) {
+      latestStatuses.push(latest[0]);
+    }
+  }
+
+  return latestStatuses.sort(
+    (a, b) => b.occurredAt.getTime() - a.occurredAt.getTime()
+  );
 }
 
 export async function getStatusEvents(params: {

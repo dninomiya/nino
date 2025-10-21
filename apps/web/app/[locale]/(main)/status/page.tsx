@@ -11,7 +11,6 @@ import { TECHNOLOGIES } from "@workspace/lib/technologies";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import {
-  statusLatest,
   statusEvents,
   type NormalizedStatus,
 } from "@workspace/db/schemas/status";
@@ -19,11 +18,7 @@ import type { ProviderName } from "@/lib/status";
 import { providers } from "@/lib/status";
 
 // 型定義
-type StatusLatest = typeof statusLatest.$inferSelect;
 type StatusEvent = typeof statusEvents.$inferSelect;
-
-// StatusLatestにlinkプロパティを追加した型
-type StatusLatestWithLink = StatusLatest & { link?: string };
 
 // プロバイダー名からリンクを取得する関数
 function getProviderLink(providerName: ProviderName): string {
@@ -82,7 +77,7 @@ export default async function StatusPage() {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {latest.map((p: StatusLatestWithLink) => {
+        {latest.map((p: StatusEvent) => {
           const techInfo =
             TECHNOLOGIES[p.provider as keyof typeof TECHNOLOGIES];
           const IconComponent = techInfo?.icon;

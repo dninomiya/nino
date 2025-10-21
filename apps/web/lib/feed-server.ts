@@ -364,7 +364,7 @@ export async function fetchAndSaveNewFeedItems(): Promise<void> {
     );
 
     // ページを revalidate
-    revalidatePath("/[locale]/(main)/");
+    revalidatePath("/[locale]/(main)", "page");
   } catch (error) {
     console.error("Failed to fetch and save new feed items:", error);
     throw error;

@@ -1,24 +1,5 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-  uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { id, timestamps } from "../util";
-
-// 最新状態テーブル
-export const statusLatest = sqliteTable(
-  "status_latest",
-  {
-    id,
-    provider: text("provider").notNull(),
-    status: text("status").notNull(), // normal | degraded | partial | major | maintenance | unknown
-    description: text("description"),
-    raw: text("raw"),
-    ...timestamps,
-  },
-  (table) => [uniqueIndex("status_latest_provider_unique").on(table.provider)]
-);
 
 // 変更履歴イベントテーブル
 export const statusEvents = sqliteTable("status_events", {
