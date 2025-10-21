@@ -1,10 +1,13 @@
 import {
   SiBetterauth,
   SiCloudflare,
+  SiDiscord,
   SiDrizzle,
   SiExpo,
   SiFirebase,
+  SiGithub,
   SiNextdotjs,
+  SiNotion,
   SiReacthookform,
   SiResend,
   SiStripe,
@@ -96,5 +99,20 @@ export const TECHNOLOGIES = {
     icon: Database,
     title: "Convex",
     description: "BaaS",
+  },
+  GitHub: {
+    icon: SiGithub,
+    title: "GitHub",
+    description: "コードホスティング",
+  },
+  Notion: {
+    icon: SiNotion,
+    title: "Notion",
+    description: "プロダクティビティツール",
+  },
+  Discord: {
+    icon: SiDiscord,
+    title: "Discord",
+    description: "コミュニケーションツール",
   },
 };
