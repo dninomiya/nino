@@ -39,37 +39,51 @@ type FetchedItem = {
 async function fetchProvider(provider: {
   name: ProviderName;
   rss: string;
-}): Promise<FetchedItem | null> {
+}): Promise<FetchedItem[]> {
   try {
     const feed = await parser.parseURL(provider.rss);
-    const item = feed.items?.[0];
-    if (!item) return null;
-    const title = item.title || "";
-    const description = (item.contentSnippet ||
-      item.content ||
-      item.summary ||
-      "") as string;
-    const link = item.link || (feed.link as string) || undefined;
-    const occurredAt = new Date(item.isoDate || item.pubDate || Date.now());
-    const status = normalizeStatus(`${title} ${description}`);
-    return {
-      provider: provider.name,
-      status,
-      title,
-      description,
-      link,
-      occurredAt,
-      raw: item,
-    };
+    if (!feed.items) return [];
+
+    const now = new Date();
+    const pastItems: FetchedItem[] = [];
+
+    for (const item of feed.items) {
+      const title = item.title || "";
+      const description = (item.contentSnippet ||
+        item.content ||
+        item.summary ||
+        "") as string;
+      const link = item.link || (feed.link as string) || undefined;
+      const occurredAt = new Date(item.updated || item.pubDate || Date.now());
+
+      // 過去のイベントのみを処理
+      if (occurredAt <= now) {
+        const status = normalizeStatus(`${title} ${description}`);
+        pastItems.push({
+          provider: provider.name,
+          status,
+          title,
+          description,
+          link,
+          occurredAt,
+          raw: item,
+        });
+      }
+    }
+
+    // 過去のイベントを日時でソートして最新10件を返す
+    return pastItems
+      .sort((a, b) => b.occurredAt.getTime() - a.occurredAt.getTime())
+      .slice(0, 10);
   } catch (e) {
     console.error("fetchProvider failed", provider.name, e);
-    return null;
+    return [];
   }
 }
 
 export async function fetchAllStatuses(): Promise<FetchedItem[]> {
   const results = await Promise.all(providers.map((p) => fetchProvider(p)));
-  return results.filter(Boolean) as FetchedItem[];
+  return results.flat();
 }
 
 const batchSummarySchema = z.object({
