@@ -5,7 +5,7 @@ import {
   SiNotion,
   SiSlack,
 } from "@icons-pack/react-simple-icons";
-import { TECHNOLOGIES } from "@workspace/lib/constants";
+import { TECHNOLOGIES } from "@workspace/lib/technologies";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -122,7 +122,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]">) {
       <section className="space-y-4">
         <h2>モダンな開発技術に精通</h2>
         <div className="flex flex-wrap gap-2">
-          {TECHNOLOGIES.map((technology) => (
+          {Object.values(TECHNOLOGIES).map((technology) => (
             <Tooltip key={technology.title}>
               <TooltipTrigger asChild>
                 <Badge variant="outline" key={technology.title}>
