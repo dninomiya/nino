@@ -54,24 +54,24 @@ export default async function DocsPage({
       <div>
         <MDXContent>
           <div className="flex items-center justify-between gap-2 not-prose">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h1 className="text-4xl font-bold">{metadata.title}</h1>
-              <div className="flex gap-1 flex-wrap">
+              <div className="flex gap-4 flex-wrap">
                 <p
                   className="text-muted-foreground text-sm flex items-center gap-1.5"
                   title={`${tCommon.createdAt}: ${metadata.createdAt}`}
                 >
                   {formatDateByRecency(metadata.createdAt, locale)}
                 </p>
-                ・
-                <p
-                  className="text-muted-foreground text-sm flex items-center gap-1.5"
-                  title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
-                >
-                  <RefreshCw className="size-3.5" />
-                  {formatDateByRecency(metadata.updatedAt, locale)}
-                </p>
-                ・
+                {metadata.updatedAt && (
+                  <p
+                    className="text-muted-foreground text-sm flex items-center gap-1.5"
+                    title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
+                  >
+                    <RefreshCw className="size-3.5" />
+                    {formatDateByRecency(metadata.updatedAt, locale)}
+                  </p>
+                )}
                 <p
                   className="text-muted-foreground text-sm flex items-center gap-1.5"
                   title={`${tCommon.readingTime}: ${formatReadingTime(post.readingTime.time, locale)}`}

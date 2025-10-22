@@ -76,6 +76,12 @@ export default {
   DocsListPage: {
     title: "Documentation",
   },
+  DocsSidebar: {
+    title: "Documentation",
+    gettingStarted: "Getting Started",
+    guides: "Guides",
+    reference: "Reference",
+  },
   RegistryPage: {
     title: "Registry",
     blocks: "Blocks",

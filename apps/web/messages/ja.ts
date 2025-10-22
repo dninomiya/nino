@@ -74,6 +74,12 @@ export default {
   DocsListPage: {
     title: "ドキュメント",
   },
+  DocsSidebar: {
+    title: "ドキュメント",
+    gettingStarted: "はじめに",
+    guides: "ガイド",
+    reference: "リファレンス",
+  },
   RegistryPage: {
     title: "レジストリ",
     blocks: "ブロック",
