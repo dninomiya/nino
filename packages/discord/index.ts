@@ -73,7 +73,11 @@ export function formatDiscordMessage(
       // YouTube動画の場合は<>で挟まない
       const link =
         section.type === "youtube" ? section.link : `<${section.link}>`;
-      return `**${section.title}**:\n${section.summary}\n${link}`;
+
+      // summaryが空の場合はsummaryの行を表示しない
+      const summaryLine = section.summary ? `\n${section.summary}` : "";
+
+      return `**${section.title}**:${summaryLine}\n${link}`;
     })
     .join("\n\n");
 

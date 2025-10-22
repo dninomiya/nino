@@ -616,28 +616,33 @@ export async function sendDiscordNotification(
         let summary = item.summary;
 
         if (!summary) {
-          // タグを日本語ラベルに変換（ハードコード）
-          const tagLabels = (item.tags || [])
-            .map((tag) => {
-              const tagMap: Record<string, string> = {
-                feature: "機能追加",
-                event: "イベント",
-                bugfix: "バグ修正",
-                "big-news": "ビッグニュース",
-                release: "リリース",
-                update: "アップデート",
-                announcement: "お知らせ",
-                tutorial: "チュートリアル",
-                documentation: "ドキュメント",
-                security: "セキュリティ",
-                performance: "パフォーマンス",
-                "breaking-change": "破壊的変更",
-              };
-              return tagMap[tag];
-            })
-            .filter(Boolean);
+          // YouTubeソースの場合は「更新情報」を表示しない
+          if (item.type === "youtube") {
+            summary = "";
+          } else {
+            // タグを日本語ラベルに変換（ハードコード）
+            const tagLabels = (item.tags || [])
+              .map((tag) => {
+                const tagMap: Record<string, string> = {
+                  feature: "機能追加",
+                  event: "イベント",
+                  bugfix: "バグ修正",
+                  "big-news": "ビッグニュース",
+                  release: "リリース",
+                  update: "アップデート",
+                  announcement: "お知らせ",
+                  tutorial: "チュートリアル",
+                  documentation: "ドキュメント",
+                  security: "セキュリティ",
+                  performance: "パフォーマンス",
+                  "breaking-change": "破壊的変更",
+                };
+                return tagMap[tag];
+              })
+              .filter(Boolean);
 
-          summary = tagLabels.length > 0 ? tagLabels.join(", ") : "更新情報";
+            summary = tagLabels.length > 0 ? tagLabels.join(", ") : "更新情報";
+          }
         }
 
         return {
