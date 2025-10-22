@@ -220,6 +220,18 @@ export const collections: FeedCollection[] = [
     ],
   },
   {
+    name: "AI SDK",
+    icon: SiVercel,
+    category: "library",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/vercel/ai/releases.atom",
+        type: "releases",
+      },
+    ],
+  },
+  {
     name: "shadcn/ui",
     icon: SiGithub,
     category: "library",

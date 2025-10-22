@@ -3,7 +3,7 @@ import { defaultLocale, Locale, locales } from "./lib/i18n/locale";
 import Negotiator from "negotiator";
 import { match } from "@formatjs/intl-localematcher";
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const hasLocale = locales.some((locale) => pathname.startsWith(`/${locale}`));
