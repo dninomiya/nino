@@ -25,7 +25,7 @@ export default async function Layout({
       },
       {
         title: "guides",
-        items: [],
+        items: ["next-turso-drizzle-installation"],
       },
       {
         title: "reference",

@@ -1,0 +1,365 @@
+---
+title: Webアプリの環境構築
+description: Next.js, Turso, Drizzle を使った環境構築
+createdAt: 2025-10-23
+---
+
+[https://www.youtube.com/watch?v=mU7kn7lxKEQ&feature=youtu.be](https://www.youtube.com/watch?v=mU7kn7lxKEQ&feature=youtu.be)
+
+[https://github.com/nino-plus/turso-setup](https://github.com/nino-plus/turso-setup)
+
+turborepo バージョン
+
+[https://github.com/nino-plus/turso-turborepo](https://github.com/nino-plus/turso-turborepo)
+
+
+
+## 概要
+
+[Turso](https://turso.tech/) は 無料で100のDBを作成できるなど、Supabaseに比べ圧倒的なコストパフォーマンスとなっています。いくつもの個人アプリをリリースしたい人や、学習中で複数プロダクトを気軽に作りたい人におすすめです。
+
+## テンプレート
+
+コマンド一発で環境構築を終えたい人は以下のテンプレートを使用してください。
+
+https://github.com/nino-plus/turborepo-template
+
+## Next.js & shadcn/ui のインストール
+
+Turborepo, Next.js, shadcn/ui を使った monorepo 環境を作成します。
+
+```bash
+pnpx shadcn@latest init -t next-monorepo -y
+```
+
+## Turso コマンドのインストール
+
+どこでも良いのでターミナルで以下を実行してください。コマンドインストール後は都度インストールする必要はありません。
+
+```bash
+brew install tursodatabase/tap/turso
+```
+
+## プロジェクト環境に Drizzle をインストール
+
+```bash
+pnpm add drizzle-orm dotenv @libsql/client
+pnpm add -D drizzle-kit
+```
+
+## ローカルのDBと接続する
+
+リモートのDB枠を消費しないために、開発時はローカルDBと接続することを推奨します。
+
+`db/local/local.db` の空ファイルを作成した上で以下を実行
+
+プロジェクト環境で実行し、ローカルDBを起動
+
+```bash
+turso dev -f db/local/local.db
+```
+
+```bash title=.env
+TURSO_DATABASE_URL=http://127.0.0.1:8080
+```
+
+gitignore に以下を追加
+
+```bash
+/db/local/
+```
+
+## リモートDBの作成
+
+Tursoダッシュボードから作成可能ですが、以下のコマンドで作成することもできます。
+
+```bash
+# リモートアカウントに接続
+turso auth login
+
+# リモートDBを作成
+turso db create my-app
+```
+
+DBへの接続情報は以下のコマンドで確認できます。
+
+```bash
+# DB のURLを表示
+turso db show my-app
+
+# DB の認証コードを生成
+turso db tokens create my-app
+```
+
+```bash title=.env
+TURSO_DATABASE_URL=
+TURSO_AUTH_TOKEN=
+```
+
+通常は上記のキーを Vercel 本番環境にセットすればOKです。また、Preview環境用のブランチを作成し、Vercelプレビュー環境の環境変数にセットすることで本番と確認環境のDBを切り分けることもできます。
+
+## Drizzle との接続
+
+```tsx title=db/index.ts
+import { drizzle } from "drizzle-orm/libsql/web";
+// まだ存在しない場合コメントアウト
+import * as authSchema from "./schemas/auth";
+
+export const db = drizzle({
+  connection: {
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+  },
+  schema: {
+    ...authSchema,
+  },
+});
+```
+
+```tsx title=drizzle.config.ts
+import "dotenv/config";
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+  out: "./db/migrations",
+  schema: "./db/schemas/*.ts",
+  dialect: "turso",
+  dbCredentials: {
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN! || "local",
+  },
+});
+```
+
+## Better Auth との連携
+
+通常通り Drizzle と連携してください。その際、 `provider` を `sqlite` に変更してください。
+
+```tsx
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "@/db";
+import { nanoid } from "nanoid";
+import { nextCookies } from "better-auth/next-js";
+import { getBaseURL } from "./get-base-url";
+
+export const auth = betterAuth({
+  baseURL: getBaseURL(),
+  database: drizzleAdapter(db, {
+    provider: "sqlite", // ここを変更
+    usePlural: true,
+  }),
+  advanced: {
+    database: {
+      generateId: () => nanoid(10),
+    },
+  },
+  plugins: [nextCookies()],
+});
+```
+
+## スキーマの書き方Tips
+
+SQLite は Postgres と若干異なります。日付カラムはBetter Auth で自動生成されるスキーマに準拠し、以下の記述を推奨します。以下のように共通関数にし、以後独自に定義するスキーマの日付カラムにセットしてください。
+
+```tsx
+import { sql } from "drizzle-orm";
+import { integer } from "drizzle-orm/sqlite-core";
+
+export const timestamps = {
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+};
+
+// 使用例
+export const users = sqliteTable("pets", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  ...timestamps
+});
+
+// ついでに id カラムも汎用化しておくと便利です
+export const id = text("id")
+  .primaryKey()
+  .$defaultFn(() => nanoid(10));
+```
+
+Better Auth で自動生成されるスキーマについても、タイムスタンプ箇所は上記のヘルパーに差し替えることを推奨します。
+
+better-auth で生成する Drizzle スキーマに非推奨の記述が入る件はIssue起票中
+[https://github.com/better-auth/better-auth/issues/4796](https://github.com/better-auth/better-auth/issues/4796)
+
+最後に Better Auth のDrizzleスキーマを生成してください。
+
+```bash
+pnpx @better-auth/cli@latest generate --output ./db/schemas/auth.ts --yes
+```
+
+## マイグレーション
+
+postgre(Supabaseなど)から移行する際は、既存の `migrations` 関連のファイル、ディレクトリを削除してください。その上で、以下を実行します。
+
+```bash
+pnpm drizzle-kit generate
+pnpm drizzle-kit migrate
+```
+
+## GitHub Actions を使って本番環境に自動マイグレーション
+
+```bash title=.github/workflows/migrate.yml
+name: Apply schema migrations
+
+# 👉 Only run this workflow when a change is made to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  apply_migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies & tooling
+        run: |
+          npm install -g pnpm
+          pnpm install
+      - name: Apply migrations
+        run: pnpm drizzle:migrate
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+
+```
+
+## データベースの確認
+
+drizzle のスタジオ機能でローカルDBの内容を確認できます。
+
+```bash
+pnpm drizzle-kit studio
+```
+
+## Supabase からデータを移植する方法
+
+以下のコマンドで `data.sql` に全データを吐き出します。事前にDockerを起動しておく必要があります。
+
+```bash
+# ローカルSupabaseからデータを移植する場合
+pnpx supabase db dump --db-url <DB_URL> -f supabase-to-turso.sql –inserts –column-inserts --data-only
+
+# リモートSupabaseからデータを移植する場合
+pnpx supabase login
+pnpx supabase link
+pnpx supabase db dump -f supabase-to-turso.sql –inserts –column-inserts --data-only
+```
+
+`supabase-to-turso.sql` を以下のように編集します。
+
+- `INSERT...` から始まり、`"public".` のスキーマに関連する行のみを残して他を削除
+    - `drizzle.` や `auth.` 、 `storage.` からはじまるスキーマが残ってないことを確認してください
+- テーブル名の `"public".` の部分をすべて削除
+- 日付の箇所を変更するSQL文を追記。SQLiteは Postgres と一部カラムの互換性がないので、値の整合性を持たせるためにレコードを更新します。
+    - 日付更新SQL
+        
+        Better Auth関係のテーブル以外に独自テーブルもある場合、最下部のコメントやAIを参考に、適宜加筆してください。
+        
+        ```sql
+        -- アカウント
+        
+        UPDATE accounts
+        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
+        WHERE typeof(created_at) = 'text';
+        
+        UPDATE accounts
+        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
+        WHERE typeof(updated_at) = 'text';
+        
+        UPDATE accounts
+        SET access_token_expires_at = CAST(strftime('%s', access_token_expires_at) AS INTEGER)
+        WHERE typeof(access_token_expires_at) = 'text';
+        
+        UPDATE accounts
+        SET refresh_token_expires_at = CAST(strftime('%s', refresh_token_expires_at) AS INTEGER)
+        WHERE typeof(refresh_token_expires_at) = 'text';
+        
+        -- セッション
+        
+        UPDATE sessions
+        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
+        WHERE typeof(created_at) = 'text';
+        
+        UPDATE sessions
+        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
+        WHERE typeof(updated_at) = 'text';
+        
+        UPDATE sessions
+        SET expires_at = CAST(strftime('%s', expires_at) AS INTEGER)
+        WHERE typeof(expires_at) = 'text';
+        
+        -- ユーザー
+        
+        UPDATE users
+        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
+        WHERE typeof(created_at) = 'text';
+        
+        UPDATE users
+        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
+        WHERE typeof(updated_at) = 'text';
+        
+        -- verifications
+        
+        UPDATE verifications
+        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
+        WHERE typeof(created_at) = 'text';
+        
+        UPDATE verifications
+        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
+        WHERE typeof(updated_at) = 'text';
+        
+        UPDATE verifications
+        SET expires_at = CAST(strftime('%s', expires_at) AS INTEGER)
+        WHERE typeof(expires_at) = 'text';
+        
+        -- サブスクリプション
+        
+        -- UPDATE subscriptions
+        -- SET period_start = CAST(strftime('%s', period_start) AS INTEGER)
+        -- WHERE typeof(period_start) = 'text';
+        
+        -- UPDATE subscriptions
+        -- SET period_end = CAST(strftime('%s', period_end) AS INTEGER)
+        -- WHERE typeof(period_end) = 'text';
+        
+        -- UPDATE subscriptions
+        -- SET trial_start = CAST(strftime('%s', trial_start) AS INTEGER)
+        -- WHERE typeof(trial_start) = 'text';
+        
+        -- UPDATE subscriptions
+        -- SET trial_end = CAST(strftime('%s', trial_end) AS INTEGER)
+        -- WHERE typeof(trial_end) = 'text';
+        
+        -- その他独自のテーブルの日付カラムを更新する
+        
+        -- UPDATE demo_items
+        -- SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
+        -- WHERE typeof(created_at) = 'text';
+        ```
+        
+
+最後に、 turso のコマンドでデータをインポートします。
+
+```bash
+# ローカルの例
+turso db shell http://127.0.0.1:8080 < supabase-to-turso.sql
+```
+
+リモートの場合はダッシュボードのSQLコンソールに `supabase-to-turso.sql` の内容を貼り付けて実行してください。
+
+しばらくはSupabase環境と並行運用（SupabaseとTurso両方にデータをセットするなど）し、確実な移行が確認できてから旧環境を削除することをお勧めします。

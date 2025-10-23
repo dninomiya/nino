@@ -43,10 +43,6 @@ export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
         title: t.guides,
         items: docItems.guides,
       },
-      {
-        title: t.reference,
-        items: docItems.reference,
-      },
     ],
   };
 
