@@ -1,8 +1,13 @@
 import { getDocMetas } from "@/lib/docs";
-import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import {
+  getCurrentLocale,
+  getMessage,
+  setCurrentLocaleFromParams,
+} from "@/lib/i18n/server";
+import { formatDateByRecency } from "@/lib/util";
 import {
   Card,
-  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
@@ -20,6 +25,7 @@ export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
   const docs = await getDocMetas();
   const t = await getMessage("DocsListPage");
+  const locale = getCurrentLocale();
 
   return (
     <div className="container mx-auto py-10">
@@ -30,13 +36,10 @@ export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
             <Card>
               <CardHeader>
                 <CardTitle>{doc.title}</CardTitle>
+                <CardDescription>
+                  {formatDateByRecency(doc.updatedAt || doc.createdAt, locale)}
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">{doc.description}</p>
-                <time className="text-sm text-muted-foreground">
-                  更新日: {new Date(doc.updatedAt).toLocaleDateString("ja-JP")}
-                </time>
-              </CardContent>
             </Card>
           </Link>
         ))}
