@@ -1,6 +1,19 @@
-export function MDXContent({ children }: { children: React.ReactNode }) {
+import { cn } from "@/lib/utils";
+
+export function MDXContent({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <article className="prose min-w-0 prose-headings:scroll-mt-[calc(theme(spacing.header)+theme(spacing.8))] mx-auto py-10 xl:py-14 dark:prose-invert prose-neutral">
+    <article
+      className={cn(
+        "prose min-w-0 max-w-none prose-headings:scroll-mt-[calc(theme(spacing.header)+theme(spacing.8))] py-10 xl:py-14 dark:prose-invert prose-neutral",
+        className
+      )}
+    >
       {children}
     </article>
   );

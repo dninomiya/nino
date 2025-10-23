@@ -16,35 +16,20 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useMessage } from "@/components/i18n-provider";
 
-const getDocItems = (category: string) => {
-  const docsConfig = {
-    categories: [
-      {
-        title: "gettingStarted",
-        items: ["changelog"],
-      },
-      {
-        title: "guides",
-        items: [],
-      },
-      {
-        title: "reference",
-        items: [],
-      },
-    ],
+interface DocItem {
+  title: string;
+  url: string;
+}
+
+interface DocSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  docItems: {
+    gettingStarted: DocItem[];
+    guides: DocItem[];
+    reference: DocItem[];
   };
+}
 
-  return (
-    docsConfig.categories
-      .find((cat) => cat.title === category)
-      ?.items.map((item) => ({
-        title: item,
-        url: `/docs/${item}`,
-      })) || []
-  );
-};
-
-export function DocSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
   const pathname = usePathname();
   const t = useMessage("DocsSidebar");
 
@@ -52,15 +37,15 @@ export function DocSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navGroup: [
       {
         title: t.gettingStarted,
-        items: getDocItems("gettingStarted"),
+        items: docItems.gettingStarted,
       },
       {
         title: t.guides,
-        items: getDocItems("guides"),
+        items: docItems.guides,
       },
       {
         title: t.reference,
-        items: getDocItems("reference"),
+        items: docItems.reference,
       },
     ],
   };

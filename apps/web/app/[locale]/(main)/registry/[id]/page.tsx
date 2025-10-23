@@ -47,8 +47,8 @@ export default async function RegistryPage({
   const locale = getCurrentLocale();
 
   return (
-    <div className="flex px-4">
-      <MDXContent>
+    <div className="flex max-w-6xl container gap-10">
+      <MDXContent className="flex-1">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 not-prose">
           <div className="space-y-2">
             <h1 className="text-3xl xl:text-4xl font-bold">{metadata.title}</h1>
