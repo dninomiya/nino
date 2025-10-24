@@ -98,10 +98,7 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
 
         {/* 凡例 - React Flow内に配置 */}
         <div className="absolute top-4 left-4 z-10">
-          <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">凡例</CardTitle>
-            </CardHeader>
+          <Card>
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2 text-xs">
                 <div className="w-3 h-3 bg-blue-500 rounded"></div>

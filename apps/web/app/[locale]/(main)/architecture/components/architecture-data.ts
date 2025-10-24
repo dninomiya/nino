@@ -208,7 +208,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "vercel",
     type: "custom",
-    position: { x: 1000, y: 150 },
+    position: { x: 1000, y: 200 },
     data: {
       label: "Vercel",
       type: "baas",
@@ -220,7 +220,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "stripe",
     type: "custom",
-    position: { x: 1000, y: 250 },
+    position: { x: 1000, y: 350 },
     data: {
       label: "Stripe",
       type: "baas",
@@ -232,7 +232,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "resend",
     type: "custom",
-    position: { x: 1000, y: 350 },
+    position: { x: 1000, y: 500 },
     data: {
       label: "Resend",
       type: "baas",
