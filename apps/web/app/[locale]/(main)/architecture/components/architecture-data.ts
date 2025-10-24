@@ -4,12 +4,11 @@ import { Node, Edge } from "@xyflow/react";
 const commonEdgeStyle = {
   stroke: "var(--primary)",
   strokeWidth: 2,
-  strokeOpacity: 0.5,
 };
 
 const commonMarkerEnd = {
   type: "arrowclosed" as const,
-  color: "var(--border)",
+  color: "var(--primary)",
 };
 
 export interface ArchitectureNodeData {
@@ -19,6 +18,50 @@ export interface ArchitectureNodeData {
   description?: string;
   technologies?: string[];
   dependencies?: string[];
+  // ノードのサイズ設定（Tailwind CSSクラス）
+  size?: string;
+  // ハンドルの設定
+  handles?: {
+    // 上側のハンドル
+    topIn?: boolean;
+    topOut?: boolean;
+    topLeftIn?: boolean;
+    topLeftOut?: boolean;
+    topCenterIn?: boolean;
+    topCenterOut?: boolean;
+    topRightIn?: boolean;
+    topRightOut?: boolean;
+
+    // 右側のハンドル
+    rightIn?: boolean;
+    rightOut?: boolean;
+    rightTopIn?: boolean;
+    rightTopOut?: boolean;
+    rightCenterIn?: boolean;
+    rightCenterOut?: boolean;
+    rightBottomIn?: boolean;
+    rightBottomOut?: boolean;
+
+    // 下側のハンドル
+    bottomIn?: boolean;
+    bottomOut?: boolean;
+    bottomLeftIn?: boolean;
+    bottomLeftOut?: boolean;
+    bottomCenterIn?: boolean;
+    bottomCenterOut?: boolean;
+    bottomRightIn?: boolean;
+    bottomRightOut?: boolean;
+
+    // 左側のハンドル
+    leftIn?: boolean;
+    leftOut?: boolean;
+    leftTopIn?: boolean;
+    leftTopOut?: boolean;
+    leftCenterIn?: boolean;
+    leftCenterOut?: boolean;
+    leftBottomIn?: boolean;
+    leftBottomOut?: boolean;
+  };
   [key: string]: unknown;
 }
 
@@ -42,6 +85,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
         "@workspace/discord",
         "@workspace/registry",
       ],
+      size: "w-[220px] h-[100px]",
+      handles: {
+        leftCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
+        topCenterOut: true,
+      },
     },
   },
   {
@@ -55,6 +105,10 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "エラー監視・パフォーマンス監視",
       technologies: ["Sentry"],
       dependencies: [],
+      size: "w-[180px]",
+      handles: {
+        rightCenterIn: true,
+      },
     },
   },
 
@@ -70,6 +124,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Drizzle ORM によるDB接続・スキーマ管理・マイグレーション",
       technologies: ["Drizzle ORM", "SQLite", "Zod"],
       dependencies: [],
+      size: "w-[220px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
+      },
     },
   },
   {
@@ -83,6 +144,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Better Auth 認証システム",
       technologies: ["Better Auth"],
       dependencies: ["@workspace/db"],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
+      },
     },
   },
   {
@@ -96,6 +164,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "共有UIコンポーネント",
       technologies: ["Tailwind CSS", "Radix UI"],
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
   {
@@ -109,6 +182,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "定数、ユーティリティ",
       technologies: [],
       dependencies: [],
+      size: "w-[180px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
   {
@@ -122,6 +200,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Discord通知システム",
       technologies: ["Discord.js"],
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
   {
@@ -135,6 +218,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "レジストリシステム",
       technologies: ["Next.js"],
       dependencies: ["@workspace/ui"],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
   {
@@ -148,6 +236,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "AI機能・プロンプト管理",
       technologies: ["OpenAI", "Vercel AI"],
       dependencies: [],
+      size: "w-[250px] h-[120px]",
+      handles: {
+        topCenterIn: true,
+        topCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
+      },
     },
   },
 
@@ -161,6 +256,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       type: "baas",
       nodeTypeId: "external-ai",
       description: "AI Gateway",
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
 
@@ -175,6 +275,12 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       nodeTypeId: "baas-turso", // 左側Handle用のタイプIDに変更
       description: "データベース",
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+        topCenterIn: true,
+      },
     },
   },
   {
@@ -187,6 +293,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       nodeTypeId: "baas-vercel", // 下側Handle用のタイプIDに変更
       description: "ホスティング",
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        bottomCenterIn: true,
+        bottomCenterOut: true,
+      },
     },
   },
   {
@@ -200,6 +311,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "ソースコード管理",
       technologies: ["Git", "GitHub"],
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        bottomCenterIn: true,
+        bottomCenterOut: true,
+        topCenterOut: true,
+        rightCenterOut: true,
+      },
     },
   },
   {
@@ -212,6 +330,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       nodeTypeId: "baas-stripe", // 左側Handle用のタイプIDに変更
       description: "決済",
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
   {
@@ -224,6 +347,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       nodeTypeId: "baas-email",
       description: "メール送信",
       dependencies: [],
+      size: "w-[200px]",
+      handles: {
+        leftCenterIn: true,
+        leftCenterOut: true,
+      },
     },
   },
 ];
@@ -233,67 +361,61 @@ export const initialEdges: Edge[] = [
   {
     id: "db-to-web",
     source: "db-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "auth-to-web",
     source: "auth-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "ui-to-web",
     source: "ui-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "lib-to-web",
     source: "lib-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "discord-to-web",
     source: "discord-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "registry-to-web",
     source: "registry-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
 
@@ -301,9 +423,9 @@ export const initialEdges: Edge[] = [
   {
     id: "auth-to-db",
     source: "auth-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "db-package",
-    targetHandle: "in",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
@@ -311,9 +433,9 @@ export const initialEdges: Edge[] = [
   {
     id: "registry-to-ui",
     source: "registry-package",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "ui-package",
-    targetHandle: "in",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
@@ -323,12 +445,11 @@ export const initialEdges: Edge[] = [
   {
     id: "ai-package-to-gateway",
     source: "ai-package",
-    sourceHandle: "out",
+    sourceHandle: "outRightCenter",
     target: "ai-gateway",
-    targetHandle: "in",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
 
@@ -336,61 +457,56 @@ export const initialEdges: Edge[] = [
   {
     id: "web-to-sentry",
     source: "web-app",
-    sourceHandle: "outLeft",
+    sourceHandle: "outLeftCenter",
     target: "sentry",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   // Web AppからGitHubへの接続
   {
     id: "web-to-github",
     source: "web-app",
-    sourceHandle: "outTop",
+    sourceHandle: "outTopCenter",
     target: "github",
-    targetHandle: "in",
+    targetHandle: "inBottomCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   // GitHubからVercelへの接続
   {
     id: "github-to-vercel",
     source: "github",
-    sourceHandle: "outTop",
+    sourceHandle: "outTopCenter",
     target: "vercel",
-    targetHandle: "in",
+    targetHandle: "inBottomCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   // GitHubからTursoへの接続
   {
     id: "github-to-turso",
     source: "github",
-    sourceHandle: "out",
+    sourceHandle: "outRightCenter",
     target: "turso",
-    targetHandle: "in",
+    targetHandle: "inTopCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "resend-to-web",
     source: "resend",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "web-app",
-    targetHandle: "in",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     label: "email",
     labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
 
@@ -398,23 +514,21 @@ export const initialEdges: Edge[] = [
   {
     id: "turso-to-db-package",
     source: "turso",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "db-package",
-    targetHandle: "inRight",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "db-package-to-turso",
     source: "db-package",
-    sourceHandle: "outRight",
+    sourceHandle: "outRightCenter",
     target: "turso",
-    targetHandle: "in",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
 
@@ -422,23 +536,21 @@ export const initialEdges: Edge[] = [
   {
     id: "stripe-to-auth-package",
     source: "stripe",
-    sourceHandle: "out",
+    sourceHandle: "outLeftCenter",
     target: "auth-package",
-    targetHandle: "inRight",
+    targetHandle: "inRightCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "auth-package-to-stripe",
     source: "auth-package",
-    sourceHandle: "outRight",
+    sourceHandle: "outRightCenter",
     target: "stripe",
-    targetHandle: "in",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
-    animated: true,
     markerEnd: commonMarkerEnd,
   },
 ];

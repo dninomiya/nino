@@ -49,134 +49,6 @@ const nodeTypeIcons = {
   baas: "☁️",
 };
 
-// ノードタイプID別のHandle配置設定
-const nodeTypeHandleConfig: Record<
-  string,
-  {
-    in: { position: Position; top?: string; left?: string };
-    out?: { position: Position; top?: string; left?: string };
-    inRight?: { position: Position; top?: string; left?: string };
-    outRight?: { position: Position; top?: string; left?: string };
-    inTop?: { position: Position; top?: string; left?: string };
-    outTop?: { position: Position; top?: string; left?: string };
-    outLeft?: { position: Position; top?: string; left?: string };
-  }
-> = {
-  // アプリケーションタイプ（左右にHandle）
-  "app-main": {
-    in: { position: Position.Right, top: "66%", left: undefined },
-    out: { position: Position.Right, top: "33%", left: undefined },
-    // 左側のHandleも追加（Sentryとの接続用）
-    outLeft: { position: Position.Left, top: "50%", left: undefined },
-    // 上側のHandleも追加（Vercelとの接続用）
-    inTop: { position: Position.Top, top: undefined, left: "50%" },
-    outTop: { position: Position.Top, top: undefined, left: "50%" },
-  },
-  "app-sidebar": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Right, top: "33%", left: undefined },
-  },
-
-  // パッケージタイプ（左右にHandle）
-  "package-db": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-    // 右側のHandleも追加（Tursoとの接続用）
-    inRight: { position: Position.Right, top: "66%", left: undefined },
-    outRight: { position: Position.Right, top: "33%", left: undefined },
-  },
-  "package-auth": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-    // 右側のHandleも追加（Stripeとの接続用）
-    inRight: { position: Position.Right, top: "66%", left: undefined },
-    outRight: { position: Position.Right, top: "33%", left: undefined },
-  },
-  "package-ui": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "package-lib": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "package-discord": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "package-registry": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "package-ai": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-
-  // データベースタイプ（左右にHandle）
-  "database-main": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-
-  // 外部サービスタイプ（左右にHandle）
-  "external-rss": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "external-discord": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "external-ai": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-
-  // BaaSサービスタイプ（上下にHandle）
-  "baas-database": {
-    in: { position: Position.Bottom, top: undefined, left: "66%" },
-    out: { position: Position.Bottom, top: undefined, left: "33%" },
-  },
-  // Turso専用（左側にHandle）
-  "baas-turso": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-  "baas-hosting": {
-    in: { position: Position.Bottom, top: undefined, left: "66%" },
-    out: { position: Position.Bottom, top: undefined, left: "33%" },
-  },
-  // Vercel専用（下側にHandle）
-  "baas-vercel": {
-    in: { position: Position.Bottom, top: undefined, left: "50%" },
-    out: { position: Position.Bottom, top: undefined, left: "50%" },
-  },
-  // GitHub専用（上下にHandle）
-  "external-github": {
-    in: { position: Position.Bottom, top: undefined, left: "50%" },
-    out: { position: Position.Bottom, top: undefined, left: "33%" },
-    outTop: { position: Position.Top, top: undefined, left: "50%" },
-  },
-  // Sentry専用（右側にinのみ）
-  "baas-sentry": {
-    in: { position: Position.Right, top: "50%", left: undefined },
-  },
-  "baas-payment": {
-    in: { position: Position.Bottom, top: undefined, left: "66%" },
-    out: { position: Position.Bottom, top: undefined, left: "33%" },
-  },
-  "baas-email": {
-    in: { position: Position.Bottom, top: undefined, left: "66%" },
-    out: { position: Position.Bottom, top: undefined, left: "33%" },
-  },
-  // Stripe専用（左側にHandle）
-  "baas-stripe": {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
-  },
-};
-
 // 技術名とアイコンのマッピング
 const getTechnologyIcon = (tech: string) => {
   const iconMap: Record<
@@ -210,7 +82,7 @@ const getTechnologyIcon = (tech: string) => {
 };
 
 export const CustomNode = memo(({ data, selected }: NodeProps) => {
-  const { label, type, nodeTypeId, description, technologies } =
+  const { label, type, nodeTypeId, description, technologies, size, handles } =
     data as unknown as ArchitectureNodeData;
   const colorClass = nodeTypeColors[type as keyof typeof nodeTypeColors];
   const icon = nodeTypeIcons[type as keyof typeof nodeTypeIcons];
@@ -218,171 +90,276 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   // グループ内のノードかどうかを判定
   const isInGroup = data.parentId;
 
-  // ノードタイプIDに応じたHandle設定を取得
-  const handleConfig = nodeTypeHandleConfig[nodeTypeId] || {
-    in: { position: Position.Left, top: "66%", left: undefined },
-    out: { position: Position.Left, top: "33%", left: undefined },
+  // サイズ設定を取得（データで指定されたサイズを優先、なければデフォルト）
+  const getNodeSize = () => {
+    return size || "w-[200px]";
   };
 
-  // ノードタイプID別のサイズ設定
-  const nodeTypeSizes: Record<string, string> = {
-    // アプリケーション
-    "app-main": "w-[200px]",
-    "app-sidebar": "w-[180px]",
+  // ハンドル設定を取得
+  const getHandleConfig = () => {
+    if (!handles) {
+      return {
+        in: { position: Position.Left, top: "66%", left: undefined },
+        out: { position: Position.Left, top: "33%", left: undefined },
+      };
+    }
 
-    // パッケージ
-    "package-db": "w-[220px]",
-    "package-auth": "w-[200px]",
-    "package-ui": "w-[200px]",
-    "package-lib": "w-[180px]",
-    "package-discord": "w-[200px]",
-    "package-registry": "w-[200px]",
-    "package-ai": "w-[200px]",
+    const config: Record<string, any> = {};
 
-    // データベース
-    "database-main": "w-[200px]",
+    // 上側のハンドル
+    if (handles.topLeftIn) {
+      config.inTopLeft = {
+        position: Position.Top,
+        top: undefined,
+        left: "25%",
+      };
+    }
+    if (handles.topLeftOut) {
+      config.outTopLeft = {
+        position: Position.Top,
+        top: undefined,
+        left: "25%",
+      };
+    }
+    if (handles.topCenterIn) {
+      config.inTopCenter = {
+        position: Position.Top,
+        top: undefined,
+        left: "50%",
+      };
+    }
+    if (handles.topCenterOut) {
+      config.outTopCenter = {
+        position: Position.Top,
+        top: undefined,
+        left: "50%",
+      };
+    }
+    if (handles.topRightIn) {
+      config.inTopRight = {
+        position: Position.Top,
+        top: undefined,
+        left: "75%",
+      };
+    }
+    if (handles.topRightOut) {
+      config.outTopRight = {
+        position: Position.Top,
+        top: undefined,
+        left: "75%",
+      };
+    }
+    // 後方互換性のため
+    if (handles.topIn && !handles.topCenterIn) {
+      config.inTop = { position: Position.Top, top: undefined, left: "50%" };
+    }
+    if (handles.topOut && !handles.topCenterOut) {
+      config.outTop = { position: Position.Top, top: undefined, left: "50%" };
+    }
 
-    // 外部サービス
-    "external-rss": "w-[180px]",
-    "external-discord": "w-[200px]",
-    "external-ai": "w-[200px]",
-    "external-github": "w-[200px]",
+    // 右側のハンドル
+    if (handles.rightTopIn) {
+      config.inRightTop = {
+        position: Position.Right,
+        top: "25%",
+        left: undefined,
+      };
+    }
+    if (handles.rightTopOut) {
+      config.outRightTop = {
+        position: Position.Right,
+        top: "25%",
+        left: undefined,
+      };
+    }
+    if (handles.rightCenterIn) {
+      config.inRightCenter = {
+        position: Position.Right,
+        top: "50%",
+        left: undefined,
+      };
+    }
+    if (handles.rightCenterOut) {
+      config.outRightCenter = {
+        position: Position.Right,
+        top: "50%",
+        left: undefined,
+      };
+    }
+    if (handles.rightBottomIn) {
+      config.inRightBottom = {
+        position: Position.Right,
+        top: "75%",
+        left: undefined,
+      };
+    }
+    if (handles.rightBottomOut) {
+      config.outRightBottom = {
+        position: Position.Right,
+        top: "75%",
+        left: undefined,
+      };
+    }
+    // 後方互換性のため
+    if (handles.rightIn && !handles.rightCenterIn) {
+      config.inRight = {
+        position: Position.Right,
+        top: "66%",
+        left: undefined,
+      };
+    }
+    if (handles.rightOut && !handles.rightCenterOut) {
+      config.outRight = {
+        position: Position.Right,
+        top: "33%",
+        left: undefined,
+      };
+    }
 
-    // BaaSサービス
-    "baas-database": "w-[300px] h-[80px]",
-    "baas-turso": "w-[200px]",
-    "baas-hosting": "w-[300px] h-[80px]",
-    "baas-vercel": "w-[200px]",
-    "baas-payment": "w-[200px]",
-    "baas-email": "w-[200px]",
-    "baas-stripe": "w-[200px]",
-    "baas-sentry": "w-[200px]",
+    // 下側のハンドル
+    if (handles.bottomLeftIn) {
+      config.inBottomLeft = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "25%",
+      };
+    }
+    if (handles.bottomLeftOut) {
+      config.outBottomLeft = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "25%",
+      };
+    }
+    if (handles.bottomCenterIn) {
+      config.inBottomCenter = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "50%",
+      };
+    }
+    if (handles.bottomCenterOut) {
+      config.outBottomCenter = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "50%",
+      };
+    }
+    if (handles.bottomRightIn) {
+      config.inBottomRight = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "75%",
+      };
+    }
+    if (handles.bottomRightOut) {
+      config.outBottomRight = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "75%",
+      };
+    }
+    // 後方互換性のため
+    if (handles.bottomIn && !handles.bottomCenterIn) {
+      config.inBottom = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "50%",
+      };
+    }
+    if (handles.bottomOut && !handles.bottomCenterOut) {
+      config.outBottom = {
+        position: Position.Bottom,
+        top: undefined,
+        left: "50%",
+      };
+    }
+
+    // 左側のハンドル
+    if (handles.leftTopIn) {
+      config.inLeftTop = {
+        position: Position.Left,
+        top: "25%",
+        left: undefined,
+      };
+    }
+    if (handles.leftTopOut) {
+      config.outLeftTop = {
+        position: Position.Left,
+        top: "25%",
+        left: undefined,
+      };
+    }
+    if (handles.leftCenterIn) {
+      config.inLeftCenter = {
+        position: Position.Left,
+        top: "50%",
+        left: undefined,
+      };
+    }
+    if (handles.leftCenterOut) {
+      config.outLeftCenter = {
+        position: Position.Left,
+        top: "50%",
+        left: undefined,
+      };
+    }
+    if (handles.leftBottomIn) {
+      config.inLeftBottom = {
+        position: Position.Left,
+        top: "75%",
+        left: undefined,
+      };
+    }
+    if (handles.leftBottomOut) {
+      config.outLeftBottom = {
+        position: Position.Left,
+        top: "75%",
+        left: undefined,
+      };
+    }
+    // 後方互換性のため
+    if (handles.leftIn && !handles.leftCenterIn) {
+      config.in = { position: Position.Left, top: "66%", left: undefined };
+    }
+    if (handles.leftOut && !handles.leftCenterOut) {
+      config.out = { position: Position.Left, top: "33%", left: undefined };
+    }
+
+    return config;
   };
 
-  // ノードタイプIDに応じたサイズ設定を取得
-  const getNodeSize = (nodeTypeId: string) => {
-    return nodeTypeSizes[nodeTypeId] || "w-[200px]"; // デフォルトサイズ
-  };
+  const finalHandleConfig = getHandleConfig();
 
   return (
-    <Card className={cn(getNodeSize(nodeTypeId), "text-sm p-3", colorClass)}>
-      {/* Handle for incoming connections */}
-      <Handle
-        type="target"
-        id="in"
-        position={handleConfig.in.position}
-        style={{
-          background: "var(--muted)",
-          ...(handleConfig.in.top ? { top: handleConfig.in.top } : {}),
-          ...(handleConfig.in.left ? { left: handleConfig.in.left } : {}),
-        }}
-      />
+    <Card className={cn(getNodeSize(), "text-sm p-3", colorClass)}>
+      {/* 動的にハンドルをレンダリング */}
+      {Object.entries(finalHandleConfig).map(([key, config]) => {
+        if (!config) return null;
 
-      {/* Handle for outgoing connections */}
-      {handleConfig.out && (
-        <Handle
-          type="source"
-          id="out"
-          position={handleConfig.out.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.out.top ? { top: handleConfig.out.top } : {}),
-            ...(handleConfig.out.left ? { left: handleConfig.out.left } : {}),
-          }}
-        />
-      )}
+        const isTarget = key.startsWith("in");
+        const isSource = key.startsWith("out");
 
-      {/* 右側のHandle（Database Package用） */}
-      {handleConfig.inRight && (
-        <Handle
-          type="target"
-          id="inRight"
-          position={handleConfig.inRight.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.inRight.top
-              ? { top: handleConfig.inRight.top }
-              : {}),
-            ...(handleConfig.inRight.left
-              ? { left: handleConfig.inRight.left }
-              : {}),
-          }}
-        />
-      )}
-
-      {handleConfig.outRight && (
-        <Handle
-          type="source"
-          id="outRight"
-          position={handleConfig.outRight.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.outRight.top
-              ? { top: handleConfig.outRight.top }
-              : {}),
-            ...(handleConfig.outRight.left
-              ? { left: handleConfig.outRight.left }
-              : {}),
-          }}
-        />
-      )}
-
-      {/* 上側のHandle（Web App用） */}
-      {handleConfig.inTop && (
-        <Handle
-          type="target"
-          id="inTop"
-          position={handleConfig.inTop.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.inTop.top ? { top: handleConfig.inTop.top } : {}),
-            ...(handleConfig.inTop.left
-              ? { left: handleConfig.inTop.left }
-              : {}),
-          }}
-        />
-      )}
-
-      {handleConfig.outTop && (
-        <Handle
-          type="source"
-          id="outTop"
-          position={handleConfig.outTop.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.outTop.top
-              ? { top: handleConfig.outTop.top }
-              : {}),
-            ...(handleConfig.outTop.left
-              ? { left: handleConfig.outTop.left }
-              : {}),
-          }}
-        />
-      )}
-
-      {/* 左側のHandle（Web App用） */}
-      {handleConfig.outLeft && (
-        <Handle
-          type="source"
-          id="outLeft"
-          position={handleConfig.outLeft.position}
-          style={{
-            background: "var(--muted)",
-            ...(handleConfig.outLeft.top
-              ? { top: handleConfig.outLeft.top }
-              : {}),
-            ...(handleConfig.outLeft.left
-              ? { left: handleConfig.outLeft.left }
-              : {}),
-          }}
-        />
-      )}
+        return (
+          <Handle
+            key={key}
+            type={isTarget ? "target" : "source"}
+            id={key}
+            position={config.position}
+            style={{
+              background: "var(--muted)",
+              ...(config.top ? { top: config.top } : {}),
+              ...(config.left ? { left: config.left } : {}),
+            }}
+          />
+        );
+      })}
 
       <CardHeader className="p-0">
         <CardTitle>{label}</CardTitle>
         {description && (
           <CardDescription
-            className={`${isInGroup ? "text-[10px]" : "text-xs"} opacity-90 overflow-hidden`}
+            className={`${isInGroup ? "text-[10px]" : "text-xs"} overflow-hidden`}
             style={{
               display: "-webkit-box",
               WebkitLineClamp: 2,
