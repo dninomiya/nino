@@ -180,11 +180,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "vercel",
     type: "custom",
-    position: { x: 1000, y: 200 },
+    position: { x: 100, y: 0 }, // Web Appの上に移動
     data: {
       label: "Vercel",
       type: "baas",
-      nodeTypeId: "baas-hosting",
+      nodeTypeId: "baas-vercel", // 下側Handle用のタイプIDに変更
       description: "ホスティング",
       dependencies: [],
     },
@@ -192,11 +192,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "stripe",
     type: "custom",
-    position: { x: 1000, y: 350 },
+    position: { x: 650, y: 150 }, // Auth Packageの右に移動
     data: {
       label: "Stripe",
       type: "baas",
-      nodeTypeId: "baas-payment",
+      nodeTypeId: "baas-stripe", // 左側Handle用のタイプIDに変更
       description: "決済",
       dependencies: [],
     },
@@ -334,23 +334,10 @@ export const initialEdges: Edge[] = [
   {
     id: "web-to-vercel",
     source: "web-app",
-    sourceHandle: "out",
+    sourceHandle: "outTop",
     target: "vercel",
     targetHandle: "in",
     type: "smoothstep",
-    style: commonEdgeStyle,
-    animated: true,
-    markerEnd: commonMarkerEnd,
-  },
-  {
-    id: "stripe-to-web",
-    source: "stripe",
-    sourceHandle: "out",
-    target: "web-app",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "payment",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
     animated: true,
     markerEnd: commonMarkerEnd,
@@ -386,6 +373,30 @@ export const initialEdges: Edge[] = [
     source: "db-package",
     sourceHandle: "outRight",
     target: "turso",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
+
+  // Auth PackageとStripeの双方向接続
+  {
+    id: "stripe-to-auth-package",
+    source: "stripe",
+    sourceHandle: "out",
+    target: "auth-package",
+    targetHandle: "inRight",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
+  {
+    id: "auth-package-to-stripe",
+    source: "auth-package",
+    sourceHandle: "outRight",
+    target: "stripe",
     targetHandle: "in",
     type: "smoothstep",
     style: commonEdgeStyle,

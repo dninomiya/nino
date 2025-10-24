@@ -54,12 +54,17 @@ const nodeTypeHandleConfig: Record<
     out: { position: Position; top?: string; left?: string };
     inRight?: { position: Position; top?: string; left?: string };
     outRight?: { position: Position; top?: string; left?: string };
+    inTop?: { position: Position; top?: string; left?: string };
+    outTop?: { position: Position; top?: string; left?: string };
   }
 > = {
   // アプリケーションタイプ（左右にHandle）
   "app-main": {
     in: { position: Position.Right, top: "66%", left: undefined },
     out: { position: Position.Right, top: "33%", left: undefined },
+    // 上側のHandleも追加（Vercelとの接続用）
+    inTop: { position: Position.Top, top: undefined, left: "50%" },
+    outTop: { position: Position.Top, top: undefined, left: "50%" },
   },
   "app-sidebar": {
     in: { position: Position.Left, top: "66%", left: undefined },
@@ -77,6 +82,9 @@ const nodeTypeHandleConfig: Record<
   "package-auth": {
     in: { position: Position.Left, top: "66%", left: undefined },
     out: { position: Position.Left, top: "33%", left: undefined },
+    // 右側のHandleも追加（Stripeとの接続用）
+    inRight: { position: Position.Right, top: "66%", left: undefined },
+    outRight: { position: Position.Right, top: "33%", left: undefined },
   },
   "package-ui": {
     in: { position: Position.Left, top: "66%", left: undefined },
@@ -129,6 +137,11 @@ const nodeTypeHandleConfig: Record<
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
   },
+  // Vercel専用（下側にHandle）
+  "baas-vercel": {
+    in: { position: Position.Bottom, top: undefined, left: "50%" },
+    out: { position: Position.Bottom, top: undefined, left: "50%" },
+  },
   "baas-payment": {
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
@@ -136,6 +149,11 @@ const nodeTypeHandleConfig: Record<
   "baas-email": {
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
+  },
+  // Stripe専用（左側にHandle）
+  "baas-stripe": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
   },
 };
 
@@ -249,6 +267,39 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
               : {}),
             ...(handleConfig.outRight.left
               ? { left: handleConfig.outRight.left }
+              : {}),
+          }}
+        />
+      )}
+
+      {/* 上側のHandle（Web App用） */}
+      {handleConfig.inTop && (
+        <Handle
+          type="target"
+          id="inTop"
+          position={handleConfig.inTop.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.inTop.top ? { top: handleConfig.inTop.top } : {}),
+            ...(handleConfig.inTop.left
+              ? { left: handleConfig.inTop.left }
+              : {}),
+          }}
+        />
+      )}
+
+      {handleConfig.outTop && (
+        <Handle
+          type="source"
+          id="outTop"
+          position={handleConfig.outTop.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.outTop.top
+              ? { top: handleConfig.outTop.top }
+              : {}),
+            ...(handleConfig.outTop.left
+              ? { left: handleConfig.outTop.left }
               : {}),
           }}
         />
