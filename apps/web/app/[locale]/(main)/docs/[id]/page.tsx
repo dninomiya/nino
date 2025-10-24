@@ -51,7 +51,7 @@ export default async function DocsPage({
   return (
     <div className="flex max-w-6xl container gap-10">
       <MDXContent className="flex-1">
-        <div className="flex items-center justify-between gap-2 not-prose">
+        <div className="flex items-center justify-between gap-2 not-prose mb-6">
           <div className="space-y-3">
             <h1 className="text-4xl font-bold">{metadata.title}</h1>
             <div className="flex gap-4 flex-wrap">
