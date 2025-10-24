@@ -1,4 +1,5 @@
 import { CopyButon } from "@/components/copy-markdown-button";
+import { HelpBanner } from "@/components/help-banner";
 import { MDXContent } from "@/components/mdx-contenet";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
@@ -83,6 +84,7 @@ export default async function DocsPage({
         </div>
 
         <Content />
+        <HelpBanner />
       </MDXContent>
       <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header)-theme(spacing.4))] px-6 py-10 overflow-auto">
         <TableOfContents />

@@ -500,27 +500,22 @@ pnpm studio
 
 ### 11.1 よくある問題
 
-1. **pnpmのバージョン不一致**
+1. **パッケージのバージョンを揃える方法**
+
+   以下のコマンドで、すべてのアプリ（パッケージ）でバージョンを揃えることができます。バージョンの組み合わせは繊細なので、Next.js や React、TypeScript など基盤となる技術を段階的に揃えていくことをお勧めします。（全部ライブラリをまとめてアップデート&揃える、とするとエラーが発生する可能性があります。）
+
    ```bash
-   pnpm --version
-   # 10.18.3以上であることを確認
+   # nextバージョンを揃える
+   pnpm up next@latest -r
    ```
-
-2. **環境変数の設定漏れ**
-   - `.env`ファイルが正しく設定されているか確認
-   - 必要な環境変数がすべて設定されているか確認
-
-3. **データベース接続エラー**
-   - Tursoの認証情報が正しいか確認
-   - データベースが作成されているか確認
 
 ## 12. 最終Tips
 
 ### 12.1 .env.exampleファイルの作成
 
-プロジェクトのルートディレクトリに`.env.example`ファイルを作成して、必要な環境変数のテンプレートを提供することをお勧めします：
+各アプリ、パッケージに`.env.example`ファイルを作成して、必要な環境変数のテンプレートを提供することをお勧めします：
 
-```bash title=.env.example
+```bash title=apps/web/.env.example
 # データベース設定
 TURSO_DATABASE_URL=
 
@@ -529,8 +524,19 @@ BETTER_AUTH_SECRET=
 
 # Sentry設定
 SENTRY_AUTH_TOKEN=
-SENTRY_ORG=
-SENTRY_PROJECT=
+```
+
+```bash title=packages/db/.env.example
+# データベース設定
+TURSO_DATABASE_URL=
+
+# 認証設定
+BETTER_AUTH_SECRET=
+```
+
+```bash title=packages/auth/.env.example
+# データベース設定
+TURSO_DATABASE_URL=
 ```
 
 ## 13. 追加リソース
