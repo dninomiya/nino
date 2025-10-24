@@ -131,6 +131,24 @@
   body {
     @apply bg-background text-foreground wrap-anywhere;
   }
+
+  .shiki {
+    .add, .remove {
+      @apply relative;
+
+      &:before {
+        @apply absolute top-1/2 left-1 -translate-y-1/2;
+      }
+    }
+    .remove:before {
+      @apply text-red-500;
+      content: "-";
+    }
+    .add:before {
+      @apply text-green-500;
+      content: "+";
+    }
+  }
 }
 
 @utility container {

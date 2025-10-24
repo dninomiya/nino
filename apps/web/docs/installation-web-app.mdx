@@ -172,62 +172,107 @@ export const insertSessionSchema = createInsertSchema(sessions);
 export const selectSessionSchema = createSelectSchema(sessions);
 ```
 
-## 3. Next.jsアプリケーションの設定
+## 3. 認証パッケージ（auth）の作成
 
-### 3.1 アプリケーションの起動
+### 3.1 認証パッケージの初期化
 
-```bash
-# ルートディレクトリから
-pnpm dev
+以下の内容で `packages/auth/package.json` を作成します：
 
-# または、webアプリのみ起動
-cd apps/web
-pnpm dev
+```json
+{
+  "name": "@workspace/auth",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "generate": "pnpx @better-auth/cli generate --output ../db/schemas/auth.ts --yes"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./client": "./client.ts",
+    "./handler": "./handler.ts"
+  },
+  "dependencies": {
+    "@workspace/db": "workspace:*",
+    "better-auth": "^1.3.27",
+    "nanoid": "^5.1.6"
+  },
+  "devDependencies": {
+    "@workspace/typescript-config": "workspace:*"
+  }
+}
 ```
 
-### 3.2 Next.js設定の特徴
-
-- **Next.js 16.0.0**を使用
-- **Turbopack**で開発サーバーを起動
-- **MDX**サポート（ドキュメント用）
-- **Sentry**統合
-- **国際化（i18n）**サポート
-
-## 4. 認証パッケージ（auth）の作成
-
-### 4.1 認証パッケージの初期化
-
-まず、`packages/auth`ディレクトリに`package.json`を作成します：
+### 3.2 必要な依存関係のインストール
 
 ```bash
-# packages/authディレクトリに移動
-cd packages/auth
-
-# package.jsonの作成
-pnpm init
+# 依存関係のインストール
+pnpm install
 ```
 
-### 4.2 必要な依存関係のインストール
-
-```bash
-# Better Auth関連の依存関係をインストール
-pnpm add better-auth
-pnpm add -D @types/node
-```
-
-### 4.3 認証パッケージの環境変数設定
+### 3.3 認証パッケージの環境変数設定
 
 `packages/auth/.env`ファイルを作成：
 
 ```bash title=packages/auth/.env
-# Better Auth設定
-BETTER_AUTH_SECRET=your-secret-key-here
-BETTER_AUTH_URL=http://localhost:3000
+TURSO_DATABASE_URL=http://127.0.0.1:8080
 ```
 
-### 4.2 Better Authの設定
+### 3.4 認証スキーマの作成
 
-`packages/auth/index.ts`で認証設定を作成：
+コマンドを実行して認証スキーマを作成します：
+
+```bash
+cd packages/auth
+
+pnpm generate
+```
+
+`packages/db/schemas/auth.ts`が作成されたら、マイグレーションを実行します：
+
+```bash
+cd packages/db
+# マイグレーションファイルの生成
+pnpm generate
+
+# マイグレーションの実行
+pnpm migrate
+```
+
+### 3.5 データベース接続の更新
+
+`packages/db/index.ts`を更新して認証スキーマを含めます：
+
+```typescript title=packages/db/index.ts
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/libsql/web";
+import * as auth from "./schemas/auth";
+
+export const db = drizzle({
+  connection: {
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+  },
+  schema: {
+    ...auth, // [!code ++]
+  },
+});
+```
+
+### 3.6 マイグレーションの実行
+
+```bash
+# マイグレーションファイルの生成
+cd packages/db
+pnpm generate
+
+# マイグレーションの実行
+pnpm migrate
+```
+
+### 3.7 Better Authの設定
+
+`packages/auth/index.ts` で認証設定を作成：
 
 ```typescript title=packages/auth/index.ts
 import { betterAuth } from "better-auth";
@@ -247,126 +292,23 @@ export const auth = betterAuth({
 });
 ```
 
-### 4.3 認証スキーマの生成
+## 4. Next.jsアプリケーションの設定
+
+### 4.1 アプリケーションの起動
 
 ```bash
-cd packages/auth
-pnpm generate
-```
-
-## 5. UIパッケージ（ui）の設定
-
-### 5.1 UIパッケージの初期化
-
-まず、`packages/ui`ディレクトリに`package.json`を作成します：
-
-```bash
-# packages/uiディレクトリに移動
-cd packages/ui
-
-# package.jsonの作成
-pnpm init
-```
-
-### 5.2 必要な依存関係のインストール
-
-```bash
-# shadcn/ui関連の依存関係をインストール
-pnpm add @radix-ui/react-slot class-variance-authority clsx tailwind-merge
-pnpm add -D @types/node tailwindcss postcss autoprefixer
-```
-
-### 5.4 UIパッケージの環境変数設定
-
-`packages/ui/.env`ファイルを作成（通常は不要ですが、将来的な拡張に備えて）：
-
-```bash title=packages/ui/.env
-# UIパッケージ用の環境変数（現在は不要）
-# 将来的な拡張に備えて作成
-```
-
-### 5.5 shadcn/uiの設定
-
-`packages/ui`にshadcn/uiコンポーネントが配置されています：
-
-```bash
-# UIパッケージのビルド
-cd packages/ui
-pnpm build
-```
-
-### 5.6 コンポーネントの使用
-
-```typescript
-// アプリケーションでUIコンポーネントを使用
-import { Button } from "@workspace/ui/components/button";
-import { Card } from "@workspace/ui/components/card";
-```
-
-## 6. 開発ツールの設定
-
-### 6.1 ESLint設定
-
-共有ESLint設定が`packages/eslint-config`にあります：
-
-```bash
-# リンターの実行
-pnpm lint
-
-# リンターの自動修正
-pnpm lint:fix
-```
-
-### 6.2 TypeScript設定
-
-共有TypeScript設定が`packages/typescript-config`にあります：
-
-```bash
-# 型チェック
-pnpm typecheck
-```
-
-### 6.3 Prettier設定
-
-```bash
-# コードフォーマット
-pnpm format
+# ルートディレクトリから
+pnpm dev
 ```
 
 ## 7. 監視・ログ設定（Sentry）
 
 ### 7.1 Sentryの設定
 
-`apps/web/next.config.mjs`でSentryが設定されています：
-
-```javascript
-export default withSentryConfig(withMDX(nextConfig), {
-  org: "deer-inc",
-  project: "nino",
-  tunnelRoute: "/monitoring",
-  automaticVercelMonitors: true
-});
-```
-
-### 7.2 Sentry設定ファイル
-
-- `sentry.server.config.ts` - サーバーサイド設定
-- `sentry.edge.config.ts` - Edge Runtime設定
-
-## 8. テスト設定
-
-### 8.1 テスト環境の確認
-
-現在のプロジェクトでは、テスト設定は`pnpm-lock.yaml`に含まれていますが、明示的なテストファイルは見つかりませんでした。
-
-### 8.2 テストの追加（推奨）
+[公式ドキュメント](https://docs.sentry.io/platforms/javascript/guides/nextjs/)のコマンドでSentryを設定してください。
 
 ```bash
-# Vitestの追加
-pnpm add -D vitest @vitejs/plugin-react
-
-# Playwrightの追加
-pnpm add -D @playwright/test
+@sentry/wizard@latest -i nextjs
 ```
 
 ## 9. アプリケーション（web）の環境変数設定
@@ -378,25 +320,17 @@ pnpm add -D @playwright/test
 ```bash title=apps/web/.env.local
 # データベース設定
 TURSO_DATABASE_URL=libsql://your-database-url
-TURSO_AUTH_TOKEN=your-auth-token
 
 # 認証設定
 BETTER_AUTH_SECRET=your-secret-key-here
 BETTER_AUTH_URL=http://localhost:3000
-
-# Sentry設定
-SENTRY_AUTH_TOKEN=your-sentry-auth-token
-SENTRY_ORG=your-sentry-org
-SENTRY_PROJECT=your-sentry-project
-
-# その他の設定
-CRON_SECRET=your-cron-secret
-AI_GATEWAY_API_KEY=your-ai-gateway-api-key
 ```
 
-### 9.2 Vercel設定
+BETTER_AUTH_SECRET は以下のコマンドで生成できます。
 
-`apps/web/vercel.json`でVercelの設定が定義されています。
+```bash
+pnpx @better-auth/cli@latest secret
+```
 
 ### 9.3 本番環境の環境変数設定
 
@@ -406,8 +340,6 @@ AI_GATEWAY_API_KEY=your-ai-gateway-api-key
 - `TURSO_AUTH_TOKEN`
 - `BETTER_AUTH_SECRET`
 - `SENTRY_AUTH_TOKEN`
-- `CRON_SECRET`
-- `AI_GATEWAY_API_KEY`
 
 ## 10. 開発ワークフロー
 
@@ -430,6 +362,8 @@ pnpm typecheck
 pnpm format
 ```
 
+_
+
 ### 10.2 データベース操作
 
 ```bash
@@ -446,31 +380,37 @@ pnpm studio
 
 ### 10.3 実装フローに従った開発手順
 
-リポジトリ固有のルールに従って、以下の順序で開発を進めてください：
+たとえばペットに関する機能を開発する場合、以下の順序で開発を進めてください：
 
-1. **Drizzleスキーマの更新** (`/packages/db/schemas/`)
+1. **Drizzleスキーマの作成** (`/packages/db/schemas/`)
    ```bash
-   # スキーマファイルを編集
-   vim packages/db/schemas/auth.ts
+   # スキーマファイルを編集（例：認証スキーマ）
+   touch packages/db/schemas/pet.ts
    ```
 
 2. **マイグレーションの実行** (`/packages/db`)
    ```bash
    cd packages/db
-   pnpm generate  # マイグレーションファイル生成
-   pnpm migrate   # マイグレーション実行
+   pnpm gm  # generate + migrate
    ```
 
-3. **型の生成** (`/packages/db/types/`)
-   ```bash
-   # Drizzleスキーマから型を自動生成
-   pnpm generate:types
+3. **型の作成**
+   ```ts title=packages/db/types/pet.ts
+   import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+   import { pets } from "../schemas/pet";
+
+   export type Pet = InferSelectModel<typeof pets>;
+   export type NewPet = InferInsertModel<typeof pets>;
    ```
 
-4. **Zodスキーマの生成** (`/packages/db/zod/`)
-   ```bash
-   # DrizzleスキーマからZodスキーマを自動生成
-   pnpm generate:zod
+4. **Zodスキーマの作成**
+   ```ts title=packages/db/zod/pet.ts
+   import { z } from "zod";
+   import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+   import { pets } from "../schemas/pet";
+
+   export const insertPetSchema = createInsertSchema(pets);
+   export const selectPetSchema = createSelectSchema(pets);
    ```
 
 5. **各アプリケーションで使用**
@@ -478,7 +418,22 @@ pnpm studio
    // アプリケーションで型とZodスキーマを使用
    import { User, NewUser } from "@workspace/db";
    import { insertUserSchema, selectUserSchema } from "@workspace/db";
+   import { auth } from "@workspace/auth";
    ```
+
+### 10.4 環境変数を追加する場合
+
+いずれかのアプリ（/apps/web など）に環境変数を追加する場合、必ず `turbo.json` に定義を追加してください。
+
+```json title=turbo.json
+{
+  "tasks": {
+    "dev": {
+      "env": ["TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN", "BETTER_AUTH_SECRET", "CRON_SECRET", "AI_GATEWAY_API_KEY", "SENTRY_AUTH_TOKEN"] // [!code ++]
+    }
+  }
+}
+```
 
 ## 11. トラブルシューティング
 
@@ -498,17 +453,6 @@ pnpm studio
    - Tursoの認証情報が正しいか確認
    - データベースが作成されているか確認
 
-### 11.2 ログの確認
-
-```bash
-# 開発サーバーのログを確認
-pnpm dev
-
-# データベースのログを確認
-cd packages/db
-pnpm dev
-```
-
 ## 12. 最終Tips
 
 ### 12.1 .env.exampleファイルの作成
@@ -517,38 +461,16 @@ pnpm dev
 
 ```bash title=.env.example
 # データベース設定
-TURSO_DATABASE_URL=libsql://your-database-url
-TURSO_AUTH_TOKEN=your-auth-token
+TURSO_DATABASE_URL=
 
 # 認証設定
-BETTER_AUTH_SECRET=your-secret-key-here
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=
 
 # Sentry設定
-SENTRY_AUTH_TOKEN=your-sentry-auth-token
-SENTRY_ORG=your-sentry-org
-SENTRY_PROJECT=your-sentry-project
-
-# その他の設定
-CRON_SECRET=your-cron-secret
-AI_GATEWAY_API_KEY=your-ai-gateway-api-key
+SENTRY_AUTH_TOKEN=
+SENTRY_ORG=
+SENTRY_PROJECT=
 ```
-
-### 12.2 環境変数の管理
-
-- 各パッケージに個別の`.env`ファイルを作成
-- ルートディレクトリに`.env.example`を配置
-- `.env`ファイルは`.gitignore`に追加してバージョン管理から除外
-- 本番環境では各デプロイプラットフォームで環境変数を設定
-
-### 12.3 パッケージ間の依存関係
-
-実装フローに従って、以下の順序でパッケージを作成・設定してください：
-
-1. **dbパッケージ** - `package.json`作成 → 依存関係インストール → データベーススキーマとマイグレーション
-2. **authパッケージ** - `package.json`作成 → 依存関係インストール → 認証設定（dbパッケージに依存）
-3. **uiパッケージ** - `package.json`作成 → 依存関係インストール → UIコンポーネント
-4. **webアプリケーション** - 全パッケージを使用
 
 ## 13. 追加リソース
 
