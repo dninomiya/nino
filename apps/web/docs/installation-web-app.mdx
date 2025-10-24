@@ -364,7 +364,68 @@ pnpm format
 
 _
 
-### 10.2 データベース操作
+### 10.2 TurborepoとStudioタスクの設定
+
+このプロジェクトでは、Turborepoを使用してモノレポ全体のタスクを効率的に管理しています。Drizzle Studioを起動するためのタスクや、依存する環境変数を設定します。
+
+#### turbo.jsonの設定
+
+```json title=turbo.json
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["TURSO_DATABASE_URL", "TURSO_AUTH_TOKEN", "BETTER_AUTH_SECRET", "SENTRY_AUTH_TOKEN"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "studio": { // [!code ++]
+      "cache": false, // [!code ++]
+      "persistent": true // [!code ++]
+    } // [!code ++]
+  }
+}
+```
+
+次に、ルートのpackage.jsonに以下を追加します。
+
+```json title=package.json
+{
+  "scripts": {
+    "dev": "turbo dev studio"
+  }
+}
+```
+
+ルートで`pnpm dev`または`turbo dev studio`を実行すると：
+
+1. **turbo dev**: 全てのパッケージで`dev`タスクが並行実行される
+2. **turbo studio**: 全てのパッケージで`studio`タスクが並行実行される
+
+具体的には：
+- **webアプリケーション**: Next.js開発サーバーが起動（通常localhost:3000）
+- **dbパッケージ**: Turso ローカルデータベースが起動
+- **dbパッケージ**: Drizzle Studioが起動
+
+この構成により、開発者は1つのコマンドでWebアプリケーションとデータベース管理ツールの両方を同時に起動でき、効率的な開発環境を構築できます。
+
+Drizzle Studioは、データベーススキーマの可視化、データの確認・編集、SQLクエリの実行などができるWebベースの管理ツールです。
+
+それぞれターミナルに表示されるURLをブラウザで開くことでアクセスできます。
+
+### 10.3 データベース操作
 
 ```bash
 # マイグレーション生成
@@ -378,7 +439,7 @@ pnpm migrate
 pnpm studio
 ```
 
-### 10.3 実装フローに従った開発手順
+### 10.4 実装フローに従った開発手順
 
 たとえばペットに関する機能を開発する場合、以下の順序で開発を進めてください：
 
@@ -421,7 +482,7 @@ pnpm studio
    import { auth } from "@workspace/auth";
    ```
 
-### 10.4 環境変数を追加する場合
+### 10.5 環境変数を追加する場合
 
 いずれかのアプリ（/apps/web など）に環境変数を追加する場合、必ず `turbo.json` に定義を追加してください。
 
