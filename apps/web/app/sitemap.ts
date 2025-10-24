@@ -6,6 +6,16 @@ import { getRegistryDocMetas } from "@/lib/registry";
 import { baseUrl } from "@/registry/lib/base-url";
 import type { MetadataRoute } from "next";
 
+// 安全な日付作成関数
+const createSafeDate = (dateValue: string | undefined | null): Date => {
+  if (!dateValue) {
+    return new Date();
+  }
+
+  const date = new Date(dateValue);
+  return isNaN(date.getTime()) ? new Date() : date;
+};
+
 type SitemapPath = {
   path: string;
   lastModified: Date;
@@ -52,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (doc) =>
       ({
         path: `/docs/${doc.id}`,
-        lastModified: new Date(doc.updatedAt),
+        lastModified: createSafeDate(doc.updatedAt),
         changeFrequency: "monthly",
         priority: 0.8,
       }) satisfies SitemapPath
@@ -61,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (doc) =>
       ({
         path: `/registry/${doc.name}`,
-        lastModified: new Date(doc.updatedAt),
+        lastModified: createSafeDate(doc.updatedAt),
         changeFrequency: "monthly",
         priority: 0.8,
       }) satisfies SitemapPath
