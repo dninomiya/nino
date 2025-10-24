@@ -1,6 +1,7 @@
 export const links = [
   { href: "/docs", labelKey: "docs" },
   { href: "/registry", labelKey: "registry" },
+  { href: "/architecture", labelKey: "architecture" },
 ] as const;
 
 export const tools = [

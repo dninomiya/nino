@@ -105,6 +105,7 @@ export default {
   MainNav: {
     docs: "Docs",
     registry: "Registry",
+    architecture: "Architecture",
     tools: "Tools",
     membership: "Membership",
     archive: "Archive",

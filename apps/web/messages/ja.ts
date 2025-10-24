@@ -102,6 +102,7 @@ export default {
   MainNav: {
     docs: "ドキュメント",
     registry: "レジストリ",
+    architecture: "アーキテクチャ",
     tools: "ツール",
     membership: "メンバーシップ",
     archive: "アーカイブ",
