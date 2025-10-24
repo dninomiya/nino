@@ -100,7 +100,7 @@ brew install tursodatabase/tap/turso
 touch packages/db/local/local.db
 ```
 
-### 2.2 データベースパッケージの環境変数設定
+### 2.4 データベースパッケージの環境変数設定
 
 `packages/db/.env`ファイルを作成：
 
@@ -109,7 +109,7 @@ TURSO_DATABASE_URL=http://127.0.0.1:8080
 TURSO_AUTH_TOKEN=local
 ```
 
-### 2.4 Drizzle設定ファイルの作成
+### 2.5 Drizzle設定ファイルの作成
 
 `packages/db/drizzle.config.ts`を作成：
 
@@ -147,7 +147,7 @@ export const db = drizzle({
 });
 ```
 
-### 2.9 型とZodスキーマの生成
+### 2.7 型とZodスキーマの生成
 
 Drizzleスキーマから型とZodスキーマを作成し、各アプリケーションで使用できるようにします：
 
@@ -301,9 +301,9 @@ export const auth = betterAuth({
 pnpm dev
 ```
 
-## 7. 監視・ログ設定（Sentry）
+## 5. 監視・ログ設定（Sentry）
 
-### 7.1 Sentryの設定
+### 5.1 Sentryの設定
 
 [公式ドキュメント](https://docs.sentry.io/platforms/javascript/guides/nextjs/)のコマンドでSentryを設定してください。
 
@@ -311,9 +311,9 @@ pnpm dev
 @sentry/wizard@latest -i nextjs
 ```
 
-## 9. アプリケーション（web）の環境変数設定
+## 6. アプリケーション（web）の環境変数設定
 
-### 9.1 Webアプリケーションの環境変数設定
+### 6.1 Webアプリケーションの環境変数設定
 
 `apps/web/.env.local`ファイルを作成：
 
@@ -332,7 +332,7 @@ BETTER_AUTH_SECRET は以下のコマンドで生成できます。
 pnpx @better-auth/cli@latest secret
 ```
 
-### 9.3 本番環境の環境変数設定
+### 6.2 本番環境の環境変数設定
 
 本番環境では以下の環境変数を設定してください：
 
@@ -341,9 +341,9 @@ pnpx @better-auth/cli@latest secret
 - `BETTER_AUTH_SECRET`
 - `SENTRY_AUTH_TOKEN`
 
-## 10. 開発ワークフロー
+## 7. 開発ワークフロー
 
-### 10.1 基本的なコマンド
+### 7.1 基本的なコマンド
 
 ```bash
 # 開発サーバーの起動
@@ -364,7 +364,7 @@ pnpm format
 
 _
 
-### 10.2 TurborepoとStudioタスクの設定
+### 7.2 TurborepoとStudioタスクの設定
 
 このプロジェクトでは、Turborepoを使用してモノレポ全体のタスクを効率的に管理しています。Drizzle Studioを起動するためのタスクや、依存する環境変数を設定します。
 
@@ -425,7 +425,7 @@ Drizzle Studioは、データベーススキーマの可視化、データの確
 
 それぞれターミナルに表示されるURLをブラウザで開くことでアクセスできます。
 
-### 10.3 データベース操作
+### 7.3 データベース操作
 
 ```bash
 # マイグレーション生成
@@ -439,7 +439,7 @@ pnpm migrate
 pnpm studio
 ```
 
-### 10.4 実装フローに従った開発手順
+### 7.4 実装フローに従った開発手順
 
 たとえばペットに関する機能を開発する場合、以下の順序で開発を進めてください：
 
@@ -482,7 +482,7 @@ pnpm studio
    import { auth } from "@workspace/auth";
    ```
 
-### 10.5 環境変数を追加する場合
+### 7.5 環境変数を追加する場合
 
 いずれかのアプリ（/apps/web など）に環境変数を追加する場合、必ず `turbo.json` に定義を追加してください。
 
@@ -496,9 +496,9 @@ pnpm studio
 }
 ```
 
-## 11. トラブルシューティング
+## 8. トラブルシューティング
 
-### 11.1 よくある問題
+### 8.1 よくある問題
 
 1. **パッケージのバージョンを揃える方法**
 
@@ -509,9 +509,9 @@ pnpm studio
    pnpm up next@latest -r
    ```
 
-## 12. 最終Tips
+## 9. 最終Tips
 
-### 12.1 .env.exampleファイルの作成
+### 9.1 .env.exampleファイルの作成
 
 各アプリ、パッケージに`.env.example`ファイルを作成して、必要な環境変数のテンプレートを提供することをお勧めします：
 
@@ -539,7 +539,7 @@ BETTER_AUTH_SECRET=
 TURSO_DATABASE_URL=
 ```
 
-## 13. 追加リソース
+## 10. 追加リソース
 
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [Next.js Documentation](https://nextjs.org/docs)
