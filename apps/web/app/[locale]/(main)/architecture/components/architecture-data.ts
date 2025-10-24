@@ -1,5 +1,17 @@
 import { Node, Edge } from "@xyflow/react";
 
+// 共通のエッジスタイル
+const commonEdgeStyle = {
+  stroke: "var(--primary)",
+  strokeWidth: 2,
+  strokeOpacity: 0.5,
+};
+
+const commonMarkerEnd = {
+  type: "arrowclosed" as const,
+  color: "var(--border)",
+};
+
 export interface ArchitectureNodeData {
   label: string;
   type: "app" | "package" | "database" | "external" | "baas";
@@ -212,12 +224,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "auth-to-web",
@@ -226,12 +235,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "ui-to-web",
@@ -240,12 +246,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "lib-to-web",
@@ -254,12 +257,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "discord-to-web",
@@ -268,12 +268,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "registry-to-web",
@@ -282,12 +279,9 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#3b82f6", strokeWidth: 3 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
+    markerEnd: commonMarkerEnd,
   },
 
   // パッケージ間の依存関係
@@ -298,11 +292,8 @@ export const initialEdges: Edge[] = [
     target: "db-package",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#10b981", strokeWidth: 2 },
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
+    style: commonEdgeStyle,
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "registry-to-ui",
@@ -311,11 +302,8 @@ export const initialEdges: Edge[] = [
     target: "ui-package",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#10b981", strokeWidth: 2 },
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
+    style: commonEdgeStyle,
+    markerEnd: commonMarkerEnd,
   },
 
   // 外部サービスからのデータフロー
@@ -326,12 +314,9 @@ export const initialEdges: Edge[] = [
     target: "discord-package",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#f59e0b", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#f59e0b",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "ai-to-web",
@@ -340,29 +325,12 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#f59e0b", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#f59e0b",
-    },
+    markerEnd: commonMarkerEnd,
   },
 
   // BaaSサービスからWeb Appへの接続
-  {
-    id: "turso-to-web",
-    source: "turso",
-    sourceHandle: "out",
-    target: "web-app",
-    targetHandle: "in",
-    type: "smoothstep",
-    style: { stroke: "#8b5cf6", strokeWidth: 2 },
-    animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#8b5cf6",
-    },
-  },
   {
     id: "web-to-vercel",
     source: "web-app",
@@ -370,12 +338,9 @@ export const initialEdges: Edge[] = [
     target: "vercel",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#8b5cf6", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#8b5cf6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "stripe-to-web",
@@ -386,12 +351,9 @@ export const initialEdges: Edge[] = [
     type: "smoothstep",
     label: "payment",
     labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#8b5cf6", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#8b5cf6",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "resend-to-web",
@@ -402,12 +364,9 @@ export const initialEdges: Edge[] = [
     type: "smoothstep",
     label: "email",
     labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#8b5cf6", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#8b5cf6",
-    },
+    markerEnd: commonMarkerEnd,
   },
 
   // Database PackageとTursoの双方向接続
@@ -418,12 +377,9 @@ export const initialEdges: Edge[] = [
     target: "db-package",
     targetHandle: "inRight",
     type: "smoothstep",
-    style: { stroke: "#10b981", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
+    markerEnd: commonMarkerEnd,
   },
   {
     id: "db-package-to-turso",
@@ -432,11 +388,8 @@ export const initialEdges: Edge[] = [
     target: "turso",
     targetHandle: "in",
     type: "smoothstep",
-    style: { stroke: "#10b981", strokeWidth: 2 },
+    style: commonEdgeStyle,
     animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
+    markerEnd: commonMarkerEnd,
   },
 ];
