@@ -46,25 +46,94 @@ const nodeTypeIcons = {
   baas: "☁️",
 };
 
-// ノードタイプ別のHandle配置設定
-const nodeTypeHandleConfig = {
-  app: {
+// ノードタイプID別のHandle配置設定
+const nodeTypeHandleConfig: Record<
+  string,
+  {
+    in: { position: Position; top?: string; left?: string };
+    out: { position: Position; top?: string; left?: string };
+    inRight?: { position: Position; top?: string; left?: string };
+    outRight?: { position: Position; top?: string; left?: string };
+  }
+> = {
+  // アプリケーションタイプ（左右にHandle）
+  "app-main": {
     in: { position: Position.Right, top: "66%", left: undefined },
     out: { position: Position.Right, top: "33%", left: undefined },
   },
-  package: {
+  "app-sidebar": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Right, top: "33%", left: undefined },
+  },
+
+  // パッケージタイプ（左右にHandle）
+  "package-db": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+    // 右側のHandleも追加（Tursoとの接続用）
+    inRight: { position: Position.Right, top: "66%", left: undefined },
+    outRight: { position: Position.Right, top: "33%", left: undefined },
+  },
+  "package-auth": {
     in: { position: Position.Left, top: "66%", left: undefined },
     out: { position: Position.Left, top: "33%", left: undefined },
   },
-  database: {
+  "package-ui": {
     in: { position: Position.Left, top: "66%", left: undefined },
     out: { position: Position.Left, top: "33%", left: undefined },
   },
-  external: {
+  "package-lib": {
     in: { position: Position.Left, top: "66%", left: undefined },
     out: { position: Position.Left, top: "33%", left: undefined },
   },
-  baas: {
+  "package-discord": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  "package-registry": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+
+  // データベースタイプ（左右にHandle）
+  "database-main": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+
+  // 外部サービスタイプ（左右にHandle）
+  "external-rss": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  "external-discord": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  "external-ai": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+
+  // BaaSサービスタイプ（上下にHandle）
+  "baas-database": {
+    in: { position: Position.Bottom, top: undefined, left: "66%" },
+    out: { position: Position.Bottom, top: undefined, left: "33%" },
+  },
+  // Turso専用（左側にHandle）
+  "baas-turso": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  "baas-hosting": {
+    in: { position: Position.Bottom, top: undefined, left: "66%" },
+    out: { position: Position.Bottom, top: undefined, left: "33%" },
+  },
+  "baas-payment": {
+    in: { position: Position.Bottom, top: undefined, left: "66%" },
+    out: { position: Position.Bottom, top: undefined, left: "33%" },
+  },
+  "baas-email": {
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
   },
@@ -100,7 +169,7 @@ const getTechnologyIcon = (tech: string) => {
 };
 
 export const CustomNode = memo(({ data, selected }: NodeProps) => {
-  const { label, type, description, technologies } =
+  const { label, type, nodeTypeId, description, technologies } =
     data as unknown as ArchitectureNodeData;
   const colorClass = nodeTypeColors[type as keyof typeof nodeTypeColors];
   const icon = nodeTypeIcons[type as keyof typeof nodeTypeIcons];
@@ -108,10 +177,11 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   // グループ内のノードかどうかを判定
   const isInGroup = data.parentId;
 
-  // ノードタイプに応じたHandle設定を取得
-  const handleConfig =
-    nodeTypeHandleConfig[type as keyof typeof nodeTypeHandleConfig] ||
-    nodeTypeHandleConfig.package;
+  // ノードタイプIDに応じたHandle設定を取得
+  const handleConfig = nodeTypeHandleConfig[nodeTypeId] || {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  };
 
   // ノードタイプに応じたサイズ設定
   const getNodeSize = (nodeType: string) => {
@@ -148,6 +218,41 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
           ...(handleConfig.out.left ? { left: handleConfig.out.left } : {}),
         }}
       />
+
+      {/* 右側のHandle（Database Package用） */}
+      {handleConfig.inRight && (
+        <Handle
+          type="target"
+          id="inRight"
+          position={handleConfig.inRight.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.inRight.top
+              ? { top: handleConfig.inRight.top }
+              : {}),
+            ...(handleConfig.inRight.left
+              ? { left: handleConfig.inRight.left }
+              : {}),
+          }}
+        />
+      )}
+
+      {handleConfig.outRight && (
+        <Handle
+          type="source"
+          id="outRight"
+          position={handleConfig.outRight.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.outRight.top
+              ? { top: handleConfig.outRight.top }
+              : {}),
+            ...(handleConfig.outRight.left
+              ? { left: handleConfig.outRight.left }
+              : {}),
+          }}
+        />
+      )}
 
       <CardHeader className="p-0">
         <CardTitle>{label}</CardTitle>

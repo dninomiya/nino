@@ -3,6 +3,7 @@ import { Node, Edge } from "@xyflow/react";
 export interface ArchitectureNodeData {
   label: string;
   type: "app" | "package" | "database" | "external" | "baas";
+  nodeTypeId: string; // ノードタイプのID（Handle設定のマッチング用）
   description?: string;
   technologies?: string[];
   dependencies?: string[];
@@ -18,6 +19,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Web App",
       type: "app",
+      nodeTypeId: "app-main",
       description: "Next.js 16 メインアプリケーション",
       technologies: ["Next.js 16"],
       dependencies: [
@@ -39,6 +41,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Database Package",
       type: "package",
+      nodeTypeId: "package-db",
       description: "Drizzle ORM によるDB接続・スキーマ管理・マイグレーション",
       technologies: ["Drizzle ORM", "SQLite", "Zod"],
       dependencies: [],
@@ -51,6 +54,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Auth Package",
       type: "package",
+      nodeTypeId: "package-auth",
       description: "Better Auth 認証システム",
       technologies: ["Better Auth"],
       dependencies: ["@workspace/db"],
@@ -63,6 +67,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "UI Package",
       type: "package",
+      nodeTypeId: "package-ui",
       description: "共有UIコンポーネント",
       technologies: ["Tailwind CSS", "Radix UI"],
       dependencies: [],
@@ -75,6 +80,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Lib Package",
       type: "package",
+      nodeTypeId: "package-lib",
       description: "定数、ユーティリティ",
       technologies: [],
       dependencies: [],
@@ -87,6 +93,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Discord Package",
       type: "package",
+      nodeTypeId: "package-discord",
       description: "Discord通知システム",
       technologies: ["Discord.js"],
       dependencies: [],
@@ -99,12 +106,12 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Registry Package",
       type: "package",
+      nodeTypeId: "package-registry",
       description: "レジストリシステム",
       technologies: ["Next.js"],
       dependencies: ["@workspace/ui"],
     },
   },
-
 
   // 外部サービスノード
   {
@@ -114,6 +121,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "RSS Feeds",
       type: "external",
+      nodeTypeId: "external-rss",
       description: "外部RSSフィード",
       technologies: ["RSS", "XML"],
       dependencies: [],
@@ -126,6 +134,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Discord API",
       type: "external",
+      nodeTypeId: "external-discord",
       description: "Discord Webhook API",
       technologies: ["Discord API", "Webhooks"],
       dependencies: [],
@@ -138,6 +147,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "AI Gateway",
       type: "baas",
+      nodeTypeId: "external-ai",
       description: "AI Gateway",
     },
   },
@@ -146,10 +156,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "turso",
     type: "custom",
-    position: { x: 1000, y: 50 },
+    position: { x: 650, y: 50 }, // Database Packageの隣に移動
     data: {
       label: "Turso",
       type: "baas",
+      nodeTypeId: "baas-turso", // 左側Handle用のタイプIDに変更
       description: "データベース",
       dependencies: [],
     },
@@ -161,6 +172,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Vercel",
       type: "baas",
+      nodeTypeId: "baas-hosting",
       description: "ホスティング",
       dependencies: [],
     },
@@ -172,6 +184,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Stripe",
       type: "baas",
+      nodeTypeId: "baas-payment",
       description: "決済",
       dependencies: [],
     },
@@ -183,6 +196,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Resend",
       type: "baas",
+      nodeTypeId: "baas-email",
       description: "メール送信",
       dependencies: [],
     },
@@ -304,7 +318,6 @@ export const initialEdges: Edge[] = [
     },
   },
 
-
   // 外部サービスからのデータフロー
   {
     id: "discord-to-discord-pkg",
@@ -394,6 +407,36 @@ export const initialEdges: Edge[] = [
     markerEnd: {
       type: "arrowclosed",
       color: "#8b5cf6",
+    },
+  },
+
+  // Database PackageとTursoの双方向接続
+  {
+    id: "turso-to-db-package",
+    source: "turso",
+    sourceHandle: "out",
+    target: "db-package",
+    targetHandle: "inRight",
+    type: "smoothstep",
+    style: { stroke: "#10b981", strokeWidth: 2 },
+    animated: true,
+    markerEnd: {
+      type: "arrowclosed",
+      color: "#10b981",
+    },
+  },
+  {
+    id: "db-package-to-turso",
+    source: "db-package",
+    sourceHandle: "outRight",
+    target: "turso",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: { stroke: "#10b981", strokeWidth: 2 },
+    animated: true,
+    markerEnd: {
+      type: "arrowclosed",
+      color: "#10b981",
     },
   },
 ];
