@@ -149,8 +149,8 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       handles: {
         leftCenterIn: true,
         leftCenterOut: true,
-        rightCenterIn: true,
-        rightCenterOut: true,
+        rightTopIn: true,
+        rightBottomOut: true,
         topCenterOut: true,
       },
     },
@@ -252,7 +252,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "ai-gateway",
     type: "custom",
-    position: { x: 1000, y: 300 },
+    position: { x: 1140, y: 950 },
     data: {
       label: "Vercel AI Gateway",
       type: "baas",
@@ -308,8 +308,8 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     position: { x: 100, y: -50 }, // Web Appノードの横幅に揃えて配置
     data: {
       label: "GitHub",
-      type: "external",
-      nodeTypeId: "external-github", // 上下にHandle用のタイプID
+      type: "baas",
+      nodeTypeId: "baas-github", // 上下にHandle用のタイプID
       description: "ソースコード管理",
       technologies: ["Git", "GitHub"],
       dependencies: [],
@@ -325,17 +325,17 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "stripe",
     type: "custom",
-    position: { x: 840, y: 220 }, // Auth Packageの右に移動
+    position: { x: 960, y: 320 }, // Auth Packageの右に移動
     data: {
       label: "Stripe",
       type: "baas",
       nodeTypeId: "baas-stripe", // 左側Handle用のタイプIDに変更
       description: "決済",
       dependencies: [],
-      size: "w-[200px]",
+      size: "w-[200px] h-[110px]",
       handles: {
-        leftCenterIn: true,
-        leftCenterOut: true,
+        leftTopOut: true,
+        leftBottomIn: true,
       },
     },
   },
@@ -541,20 +541,24 @@ export const initialEdges: Edge[] = [
   {
     id: "stripe-to-auth-package",
     source: "stripe",
-    sourceHandle: "outLeftCenter",
+    sourceHandle: "outLeftTop",
     target: "auth-package",
-    targetHandle: "inRightCenter",
+    targetHandle: "inRightTop",
     type: "smoothstep",
+    label: "webhookイベント",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
   {
     id: "auth-package-to-stripe",
     source: "auth-package",
-    sourceHandle: "outRightCenter",
+    sourceHandle: "outRightBottom",
     target: "stripe",
-    targetHandle: "inLeftCenter",
+    targetHandle: "inLeftBottom",
     type: "smoothstep",
+    label: "顧客の作成",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
