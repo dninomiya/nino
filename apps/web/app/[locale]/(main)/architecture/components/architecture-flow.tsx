@@ -30,10 +30,56 @@ import {
   ArchitectureNodeData,
 } from "./architecture-data";
 import { nodeTypes } from "./node-types";
+import {
+  SiNextdotjs,
+  SiReact,
+  SiTypescript,
+  SiTailwindcss,
+  SiDrizzle,
+  SiSqlite,
+  SiZod,
+  SiBetterauth,
+  SiRadixui,
+  SiDiscord,
+  SiOpenai,
+  SiTurso,
+  SiVercel,
+  SiStripe,
+  SiResend,
+} from "@icons-pack/react-simple-icons";
 
 interface ArchitectureFlowProps {
   className?: string;
 }
+
+// 技術名とアイコンのマッピング
+const getTechnologyIcon = (tech: string) => {
+  const iconMap: Record<
+    string,
+    React.ComponentType<{ className?: string; size?: number }>
+  > = {
+    "Next.js 16": SiNextdotjs,
+    "Next.js": SiNextdotjs,
+    "React 19": SiReact,
+    React: SiReact,
+    TypeScript: SiTypescript,
+    "Tailwind CSS": SiTailwindcss,
+    "Drizzle ORM": SiDrizzle,
+    SQLite: SiSqlite,
+    Zod: SiZod,
+    "Better Auth": SiBetterauth,
+    "Radix UI": SiRadixui,
+    "Discord.js": SiDiscord,
+    "Discord API": SiDiscord,
+    OpenAI: SiOpenai,
+    Turso: SiTurso,
+    Vercel: SiVercel,
+    Stripe: SiStripe,
+    Resend: SiResend,
+  };
+
+  return iconMap[tech] || null;
+};
 
 function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes as any);
@@ -77,7 +123,7 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
         elementsSelectable={true}
       >
         <Background />
-        <Controls />
+        <Controls className="[&>button]:bg-white [&>button]:border-gray-300 [&>button]:text-gray-700 dark:[&>button]:bg-gray-800 dark:[&>button]:border-gray-600 dark:[&>button]:text-gray-300 [&>button:hover]:bg-gray-50 dark:[&>button:hover]:bg-gray-700" />
 
         {/* コントロールパネル - React Flow内に配置 */}
         <div className="absolute top-4 right-4 z-10">
@@ -115,8 +161,8 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
                 <span>データベース</span>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <div className="w-3 h-3 bg-orange-500 rounded"></div>
-                <span>外部サービス</span>
+                <div className="w-3 h-3 bg-cyan-500 rounded"></div>
+                <span>BaaS</span>
               </div>
             </CardContent>
           </Card>
@@ -148,15 +194,24 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
                     <div className="flex flex-wrap gap-1">
                       {(
                         selectedNode.data as unknown as ArchitectureNodeData
-                      )?.technologies?.map((tech: string, index: number) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
+                      )?.technologies?.map((tech: string, index: number) => {
+                        const IconComponent = getTechnologyIcon(tech);
+                        return (
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="text-xs flex items-center gap-1"
+                          >
+                            {IconComponent && (
+                              <IconComponent
+                                size={12}
+                                className="text-current"
+                              />
+                            )}
+                            {tech}
+                          </Badge>
+                        );
+                      })}
                     </div>
                   </div>
                   {(selectedNode.data as unknown as ArchitectureNodeData)

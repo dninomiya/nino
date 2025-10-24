@@ -2,7 +2,7 @@ import { Node, Edge } from "@xyflow/react";
 
 export interface ArchitectureNodeData {
   label: string;
-  type: "app" | "package" | "database" | "external";
+  type: "app" | "package" | "database" | "external" | "baas";
   description?: string;
   technologies?: string[];
   dependencies?: string[];
@@ -167,6 +167,56 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       dependencies: [],
     },
   },
+
+  // BaaSサービスノード
+  {
+    id: "turso",
+    type: "custom",
+    position: { x: 1000, y: 50 },
+    data: {
+      label: "Turso",
+      type: "baas",
+      description: "SQLiteベースのデータベースサービス",
+      technologies: ["Turso", "SQLite"],
+      dependencies: [],
+    },
+  },
+  {
+    id: "vercel",
+    type: "custom",
+    position: { x: 1000, y: 150 },
+    data: {
+      label: "Vercel",
+      type: "baas",
+      description: "ホスティング・デプロイメントサービス",
+      technologies: ["Vercel", "Next.js"],
+      dependencies: [],
+    },
+  },
+  {
+    id: "stripe",
+    type: "custom",
+    position: { x: 1000, y: 250 },
+    data: {
+      label: "Stripe",
+      type: "baas",
+      description: "決済処理サービス",
+      technologies: ["Stripe", "Payment API"],
+      dependencies: [],
+    },
+  },
+  {
+    id: "resend",
+    type: "custom",
+    position: { x: 1000, y: 350 },
+    data: {
+      label: "Resend",
+      type: "baas",
+      description: "メール送信サービス",
+      technologies: ["Resend", "Email API"],
+      dependencies: [],
+    },
+  },
 ];
 
 export const initialEdges: Edge[] = [
@@ -260,6 +310,36 @@ export const initialEdges: Edge[] = [
   {
     id: "ai-to-web",
     source: "ai-gateway",
+    target: "web-app",
+    type: "smoothstep",
+    animated: true,
+  },
+
+  // BaaSサービスからWeb Appへの接続
+  {
+    id: "turso-to-web",
+    source: "turso",
+    target: "web-app",
+    type: "smoothstep",
+    animated: true,
+  },
+  {
+    id: "vercel-to-web",
+    source: "vercel",
+    target: "web-app",
+    type: "smoothstep",
+    animated: true,
+  },
+  {
+    id: "stripe-to-web",
+    source: "stripe",
+    target: "web-app",
+    type: "smoothstep",
+    animated: true,
+  },
+  {
+    id: "resend-to-web",
+    source: "resend",
     target: "web-app",
     type: "smoothstep",
     animated: true,
