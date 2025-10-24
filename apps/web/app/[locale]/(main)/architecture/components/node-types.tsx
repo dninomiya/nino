@@ -84,12 +84,17 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   const isInGroup = data.parentId;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{label}</CardTitle>
+    <Card className="w-[200px] min-h-[120px]">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm">{label}</CardTitle>
         {description && (
           <CardDescription
-            className={`${isInGroup ? "text-[10px]" : "text-xs"} opacity-90`}
+            className={`${isInGroup ? "text-[10px]" : "text-xs"} opacity-90 overflow-hidden`}
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
           >
             {description}
           </CardDescription>
