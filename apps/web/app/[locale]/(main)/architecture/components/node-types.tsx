@@ -27,6 +27,8 @@ import {
   SiVercel,
   SiStripe,
   SiResend,
+  SiGit,
+  SiGithub,
 } from "@icons-pack/react-simple-icons";
 import { cn } from "@/lib/utils";
 
@@ -187,6 +189,8 @@ const getTechnologyIcon = (tech: string) => {
     Vercel: SiVercel,
     Stripe: SiStripe,
     Resend: SiResend,
+    Git: SiGit,
+    GitHub: SiGithub,
   };
 
   return iconMap[tech] || null;

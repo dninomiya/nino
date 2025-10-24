@@ -62,7 +62,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "auth-package",
     type: "custom",
-    position: { x: 400, y: 150 },
+    position: { x: 400, y: 200 },
     data: {
       label: "Auth Package",
       type: "package",
@@ -75,7 +75,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "ui-package",
     type: "custom",
-    position: { x: 400, y: 250 },
+    position: { x: 400, y: 350 },
     data: {
       label: "UI Package",
       type: "package",
@@ -88,7 +88,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "lib-package",
     type: "custom",
-    position: { x: 400, y: 350 },
+    position: { x: 400, y: 500 },
     data: {
       label: "Lib Package",
       type: "package",
@@ -101,7 +101,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "discord-package",
     type: "custom",
-    position: { x: 400, y: 450 },
+    position: { x: 400, y: 650 },
     data: {
       label: "Discord Package",
       type: "package",
@@ -114,7 +114,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "registry-package",
     type: "custom",
-    position: { x: 400, y: 550 },
+    position: { x: 400, y: 800 },
     data: {
       label: "Registry Package",
       type: "package",
