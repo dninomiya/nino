@@ -108,6 +108,10 @@ const nodeTypeHandleConfig: Record<
     in: { position: Position.Left, top: "66%", left: undefined },
     out: { position: Position.Left, top: "33%", left: undefined },
   },
+  "package-ai": {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
 
   // データベースタイプ（左右にHandle）
   "database-main": {
@@ -233,6 +237,7 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
     "package-lib": "w-[180px]",
     "package-discord": "w-[200px]",
     "package-registry": "w-[200px]",
+    "package-ai": "w-[200px]",
 
     // データベース
     "database-main": "w-[200px]",

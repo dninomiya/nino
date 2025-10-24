@@ -137,6 +137,19 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       dependencies: ["@workspace/ui"],
     },
   },
+  {
+    id: "ai-package",
+    type: "custom",
+    position: { x: 400, y: 950 },
+    data: {
+      label: "AI Package",
+      type: "package",
+      nodeTypeId: "package-ai",
+      description: "AI機能・プロンプト管理",
+      technologies: ["OpenAI", "Vercel AI"],
+      dependencies: [],
+    },
+  },
 
   // 外部サービスノード
   {
@@ -307,6 +320,17 @@ export const initialEdges: Edge[] = [
   },
 
   // 外部サービスからのデータフロー
+  {
+    id: "ai-package-to-gateway",
+    source: "ai-package",
+    sourceHandle: "out",
+    target: "ai-gateway",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
 
   // Web AppからSentryへの接続
   {
