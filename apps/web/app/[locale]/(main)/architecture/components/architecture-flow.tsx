@@ -1,21 +1,14 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import React from "react";
 import {
   ReactFlow,
   Background,
   Controls,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Connection,
-  Edge,
-  Node,
   ReactFlowProvider,
   NodeTypes,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
@@ -82,64 +75,22 @@ const getTechnologyIcon = (tech: string) => {
 };
 
 function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes as any);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
-
-  const onLayout = useCallback(() => {
-    // 自動レイアウト機能（簡易版）
-    const layoutedNodes = nodes.map((node, index) => ({
-      ...node,
-      position: {
-        x: (index % 3) * 300 + 100,
-        y: Math.floor(index / 3) * 200 + 100,
-      },
-    }));
-    setNodes(layoutedNodes);
-  }, [nodes, setNodes]);
-
-  const selectedNode = useMemo(() => {
-    return nodes.find((node) => node.selected);
-  }, [nodes]);
-
   return (
     <div className={`h-[600px] w-full relative ${className}`}>
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        nodes={initialNodes as any}
+        edges={initialEdges as any}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         className="bg-gray-50 dark:bg-gray-900"
         nodesDraggable={false}
         nodesConnectable={false}
-        elementsSelectable={true}
+        elementsSelectable={false}
+        nodesFocusable={false}
       >
         <Background />
         <Controls className="[&>button]:bg-white [&>button]:border-gray-300 [&>button]:text-gray-700 dark:[&>button]:bg-gray-800 dark:[&>button]:border-gray-600 dark:[&>button]:text-gray-300 [&>button:hover]:bg-gray-50 dark:[&>button:hover]:bg-gray-700" />
-
-        {/* コントロールパネル - React Flow内に配置 */}
-        <div className="absolute top-4 right-4 z-10">
-          <div className="flex flex-col gap-2">
-            <Button onClick={onLayout} size="sm" variant="outline">
-              📐 レイアウト整列
-            </Button>
-            <Button
-              onClick={() => window.location.reload()}
-              size="sm"
-              variant="outline"
-            >
-              🔄 リセット
-            </Button>
-          </div>
-        </div>
 
         {/* 凡例 - React Flow内に配置 */}
         <div className="absolute top-4 left-4 z-10">
@@ -167,79 +118,6 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
             </CardContent>
           </Card>
         </div>
-
-        {/* 選択されたノードの詳細情報 - React Flow内に配置 */}
-        {selectedNode && (
-          <div className="absolute bottom-4 left-4 z-10 max-w-sm">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <span>CustomNode</span>
-                  {
-                    (selectedNode.data as unknown as ArchitectureNodeData)
-                      ?.label
-                  }
-                </CardTitle>
-                <CardDescription>
-                  {
-                    (selectedNode.data as unknown as ArchitectureNodeData)
-                      ?.description
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div>
-                    <h4 className="text-xs font-medium mb-1">技術スタック:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {(
-                        selectedNode.data as unknown as ArchitectureNodeData
-                      )?.technologies?.map((tech: string, index: number) => {
-                        const IconComponent = getTechnologyIcon(tech);
-                        return (
-                          <Badge
-                            key={index}
-                            variant="secondary"
-                            className="text-xs flex items-center gap-1"
-                          >
-                            {IconComponent && (
-                              <IconComponent
-                                size={12}
-                                className="text-current"
-                              />
-                            )}
-                            {tech}
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  {(selectedNode.data as unknown as ArchitectureNodeData)
-                    ?.dependencies &&
-                    (selectedNode.data as unknown as ArchitectureNodeData)
-                      .dependencies!.length > 0 && (
-                      <div>
-                        <h4 className="text-xs font-medium mb-1">依存関係:</h4>
-                        <div className="flex flex-wrap gap-1">
-                          {(
-                            selectedNode.data as unknown as ArchitectureNodeData
-                          ).dependencies!.map((dep: string, index: number) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {dep}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </ReactFlow>
     </div>
   );

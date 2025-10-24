@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Handle, Position, NodeProps, NodeTypes } from "@xyflow/react";
+import { NodeProps, NodeTypes } from "@xyflow/react";
 import {
   Card,
   CardContent,
@@ -116,17 +116,6 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
           )}
         </CardContent>
       </Card>
-
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="w-3 h-3 bg-gray-400"
-      />
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="w-3 h-3 bg-gray-400"
-      />
     </div>
   );
 });
