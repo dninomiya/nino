@@ -140,37 +140,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
 
   // 外部サービスノード
   {
-    id: "rss-feeds",
-    type: "custom",
-    position: { x: 100, y: 300 },
-    data: {
-      label: "RSS Feeds",
-      type: "external",
-      nodeTypeId: "external-rss",
-      description: "外部RSSフィード",
-      technologies: ["RSS", "XML"],
-      dependencies: [],
-    },
-  },
-  {
-    id: "discord-api",
-    type: "custom",
-    position: { x: 100, y: 400 },
-    data: {
-      label: "Discord API",
-      type: "external",
-      nodeTypeId: "external-discord",
-      description: "Discord Webhook API",
-      technologies: ["Discord API", "Webhooks"],
-      dependencies: [],
-    },
-  },
-  {
     id: "ai-gateway",
     type: "custom",
     position: { x: 1000, y: 300 },
     data: {
-      label: "AI Gateway",
+      label: "Vercel AI Gateway",
       type: "baas",
       nodeTypeId: "external-ai",
       description: "AI Gateway",
@@ -333,28 +307,6 @@ export const initialEdges: Edge[] = [
   },
 
   // 外部サービスからのデータフロー
-  {
-    id: "discord-to-discord-pkg",
-    source: "discord-api",
-    sourceHandle: "out",
-    target: "discord-package",
-    targetHandle: "in",
-    type: "smoothstep",
-    style: commonEdgeStyle,
-    animated: true,
-    markerEnd: commonMarkerEnd,
-  },
-  {
-    id: "ai-to-web",
-    source: "ai-gateway",
-    sourceHandle: "out",
-    target: "web-app",
-    targetHandle: "in",
-    type: "smoothstep",
-    style: commonEdgeStyle,
-    animated: true,
-    markerEnd: commonMarkerEnd,
-  },
 
   // Web AppからSentryへの接続
   {
