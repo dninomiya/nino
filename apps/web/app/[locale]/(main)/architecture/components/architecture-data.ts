@@ -19,7 +19,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       label: "Web App",
       type: "app",
       description: "Next.js 16 メインアプリケーション",
-      technologies: ["Next.js 16", "Tailwind CSS"],
+      technologies: ["Next.js 16"],
       dependencies: [
         "@workspace/db",
         "@workspace/auth",
@@ -116,6 +116,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       backgroundColor: "transparent",
       border: "none",
       borderRadius: "12px",
+      zIndex: -1, // 最背面に配置
     },
     data: {
       label: "Database",
@@ -502,10 +503,10 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "vercel-to-web",
-    source: "vercel",
+    id: "web-to-vercel",
+    source: "web-app",
     sourceHandle: "out",
-    target: "web-app",
+    target: "vercel",
     targetHandle: "in",
     type: "smoothstep",
     label: "deploy",

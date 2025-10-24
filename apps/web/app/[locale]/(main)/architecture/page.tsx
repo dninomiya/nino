@@ -10,7 +10,7 @@ export default function ArchitecturePage() {
         </p>
       </div>
 
-      <ArchitectureFlow className="rounded-lg" />
+      <ArchitectureFlow className="rounded-2xl overflow-hidden border" />
 
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>

@@ -28,13 +28,14 @@ import {
   SiStripe,
   SiResend,
 } from "@icons-pack/react-simple-icons";
+import { cn } from "@/lib/utils";
 
 const nodeTypeColors = {
-  app: "bg-blue-500 border-blue-600 text-white",
-  package: "bg-green-500 border-green-600 text-white",
-  database: "bg-purple-500 border-purple-600 text-white",
-  external: "bg-orange-500 border-orange-600 text-white",
-  baas: "bg-cyan-500 border-cyan-600 text-white",
+  app: "border-blue-600 text-white",
+  package: "border-green-600 text-white",
+  database: "border-purple-600 text-white",
+  external: "border-orange-600 text-white",
+  baas: "border-cyan-600 text-white",
 };
 
 const nodeTypeIcons = {
@@ -84,21 +85,21 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   const isInGroup = data.parentId;
 
   return (
-    <Card className="w-[200px] text-sm p-3">
+    <Card className={cn("w-[200px] text-sm p-3", colorClass)}>
       {/* Handle for incoming connections */}
       <Handle
         type="target"
-        position={Position.Left}
         id="in"
-        style={{ background: "#555" }}
+        position={Position.Left}
+        style={{ background: "var(--muted)", top: "66%" }}
       />
 
       {/* Handle for outgoing connections */}
       <Handle
         type="source"
-        position={Position.Right}
         id="out"
-        style={{ background: "#555" }}
+        position={Position.Left}
+        style={{ background: "var(--muted)", top: "33%" }}
       />
 
       <CardHeader className="p-0">
@@ -117,7 +118,7 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
         )}
       </CardHeader>
       {technologies && technologies.length > 0 && (
-        <CardContent>
+        <CardContent className="p-0">
           <div className="flex flex-wrap gap-1">
             {technologies.map((tech: string, index: number) => {
               const IconComponent = getTechnologyIcon(tech);
