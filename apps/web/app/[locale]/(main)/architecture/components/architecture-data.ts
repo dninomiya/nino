@@ -180,12 +180,25 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "vercel",
     type: "custom",
-    position: { x: 100, y: 0 }, // Web Appの上に移動
+    position: { x: 100, y: -100 }, // Web Appの上に移動
     data: {
       label: "Vercel",
       type: "baas",
       nodeTypeId: "baas-vercel", // 下側Handle用のタイプIDに変更
       description: "ホスティング",
+      dependencies: [],
+    },
+  },
+  {
+    id: "github",
+    type: "custom",
+    position: { x: 100, y: -50 }, // VercelとWeb Appの間に配置
+    data: {
+      label: "GitHub",
+      type: "external",
+      nodeTypeId: "external-github", // 上下にHandle用のタイプID
+      description: "ソースコード管理",
+      technologies: ["Git", "GitHub"],
       dependencies: [],
     },
   },
@@ -330,12 +343,36 @@ export const initialEdges: Edge[] = [
     markerEnd: commonMarkerEnd,
   },
 
-  // BaaSサービスからWeb Appへの接続
+  // Web AppからGitHubへの接続
   {
-    id: "web-to-vercel",
+    id: "web-to-github",
     source: "web-app",
     sourceHandle: "outTop",
+    target: "github",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
+  // GitHubからVercelへの接続
+  {
+    id: "github-to-vercel",
+    source: "github",
+    sourceHandle: "outTop",
     target: "vercel",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
+  // GitHubからTursoへの接続
+  {
+    id: "github-to-turso",
+    source: "github",
+    sourceHandle: "out",
+    target: "turso",
     targetHandle: "in",
     type: "smoothstep",
     style: commonEdgeStyle,

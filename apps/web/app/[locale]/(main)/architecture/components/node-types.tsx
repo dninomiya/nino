@@ -142,6 +142,12 @@ const nodeTypeHandleConfig: Record<
     in: { position: Position.Bottom, top: undefined, left: "50%" },
     out: { position: Position.Bottom, top: undefined, left: "50%" },
   },
+  // GitHub専用（上下にHandle）
+  "external-github": {
+    in: { position: Position.Bottom, top: undefined, left: "50%" },
+    out: { position: Position.Bottom, top: undefined, left: "33%" },
+    outTop: { position: Position.Top, top: undefined, left: "50%" },
+  },
   "baas-payment": {
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
