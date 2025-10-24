@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { NodeProps, NodeTypes } from "@xyflow/react";
+import { NodeProps, NodeTypes, Handle, Position } from "@xyflow/react";
 import {
   Card,
   CardContent,
@@ -84,7 +84,23 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   const isInGroup = data.parentId;
 
   return (
-    <Card className="w-[200px] min-h-[120px]">
+    <Card className="w-[200px] min-h-[120px] relative">
+      {/* Handle for incoming connections */}
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="in"
+        style={{ background: "#555" }}
+      />
+
+      {/* Handle for outgoing connections */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="out"
+        style={{ background: "#555" }}
+      />
+
       <CardHeader className="pb-2">
         <CardTitle className="text-sm">{label}</CardTitle>
         {description && (
