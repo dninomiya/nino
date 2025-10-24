@@ -79,7 +79,8 @@ export async function CodeBlock({
           {codesWithValue.map((item, i) => {
             const Icon = icons[item.lang as keyof typeof icons];
             const label =
-              item.title || (item.lang === "sh" ? "ターミナル" : item.lang);
+              item.title ||
+              (item.lang.match(/^(sh|bash)$/) ? "ターミナル" : item.lang);
 
             return (
               <CodeTrigger key={i} value={item.value} group={item.group}>

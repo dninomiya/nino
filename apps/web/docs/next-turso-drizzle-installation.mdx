@@ -6,104 +6,135 @@ createdAt: 2025-10-23
 
 https://www.youtube.com/watch?v=mU7kn7lxKEQ&feature=youtu.be
 
-[https://github.com/nino-plus/turso-setup](https://github.com/nino-plus/turso-setup)
-
-turborepo バージョン
-
-[https://github.com/nino-plus/turso-turborepo](https://github.com/nino-plus/turso-turborepo)
-
-
 
 ## 概要
 
-[Turso](https://turso.tech/) は 無料で100のDBを作成できるなど、Supabaseに比べ圧倒的なコストパフォーマンスとなっています。いくつもの個人アプリをリリースしたい人や、学習中で複数プロダクトを気軽に作りたい人におすすめです。
+以下の技術スタックで環境構築していきます。
 
-## テンプレート
+- Next.js / フレームワーク
+- shadcn/ui / UIキット
+- Turso / データベース
+- Drizzle / ORM
+- Better Auth / 認証ライブラリ
+- Turborepo / モノリポ
+- Sentry / 監視ツール
+- Vitest / テストライブラリ
+- Playwright / E2Eテストライブラリ
+- AGENTS.md / エージェントドキュメント
 
-コマンド一発で環境構築を終えたい人は以下のテンプレートを使用してください。
+## 1. プロジェクトの初期化
 
-https://github.com/nino-plus/turborepo-template
-
-## Next.js & shadcn/ui のインストール
-
-Turborepo, Next.js, shadcn/ui を使った monorepo 環境を作成します。
+### 1.1 リポジトリのクローンとセットアップ
 
 ```bash
 pnpx shadcn@latest init -t next-monorepo -y
 ```
 
-## Turso コマンドのインストール
+### 1.2 ワークスペース構成の確認
 
-どこでも良いのでターミナルで以下を実行してください。コマンドインストール後は都度インストールする必要はありません。
+このプロジェクトはTurborepoを使用したモノレポ構成です。このドキュメント通りに進めると、最終的に以下のようになります。
+
+```sh title=ディレクトリ構成
+my-app/
+├── apps/
+│   └── web/                 # Next.jsアプリケーション
+├── packages/
+│   ├── auth/               # Better Auth認証パッケージ
+│   ├── db/                 # Drizzle ORM + Tursoデータベース
+│   ├── eslint-config/      # 共有ESLint設定
+│   ├── lib/                # 共有ライブラリ
+│   ├── typescript-config/  # 共有TypeScript設定
+│   └── ui/                 # shadcn/uiコンポーネント
+└── turbo.json              # Turborepo設定
+```
+
+## 2. データベースパッケージ（db）の作成
+
+### 2.1 データベースパッケージの初期化
+
+以下の内容で `packages/db/package.json` を作成します：
+
+```json
+{
+  "name": "@workspace/db",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "turso dev -f local/local.db",
+    "generate": "pnpm drizzle-kit generate",
+    "migrate": "pnpm drizzle-kit migrate",
+    "gm": "pnpm drizzle-kit generate && pnpm drizzle-kit migrate",
+    "studio": "pnpm drizzle-kit studio",
+    "generate:types": "drizzle-kit introspect --out=./types",
+    "generate:zod": "drizzle-zod --out=./zod --schema=./schemas"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.6",
+    "drizzle-zod": "^0.8.3",
+    "nanoid": "^5.1.6",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@workspace/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.31.5"
+  }
+}
+```
+
+### 2.2 必要な依存関係のインストール
 
 ```bash
+pnpm install
+```
+
+### 2.3 Tursoのセットアップ
+
+```bash
+# Turso CLIのインストール
 brew install tursodatabase/tap/turso
+
+# ローカルデータベースの作成
+touch packages/db/local/local.db
 ```
 
-## プロジェクト環境に Drizzle をインストール
+### 2.2 データベースパッケージの環境変数設定
 
-```bash
-pnpm add drizzle-orm dotenv @libsql/client
-pnpm add -D drizzle-kit
-```
+`packages/db/.env`ファイルを作成：
 
-## ローカルのDBと接続する
-
-リモートのDB枠を消費しないために、開発時はローカルDBと接続することを推奨します。
-
-`db/local/local.db` の空ファイルを作成した上で以下を実行
-
-プロジェクト環境で実行し、ローカルDBを起動
-
-```bash
-turso dev -f db/local/local.db
-```
-
-```bash title=.env
+```bash title=packages/db/.env
 TURSO_DATABASE_URL=http://127.0.0.1:8080
+TURSO_AUTH_TOKEN=local
 ```
 
-gitignore に以下を追加
+### 2.4 Drizzle設定ファイルの作成
 
-```bash
-/db/local/
+`packages/db/drizzle.config.ts`を作成：
+
+```typescript title=packages/db/drizzle.config.ts
+import 'dotenv/config'
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+  schema: "./schemas/*.ts",
+  out: "./migrations",
+  dialect: "turso",
+  dbCredentials: {
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN || "dev",
+  },
+});
 ```
 
-## リモートDBの作成
+### 2.6 データベース接続の設定
 
-Tursoダッシュボードから作成可能ですが、以下のコマンドで作成することもできます。
+`packages/db/index.ts`を作成：
 
-```bash
-# リモートアカウントに接続
-turso auth login
-
-# リモートDBを作成
-turso db create my-app
-```
-
-DBへの接続情報は以下のコマンドで確認できます。
-
-```bash
-# DB のURLを表示
-turso db show my-app
-
-# DB の認証コードを生成
-turso db tokens create my-app
-```
-
-```bash title=.env
-TURSO_DATABASE_URL=
-TURSO_AUTH_TOKEN=
-```
-
-通常は上記のキーを Vercel 本番環境にセットすればOKです。また、Preview環境用のブランチを作成し、Vercelプレビュー環境の環境変数にセットすることで本番と確認環境のDBを切り分けることもできます。
-
-## Drizzle との接続
-
-```tsx title=db/index.ts
+```typescript title=packages/db/index.ts
+import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql/web";
-// まだ存在しない場合コメントアウト
-import * as authSchema from "./schemas/auth";
 
 export const db = drizzle({
   connection: {
@@ -111,255 +142,423 @@ export const db = drizzle({
     authToken: process.env.TURSO_AUTH_TOKEN!,
   },
   schema: {
-    ...authSchema,
+    // 後で追加
   },
 });
 ```
 
-```tsx title=drizzle.config.ts
-import "dotenv/config";
-import { defineConfig } from "drizzle-kit";
+### 2.9 型とZodスキーマの生成
 
-export default defineConfig({
-  out: "./db/migrations",
-  schema: "./db/schemas/*.ts",
-  dialect: "turso",
-  dbCredentials: {
-    url: process.env.TURSO_DATABASE_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN! || "local",
-  },
-});
+Drizzleスキーマから型とZodスキーマを作成し、各アプリケーションで使用できるようにします：
+
+```typescript title=packages/db/types/index.ts
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { users, sessions } from "../schemas/auth";
+
+export type User = InferSelectModel<typeof users>;
+export type NewUser = InferInsertModel<typeof users>;
+export type Session = InferSelectModel<typeof sessions>;
+export type NewSession = InferInsertModel<typeof sessions>;
 ```
 
-## Better Auth との連携
+```typescript title=packages/db/zod/index.ts
+import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { users, sessions } from "../schemas/auth";
 
-通常通り Drizzle と連携してください。その際、 `provider` を `sqlite` に変更してください。
+export const insertUserSchema = createInsertSchema(users);
+export const selectUserSchema = createSelectSchema(users);
+export const insertSessionSchema = createInsertSchema(sessions);
+export const selectSessionSchema = createSelectSchema(sessions);
+```
 
-```tsx
+## 3. Next.jsアプリケーションの設定
+
+### 3.1 アプリケーションの起動
+
+```bash
+# ルートディレクトリから
+pnpm dev
+
+# または、webアプリのみ起動
+cd apps/web
+pnpm dev
+```
+
+### 3.2 Next.js設定の特徴
+
+- **Next.js 16.0.0**を使用
+- **Turbopack**で開発サーバーを起動
+- **MDX**サポート（ドキュメント用）
+- **Sentry**統合
+- **国際化（i18n）**サポート
+
+## 4. 認証パッケージ（auth）の作成
+
+### 4.1 認証パッケージの初期化
+
+まず、`packages/auth`ディレクトリに`package.json`を作成します：
+
+```bash
+# packages/authディレクトリに移動
+cd packages/auth
+
+# package.jsonの作成
+pnpm init
+```
+
+### 4.2 必要な依存関係のインストール
+
+```bash
+# Better Auth関連の依存関係をインストール
+pnpm add better-auth
+pnpm add -D @types/node
+```
+
+### 4.3 認証パッケージの環境変数設定
+
+`packages/auth/.env`ファイルを作成：
+
+```bash title=packages/auth/.env
+# Better Auth設定
+BETTER_AUTH_SECRET=your-secret-key-here
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+### 4.2 Better Authの設定
+
+`packages/auth/index.ts`で認証設定を作成：
+
+```typescript title=packages/auth/index.ts
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db";
-import { nanoid } from "nanoid";
+import { db } from "@workspace/db";
 import { nextCookies } from "better-auth/next-js";
-import { getBaseURL } from "./get-base-url";
+import { anonymous } from "better-auth/plugins";
 
 export const auth = betterAuth({
-  baseURL: getBaseURL(),
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  secret: process.env.BETTER_AUTH_SECRET!,
   database: drizzleAdapter(db, {
-    provider: "sqlite", // ここを変更
+    provider: "sqlite",
     usePlural: true,
   }),
-  advanced: {
-    database: {
-      generateId: () => nanoid(10),
-    },
-  },
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), anonymous()],
 });
 ```
 
-## スキーマの書き方Tips
+### 4.3 認証スキーマの生成
 
-SQLite は Postgres と若干異なります。日付カラムはBetter Auth で自動生成されるスキーマに準拠し、以下の記述を推奨します。以下のように共通関数にし、以後独自に定義するスキーマの日付カラムにセットしてください。
+```bash
+cd packages/auth
+pnpm generate
+```
 
-```tsx
-import { sql } from "drizzle-orm";
-import { integer } from "drizzle-orm/sqlite-core";
+## 5. UIパッケージ（ui）の設定
 
-export const timestamps = {
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
-    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
-    .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
-    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-};
+### 5.1 UIパッケージの初期化
 
-// 使用例
-export const users = sqliteTable("pets", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  ...timestamps
+まず、`packages/ui`ディレクトリに`package.json`を作成します：
+
+```bash
+# packages/uiディレクトリに移動
+cd packages/ui
+
+# package.jsonの作成
+pnpm init
+```
+
+### 5.2 必要な依存関係のインストール
+
+```bash
+# shadcn/ui関連の依存関係をインストール
+pnpm add @radix-ui/react-slot class-variance-authority clsx tailwind-merge
+pnpm add -D @types/node tailwindcss postcss autoprefixer
+```
+
+### 5.4 UIパッケージの環境変数設定
+
+`packages/ui/.env`ファイルを作成（通常は不要ですが、将来的な拡張に備えて）：
+
+```bash title=packages/ui/.env
+# UIパッケージ用の環境変数（現在は不要）
+# 将来的な拡張に備えて作成
+```
+
+### 5.5 shadcn/uiの設定
+
+`packages/ui`にshadcn/uiコンポーネントが配置されています：
+
+```bash
+# UIパッケージのビルド
+cd packages/ui
+pnpm build
+```
+
+### 5.6 コンポーネントの使用
+
+```typescript
+// アプリケーションでUIコンポーネントを使用
+import { Button } from "@workspace/ui/components/button";
+import { Card } from "@workspace/ui/components/card";
+```
+
+## 6. 開発ツールの設定
+
+### 6.1 ESLint設定
+
+共有ESLint設定が`packages/eslint-config`にあります：
+
+```bash
+# リンターの実行
+pnpm lint
+
+# リンターの自動修正
+pnpm lint:fix
+```
+
+### 6.2 TypeScript設定
+
+共有TypeScript設定が`packages/typescript-config`にあります：
+
+```bash
+# 型チェック
+pnpm typecheck
+```
+
+### 6.3 Prettier設定
+
+```bash
+# コードフォーマット
+pnpm format
+```
+
+## 7. 監視・ログ設定（Sentry）
+
+### 7.1 Sentryの設定
+
+`apps/web/next.config.mjs`でSentryが設定されています：
+
+```javascript
+export default withSentryConfig(withMDX(nextConfig), {
+  org: "deer-inc",
+  project: "nino",
+  tunnelRoute: "/monitoring",
+  automaticVercelMonitors: true
 });
-
-// ついでに id カラムも汎用化しておくと便利です
-export const id = text("id")
-  .primaryKey()
-  .$defaultFn(() => nanoid(10));
 ```
 
-Better Auth で自動生成されるスキーマについても、タイムスタンプ箇所は上記のヘルパーに差し替えることを推奨します。
+### 7.2 Sentry設定ファイル
 
-better-auth で生成する Drizzle スキーマに非推奨の記述が入る件はIssue起票中
-[https://github.com/better-auth/better-auth/issues/4796](https://github.com/better-auth/better-auth/issues/4796)
+- `sentry.server.config.ts` - サーバーサイド設定
+- `sentry.edge.config.ts` - Edge Runtime設定
 
-最後に Better Auth のDrizzleスキーマを生成してください。
+## 8. テスト設定
+
+### 8.1 テスト環境の確認
+
+現在のプロジェクトでは、テスト設定は`pnpm-lock.yaml`に含まれていますが、明示的なテストファイルは見つかりませんでした。
+
+### 8.2 テストの追加（推奨）
 
 ```bash
-pnpx @better-auth/cli@latest generate --output ./db/schemas/auth.ts --yes
+# Vitestの追加
+pnpm add -D vitest @vitejs/plugin-react
+
+# Playwrightの追加
+pnpm add -D @playwright/test
 ```
 
-## マイグレーション
+## 9. アプリケーション（web）の環境変数設定
 
-postgre(Supabaseなど)から移行する際は、既存の `migrations` 関連のファイル、ディレクトリを削除してください。その上で、以下を実行します。
+### 9.1 Webアプリケーションの環境変数設定
+
+`apps/web/.env.local`ファイルを作成：
+
+```bash title=apps/web/.env.local
+# データベース設定
+TURSO_DATABASE_URL=libsql://your-database-url
+TURSO_AUTH_TOKEN=your-auth-token
+
+# 認証設定
+BETTER_AUTH_SECRET=your-secret-key-here
+BETTER_AUTH_URL=http://localhost:3000
+
+# Sentry設定
+SENTRY_AUTH_TOKEN=your-sentry-auth-token
+SENTRY_ORG=your-sentry-org
+SENTRY_PROJECT=your-sentry-project
+
+# その他の設定
+CRON_SECRET=your-cron-secret
+AI_GATEWAY_API_KEY=your-ai-gateway-api-key
+```
+
+### 9.2 Vercel設定
+
+`apps/web/vercel.json`でVercelの設定が定義されています。
+
+### 9.3 本番環境の環境変数設定
+
+本番環境では以下の環境変数を設定してください：
+
+- `TURSO_DATABASE_URL`
+- `TURSO_AUTH_TOKEN`
+- `BETTER_AUTH_SECRET`
+- `SENTRY_AUTH_TOKEN`
+- `CRON_SECRET`
+- `AI_GATEWAY_API_KEY`
+
+## 10. 開発ワークフロー
+
+### 10.1 基本的なコマンド
 
 ```bash
-pnpm drizzle-kit generate
-pnpm drizzle-kit migrate
+# 開発サーバーの起動
+pnpm dev
+
+# ビルド
+pnpm build
+
+# リンター
+pnpm lint
+
+# 型チェック
+pnpm typecheck
+
+# フォーマット
+pnpm format
 ```
 
-## GitHub Actions を使って本番環境に自動マイグレーション
-
-```bash title=.github/workflows/migrate.yml
-name: Apply schema migrations
-
-# 👉 Only run this workflow when a change is made to the main branch
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  apply_migrations:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install dependencies & tooling
-        run: |
-          npm install -g pnpm
-          pnpm install
-      - name: Apply migrations
-        run: pnpm drizzle:migrate
-        env:
-          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-
-```
-
-## データベースの確認
-
-drizzle のスタジオ機能でローカルDBの内容を確認できます。
+### 10.2 データベース操作
 
 ```bash
-pnpm drizzle-kit studio
+# マイグレーション生成
+cd packages/db
+pnpm generate
+
+# マイグレーション実行
+pnpm migrate
+
+# Drizzle Studio起動
+pnpm studio
 ```
 
-## Supabase からデータを移植する方法
+### 10.3 実装フローに従った開発手順
 
-以下のコマンドで `data.sql` に全データを吐き出します。事前にDockerを起動しておく必要があります。
+リポジトリ固有のルールに従って、以下の順序で開発を進めてください：
+
+1. **Drizzleスキーマの更新** (`/packages/db/schemas/`)
+   ```bash
+   # スキーマファイルを編集
+   vim packages/db/schemas/auth.ts
+   ```
+
+2. **マイグレーションの実行** (`/packages/db`)
+   ```bash
+   cd packages/db
+   pnpm generate  # マイグレーションファイル生成
+   pnpm migrate   # マイグレーション実行
+   ```
+
+3. **型の生成** (`/packages/db/types/`)
+   ```bash
+   # Drizzleスキーマから型を自動生成
+   pnpm generate:types
+   ```
+
+4. **Zodスキーマの生成** (`/packages/db/zod/`)
+   ```bash
+   # DrizzleスキーマからZodスキーマを自動生成
+   pnpm generate:zod
+   ```
+
+5. **各アプリケーションで使用**
+   ```typescript
+   // アプリケーションで型とZodスキーマを使用
+   import { User, NewUser } from "@workspace/db";
+   import { insertUserSchema, selectUserSchema } from "@workspace/db";
+   ```
+
+## 11. トラブルシューティング
+
+### 11.1 よくある問題
+
+1. **pnpmのバージョン不一致**
+   ```bash
+   pnpm --version
+   # 10.18.3以上であることを確認
+   ```
+
+2. **環境変数の設定漏れ**
+   - `.env`ファイルが正しく設定されているか確認
+   - 必要な環境変数がすべて設定されているか確認
+
+3. **データベース接続エラー**
+   - Tursoの認証情報が正しいか確認
+   - データベースが作成されているか確認
+
+### 11.2 ログの確認
 
 ```bash
-# ローカルSupabaseからデータを移植する場合
-pnpx supabase db dump --db-url <DB_URL> -f supabase-to-turso.sql –inserts –column-inserts --data-only
+# 開発サーバーのログを確認
+pnpm dev
 
-# リモートSupabaseからデータを移植する場合
-pnpx supabase login
-pnpx supabase link
-pnpx supabase db dump -f supabase-to-turso.sql –inserts –column-inserts --data-only
+# データベースのログを確認
+cd packages/db
+pnpm dev
 ```
 
-`supabase-to-turso.sql` を以下のように編集します。
+## 12. 最終Tips
 
-- `INSERT...` から始まり、`"public".` のスキーマに関連する行のみを残して他を削除
-    - `drizzle.` や `auth.` 、 `storage.` からはじまるスキーマが残ってないことを確認してください
-- テーブル名の `"public".` の部分をすべて削除
-- 日付の箇所を変更するSQL文を追記。SQLiteは Postgres と一部カラムの互換性がないので、値の整合性を持たせるためにレコードを更新します。
-    - 日付更新SQL
-        
-        Better Auth関係のテーブル以外に独自テーブルもある場合、最下部のコメントやAIを参考に、適宜加筆してください。
-        
-        ```sql
-        -- アカウント
-        
-        UPDATE accounts
-        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
-        WHERE typeof(created_at) = 'text';
-        
-        UPDATE accounts
-        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
-        WHERE typeof(updated_at) = 'text';
-        
-        UPDATE accounts
-        SET access_token_expires_at = CAST(strftime('%s', access_token_expires_at) AS INTEGER)
-        WHERE typeof(access_token_expires_at) = 'text';
-        
-        UPDATE accounts
-        SET refresh_token_expires_at = CAST(strftime('%s', refresh_token_expires_at) AS INTEGER)
-        WHERE typeof(refresh_token_expires_at) = 'text';
-        
-        -- セッション
-        
-        UPDATE sessions
-        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
-        WHERE typeof(created_at) = 'text';
-        
-        UPDATE sessions
-        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
-        WHERE typeof(updated_at) = 'text';
-        
-        UPDATE sessions
-        SET expires_at = CAST(strftime('%s', expires_at) AS INTEGER)
-        WHERE typeof(expires_at) = 'text';
-        
-        -- ユーザー
-        
-        UPDATE users
-        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
-        WHERE typeof(created_at) = 'text';
-        
-        UPDATE users
-        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
-        WHERE typeof(updated_at) = 'text';
-        
-        -- verifications
-        
-        UPDATE verifications
-        SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
-        WHERE typeof(created_at) = 'text';
-        
-        UPDATE verifications
-        SET updated_at = CAST(strftime('%s', updated_at) AS INTEGER)
-        WHERE typeof(updated_at) = 'text';
-        
-        UPDATE verifications
-        SET expires_at = CAST(strftime('%s', expires_at) AS INTEGER)
-        WHERE typeof(expires_at) = 'text';
-        
-        -- サブスクリプション
-        
-        -- UPDATE subscriptions
-        -- SET period_start = CAST(strftime('%s', period_start) AS INTEGER)
-        -- WHERE typeof(period_start) = 'text';
-        
-        -- UPDATE subscriptions
-        -- SET period_end = CAST(strftime('%s', period_end) AS INTEGER)
-        -- WHERE typeof(period_end) = 'text';
-        
-        -- UPDATE subscriptions
-        -- SET trial_start = CAST(strftime('%s', trial_start) AS INTEGER)
-        -- WHERE typeof(trial_start) = 'text';
-        
-        -- UPDATE subscriptions
-        -- SET trial_end = CAST(strftime('%s', trial_end) AS INTEGER)
-        -- WHERE typeof(trial_end) = 'text';
-        
-        -- その他独自のテーブルの日付カラムを更新する
-        
-        -- UPDATE demo_items
-        -- SET created_at = CAST(strftime('%s', created_at) AS INTEGER)
-        -- WHERE typeof(created_at) = 'text';
-        ```
-        
+### 12.1 .env.exampleファイルの作成
 
-最後に、 turso のコマンドでデータをインポートします。
+プロジェクトのルートディレクトリに`.env.example`ファイルを作成して、必要な環境変数のテンプレートを提供することをお勧めします：
 
-```bash
-# ローカルの例
-turso db shell http://127.0.0.1:8080 < supabase-to-turso.sql
+```bash title=.env.example
+# データベース設定
+TURSO_DATABASE_URL=libsql://your-database-url
+TURSO_AUTH_TOKEN=your-auth-token
+
+# 認証設定
+BETTER_AUTH_SECRET=your-secret-key-here
+BETTER_AUTH_URL=http://localhost:3000
+
+# Sentry設定
+SENTRY_AUTH_TOKEN=your-sentry-auth-token
+SENTRY_ORG=your-sentry-org
+SENTRY_PROJECT=your-sentry-project
+
+# その他の設定
+CRON_SECRET=your-cron-secret
+AI_GATEWAY_API_KEY=your-ai-gateway-api-key
 ```
 
-リモートの場合はダッシュボードのSQLコンソールに `supabase-to-turso.sql` の内容を貼り付けて実行してください。
+### 12.2 環境変数の管理
 
-しばらくはSupabase環境と並行運用（SupabaseとTurso両方にデータをセットするなど）し、確実な移行が確認できてから旧環境を削除することをお勧めします。
+- 各パッケージに個別の`.env`ファイルを作成
+- ルートディレクトリに`.env.example`を配置
+- `.env`ファイルは`.gitignore`に追加してバージョン管理から除外
+- 本番環境では各デプロイプラットフォームで環境変数を設定
+
+### 12.3 パッケージ間の依存関係
+
+実装フローに従って、以下の順序でパッケージを作成・設定してください：
+
+1. **dbパッケージ** - `package.json`作成 → 依存関係インストール → データベーススキーマとマイグレーション
+2. **authパッケージ** - `package.json`作成 → 依存関係インストール → 認証設定（dbパッケージに依存）
+3. **uiパッケージ** - `package.json`作成 → 依存関係インストール → UIコンポーネント
+4. **webアプリケーション** - 全パッケージを使用
+
+## 13. 追加リソース
+
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team/)
+- [Better Auth Documentation](https://www.better-auth.com/)
+- [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [Sentry Documentation](https://docs.sentry.io/)
+
+---
+
+このガイドに従って環境を構築することで、このリポジトリの構成を再現できます。問題が発生した場合は、各ツールの公式ドキュメントを参照してください。
