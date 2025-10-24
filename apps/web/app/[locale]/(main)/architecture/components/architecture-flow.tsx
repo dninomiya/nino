@@ -40,6 +40,7 @@ import {
   SiStripe,
   SiResend,
 } from "@icons-pack/react-simple-icons";
+import { useTheme } from "next-themes";
 
 interface ArchitectureFlowProps {
   className?: string;
@@ -75,6 +76,8 @@ const getTechnologyIcon = (tech: string) => {
 };
 
 function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
+  const { resolvedTheme } = useTheme();
+
   return (
     <div className={`h-[600px] w-full relative ${className}`}>
       <ReactFlow
@@ -82,6 +85,7 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
         edges={initialEdges as any}
         nodeTypes={nodeTypes}
         fitView
+        colorMode={resolvedTheme === "dark" ? "dark" : "light"}
         fitViewOptions={{ padding: 0.2 }}
         className="bg-gray-50 dark:bg-gray-900"
         nodesDraggable={false}
@@ -90,7 +94,7 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
         nodesFocusable={false}
       >
         <Background />
-        <Controls className="[&>button]:bg-white [&>button]:border-gray-300 [&>button]:text-gray-700 dark:[&>button]:bg-gray-800 dark:[&>button]:border-gray-600 dark:[&>button]:text-gray-300 [&>button:hover]:bg-gray-50 dark:[&>button:hover]:bg-gray-700" />
+        <Controls />
 
         {/* 凡例 - React Flow内に配置 */}
         <div className="absolute top-4 left-4 z-10">
