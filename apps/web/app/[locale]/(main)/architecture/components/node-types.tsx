@@ -80,48 +80,77 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   const colorClass = nodeTypeColors[type as keyof typeof nodeTypeColors];
   const icon = nodeTypeIcons[type as keyof typeof nodeTypeIcons];
 
+  // グループ内のノードかどうかを判定
+  const isInGroup = data.parentId;
+
   return (
-    <div className={`min-w-[200px] ${selected ? "ring-2 ring-blue-400" : ""}`}>
-      <Card className={`${colorClass} border-2`}>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center gap-2">
-            <span>{icon}</span>
-            {label}
-          </CardTitle>
-          {description && (
-            <CardDescription className="text-xs opacity-90">
-              {description}
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent className="pt-0">
-          {technologies && technologies.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {technologies.map((tech: string, index: number) => {
-                const IconComponent = getTechnologyIcon(tech);
-                return (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="text-xs flex items-center gap-1"
-                  >
-                    {IconComponent && (
-                      <IconComponent size={12} className="text-current" />
-                    )}
-                    {tech}
-                  </Badge>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{label}</CardTitle>
+        {description && (
+          <CardDescription
+            className={`${isInGroup ? "text-[10px]" : "text-xs"} opacity-90`}
+          >
+            {description}
+          </CardDescription>
+        )}
+      </CardHeader>
+      <CardContent className="pt-0">
+        {technologies && technologies.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {technologies.map((tech: string, index: number) => {
+              const IconComponent = getTechnologyIcon(tech);
+              return (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className={`${isInGroup ? "text-[10px] px-1 py-0" : "text-xs"} flex items-center gap-1`}
+                >
+                  {IconComponent && (
+                    <IconComponent
+                      size={isInGroup ? 10 : 12}
+                      className="text-current"
+                    />
+                  )}
+                  {tech}
+                </Badge>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 });
 
 CustomNode.displayName = "CustomNode";
 
+// グループノードコンポーネント
+export const GroupNode = memo(({ data, selected }: NodeProps) => {
+  const { label, description } = data as unknown as ArchitectureNodeData;
+
+  return (
+    <div className={`min-w-[200px] ${selected ? "ring-2 ring-blue-400" : ""}`}>
+      <Card className="bg-purple-500/10 border-2 border-purple-500/30 backdrop-blur-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2 text-purple-700 dark:text-purple-300">
+            <span>🗄️</span>
+            {label}
+          </CardTitle>
+          {description && (
+            <CardDescription className="text-xs text-purple-600 dark:text-purple-400">
+              {description}
+            </CardDescription>
+          )}
+        </CardHeader>
+      </Card>
+    </div>
+  );
+});
+
+GroupNode.displayName = "GroupNode";
+
 export const nodeTypes: NodeTypes = {
   custom: CustomNode,
+  group: GroupNode,
 };

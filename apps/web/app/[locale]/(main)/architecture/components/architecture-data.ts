@@ -6,6 +6,7 @@ export interface ArchitectureNodeData {
   description?: string;
   technologies?: string[];
   dependencies?: string[];
+  [key: string]: unknown;
 }
 
 export const initialNodes: Node<ArchitectureNodeData>[] = [
@@ -38,7 +39,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Database Package",
       type: "package",
-      description: "Drizzle ORM, スキーマ, マイグレーション",
+      description: "Drizzle ORM によるDB接続・スキーマ管理・マイグレーション",
       technologies: ["Drizzle ORM", "SQLite", "Zod", "TypeScript"],
       dependencies: [],
     },
@@ -104,11 +105,32 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     },
   },
 
-  // データベーステーブルノード
+  // データベースグループ
+  {
+    id: "database-group",
+    type: "group",
+    position: { x: 650, y: 20 },
+    style: {
+      width: 200,
+      height: 200,
+      backgroundColor: "rgba(139, 92, 246, 0.1)",
+      border: "2px solid rgba(139, 92, 246, 0.3)",
+      borderRadius: "8px",
+    },
+    data: {
+      label: "Database",
+      type: "database",
+      description: "データベーステーブルグループ",
+    },
+  },
+
+  // データベーステーブルノード（グループ内）
   {
     id: "feed-items-table",
     type: "custom",
-    position: { x: 700, y: 50 },
+    position: { x: 20, y: 50 },
+    parentId: "database-group",
+    extent: "parent",
     data: {
       label: "feed_items",
       type: "database",
@@ -120,7 +142,9 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "status-events-table",
     type: "custom",
-    position: { x: 700, y: 150 },
+    position: { x: 20, y: 120 },
+    parentId: "database-group",
+    extent: "parent",
     data: {
       label: "status_events",
       type: "database",
@@ -284,12 +308,40 @@ export const initialEdges: Edge[] = [
     source: "db-package",
     target: "feed-items-table",
     type: "smoothstep",
+    label: "Drizzle ORM",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
+    style: { stroke: "#3b82f6", strokeWidth: 2 },
   },
   {
     id: "db-to-status-events",
     source: "db-package",
     target: "status-events-table",
     type: "smoothstep",
+    label: "Drizzle ORM",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
+    style: { stroke: "#3b82f6", strokeWidth: 2 },
+  },
+
+  // データベーステーブルからTursoへの接続
+  {
+    id: "feed-items-to-turso",
+    source: "feed-items-table",
+    target: "turso",
+    type: "smoothstep",
+    label: "SQLite",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
+    style: { stroke: "#10b981", strokeWidth: 2 },
+    animated: true,
+  },
+  {
+    id: "status-events-to-turso",
+    source: "status-events-table",
+    target: "turso",
+    type: "smoothstep",
+    label: "SQLite",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
+    style: { stroke: "#10b981", strokeWidth: 2 },
+    animated: true,
   },
 
   // 外部サービスからのデータフロー
@@ -321,6 +373,9 @@ export const initialEdges: Edge[] = [
     source: "turso",
     target: "web-app",
     type: "smoothstep",
+    label: "Drizzle Connection",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
+    style: { stroke: "#8b5cf6", strokeWidth: 2 },
     animated: true,
   },
   {

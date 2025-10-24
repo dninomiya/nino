@@ -85,7 +85,7 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
         edges={initialEdges as any}
         nodeTypes={nodeTypes}
         fitView
-        colorMode={resolvedTheme === "dark" ? "dark" : "light"}
+        colorMode={resolvedTheme === "light" ? "light" : "dark"}
         fitViewOptions={{ padding: 0.2 }}
         className="bg-gray-50 dark:bg-gray-900"
         nodesDraggable={false}
@@ -118,6 +118,23 @@ function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
               <div className="flex items-center gap-2 text-xs">
                 <div className="w-3 h-3 bg-cyan-500 rounded"></div>
                 <span>BaaS</span>
+              </div>
+              <div className="space-y-1 mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                  接続タイプ
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-4 h-0.5 bg-blue-500"></div>
+                  <span>Drizzle ORM</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-4 h-0.5 bg-green-500"></div>
+                  <span>SQLite</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-4 h-0.5 bg-purple-500"></div>
+                  <span>Drizzle Connection</span>
+                </div>
               </div>
             </CardContent>
           </Card>
