@@ -91,6 +91,8 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
         rightCenterIn: true,
         rightCenterOut: true,
         topCenterOut: true,
+        leftBottomIn: true,
+        bottomCenterIn: true,
       },
     },
   },
@@ -121,7 +123,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       label: "Database Package",
       type: "package",
       nodeTypeId: "package-db",
-      description: "Drizzle ORM によるDB接続・スキーマ管理・マイグレーション",
+      description: "ORM・スキーマ管理・マイグレーション",
       technologies: ["Drizzle ORM", "SQLite", "Zod"],
       dependencies: [],
       size: "w-[320px]",
@@ -158,7 +160,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "ui-package",
     type: "custom",
-    position: { x: 400, y: 350 },
+    position: { x: 100, y: 350 },
     data: {
       label: "UI Package",
       type: "package",
@@ -166,10 +168,9 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "共有UIコンポーネント",
       technologies: ["Tailwind CSS", "Radix UI"],
       dependencies: [],
-      size: "w-[200px]",
+      size: "w-[220px]",
       handles: {
-        leftCenterIn: true,
-        leftCenterOut: true,
+        topCenterOut: true,
       },
     },
   },
@@ -194,7 +195,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "discord-package",
     type: "custom",
-    position: { x: 400, y: 650 },
+    position: { x: -200, y: 250 },
     data: {
       label: "Discord Package",
       type: "package",
@@ -202,10 +203,9 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Discord通知システム",
       technologies: ["Discord.js"],
       dependencies: [],
-      size: "w-[200px]",
+      size: "w-[240px]",
       handles: {
-        leftCenterIn: true,
-        leftCenterOut: true,
+        rightCenterOut: true,
       },
     },
   },
@@ -270,7 +270,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "turso",
     type: "custom",
-    position: { x: 840, y: 100 }, // Database Packageの隣に移動
+    position: { x: 960, y: 100 }, // Database Packageの隣に移動
     data: {
       label: "Turso",
       type: "baas",
@@ -342,7 +342,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "resend",
     type: "custom",
-    position: { x: 1000, y: 500 },
+    position: { x: 960, y: 500 },
     data: {
       label: "Resend",
       type: "baas",
@@ -383,9 +383,9 @@ export const initialEdges: Edge[] = [
   {
     id: "ui-to-web",
     source: "ui-package",
-    sourceHandle: "outLeftCenter",
+    sourceHandle: "outTopCenter",
     target: "web-app",
-    targetHandle: "inRightCenter",
+    targetHandle: "inBottomCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
@@ -403,12 +403,11 @@ export const initialEdges: Edge[] = [
   {
     id: "discord-to-web",
     source: "discord-package",
-    sourceHandle: "outLeftCenter",
+    sourceHandle: "outRightCenter",
     target: "web-app",
-    targetHandle: "inRightCenter",
+    targetHandle: "inLeftBottom",
     type: "smoothstep",
     style: commonEdgeStyle,
-    markerEnd: commonMarkerEnd,
   },
   {
     id: "registry-to-web",
