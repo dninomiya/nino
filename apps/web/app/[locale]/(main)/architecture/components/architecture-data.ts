@@ -105,55 +105,6 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     },
   },
 
-  // データベースグループ
-  {
-    id: "database-group",
-    type: "group",
-    position: { x: 650, y: 20 },
-    style: {
-      width: 250,
-      height: 520,
-      backgroundColor: "transparent",
-      border: "none",
-      borderRadius: "12px",
-      zIndex: -1, // 最背面に配置
-    },
-    data: {
-      label: "Database",
-      type: "database",
-      description: "データベーステーブルグループ",
-    },
-  },
-
-  // データベーステーブルノード（グループ内）
-  {
-    id: "feed-items-table",
-    type: "custom",
-    position: { x: 20, y: 60 },
-    parentId: "database-group",
-    extent: "parent",
-    data: {
-      label: "feed_items",
-      type: "database",
-      description: "RSSフィードアイテムテーブル",
-      technologies: [],
-      dependencies: [],
-    },
-  },
-  {
-    id: "status-events-table",
-    type: "custom",
-    position: { x: 20, y: 120 },
-    parentId: "database-group",
-    extent: "parent",
-    data: {
-      label: "status_events",
-      type: "database",
-      description: "ステータス変更履歴テーブル",
-      technologies: [],
-      dependencies: [],
-    },
-  },
 
   // 外部サービスノード
   {
@@ -239,16 +190,14 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
 ];
 
 export const initialEdges: Edge[] = [
-  // Web App から各パッケージへの依存関係
+  // 各パッケージからWeb Appへの接続
   {
-    id: "web-to-db",
-    source: "web-app",
+    id: "db-to-web",
+    source: "db-package",
     sourceHandle: "out",
-    target: "db-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -257,14 +206,12 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "web-to-auth",
-    source: "web-app",
+    id: "auth-to-web",
+    source: "auth-package",
     sourceHandle: "out",
-    target: "auth-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -273,14 +220,12 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "web-to-ui",
-    source: "web-app",
+    id: "ui-to-web",
+    source: "ui-package",
     sourceHandle: "out",
-    target: "ui-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -289,14 +234,12 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "web-to-lib",
-    source: "web-app",
+    id: "lib-to-web",
+    source: "lib-package",
     sourceHandle: "out",
-    target: "lib-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -305,14 +248,12 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "web-to-discord",
-    source: "web-app",
+    id: "discord-to-web",
+    source: "discord-package",
     sourceHandle: "out",
-    target: "discord-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -321,14 +262,12 @@ export const initialEdges: Edge[] = [
     },
   },
   {
-    id: "web-to-registry",
-    source: "web-app",
+    id: "registry-to-web",
+    source: "registry-package",
     sourceHandle: "out",
-    target: "registry-package",
+    target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#3b82f6", strokeWidth: 3 },
     animated: true,
     markerEnd: {
@@ -345,8 +284,6 @@ export const initialEdges: Edge[] = [
     target: "db-package",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#10b981", strokeWidth: 2 },
     markerEnd: {
       type: "arrowclosed",
@@ -360,8 +297,6 @@ export const initialEdges: Edge[] = [
     target: "ui-package",
     targetHandle: "in",
     type: "smoothstep",
-    label: "import",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#10b981", strokeWidth: 2 },
     markerEnd: {
       type: "arrowclosed",
@@ -369,89 +304,8 @@ export const initialEdges: Edge[] = [
     },
   },
 
-  // データベーステーブルへの接続
-  {
-    id: "db-to-feed-items",
-    source: "db-package",
-    sourceHandle: "out",
-    target: "feed-items-table",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "Drizzle ORM",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#3b82f6", strokeWidth: 2 },
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
-  },
-  {
-    id: "db-to-status-events",
-    source: "db-package",
-    sourceHandle: "out",
-    target: "status-events-table",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "Drizzle ORM",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#3b82f6", strokeWidth: 2 },
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#3b82f6",
-    },
-  },
-
-  // データベーステーブルからTursoへの接続
-  {
-    id: "feed-items-to-turso",
-    source: "feed-items-table",
-    sourceHandle: "out",
-    target: "turso",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "SQLite",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#10b981", strokeWidth: 2 },
-    animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
-  },
-  {
-    id: "status-events-to-turso",
-    source: "status-events-table",
-    sourceHandle: "out",
-    target: "turso",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "SQLite",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#10b981", strokeWidth: 2 },
-    animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#10b981",
-    },
-  },
 
   // 外部サービスからのデータフロー
-  {
-    id: "rss-to-feed-items",
-    source: "rss-feeds",
-    sourceHandle: "out",
-    target: "feed-items-table",
-    targetHandle: "in",
-    type: "smoothstep",
-    label: "data",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
-    style: { stroke: "#f59e0b", strokeWidth: 2 },
-    animated: true,
-    markerEnd: {
-      type: "arrowclosed",
-      color: "#f59e0b",
-    },
-  },
   {
     id: "discord-to-discord-pkg",
     source: "discord-api",
@@ -459,8 +313,6 @@ export const initialEdges: Edge[] = [
     target: "discord-package",
     targetHandle: "in",
     type: "smoothstep",
-    label: "webhook",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#f59e0b", strokeWidth: 2 },
     animated: true,
     markerEnd: {
@@ -475,8 +327,6 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "AI",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#f59e0b", strokeWidth: 2 },
     animated: true,
     markerEnd: {
@@ -493,8 +343,6 @@ export const initialEdges: Edge[] = [
     target: "web-app",
     targetHandle: "in",
     type: "smoothstep",
-    label: "Drizzle Connection",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#8b5cf6", strokeWidth: 2 },
     animated: true,
     markerEnd: {
@@ -509,8 +357,6 @@ export const initialEdges: Edge[] = [
     target: "vercel",
     targetHandle: "in",
     type: "smoothstep",
-    label: "deploy",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: { stroke: "#8b5cf6", strokeWidth: 2 },
     animated: true,
     markerEnd: {

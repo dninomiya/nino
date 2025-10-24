@@ -46,6 +46,30 @@ const nodeTypeIcons = {
   baas: "☁️",
 };
 
+// ノードタイプ別のHandle配置設定
+const nodeTypeHandleConfig = {
+  app: {
+    in: { position: Position.Right, top: "66%", left: undefined },
+    out: { position: Position.Right, top: "33%", left: undefined },
+  },
+  package: {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  database: {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  external: {
+    in: { position: Position.Left, top: "66%", left: undefined },
+    out: { position: Position.Left, top: "33%", left: undefined },
+  },
+  baas: {
+    in: { position: Position.Bottom, top: undefined, left: "66%" },
+    out: { position: Position.Bottom, top: undefined, left: "33%" },
+  },
+};
+
 // 技術名とアイコンのマッピング
 const getTechnologyIcon = (tech: string) => {
   const iconMap: Record<
@@ -84,22 +108,45 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   // グループ内のノードかどうかを判定
   const isInGroup = data.parentId;
 
+  // ノードタイプに応じたHandle設定を取得
+  const handleConfig =
+    nodeTypeHandleConfig[type as keyof typeof nodeTypeHandleConfig] ||
+    nodeTypeHandleConfig.package;
+
+  // ノードタイプに応じたサイズ設定
+  const getNodeSize = (nodeType: string) => {
+    switch (nodeType) {
+      case "baas":
+        return "w-[300px] h-[80px]"; // 横長
+      default:
+        return "w-[200px]"; // デフォルト
+    }
+  };
+
   return (
-    <Card className={cn("w-[200px] text-sm p-3", colorClass)}>
+    <Card className={cn(getNodeSize(type), "text-sm p-3", colorClass)}>
       {/* Handle for incoming connections */}
       <Handle
         type="target"
         id="in"
-        position={Position.Left}
-        style={{ background: "var(--muted)", top: "66%" }}
+        position={handleConfig.in.position}
+        style={{
+          background: "var(--muted)",
+          ...(handleConfig.in.top ? { top: handleConfig.in.top } : {}),
+          ...(handleConfig.in.left ? { left: handleConfig.in.left } : {}),
+        }}
       />
 
       {/* Handle for outgoing connections */}
       <Handle
         type="source"
         id="out"
-        position={Position.Left}
-        style={{ background: "var(--muted)", top: "33%" }}
+        position={handleConfig.out.position}
+        style={{
+          background: "var(--muted)",
+          ...(handleConfig.out.top ? { top: handleConfig.out.top } : {}),
+          ...(handleConfig.out.left ? { left: handleConfig.out.left } : {}),
+        }}
       />
 
       <CardHeader className="p-0">
