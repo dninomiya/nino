@@ -84,7 +84,7 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
   const isInGroup = data.parentId;
 
   return (
-    <Card className="w-[200px] min-h-[120px] relative">
+    <Card className="w-[200px] text-sm p-3">
       {/* Handle for incoming connections */}
       <Handle
         type="target"
@@ -101,8 +101,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
         style={{ background: "#555" }}
       />
 
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm">{label}</CardTitle>
+      <CardHeader className="p-0">
+        <CardTitle>{label}</CardTitle>
         {description && (
           <CardDescription
             className={`${isInGroup ? "text-[10px]" : "text-xs"} opacity-90 overflow-hidden`}
@@ -116,8 +116,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
           </CardDescription>
         )}
       </CardHeader>
-      <CardContent className="pt-0">
-        {technologies && technologies.length > 0 && (
+      {technologies && technologies.length > 0 && (
+        <CardContent>
           <div className="flex flex-wrap gap-1">
             {technologies.map((tech: string, index: number) => {
               const IconComponent = getTechnologyIcon(tech);
@@ -138,8 +138,8 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
               );
             })}
           </div>
-        )}
-      </CardContent>
+        </CardContent>
+      )}
     </Card>
   );
 });
@@ -151,8 +151,8 @@ export const GroupNode = memo(({ data, selected }: NodeProps) => {
   const { label, description } = data as unknown as ArchitectureNodeData;
 
   return (
-    <div className={`min-w-[200px] ${selected ? "ring-2 ring-blue-400" : ""}`}>
-      <Card className="bg-purple-500/10 border-2 border-purple-500/30 backdrop-blur-sm">
+    <div className={`w-full h-full ${selected ? "ring-2 ring-blue-400" : ""}`}>
+      <Card className="w-full h-full bg-purple-500/10 border-2 border-purple-500/30 backdrop-blur-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2 text-purple-700 dark:text-purple-300">
             <span>🗄️</span>

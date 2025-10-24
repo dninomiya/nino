@@ -112,9 +112,9 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     position: { x: 650, y: 20 },
     style: {
       width: 250,
-      height: 220,
-      backgroundColor: "rgba(139, 92, 246, 0.1)",
-      border: "2px solid rgba(139, 92, 246, 0.3)",
+      height: 520,
+      backgroundColor: "transparent",
+      border: "none",
       borderRadius: "12px",
     },
     data: {
@@ -182,13 +182,11 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "ai-gateway",
     type: "custom",
-    position: { x: 100, y: 500 },
+    position: { x: 1000, y: 300 },
     data: {
       label: "AI Gateway",
-      type: "external",
-      description: "AI要約サービス",
-      technologies: ["AI API", "OpenAI"],
-      dependencies: [],
+      type: "baas",
+      description: "AI Gateway",
     },
   },
 
@@ -200,7 +198,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Turso",
       type: "baas",
-      description: "SQLiteベースのデータベースサービス",
+      description: "データベース",
       dependencies: [],
     },
   },
@@ -211,7 +209,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Vercel",
       type: "baas",
-      description: "ホスティング・デプロイメントサービス",
+      description: "ホスティング",
       dependencies: [],
     },
   },
@@ -222,7 +220,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Stripe",
       type: "baas",
-      description: "決済処理サービス",
+      description: "決済",
       dependencies: [],
     },
   },
@@ -233,7 +231,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
     data: {
       label: "Resend",
       type: "baas",
-      description: "メール送信サービス",
+      description: "メール送信",
       dependencies: [],
     },
   },
