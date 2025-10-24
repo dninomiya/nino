@@ -85,7 +85,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
         "@workspace/discord",
         "@workspace/registry",
       ],
-      size: "w-[220px] h-[100px]",
+      size: "w-[220px]",
       handles: {
         leftCenterOut: true,
         rightCenterIn: true,
@@ -105,7 +105,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "エラー監視・パフォーマンス監視",
       technologies: ["Sentry"],
       dependencies: [],
-      size: "w-[180px]",
+      size: "w-[240px]",
       handles: {
         rightCenterIn: true,
       },
@@ -116,7 +116,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "db-package",
     type: "custom",
-    position: { x: 400, y: 50 },
+    position: { x: 400, y: 100 },
     data: {
       label: "Database Package",
       type: "package",
@@ -124,19 +124,20 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Drizzle ORM によるDB接続・スキーマ管理・マイグレーション",
       technologies: ["Drizzle ORM", "SQLite", "Zod"],
       dependencies: [],
-      size: "w-[220px]",
+      size: "w-[320px]",
       handles: {
         leftCenterIn: true,
         leftCenterOut: true,
         rightCenterIn: true,
         rightCenterOut: true,
+        bottomCenterIn: true,
       },
     },
   },
   {
     id: "auth-package",
     type: "custom",
-    position: { x: 400, y: 200 },
+    position: { x: 400, y: 320 },
     data: {
       label: "Auth Package",
       type: "package",
@@ -144,12 +145,13 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "Better Auth 認証システム",
       technologies: ["Better Auth"],
       dependencies: ["@workspace/db"],
-      size: "w-[200px]",
+      size: "w-[320px]",
       handles: {
         leftCenterIn: true,
         leftCenterOut: true,
         rightCenterIn: true,
         rightCenterOut: true,
+        topCenterOut: true,
       },
     },
   },
@@ -268,7 +270,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "turso",
     type: "custom",
-    position: { x: 650, y: 50 }, // Database Packageの隣に移動
+    position: { x: 840, y: 100 }, // Database Packageの隣に移動
     data: {
       label: "Turso",
       type: "baas",
@@ -286,14 +288,14 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "vercel",
     type: "custom",
-    position: { x: 100, y: -100 }, // Web Appの上に移動
+    position: { x: 100, y: -160 }, // Web Appの上に移動
     data: {
       label: "Vercel",
       type: "baas",
       nodeTypeId: "baas-vercel", // 下側Handle用のタイプIDに変更
       description: "ホスティング",
       dependencies: [],
-      size: "w-[200px]",
+      size: "w-[220px]",
       handles: {
         bottomCenterIn: true,
         bottomCenterOut: true,
@@ -303,7 +305,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "github",
     type: "custom",
-    position: { x: 100, y: -50 }, // VercelとWeb Appの間に配置
+    position: { x: 100, y: -50 }, // Web Appノードの横幅に揃えて配置
     data: {
       label: "GitHub",
       type: "external",
@@ -311,7 +313,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       description: "ソースコード管理",
       technologies: ["Git", "GitHub"],
       dependencies: [],
-      size: "w-[200px]",
+      size: "w-[220px]",
       handles: {
         bottomCenterIn: true,
         bottomCenterOut: true,
@@ -323,7 +325,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "stripe",
     type: "custom",
-    position: { x: 650, y: 150 }, // Auth Packageの右に移動
+    position: { x: 840, y: 220 }, // Auth Packageの右に移動
     data: {
       label: "Stripe",
       type: "baas",
@@ -423,10 +425,11 @@ export const initialEdges: Edge[] = [
   {
     id: "auth-to-db",
     source: "auth-package",
-    sourceHandle: "outLeftCenter",
+    sourceHandle: "outTopCenter",
     target: "db-package",
-    targetHandle: "inLeftCenter",
+    targetHandle: "inBottomCenter",
     type: "smoothstep",
+    label: "authスキーマ生成",
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
@@ -494,6 +497,8 @@ export const initialEdges: Edge[] = [
     target: "turso",
     targetHandle: "inTopCenter",
     type: "smoothstep",
+    label: "マイグレーション",
+    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
