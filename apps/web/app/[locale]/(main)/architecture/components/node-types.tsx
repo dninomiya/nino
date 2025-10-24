@@ -29,6 +29,7 @@ import {
   SiResend,
   SiGit,
   SiGithub,
+  SiSentry,
 } from "@icons-pack/react-simple-icons";
 import { cn } from "@/lib/utils";
 
@@ -53,17 +54,20 @@ const nodeTypeHandleConfig: Record<
   string,
   {
     in: { position: Position; top?: string; left?: string };
-    out: { position: Position; top?: string; left?: string };
+    out?: { position: Position; top?: string; left?: string };
     inRight?: { position: Position; top?: string; left?: string };
     outRight?: { position: Position; top?: string; left?: string };
     inTop?: { position: Position; top?: string; left?: string };
     outTop?: { position: Position; top?: string; left?: string };
+    outLeft?: { position: Position; top?: string; left?: string };
   }
 > = {
   // アプリケーションタイプ（左右にHandle）
   "app-main": {
     in: { position: Position.Right, top: "66%", left: undefined },
     out: { position: Position.Right, top: "33%", left: undefined },
+    // 左側のHandleも追加（Sentryとの接続用）
+    outLeft: { position: Position.Left, top: "50%", left: undefined },
     // 上側のHandleも追加（Vercelとの接続用）
     inTop: { position: Position.Top, top: undefined, left: "50%" },
     outTop: { position: Position.Top, top: undefined, left: "50%" },
@@ -150,6 +154,10 @@ const nodeTypeHandleConfig: Record<
     out: { position: Position.Bottom, top: undefined, left: "33%" },
     outTop: { position: Position.Top, top: undefined, left: "50%" },
   },
+  // Sentry専用（右側にinのみ）
+  "baas-sentry": {
+    in: { position: Position.Right, top: "50%", left: undefined },
+  },
   "baas-payment": {
     in: { position: Position.Bottom, top: undefined, left: "66%" },
     out: { position: Position.Bottom, top: undefined, left: "33%" },
@@ -191,6 +199,7 @@ const getTechnologyIcon = (tech: string) => {
     Resend: SiResend,
     Git: SiGit,
     GitHub: SiGithub,
+    Sentry: SiSentry,
   };
 
   return iconMap[tech] || null;
@@ -211,18 +220,47 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
     out: { position: Position.Left, top: "33%", left: undefined },
   };
 
-  // ノードタイプに応じたサイズ設定
-  const getNodeSize = (nodeType: string) => {
-    switch (nodeType) {
-      case "baas":
-        return "w-[300px] h-[80px]"; // 横長
-      default:
-        return "w-[200px]"; // デフォルト
-    }
+  // ノードタイプID別のサイズ設定
+  const nodeTypeSizes: Record<string, string> = {
+    // アプリケーション
+    "app-main": "w-[200px]",
+    "app-sidebar": "w-[180px]",
+
+    // パッケージ
+    "package-db": "w-[220px]",
+    "package-auth": "w-[200px]",
+    "package-ui": "w-[200px]",
+    "package-lib": "w-[180px]",
+    "package-discord": "w-[200px]",
+    "package-registry": "w-[200px]",
+
+    // データベース
+    "database-main": "w-[200px]",
+
+    // 外部サービス
+    "external-rss": "w-[180px]",
+    "external-discord": "w-[200px]",
+    "external-ai": "w-[200px]",
+    "external-github": "w-[200px]",
+
+    // BaaSサービス
+    "baas-database": "w-[300px] h-[80px]",
+    "baas-turso": "w-[200px]",
+    "baas-hosting": "w-[300px] h-[80px]",
+    "baas-vercel": "w-[200px]",
+    "baas-payment": "w-[200px]",
+    "baas-email": "w-[200px]",
+    "baas-stripe": "w-[200px]",
+    "baas-sentry": "w-[200px]",
+  };
+
+  // ノードタイプIDに応じたサイズ設定を取得
+  const getNodeSize = (nodeTypeId: string) => {
+    return nodeTypeSizes[nodeTypeId] || "w-[200px]"; // デフォルトサイズ
   };
 
   return (
-    <Card className={cn(getNodeSize(type), "text-sm p-3", colorClass)}>
+    <Card className={cn(getNodeSize(nodeTypeId), "text-sm p-3", colorClass)}>
       {/* Handle for incoming connections */}
       <Handle
         type="target"
@@ -236,16 +274,18 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
       />
 
       {/* Handle for outgoing connections */}
-      <Handle
-        type="source"
-        id="out"
-        position={handleConfig.out.position}
-        style={{
-          background: "var(--muted)",
-          ...(handleConfig.out.top ? { top: handleConfig.out.top } : {}),
-          ...(handleConfig.out.left ? { left: handleConfig.out.left } : {}),
-        }}
-      />
+      {handleConfig.out && (
+        <Handle
+          type="source"
+          id="out"
+          position={handleConfig.out.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.out.top ? { top: handleConfig.out.top } : {}),
+            ...(handleConfig.out.left ? { left: handleConfig.out.left } : {}),
+          }}
+        />
+      )}
 
       {/* 右側のHandle（Database Package用） */}
       {handleConfig.inRight && (
@@ -310,6 +350,24 @@ export const CustomNode = memo(({ data, selected }: NodeProps) => {
               : {}),
             ...(handleConfig.outTop.left
               ? { left: handleConfig.outTop.left }
+              : {}),
+          }}
+        />
+      )}
+
+      {/* 左側のHandle（Web App用） */}
+      {handleConfig.outLeft && (
+        <Handle
+          type="source"
+          id="outLeft"
+          position={handleConfig.outLeft.position}
+          style={{
+            background: "var(--muted)",
+            ...(handleConfig.outLeft.top
+              ? { top: handleConfig.outLeft.top }
+              : {}),
+            ...(handleConfig.outLeft.left
+              ? { left: handleConfig.outLeft.left }
               : {}),
           }}
         />

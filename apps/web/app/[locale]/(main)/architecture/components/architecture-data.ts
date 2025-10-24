@@ -44,6 +44,19 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       ],
     },
   },
+  {
+    id: "sentry",
+    type: "custom",
+    position: { x: -200, y: 100 }, // Web Appの左側に配置
+    data: {
+      label: "Sentry",
+      type: "baas",
+      nodeTypeId: "baas-sentry", // 右側Handle用のタイプID
+      description: "エラー監視・パフォーマンス監視",
+      technologies: ["Sentry"],
+      dependencies: [],
+    },
+  },
 
   // パッケージノード
   {
@@ -343,6 +356,18 @@ export const initialEdges: Edge[] = [
     markerEnd: commonMarkerEnd,
   },
 
+  // Web AppからSentryへの接続
+  {
+    id: "web-to-sentry",
+    source: "web-app",
+    sourceHandle: "outLeft",
+    target: "sentry",
+    targetHandle: "in",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    animated: true,
+    markerEnd: commonMarkerEnd,
+  },
   // Web AppからGitHubへの接続
   {
     id: "web-to-github",
