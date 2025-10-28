@@ -1,18 +1,22 @@
+"use cache";
+
 import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
+import { Metadata } from "next";
 import Link from "next/link";
 
-export const generateMetadata = async ({
-  params,
-}: PageProps<"/[locale]/registry">) => {
-  await setCurrentLocaleFromParams(params);
-  const t = await getMessage("RegistryPage");
+export async function generateMetadata() {
   return {
-    title: t.title,
+    title: "Registry",
   };
-};
+  // await setCurrentLocaleFromParams(params);
+  // const t = await getMessage("RegistryPage");
+  // return {
+  //   title: t.title,
+  // };
+}
 
 const getRegistryItems = (type: string) => {
   return Promise.all(

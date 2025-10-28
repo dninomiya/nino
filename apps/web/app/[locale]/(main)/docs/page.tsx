@@ -1,3 +1,5 @@
+"use cache";
+
 import { getDocMetas } from "@/lib/docs";
 import {
   getCurrentLocale,
@@ -13,12 +15,8 @@ import {
 } from "@workspace/ui/components/card";
 import Link from "next/link";
 
-export const generateMetadata = async ({ params }: PageProps<"/[locale]">) => {
-  await setCurrentLocaleFromParams(params);
-  const t = await getMessage("DocsListPage");
-  return {
-    title: t.title,
-  };
+export const metadata = {
+  title: "Docs",
 };
 
 export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
