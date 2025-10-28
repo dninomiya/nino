@@ -1,3 +1,5 @@
+"use cache";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { baseUrl } from "@/registry/lib/base-url";
@@ -20,7 +22,7 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 });
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 

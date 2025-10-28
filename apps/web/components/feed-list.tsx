@@ -16,21 +16,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { YouTubeVideo } from "@/components/youtube-video";
+import { FeedItem, FeedType, feedTypeMapping, techMapping } from "@/lib/feed";
 import {
   Empty,
-  EmptyHeader,
-  EmptyTitle,
   EmptyDescription,
+  EmptyHeader,
   EmptyMedia,
+  EmptyTitle,
 } from "@workspace/ui/components/empty";
-import { YouTubeVideo } from "@/components/youtube-video";
-import {
-  FeedItem,
-  FeedType,
-  getCollectionByName,
-  feedTypeMapping,
-  techMapping,
-} from "@/lib/feed";
 import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
@@ -149,6 +143,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               <>
                 {item.type === "youtube" ? (
                   <YouTubeVideo
+                    key={`youtube-${item.url}-${index}`}
                     url={item.url}
                     title={item.title}
                     thumbnail={item.thumbnail}

@@ -4,6 +4,8 @@ import { GlobalSearch } from "./global-search";
 import LocaleToggle from "./locale-toggle";
 import { MainNav } from "./main-nav";
 import { MobileNav } from "./mobile-nav";
+import { Button } from "../../../packages/ui/src/components/button";
+import { Heart } from "lucide-react";
 
 export const Header = () => {
   return (
@@ -15,12 +17,11 @@ export const Header = () => {
       <GlobalSearch />
       <LocaleToggle />
       <ModeToggle />
-      {/* <Button variant="outline">
+      <Button variant="outline">
         <Heart className="text-pink-500" />
         スポンサー
         <span>3</span>
-      </Button> */}
-      {/* <InviteNino /> */}
+      </Button>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+"use cache: private";
+
 import { FeedFilter } from "@/components/feed-filter";
 import { FeedList } from "@/components/feed-list";
 import { Footer } from "@/components/footer";

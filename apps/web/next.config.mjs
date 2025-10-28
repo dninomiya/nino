@@ -5,6 +5,7 @@ import createMDX from '@next/mdx';
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  cacheComponents: true
 }
 
 const withMDX = createMDX({

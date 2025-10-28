@@ -1,3 +1,5 @@
+"use cache";
+
 import { RegistrySidebar } from "@/app/[locale]/(main)/registry/components/registry-sidebar";
 import {
   SidebarInset,

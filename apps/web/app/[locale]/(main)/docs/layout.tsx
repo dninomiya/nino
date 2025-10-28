@@ -1,3 +1,5 @@
+"use cache";
+
 import { DocSidebar } from "@/app/[locale]/(main)/docs/components/doc-sidebar";
 import {
   SidebarInset,
