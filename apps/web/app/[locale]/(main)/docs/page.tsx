@@ -15,9 +15,13 @@ import {
 } from "@workspace/ui/components/card";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Docs",
-};
+export async function generateMetadata({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
+  const t = await getMessage("DocsListPage");
+  return {
+    title: t.title,
+  };
+}
 
 export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);

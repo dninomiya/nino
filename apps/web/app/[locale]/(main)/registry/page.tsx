@@ -4,18 +4,14 @@ import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
-import { Metadata } from "next";
 import Link from "next/link";
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: PageProps<"/[locale]">) {
+  await setCurrentLocaleFromParams(params);
+  const t = await getMessage("RegistryPage");
   return {
-    title: "Registry",
+    title: t.title,
   };
-  // await setCurrentLocaleFromParams(params);
-  // const t = await getMessage("RegistryPage");
-  // return {
-  //   title: t.title,
-  // };
 }
 
 const getRegistryItems = (type: string) => {
