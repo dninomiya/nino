@@ -27,7 +27,9 @@ export async function MainNav() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={link.href}>{t[link.labelKey]}</Link>
+              <Link href={link.href} prefetch>
+                {t[link.labelKey]}
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

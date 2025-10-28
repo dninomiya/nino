@@ -66,11 +66,5 @@
     "remark-reading-time": "^2.0.2",
     "shiki": "^3.13.0",
     "typescript": "^5.9.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.2",
-      "@types/react-dom": "19.2.2"
-    }
   }
 }
