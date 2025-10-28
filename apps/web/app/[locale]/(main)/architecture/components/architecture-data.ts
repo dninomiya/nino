@@ -171,6 +171,27 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       size: "w-[220px]",
       handles: {
         topCenterOut: true,
+        bottomCenterOut: true,
+      },
+    },
+  },
+  {
+    id: "email-package",
+    type: "custom",
+    position: { x: 400, y: 620 },
+    data: {
+      label: "Email Package",
+      type: "package",
+      nodeTypeId: "package-email",
+      description: "メール送信・管理システム",
+      technologies: ["Resend", "React Email"],
+      dependencies: [],
+      size: "w-[220px]",
+      handles: {
+        topCenterIn: true,
+        topCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
       },
     },
   },
@@ -252,7 +273,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "ai-gateway",
     type: "custom",
-    position: { x: 1140, y: 950 },
+    position: { x: 960, y: 950 },
     data: {
       label: "Vercel AI Gateway",
       type: "baas",
@@ -342,7 +363,7 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
   {
     id: "resend",
     type: "custom",
-    position: { x: 960, y: 500 },
+    position: { x: 960, y: 620 },
     data: {
       label: "Resend",
       type: "baas",
@@ -353,6 +374,8 @@ export const initialNodes: Node<ArchitectureNodeData>[] = [
       handles: {
         leftCenterIn: true,
         leftCenterOut: true,
+        rightCenterIn: true,
+        rightCenterOut: true,
       },
     },
   },
@@ -386,6 +409,16 @@ export const initialEdges: Edge[] = [
     sourceHandle: "outTopCenter",
     target: "web-app",
     targetHandle: "inBottomCenter",
+    type: "smoothstep",
+    style: commonEdgeStyle,
+    markerEnd: commonMarkerEnd,
+  },
+  {
+    id: "ui-to-email",
+    source: "ui-package",
+    sourceHandle: "outBottomCenter",
+    target: "email-package",
+    targetHandle: "inTopCenter",
     type: "smoothstep",
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
@@ -501,15 +534,14 @@ export const initialEdges: Edge[] = [
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
+  // Email PackageとResendの双方向接続
   {
-    id: "resend-to-web",
-    source: "resend",
-    sourceHandle: "outLeftCenter",
-    target: "web-app",
-    targetHandle: "inRightCenter",
+    id: "email-package-to-resend",
+    source: "email-package",
+    sourceHandle: "outRightCenter",
+    target: "resend",
+    targetHandle: "inLeftCenter",
     type: "smoothstep",
-    label: "email",
-    labelStyle: { fontSize: 12, fontWeight: "bold" },
     style: commonEdgeStyle,
     markerEnd: commonMarkerEnd,
   },
