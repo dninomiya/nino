@@ -9,7 +9,6 @@ import {
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { Footer } from "@/components/footer";
 import { getDocMetas } from "@/lib/docs";
-import { HelpBanner } from "@/components/help-banner";
 
 export default async function Layout({
   children,
