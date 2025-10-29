@@ -165,6 +165,7 @@ export default {
     docs: "Documentation",
     registry: "Registry",
     description: "Developer.",
+    architecture: "Architecture",
     copyright: "All rights reserved.",
   },
   StatusPage: {

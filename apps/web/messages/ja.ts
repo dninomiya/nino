@@ -161,6 +161,7 @@ export default {
     status: "ステータス",
     docs: "ドキュメント",
     registry: "レジストリ",
+    architecture: "アーキテクチャ",
     description: "開発者。",
     copyright: "All rights reserved.",
   },

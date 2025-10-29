@@ -66,6 +66,10 @@ const footerLinks = [
         href: "/registry",
         labelKey: "registry",
       },
+      {
+        href: "/architecture",
+        labelKey: "architecture",
+      },
     ],
   },
 ];
