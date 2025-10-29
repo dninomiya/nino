@@ -64,7 +64,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
   const [latest, events] = await Promise.all([
     getLatestStatuses(),
     getStatusEvents({
-      from: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      daysAgo: 2, // 2日前から
     }),
   ]);
 

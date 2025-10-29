@@ -9,7 +9,7 @@ import {
   statusEvents,
   type NormalizedStatus,
 } from "@workspace/db/schemas/status";
-import { desc, eq, and, gte } from "drizzle-orm";
+import { desc, eq, and, gte, sql } from "drizzle-orm";
 import {
   sendDiscordWebhook,
   formatStatusDiscordMessage,
@@ -305,15 +305,23 @@ export async function getLatestStatuses() {
 export async function getStatusEvents(params: {
   provider?: ProviderName;
   severity?: NormalizedStatus;
-  from?: Date;
+  daysAgo?: number;
   page?: number;
   pageSize?: number;
 }) {
-  const { provider, severity, from, page = 1, pageSize = 20 } = params;
+  const { provider, severity, daysAgo, page = 1, pageSize = 20 } = params;
   const where = [] as any[];
   if (provider) where.push(eq(statusEvents.provider, provider));
   if (severity) where.push(eq(statusEvents.status, severity));
-  if (from) where.push(gte(statusEvents.occurredAt, from));
+  if (daysAgo) {
+    // SQL文内で日付計算を行う（現在時刻から指定日数前）
+    where.push(
+      gte(
+        statusEvents.occurredAt,
+        sql.raw(`datetime('now', '-${daysAgo} days')`)
+      )
+    );
+  }
 
   const events = await db
     .select()
