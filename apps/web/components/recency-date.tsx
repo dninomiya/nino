@@ -1,20 +1,33 @@
 "use client";
 
-import { formatDateByRecency } from "@/lib/util";
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
+import { enUS, ja } from "date-fns/locale";
+import { Locale } from "@/lib/i18n/locale";
 import { useEffect, useState } from "react";
-import { useI18n } from "./i18n-provider";
 
-export const RecencyDate = ({ date }: { date: Date | number }) => {
-  const [client, setClient] = useState(false);
-  const { locale } = useI18n();
+interface RecencyDateProps {
+  date: string | Date | number;
+  locale: Locale;
+}
+
+export const RecencyDate = ({ date, locale }: RecencyDateProps) => {
+  const [formattedDate, setFormattedDate] = useState<string>("");
 
   useEffect(() => {
-    setClient(true);
-  }, []);
+    const dateObj = new Date(date);
+    const diffDays = differenceInDays(new Date(), dateObj);
 
-  if (!client) {
-    return <span>&nbsp;</span>;
-  }
+    if (diffDays < 5) {
+      setFormattedDate(
+        formatDistanceToNow(dateObj, {
+          addSuffix: true,
+          locale: locale === "ja" ? ja : enUS,
+        })
+      );
+    } else {
+      setFormattedDate(format(dateObj, "yyyy年MM月dd日"));
+    }
+  }, [date, locale]);
 
-  return <span>{formatDateByRecency(date, locale)}</span>;
+  return <span>{formattedDate}</span>;
 };

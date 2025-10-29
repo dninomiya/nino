@@ -4,7 +4,7 @@ import {
   getMessage,
   setCurrentLocaleFromParams,
 } from "@/lib/i18n/server";
-import { formatDateByRecency } from "@/lib/util";
+import { RecencyDate } from "@/components/recency-date";
 import {
   Card,
   CardDescription,
@@ -37,7 +37,10 @@ export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
               <CardHeader>
                 <CardTitle>{doc.title}</CardTitle>
                 <CardDescription>
-                  {formatDateByRecency(doc.updatedAt || doc.createdAt, locale)}
+                  <RecencyDate
+                    date={doc.updatedAt || doc.createdAt}
+                    locale={locale}
+                  />
                 </CardDescription>
               </CardHeader>
             </Card>

@@ -1,5 +1,3 @@
-"use cache";
-
 import { Header } from "@/components/header";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 

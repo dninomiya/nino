@@ -1,13 +1,9 @@
 import { registryDocNames } from "@/lib/registry";
-import { cacheLife } from "next/cache";
 import { NextRequest } from "next/server";
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
 export async function generateStaticParams() {
-  "use cache";
-  cacheLife("max");
-
   const registryDocPaths = registryDocNames.map((name) => ({
     path: ["registry", `${name}.md`],
   }));
@@ -72,9 +68,6 @@ async function readContent(filePath: string): Promise<string> {
  * パスからコンテンツを生成する
  */
 async function generateContent(path: string[]): Promise<string | undefined> {
-  "use cache";
-  cacheLife("max");
-
   // ファイルパスを構築
   const filePath = buildFilePath(path);
   if (!filePath) {

@@ -1,10 +1,10 @@
-"use cache";
-
 import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
@@ -21,11 +21,6 @@ const getRegistryItems = (type: string) => {
       .map(async (registry) => ({
         title: registry.title,
         name: registry.name,
-        preview: (
-          await import(
-            `@/app/[locale]/(main)/registry/${registry.name}/preview.tsx`
-          )
-        ).default,
       }))
   );
 };
@@ -46,19 +41,13 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
             {items.map((item) => (
               <Card key={item.name} className="relative">
                 <CardContent>
-                  <div
-                    className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20"
-                    style={{
-                      backgroundImage: `
-                      linear-gradient(to right, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),
-                      linear-gradient(to bottom, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px)
-                    `,
-                      backgroundSize: "20px 20px",
-                      backgroundPosition: "5px 5px",
-                    }}
+                  <Suspense
+                    fallback={
+                      <Skeleton className="aspect-video border rounded-lg" />
+                    }
                   >
-                    <item.preview />
-                  </div>
+                    <Preview name={item.name} />
+                  </Suspense>
                 </CardContent>
                 <CardHeader>
                   <CardTitle>
@@ -75,5 +64,27 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
       </div>
       <Footer />
     </>
+  );
+}
+
+async function Preview({ name }: { name: string }) {
+  const Content = (
+    await import(`@/app/[locale]/(main)/registry/${name}/preview.tsx`)
+  ).default;
+
+  return (
+    <div
+      className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20"
+      style={{
+        backgroundImage: `
+    linear-gradient(to right, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px)
+  `,
+        backgroundSize: "20px 20px",
+        backgroundPosition: "5px 5px",
+      }}
+    >
+      <Content />
+    </div>
   );
 }

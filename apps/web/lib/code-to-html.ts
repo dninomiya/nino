@@ -1,8 +1,8 @@
-import { codeToHtml } from "shiki";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
 } from "@shikijs/transformers";
+import { codeToHtml } from "shiki";
 
 /**
  * コードをシンタックスハイライト付きのHTMLに変換する共通関数

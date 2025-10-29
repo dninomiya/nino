@@ -28,7 +28,7 @@ import {
 import { ArrowUpRight, Rss, SearchX } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
-import { useMessage } from "./i18n-provider";
+import { useMessage, useI18n } from "./i18n-provider";
 
 // タグ名を翻訳する関数
 const getTagLabel = (tag: string, tTags: any) => {
@@ -65,6 +65,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
   const [sources] = useQueryState("source");
   const [tags] = useQueryState("tags");
   const tTags = useMessage("Tags");
+  const { locale } = useI18n();
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
   const filteredFeedItems = useMemo(() => {
@@ -135,7 +136,7 @@ export function FeedList({ feedItems }: { feedItems: FeedItem[] }) {
               </a>
             </CardTitle>
             <CardDescription>
-              <RecencyDate date={item.date} />
+              <RecencyDate date={item.date} locale={locale} />
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

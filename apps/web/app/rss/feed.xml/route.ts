@@ -1,9 +1,8 @@
-import { Feed } from "feed";
 import { getDocMetas } from "@/lib/docs";
 import { getRegistryDocMetas } from "@/lib/registry";
-import { baseUrl } from "@workspace/registry/lib/base-url";
 import { APP_NAME } from "@workspace/lib/constants";
-import { cacheLife } from "next/cache";
+import { baseUrl } from "@workspace/registry/lib/base-url";
+import { Feed } from "feed";
 
 export async function GET() {
   const feed = await generateFeed();
@@ -15,9 +14,6 @@ export async function GET() {
 }
 
 async function generateFeed() {
-  "use cache";
-  cacheLife("max");
-
   const siteUrl = baseUrl();
 
   const feed = new Feed({

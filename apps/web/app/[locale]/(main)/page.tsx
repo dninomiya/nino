@@ -7,7 +7,11 @@ import { RecencyDate } from "@/components/recency-date";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
 import { getFeedItemsFromDB } from "@/lib/feed-server";
-import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import {
+  getCurrentLocale,
+  getMessage,
+  setCurrentLocaleFromParams,
+} from "@/lib/i18n/server";
 import {
   Empty,
   EmptyDescription,
@@ -22,6 +26,7 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
   const feedItems = await getFeedItemsFromDB(7);
   const t = await getMessage("MainPage");
+  const locale = getCurrentLocale();
 
   return (
     <>
@@ -39,7 +44,7 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
             <h1 className="text-3xl font-bold">{t.feedTitle}</h1>
             <p>{t.feedDescription}</p>
             <p className="text-sm text-muted-foreground mb-4">
-              {t.lastUpdated}: <RecencyDate date={Date.now()} />
+              {t.lastUpdated}: <RecencyDate date={Date.now()} locale={locale} />
             </p>
             <div className="flex gap-2 flex-wrap">
               {process.env.NODE_ENV === "development" && (

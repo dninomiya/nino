@@ -78,10 +78,6 @@ const getTechnologyIcon = (tech: string) => {
 function ArchitectureFlowInner({ className }: ArchitectureFlowProps) {
   const { resolvedTheme } = useTheme();
 
-  // デバッグ用：エッジ数をコンソールに出力
-  console.log("Architecture Edges:", initialEdges.length);
-  console.log("Architecture Nodes:", initialNodes.length);
-
   return (
     <div className={`h-[600px] w-full relative ${className}`}>
       <ReactFlow

@@ -24,7 +24,7 @@ export default function Preview() {
           setFile(file);
           setOpen(true);
         }}
-        className="w-40 aspect-square"
+        className="w-36 aspect-square"
       >
         {preview && (
           <ImageCropperPreview src={preview} onRemove={() => setPreview("")} />

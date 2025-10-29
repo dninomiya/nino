@@ -1,4 +1,4 @@
-"use cache";
+"use cache: private";
 
 import { Button } from "@/components/ui/button";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
@@ -29,26 +29,6 @@ type StatusEvent = typeof statusEvents.$inferSelect;
 function getProviderLink(providerName: ProviderName): string {
   const provider = providers.find((p) => p.name === providerName);
   return provider?.link || "#";
-}
-
-// ステータスに応じた絵文字を取得する関数
-function getStatusEmoji(status: NormalizedStatus) {
-  switch (status) {
-    case "normal":
-      return "✅";
-    case "degraded":
-      return "⚠️";
-    case "partial":
-      return "🟡";
-    case "major":
-      return "🚨";
-    case "maintenance":
-      return "🔧";
-    case "unknown":
-      return "❓";
-    default:
-      return "❓";
-  }
 }
 
 // ステータスをテキストに変換する関数

@@ -14,9 +14,6 @@ export const GET = async () => {
 };
 
 async function generateLLMSText() {
-  "use cache";
-  cacheLife("max");
-
   const allRegistryDocMetas = await getRegistryDocMetas();
   const allDocMetas = await getDocMetas();
   const origin = baseUrl();

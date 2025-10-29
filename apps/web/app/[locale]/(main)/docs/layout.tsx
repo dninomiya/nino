@@ -1,14 +1,12 @@
-"use cache";
-
 import { DocSidebar } from "@/app/[locale]/(main)/docs/components/doc-sidebar";
+import { Footer } from "@/components/footer";
+import { getDocMetas } from "@/lib/docs";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
-import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
-import { Footer } from "@/components/footer";
-import { getDocMetas } from "@/lib/docs";
 
 export default async function Layout({
   children,

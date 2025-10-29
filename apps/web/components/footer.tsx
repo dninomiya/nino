@@ -17,6 +17,8 @@ import {
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
 
 const authorLinks = [
   {
@@ -74,9 +76,7 @@ const footerLinks = [
   },
 ];
 
-export const Footer = async () => {
-  const t = await getMessage("Footer");
-
+export const Footer = () => {
   return (
     <footer className="py-10 px-4 lg:px-8 border-t">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -94,28 +94,48 @@ export const Footer = async () => {
             ))}
           </div>
         </div>
-
-        {footerLinks.map((link) => (
-          <ul key={link.titleKey}>
-            <h4 className="text-lg mb-2 px-3 font-bold">
-              {t[link.titleKey as keyof typeof t]}
-            </h4>
-            {link.links.map((link) => (
-              <li key={link.href}>
-                <Button variant="link" size="sm" asChild>
-                  <Link href={link.href}>
-                    {t[link.labelKey as keyof typeof t]}
-                  </Link>
-                </Button>
-              </li>
-            ))}
-          </ul>
-        ))}
       </div>
 
-      <p className="text-sm text-muted-foreground mt-10">
-        &copy; {new Date().getFullYear()} {APP_NAME}. {t.copyright}
-      </p>
+      <FooterNavs />
+
+      <Suspense>
+        <Copyright />
+      </Suspense>
     </footer>
   );
 };
+
+async function FooterNavs() {
+  const t = await getMessage("Footer");
+
+  return (
+    <>
+      {footerLinks.map((link) => (
+        <ul key={link.titleKey}>
+          <h4 className="text-lg mb-2 px-3 font-bold">
+            {t[link.titleKey as keyof typeof t]}
+          </h4>
+          {link.links.map((link) => (
+            <li key={link.href}>
+              <Button variant="link" size="sm" asChild>
+                <Link href={link.href}>
+                  {t[link.labelKey as keyof typeof t]}
+                </Link>
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ))}
+    </>
+  );
+}
+
+async function Copyright() {
+  await connection();
+  const t = await getMessage("Footer");
+  return (
+    <p className="text-sm text-muted-foreground mt-10">
+      &copy; {new Date().getFullYear()} {APP_NAME}. {t.copyright}
+    </p>
+  );
+}
