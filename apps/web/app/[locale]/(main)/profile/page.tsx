@@ -1,4 +1,7 @@
+"use cache: private";
+
 import { ModeToggle } from "@/components/mode-toggle";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import {
   SiApple,
   SiGithub,
@@ -14,10 +17,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { formatDistanceToNow } from "date-fns";
 import { ja } from "date-fns/locale";
-import { ArrowLeft, FlaskConical, Home, Users2 } from "lucide-react";
+import { ArrowLeft, Home, Users2 } from "lucide-react";
 import Link from "next/link";
 
 const MAX_PERFORMANCE_ENVIRONMENT = [

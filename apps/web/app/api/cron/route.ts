@@ -1,8 +1,12 @@
+import { connection } from "next/server";
+
 import { NextRequest, NextResponse } from "next/server";
 import { SCHEDULES } from "./schedule";
 import { executeSchedules } from "./helper";
 
 export async function GET(request: NextRequest) {
+  await connection();
+
   try {
     // 本番環境では認証をチェック
     if (process.env.NODE_ENV === "production") {

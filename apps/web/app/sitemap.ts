@@ -1,10 +1,9 @@
-export const dynamic = "force-static";
-
 import { getDocMetas } from "@/lib/docs";
 import { locales } from "@/lib/i18n/locale";
 import { getRegistryDocMetas } from "@/lib/registry";
 import { baseUrl } from "@/registry/lib/base-url";
 import type { MetadataRoute } from "next";
+import { cacheLife } from "next/cache";
 
 // 安全な日付作成関数
 const createSafeDate = (dateValue: string | undefined | null): Date => {
@@ -24,6 +23,9 @@ type SitemapPath = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  "use cache";
+  cacheLife("max");
+
   const baseURL = baseUrl();
   const staticPaths: SitemapPath[] = [
     {

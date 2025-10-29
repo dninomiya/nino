@@ -1,3 +1,5 @@
+"use cache";
+
 import { Button } from "@/components/ui/button";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import type { ProviderName } from "@/lib/status";
