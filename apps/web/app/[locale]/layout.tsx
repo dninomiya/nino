@@ -21,8 +21,6 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export const dynamicParams = false;
-
 export default async function RootLayout({
   params,
   children,
