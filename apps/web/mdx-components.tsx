@@ -10,6 +10,7 @@ import {
   ComponentPreviewCode,
   ComponentPreviewDemo,
 } from "./components/code-preview";
+import { GoodToKnow } from "./components/good-to-know";
 
 export function useMDXComponents(): MDXComponents {
   return {
@@ -19,6 +20,7 @@ export function useMDXComponents(): MDXComponents {
     div: createCodeSlotRenderer({
       render: CodeBlock,
     }),
+    GoodToKnow,
     RegistryInstallCommand,
     ComponentPreview: ComponentPreview,
     ComponentPreviewCode: ComponentPreviewCode,

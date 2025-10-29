@@ -1,0 +1,450 @@
+---
+title: ニュース収集&AI要約
+description: ニュース収集&AI翻訳機能の実装ガイドを解説します。
+createdAt: 2025-10-29
+---
+
+このドキュメントでは、技術ニュースの自動収集・要約・配信システムの仕組みを解説します。
+
+## システム概要
+
+このシステムは以下の流れで動作します：
+
+1. Vercel Cron で /api/cron/route.ts を定期実行
+2. RSS取得
+3. DB照合で差分を絞る
+   - 最新アイテムの日時をDBから取得
+   - その日時より新しいアイテムのみをフィルタ
+4. AI要約  
+5. DB保存  
+6. Discord通知
+
+### 各コンポーネントの役割
+
+- **Cronスケジューラー**: 定期的なタスク実行を管理
+- **RSSフィード取得**: 複数の技術サイトから最新情報を収集
+- **AI要約生成**: 収集した記事を日本語で要約・タグ付け
+- **Slack通知**: 要約された情報をSlackに配信
+
+## Vercel Cron設定
+
+### vercel.jsonでのスケジュール定義
+
+```json:vercel.json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 21,1,5,9,15 * * *"
+    }
+  ]
+}
+```
+
+**スケジュール説明:**
+- `0 21,1,5,9,15 * * *` = UTC時刻で 21:00, 01:00, 05:00, 09:00, 15:00
+- JST時刻では 06:00, 10:00, 14:00, 18:00, 00:00 に実行
+- 毎日実行（`* * *` の部分）
+
+[Cron Playground](https://crontab.guru/)
+
+### CRON_SECRETの設定
+
+Vercel Cronの実行時には認証が必要です。強力なパスワードを生成して環境変数に設定しましょう。
+
+1. [パスワードを生成](https://1password.com/password-generator) を使用して強力なパスワードを生成します：
+2. 生成したパスワードを Vercel プロジェクトの環境変数に `CRON_SECRET` として設定
+
+```bash
+CRON_SECRET=your_generated_password_here
+```
+
+### エンドポイント実装
+
+```typescript:app/api/cron/route.ts
+export async function GET(request: NextRequest) {
+  // 本番環境では認証をチェック
+  if (process.env.NODE_ENV === "production") {
+    const authHeader = request.headers.get("authorization");
+    const cronSecret = process.env.CRON_SECRET;
+    
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+  
+  // フィード取得・保存処理を実行
+  await fetchAndSaveNewFeedItems();
+  
+  return NextResponse.json({ success: true });
+}
+```
+
+## RSSフィード取得
+
+### 必要な依存関係のインストール
+
+:::code-group
+
+```bash group=npm
+npm install rss-parser
+```
+
+```bash group=pnpm
+pnpm add rss-parser
+```
+
+```bash group=yarn
+yarn add rss-parser
+```
+
+:::
+
+### フィード設定
+
+```typescript:lib/feed/configs.ts
+export const collections: FeedCollection[] = [
+  {
+    name: "Next.js",
+    icon: SiNextdotjs,
+    category: "framework",
+    feeds: [
+      {
+        method: "rss",
+        url: "https://github.com/vercel/next.js/releases.atom",
+        type: "releases",
+      },
+      {
+        method: "rss",
+        url: "https://nextjs.org/feed.xml",
+        type: "blog",
+      },
+    ],
+  },
+  // ... 他の技術スタックも同様
+];
+```
+
+<GoodToKnow>
+- フィードの取得は **公開されているRSS（またはAtom）フィードのみ** を利用しています。  
+- サイトによってはRSS/Atomフィードを提供していない場合があります。また、ウェブページのスクレイピングは安定性が低く、サイトの変更による不具合やコンテンツの盗用等の問題に繋がるため、本システムでは採用していません。  
+- 利用できるRSSやAtomフィードがある場合のみ、追加・更新情報の自動取得が可能です。
+- [RSSHub Radar](https://chromewebstore.google.com/detail/rsshub-radar/kefjpfngnndepjbopdmoebkipbgkggaa?hl=ja) を使うことで効率的にRSSフィードのURLを特定できます。
+</GoodToKnow>
+
+### RSS解析とサムネイル抽出
+
+```typescript:lib/feed-server.ts
+import Parser from 'rss-parser';
+
+const parser = new Parser();
+
+async function fetchRssFeed(url: string, type: FeedType, source: string): Promise<FeedItem[]> {
+  const feed = await parser.parseURL(url);
+  
+  return allItems.map((item) => ({
+    date: new Date(item.isoDate || item.pubDate || ""),
+    title: item.title || "",
+    url: item.link || "",
+    type,
+    source,
+    thumbnail: extractThumbnail(item), // サムネイル抽出
+    rawXml: JSON.stringify(item, null, 2),
+    rssUrl: url,
+    summary: "", // AI要約で後から生成
+    tags: [], // AI要約で後から生成
+  }));
+}
+
+function extractThumbnail(item: any): string | undefined {
+  // 1. media:thumbnailから取得
+  if (item.mediaThumbnail?.$?.url) {
+    return item.mediaThumbnail.$.url;
+  }
+  
+  // 2. enclosureから画像を取得
+  if (item.enclosure) {
+    const imageEnclosure = item.enclosure.find((enc: any) => {
+      const type = enc.$?.type || enc.type;
+      return type && type.startsWith("image/");
+    });
+    if (imageEnclosure) {
+      return imageEnclosure.$?.url || imageEnclosure.url;
+    }
+  }
+  
+  // 3. description内の画像から抽出
+  const description = item.description;
+  if (description) {
+    const match = description.match(/<img[^>]+src="([^">]+)"/i);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+  
+  return undefined;
+}
+```
+
+### 新規アイテムの判定
+
+```typescript:lib/feed-server.ts
+export async function fetchAndSaveNewFeedItems(): Promise<void> {
+  // 1. DBから最新アイテムの日時を取得
+  const latestItem = await db
+    .select({ date: feedItems.date })
+    .from(feedItems)
+    .orderBy(desc(feedItems.date))
+    .limit(1);
+  
+  const cutoffDate = latestItem[0]?.date || new Date(0);
+  
+  // 2. RSSフィードを取得
+  const allItems = await getFeedItems();
+  
+  // 3. 最新日時より新しいアイテムのみフィルタ
+  const newItems = allItems.filter((item) => item.date > cutoffDate);
+}
+```
+
+## AI要約生成
+
+### 必要な依存関係のインストール
+
+:::code-group
+
+```bash group=npm
+npm install ai zod
+```
+
+```bash group=pnpm
+pnpm add ai zod
+```
+
+```bash group=yarn
+yarn add ai zod
+```
+
+:::
+
+### Vercel AI Gatewayの設定
+
+#### 1. Vercel AI Gatewayに登録
+
+[Vercel AI Gateway](https://vercel.com/ai-gateway) にアクセスしてアカウントを作成し、プロジェクトを登録します。
+
+#### 2. APIキーの取得
+
+ダッシュボードから `AI_GATEWAY_API_KEY` を取得します。
+
+#### 3. 環境変数の設定
+
+取得したAPIキーを以下の場所に設定：
+
+**ローカル開発環境 (.env)**
+```bash
+AI_GATEWAY_API_KEY=your_api_key_here
+```
+
+**Vercelプロジェクト**
+Vercelダッシュボードのプロジェクト設定 > Environment Variables で `AI_GATEWAY_API_KEY` を設定
+
+<GoodToKnow>
+- Vercel AI Gatewayは **毎月5ドル分の無料クレジット** が提供されます
+- 従量課金を有効にしない限り、自動的に課金が発生することはありません
+- 無料クレジットを超えた場合も、明示的に従量課金を有効化するまでサービスは停止されます
+</GoodToKnow>
+
+### Vercel AI SDKを使用したバッチ要約
+
+アイテムごとに要約するとLLMの制限にひっかかるケースが多いため、記事をまとめて処理し、要約回数を一回にしています。これにより
+
+- **レート制限の回避**: API呼び出し回数を大幅に削減
+- **コスト効率**: 複数記事を一度に処理することでコストを最適化
+- **処理速度**: 並列処理にすることで処理速度を向上
+
+を実現しています。
+
+```typescript:lib/feed-server.ts
+// Zodスキーマの定義
+const batchSummarySchema = z.object({
+  summaries: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      summary: z.string(),
+      tags: z.array(z.string()),
+    })
+  ),
+});
+
+export async function generateBatchSummaries(items: Array<{
+  id: string;
+  title: string;
+  content: string;
+}>): Promise<Array<{
+  id: string;
+  title: string;
+  summary: string;
+  tags: string[];
+}>> {
+  const availableTags = [
+    "feature: 新機能の追加や機能拡張",
+    "event: イベント、カンファレンス、ワークショップ",
+    "bugfix: バグ修正、不具合対応",
+    "big-news: 大きなニュース、重要な発表",
+    "release: 新バージョンリリース",
+    "update: アップデート、改善",
+    // ... 他のタグ
+  ].join("\n");
+  
+  const prompt = `以下の技術記事を分析して、それぞれの記事について以下の3つを生成してください：
+  
+  1. より分かりやすい日本語のタイトル（元のタイトルを改善）
+  2. 記事の要約（2-3文で簡潔に日本語で）
+  3. 適切なタグ（1-3個選択）
+  
+  ${itemsInfo}
+  
+  利用可能なタグ:
+  ${availableTags}`;
+  
+  const result = await generateObject({
+    model: "google/gemini-2.5-flash-lite", // Vercel AI Gateway経由
+    prompt,
+    schema: batchSummarySchema,
+  });
+  
+  return result.object.summaries;
+}
+```
+
+### バッチ処理による効率化
+
+- 複数の記事を一度にAIに送信
+- API呼び出し回数を削減
+- コスト効率の向上
+
+## データベース保存
+
+Drizzle などを使って DB に取得したフィードを保存してください。
+
+## Slack通知
+
+### Webhook送信
+
+```typescript:packages/discord/index.ts
+export async function sendDiscordWebhook(
+  channel: DiscordChannel,
+  content: string
+): Promise<void> {
+  const webhookUrl = DISCORD_WEBHOOK_URLS[channel];
+  
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content,
+    }),
+  });
+}
+```
+
+### 通知フォーマット
+
+```typescript:packages/discord/index.ts
+export function formatDiscordMessage(sections: Array<{
+  title: string;
+  summary: string;
+  link: string;
+  type?: string;
+}>): string {
+  const header = `📢 ${jstString}の最新ニュースです！\n\n`;
+  
+  const formattedSections = sections
+    .map((section) => {
+      const link = section.type === "youtube" ? section.link : `<${section.link}>`;
+      const summaryLine = section.summary ? `\n${section.summary}` : "";
+      
+      return `**${section.title}**:${summaryLine}\n${link}`;
+    })
+    .join("\n\n");
+  
+  return header + formattedSections;
+}
+```
+
+### 技術ごとのグループ化
+
+```typescript:lib/feed-server.ts
+export async function sendDiscordNotification(items: FeedItem[]): Promise<void> {
+  // 技術（source）ごとにグループ化
+  const groupedBySource = items.reduce((acc, item) => {
+    if (!acc[item.source]) {
+      acc[item.source] = [];
+    }
+    acc[item.source]!.push(item);
+    return acc;
+  }, {} as Record<string, FeedItem[]>);
+  
+  // 各技術のセクションを生成
+  const sections = Object.entries(groupedBySource)
+    .map(([source, sourceItems]) => {
+      return sourceItems.map((item) => ({
+        title: source,
+        summary: item.summary,
+        link: item.url,
+        type: item.type,
+      }));
+    })
+    .flat();
+  
+  // メッセージをフォーマットして送信
+  const message = formatDiscordMessage(sections);
+  const isDev = process.env.NODE_ENV === "development";
+  
+  if (isDev) {
+    await sendDiscordWebhook("admin", message);
+  } else {
+    await sendDiscordWebhook("techNews", message);
+  }
+}
+```
+
+## 実行フロー
+
+1. **Vercel Cronが `/api/cron` を定期実行**
+   - vercel.jsonで定義されたスケジュール（6:00, 10:00, 14:00, 18:00, 00:00 JST）
+   - UTC時刻で 21:00, 01:00, 05:00, 09:00, 15:00 に実行
+
+2. **認証チェック**
+   - 本番環境ではCRON_SECRETによる認証を実行
+
+3. **`fetchAndSaveNewFeedItems()` 実行**
+   - 最新日時より新しいアイテムのみを処理
+
+4. **RSSフィード取得**
+   - 複数の技術サイトから並列で取得
+   - サムネイル画像の自動抽出
+
+5. **バッチでAI要約生成**
+   - Vercel AI Gateway経由でGemini 2.5 Flash Liteを使用
+   - 複数記事を一度に処理して効率化
+
+6. **DB保存**
+   - 新規アイテムの保存
+   - 既存データの要約更新
+
+7. **Discord通知**
+   - 技術ごとにグループ化
+   - 開発環境とプロダクション環境で送信先を切り替え
+
+8. **ページrevalidate**
+   - Next.jsのキャッシュを更新
+
+## まとめ
+
+このシステムにより、技術ニュースの自動収集・要約・配信が実現されています。Vercel AI Gatewayを活用することで、AI要約のコスト効率を向上させ、バッチ処理によりAPI呼び出し回数を削減しています。

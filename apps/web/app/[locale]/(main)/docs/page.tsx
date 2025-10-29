@@ -1,5 +1,3 @@
-"use cache";
-
 import { getDocMetas } from "@/lib/docs";
 import {
   getCurrentLocale,

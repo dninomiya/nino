@@ -27,7 +27,7 @@ export default async function Layout({
       },
       {
         title: "guides",
-        items: ["installation-web-app"],
+        items: ["installation-web-app", "cron-feed-system"],
       },
       {
         title: "reference",
