@@ -7,7 +7,6 @@ import {
   SiZenn,
 } from "@icons-pack/react-simple-icons";
 import {
-  APP_NAME,
   AUTHOR_DISCORD_URL,
   AUTHOR_GITHUB_URL,
   AUTHOR_X_URL,
@@ -17,8 +16,7 @@ import {
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
-import { connection } from "next/server";
-import { Suspense } from "react";
+import { Copyright } from "./copyright";
 
 const authorLinks = [
   {
@@ -98,9 +96,7 @@ export const Footer = () => {
 
       <FooterNavs />
 
-      <Suspense>
-        <Copyright />
-      </Suspense>
+      <Copyright />
     </footer>
   );
 };
@@ -127,15 +123,5 @@ async function FooterNavs() {
         </ul>
       ))}
     </>
-  );
-}
-
-async function Copyright() {
-  await connection();
-  const t = await getMessage("Footer");
-  return (
-    <p className="text-sm text-muted-foreground mt-10">
-      &copy; {new Date().getFullYear()} {APP_NAME}. {t.copyright}
-    </p>
   );
 }

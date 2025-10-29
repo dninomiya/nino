@@ -1,7 +1,5 @@
-"use client";
-
-import * as React from "react";
-
+import { getMessage } from "@/lib/i18n/server";
+import { gettingStartedItems, registries } from "@/lib/registry";
 import {
   Sidebar,
   SidebarContent,
@@ -12,10 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { registries, gettingStartedItems } from "@/lib/registry";
-import { useMessage } from "@/components/i18n-provider";
 
 const getRegistryItems = (type: string) => {
   return registries
@@ -33,11 +28,8 @@ const getGettingStartedItems = () => {
   }));
 };
 
-export function RegistrySidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-  const t = useMessage("RegistrySidebar");
+export async function RegistrySidebar() {
+  const t = await getMessage("RegistrySidebar");
 
   const data = {
     navGroup: [
@@ -57,10 +49,7 @@ export function RegistrySidebar({
   };
 
   return (
-    <Sidebar
-      className="top-(--spacing-header) h-[calc(100svh-var(--spacing-header))]!"
-      {...props}
-    >
+    <Sidebar className="top-(--spacing-header) h-[calc(100svh-var(--spacing-header))]!">
       <SidebarHeader>
         <div className="px-1 text-sm pt-3">{t.title}</div>
       </SidebarHeader>
@@ -71,7 +60,7 @@ export function RegistrySidebar({
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                  <SidebarMenuButton asChild path={item.url}>
                     <Link href={item.url}>{item.title}</Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

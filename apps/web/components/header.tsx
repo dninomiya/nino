@@ -7,7 +7,7 @@ import { MobileNav } from "./mobile-nav";
 import { Button } from "../../../packages/ui/src/components/button";
 import { Heart } from "lucide-react";
 
-export const Header = () => {
+export async function Header() {
   return (
     <div className="fixed w-full bg-background top-0 z-50 h-header flex items-center gap-2 px-4 xl:px-8 border-b">
       <MobileNav />
@@ -24,4 +24,4 @@ export const Header = () => {
       </Button>
     </div>
   );
-};
+}

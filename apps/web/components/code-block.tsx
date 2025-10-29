@@ -22,6 +22,8 @@ import {
   CodeGroupOption,
 } from "@/registry/blocks/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
+import { Suspense } from "react";
+import { connection } from "next/server";
 
 type CodeBlockProps = {
   lang: string;
@@ -50,7 +52,7 @@ const icons = {
  * 統合CodeBlockコンポーネント
  * プリミティブコンポーネントを組み合わせた、すぐに使える統合コンポーネント
  */
-export async function CodeBlock({
+async function CodeBlockContent({
   groups,
   codes,
 }: {
@@ -112,5 +114,19 @@ export async function CodeBlock({
         </CodeContent>
       ))}
     </Codes>
+  );
+}
+
+export function CodeBlock({
+  groups,
+  codes,
+}: {
+  groups?: string[];
+  codes: CodeBlockProps[];
+}) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CodeBlockContent groups={groups} codes={codes} />
+    </Suspense>
   );
 }

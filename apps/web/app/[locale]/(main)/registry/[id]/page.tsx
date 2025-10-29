@@ -1,7 +1,6 @@
-"use cache";
-
 import { CopyButon } from "@/components/copy-markdown-button";
 import { MDXContent } from "@/components/mdx-contenet";
+import { RecencyDate } from "@/components/recency-date";
 import { TableOfContents } from "@/components/table-of-contents";
 import {
   getCurrentLocale,
@@ -9,7 +8,6 @@ import {
   setCurrentLocaleFromParams,
 } from "@/lib/i18n/server";
 import { getRegistryDocMeta, getRegistryDocMetas } from "@/lib/registry";
-import { formatDateByRecency } from "@/lib/util";
 import { readFileSync } from "fs";
 import { RefreshCw } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -59,7 +57,7 @@ export default async function RegistryPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
-                {formatDateByRecency(metadata.createdAt, locale)}
+                <RecencyDate date={metadata.createdAt} locale={locale} />
               </p>
               ・
               <p
@@ -67,7 +65,7 @@ export default async function RegistryPage({
                 title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
               >
                 <RefreshCw className="size-3.5" />
-                {formatDateByRecency(metadata.updatedAt, locale)}
+                <RecencyDate date={metadata.updatedAt} locale={locale} />
               </p>
             </div>
           </div>
@@ -76,7 +74,7 @@ export default async function RegistryPage({
 
         <Content />
       </MDXContent>
-      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-theme(spacing.header)-theme(spacing.4))] px-6 py-10 overflow-auto">
+      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-(var(--spacing-header))-(--spacing(4)))] px-6 py-10 overflow-auto">
         <TableOfContents />
       </aside>
     </div>

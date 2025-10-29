@@ -1,8 +1,7 @@
-"use cache";
-
 import { CopyButon } from "@/components/copy-markdown-button";
 import { HelpBanner } from "@/components/help-banner";
 import { MDXContent } from "@/components/mdx-contenet";
+import { RecencyDate } from "@/components/recency-date";
 import { TableOfContents } from "@/components/table-of-contents";
 import { getDocMeta, getDocMetas } from "@/lib/docs";
 import {
@@ -62,7 +61,7 @@ export default async function DocsPage({
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
-                {formatDateByRecency(metadata.createdAt, locale)}
+                <RecencyDate date={metadata.createdAt} locale={locale} />
               </p>
               {metadata.updatedAt && (
                 <p
@@ -70,7 +69,7 @@ export default async function DocsPage({
                   title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
                 >
                   <RefreshCw className="size-3.5" />
-                  {formatDateByRecency(metadata.updatedAt, locale)}
+                  <RecencyDate date={metadata.updatedAt} locale={locale} />
                 </p>
               )}
               <p

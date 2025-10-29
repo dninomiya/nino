@@ -1,5 +1,3 @@
-"use cache";
-
 import {
   SiBun,
   SiCss,
@@ -24,6 +22,7 @@ import {
   CodeGroupOption,
 } from "@/registry/blocks/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
+// import { generateCodeHtml } from "@/lib/code-to-html";
 
 // Icons mapping
 const icons = {
@@ -63,6 +62,8 @@ const codes = [
 const groups = ["TypeScript", "JavaScript"];
 
 export default async function Preview() {
+  "use cache";
+
   // 各コードをHTMLに変換し、valueを割り当て
   const codesWithValue = await Promise.all(
     codes.map(async (item, i) => {

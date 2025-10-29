@@ -1,6 +1,5 @@
-"use cache: private";
-
 import { ModeToggle } from "@/components/mode-toggle";
+import { RecencyDate } from "@/components/recency-date";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import {
   SiApple,
@@ -71,7 +70,7 @@ const positions = [
 ];
 
 export default async function ProfilePage({ params }: PageProps<"/[locale]">) {
-  await setCurrentLocaleFromParams(params);
+  const locale = await setCurrentLocaleFromParams(params);
 
   return (
     <div className="container max-w-3xl py-10 space-y-8">
@@ -86,7 +85,7 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]">) {
         <ModeToggle />
         <p className="text-sm text-muted-foreground text-right">
           最終更新:{" "}
-          {formatDistanceToNow(new Date(), { addSuffix: true, locale: ja })}
+          <RecencyDate date={new Date("2025-10-29")} locale={locale} />
         </p>
       </div>
 

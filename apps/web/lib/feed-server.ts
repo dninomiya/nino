@@ -5,8 +5,8 @@ import { feedItems } from "@workspace/db/schemas/feed";
 import { formatDiscordMessage, sendDiscordWebhook } from "@workspace/discord";
 import { generateObject } from "ai";
 import { subDays } from "date-fns";
-import { and, desc, eq, gte, isNull, ne, or } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { and, desc, eq, gte, isNull, ne, or, sql } from "drizzle-orm";
+import { cacheLife, revalidatePath } from "next/cache";
 import Parser from "rss-parser";
 import { z } from "zod";
 import { collections, type FeedItem, type FeedType } from "./feed";
@@ -435,8 +435,11 @@ export async function saveFeedItemsToDB(items: FeedItem[]): Promise<void> {
 export async function getFeedItemsFromDB(
   days: number = 7
 ): Promise<FeedItem[]> {
+  "use cache";
+  cacheLife("max");
+
   try {
-    const cutoffDate = subDays(new Date(), days);
+    const cutoffDate = sql.raw(`datetime('now', '-${days} days')`);
 
     const items = await db
       .select()
