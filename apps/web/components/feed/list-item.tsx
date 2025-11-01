@@ -44,6 +44,33 @@ export function FeedListItem({
   feedTypeMessages,
 }: FeedListItemProps) {
   const [expanded, setExpanded] = useState(false);
+  const isYouTube = item.type === "youtube";
+  const youTubeVideoId = isYouTube ? extractYouTubeVideoId(item.url) : null;
+
+  const fallbackImage =
+    item.thumbnail && item.thumbnail.trim() !== "" ? (
+      <img
+        src={item.thumbnail}
+        alt={item.title}
+        className="w-full rounded-md border"
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
+        }}
+      />
+    ) : null;
+
+  const mediaContent = isYouTube ? (
+    youTubeVideoId ? (
+      <YouTubeVideo
+        key={`youtube-${youTubeVideoId}-${index}`}
+        videoid={youTubeVideoId}
+      />
+    ) : (
+      fallbackImage
+    )
+  ) : (
+    fallbackImage
+  );
 
   return (
     <Card>
@@ -77,25 +104,7 @@ export function FeedListItem({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {item.type !== "releases" && (
-          <>
-            {item.type === "youtube" ? (
-              <YouTubeVideo
-                key={`youtube-${item.url}-${index}`}
-                videoid={item.url.split("v=")[1]!}
-              />
-            ) : item.thumbnail && item.thumbnail.trim() !== "" ? (
-              <img
-                src={item.thumbnail}
-                alt={item.title}
-                className="w-full rounded-md border"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            ) : null}
-          </>
-        )}
+        {item.type !== "releases" && <>{mediaContent}</>}
 
         {item.summary && (
           <div className="leading-relaxed">
@@ -174,4 +183,75 @@ function formatRawContent(raw: string, item: FeedItem) {
   } catch {
     return raw || "";
   }
+}
+
+const YOUTUBE_VIDEO_ID_PATTERN = /^[a-zA-Z0-9_-]{11}$/;
+const YOUTUBE_PATH_SEGMENTS = ["embed", "shorts", "live", "v", "clip"];
+
+function extractYouTubeVideoId(input: string): string | null {
+  const trimmed: string = input.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  if (isValidYouTubeId(trimmed)) {
+    return trimmed;
+  }
+
+  try {
+    const sanitized = trimmed as string;
+    const hasProtocol = /^(?:https?:)?\/\//i.test(sanitized);
+    let normalizedUrl: string;
+
+    if (hasProtocol) {
+      const isProtocolRelative =
+        sanitized.length >= 2 && sanitized[0] === "/" && sanitized[1] === "/";
+      normalizedUrl = isProtocolRelative
+        ? `https://${sanitized.slice(2)}`
+        : sanitized;
+    } else {
+      normalizedUrl = `https://${sanitized}`;
+    }
+    const url = new URL(normalizedUrl);
+    const hostname = url.hostname.replace(/^www\./, "").toLowerCase();
+    const pathSegments = url.pathname.split("/").filter(Boolean);
+
+    if (hostname === "youtu.be") {
+      const candidate = pathSegments[0];
+      return isValidYouTubeId(candidate) ? candidate : null;
+    }
+
+    if (hostname.endsWith("youtube.com")) {
+      const vParam = url.searchParams.get("v");
+      if (isValidYouTubeId(vParam)) {
+        return vParam!;
+      }
+
+      for (const segment of YOUTUBE_PATH_SEGMENTS) {
+        const index = pathSegments.indexOf(segment);
+        if (index !== -1) {
+          const candidate = pathSegments[index + 1];
+          if (isValidYouTubeId(candidate)) {
+            return candidate;
+          }
+        }
+      }
+
+      if (pathSegments.length) {
+        const lastSegment = pathSegments[pathSegments.length - 1];
+        if (isValidYouTubeId(lastSegment)) {
+          return lastSegment;
+        }
+      }
+    }
+  } catch {
+    // ignore URL parsing errors
+  }
+
+  return null;
+}
+
+function isValidYouTubeId(value: string | null | undefined): value is string {
+  return !!value && YOUTUBE_VIDEO_ID_PATTERN.test(value);
 }
