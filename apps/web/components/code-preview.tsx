@@ -33,7 +33,7 @@ export function ComponentPreviewDemo({
   children: React.ReactNode;
 }) {
   return (
-    <TabsContent value="demo" className="border rounded-lg p-6">
+    <TabsContent value="demo" className="border relative rounded-lg p-6">
       {children}
     </TabsContent>
   );

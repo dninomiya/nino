@@ -18,7 +18,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { YouTubeVideo } from "@/components/youtube-video";
+import { YouTubeVideo } from "@/registry/blocks/youtube-video";
 import type { FeedItem, FeedType } from "@/lib/feed";
 import { feedTypeMapping, techMapping } from "@/lib/feed";
 import { Locale } from "@/lib/i18n/locale";

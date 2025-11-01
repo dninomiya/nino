@@ -52,21 +52,22 @@ export default async function RegistryPage({
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-2 not-prose">
           <div className="space-y-2">
             <h1 className="text-3xl xl:text-4xl font-bold">{metadata.title}</h1>
-            <div className="flex gap-1 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
                 title={`${tCommon.createdAt}: ${metadata.createdAt}`}
               >
                 <RecencyDate date={metadata.createdAt} locale={locale} />
               </p>
-              ・
-              <p
-                className="text-muted-foreground text-sm flex items-center gap-1.5"
-                title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
-              >
-                <RefreshCw className="size-3.5" />
-                <RecencyDate date={metadata.updatedAt} locale={locale} />
-              </p>
+              {metadata.updatedAt && (
+                <p
+                  className="text-muted-foreground text-sm flex items-center gap-1.5"
+                  title={`${tCommon.updatedAt}: ${metadata.updatedAt}`}
+                >
+                  <RefreshCw className="size-3.5" />
+                  <RecencyDate date={metadata.updatedAt} locale={locale} />
+                </p>
+              )}
             </div>
           </div>
           <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>

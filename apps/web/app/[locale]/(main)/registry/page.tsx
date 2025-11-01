@@ -74,7 +74,7 @@ async function Preview({ name }: { name: string }) {
 
   return (
     <div
-      className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20"
+      className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20 relative"
       style={{
         backgroundImage: `
     linear-gradient(to right, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),
