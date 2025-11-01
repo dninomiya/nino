@@ -3,7 +3,7 @@ import "server-only";
 import Parser from "rss-parser";
 import { z } from "zod";
 import { generateObject } from "ai";
-import { revalidatePath } from "next/cache";
+import { cacheLife, revalidatePath } from "next/cache";
 import { db } from "@workspace/db";
 import {
   statusEvents,
@@ -279,6 +279,9 @@ export async function saveStatusDiffsAndNotify(): Promise<{ changed: number }> {
 }
 
 export async function getLatestStatuses() {
+  "use cache";
+  cacheLife("max");
+
   // 各プロバイダーの最新イベントを取得
   const providers = await db
     .selectDistinct({ provider: statusEvents.provider })
@@ -309,6 +312,9 @@ export async function getStatusEvents(params: {
   page?: number;
   pageSize?: number;
 }) {
+  "use cache";
+  cacheLife("max");
+
   const { provider, severity, daysAgo, page = 1, pageSize = 20 } = params;
   const where = [] as any[];
   if (provider) where.push(eq(statusEvents.provider, provider));
@@ -318,7 +324,7 @@ export async function getStatusEvents(params: {
     where.push(
       gte(
         statusEvents.occurredAt,
-        sql.raw(`datetime('now', '-${daysAgo} days')`)
+        sql`1000 * unixepoch('now', '-' || ${daysAgo} || ' days')`
       )
     );
   }

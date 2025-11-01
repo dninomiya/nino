@@ -439,7 +439,7 @@ export async function getFeedItemsFromDB(
   cacheLife("max");
 
   try {
-    const cutoffDate = sql.raw(`datetime('now', '-${days} days')`);
+    const cutoffDate = sql`1000 * unixepoch('now', '-' || ${days} || ' days')`;
 
     const items = await db
       .select()
