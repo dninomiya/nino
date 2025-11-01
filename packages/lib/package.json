@@ -5,7 +5,8 @@
   "private": true,
   "exports": {
     "./constants": "./constants.ts",
-    "./technologies": "./technologies.ts"
+    "./technologies": "./technologies.ts",
+    "./plan": "./plan.ts"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.8.0",
