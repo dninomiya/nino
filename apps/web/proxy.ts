@@ -32,7 +32,9 @@ export default function proxy(request: NextRequest) {
     ? cookieLocale
     : match(languages, locales, defaultLocale);
 
-  return NextResponse.rewrite(new URL(`/${locale}${pathname}`, request.url));
+  const url = request.nextUrl.clone();
+  url.pathname = `/${locale}${pathname}`;
+  return NextResponse.rewrite(url);
 }
 
 export const config = {

@@ -1,14 +1,10 @@
 import { FeedFilter } from "@/components/feed-filter";
-import { FeedList } from "@/components/feed-list";
+import { FeedList } from "@/components/feed/list";
 import { Footer } from "@/components/footer";
 import { RefreshFeedButton } from "@/components/refresh-feed-button";
 import { TestDiscordNotificationButton } from "@/components/test-discord-notification-button";
 import { getFeedItemsFromDB } from "@/lib/feed-server";
-import {
-  getCurrentLocale,
-  getMessage,
-  setCurrentLocaleFromParams,
-} from "@/lib/i18n/server";
+import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import {
   Empty,
   EmptyDescription,
@@ -19,7 +15,10 @@ import {
 import { RefreshCw } from "lucide-react";
 import { Suspense } from "react";
 
-export default async function Page({ params }: PageProps<"/[locale]">) {
+export default async function Page({
+  params,
+  searchParams,
+}: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
   const feedItems = await getFeedItemsFromDB(7);
   const t = await getMessage("MainPage");
@@ -77,20 +76,10 @@ export default async function Page({ params }: PageProps<"/[locale]">) {
             </Empty>
           ) : (
             <Suspense>
-              <FeedList feedItems={feedItems} />
+              <FeedList feedItems={feedItems} searchParams={searchParams} />
             </Suspense>
           )}
         </div>
-        {/* <div className="hidden xl:block w-80 py-10">
-          <a
-            className="twitter-timeline"
-            data-chrome="transparent nofooter noheader"
-            href="https://twitter.com/d151005?ref_src=twsrc%5Etfw"
-          >
-            Tweets by d151005
-          </a>{" "}
-          <script async src="https://platform.twitter.com/widgets.js"></script>
-        </div> */}
       </div>
       <Footer />
     </>

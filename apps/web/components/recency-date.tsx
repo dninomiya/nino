@@ -29,5 +29,5 @@ export const RecencyDate = ({ date, locale }: RecencyDateProps) => {
     }
   }, [date, locale]);
 
-  return <span>{formattedDate}</span>;
+  return <span>{formattedDate || <>&nbsp;</>}</span>;
 };

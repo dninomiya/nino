@@ -1,7 +1,4 @@
-"use client";
-
-import dynamic from "next/dynamic";
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+import { YouTubeEmbed } from "@next/third-parties/google";
 
 interface YouTubeVideoProps {
   url: string;
@@ -10,9 +7,15 @@ interface YouTubeVideoProps {
 }
 
 export function YouTubeVideo({ url }: YouTubeVideoProps) {
+  const videoId = url.split("v=")[1];
+
+  if (!videoId) {
+    return null;
+  }
+
   return (
-    <div className="aspect-video overflow-hidden rounded-md border">
-      <ReactPlayer src={url} width="100%" height="100%" controls />
+    <div className="[&_lite-youtube]:aspect-video [&_lite-youtube]:overflow-hidden [&_lite-youtube]:max-w-full! [&_lite-youtube]:rounded-md [&_lite-youtube]:border">
+      <YouTubeEmbed videoid={videoId} />
     </div>
   );
 }

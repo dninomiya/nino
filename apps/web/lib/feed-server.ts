@@ -4,7 +4,6 @@ import { db } from "@workspace/db";
 import { feedItems } from "@workspace/db/schemas/feed";
 import { formatDiscordMessage, sendDiscordWebhook } from "@workspace/discord";
 import { generateObject } from "ai";
-import { subDays } from "date-fns";
 import { and, desc, eq, gte, isNull, ne, or, sql } from "drizzle-orm";
 import { cacheLife, revalidatePath } from "next/cache";
 import Parser from "rss-parser";

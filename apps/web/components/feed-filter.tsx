@@ -1,6 +1,6 @@
 "use client";
 
-import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,6 +15,8 @@ import {
 } from "@/lib/feed";
 import { useMessage } from "./i18n-provider";
 import { useMemo, ReactNode } from "react";
+import { getFeedTypeLabel, getTagLabel } from "@/components/feed/helpers";
+import { feedSearchParamParsers } from "@/components/feed/search-params.client";
 
 interface FeedFilterProps {
   feedItems: FeedItem[];
@@ -136,46 +138,12 @@ const getCategoryLabel = (category: string, tCategories: any) => {
   return categoryMap[category] || category;
 };
 
-// タグ名を翻訳する関数
-const getTagLabel = (tag: string, tTags: any) => {
-  const tagMap: Record<string, string> = {
-    feature: tTags.feature,
-    event: tTags.event,
-    bugfix: tTags.bugfix,
-    "big-news": tTags.bigNews,
-    release: tTags.release,
-    update: tTags.update,
-    announcement: tTags.announcement,
-    tutorial: tTags.tutorial,
-    documentation: tTags.documentation,
-    security: tTags.security,
-    performance: tTags.performance,
-    "breaking-change": tTags.breakingChange,
-  };
-  return tagMap[tag] || tag;
-};
-
-// フィードタイプ名を翻訳する関数
-const getFeedTypeLabel = (type: string, tFeedTypes: any) => {
-  const typeMap: Record<string, string> = {
-    releases: tFeedTypes.releases,
-    blog: tFeedTypes.blog,
-    changelog: tFeedTypes.changelog,
-    youtube: tFeedTypes.youtube,
-  };
-  return typeMap[type] || type;
-};
-
 export function FeedFilter({ feedItems }: FeedFilterProps) {
   const t = useMessage("FeedFilter");
   const tCategories = useMessage("Categories");
   const tTags = useMessage("Tags");
   const tFeedTypes = useMessage("FeedTypes");
-  const [filters, setFilters] = useQueryStates({
-    type: parseAsArrayOf(parseAsString).withDefault([]),
-    source: parseAsArrayOf(parseAsString).withDefault([]),
-    tags: parseAsArrayOf(parseAsString).withDefault([]),
-  });
+  const [filters, setFilters] = useQueryStates(feedSearchParamParsers);
 
   // 定義済みのタイプを取得（0件のものも含む）
   const availableTypes = getAvailableTypes();
@@ -281,7 +249,12 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       ? [...currentTypes, type]
       : currentTypes.filter((t) => t !== type);
 
-    setFilters({ type: newTypes });
+    setFilters(
+      { type: newTypes },
+      {
+        shallow: false,
+      }
+    );
   };
 
   const toggleSource = (source: string, checked: boolean) => {
@@ -290,7 +263,12 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       ? [...currentSources, source]
       : currentSources.filter((s) => s !== source);
 
-    setFilters({ source: newSources });
+    setFilters(
+      { source: newSources },
+      {
+        shallow: false,
+      }
+    );
   };
 
   const toggleTag = (tag: string, checked: boolean) => {
@@ -299,7 +277,12 @@ export function FeedFilter({ feedItems }: FeedFilterProps) {
       ? [...currentTags, tag]
       : currentTags.filter((t) => t !== tag);
 
-    setFilters({ tags: newTags });
+    setFilters(
+      { tags: newTags },
+      {
+        shallow: false,
+      }
+    );
   };
 
   return (
