@@ -186,7 +186,12 @@ function CodeInternalProvider({
   const { activeGroups, setActiveGroups } = useCodeGroup();
 
   const currentGroup = useMemo(() => {
-    return groups.find((group) => activeGroups.includes(group));
+    if (groups.length === 0) {
+      return undefined;
+    }
+
+    const matchedGroup = groups.find((group) => activeGroups.includes(group));
+    return matchedGroup ?? groups[0];
   }, [groups, activeGroups]);
 
   const registerCode = useCallback((value: string, code: string) => {
