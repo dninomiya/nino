@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { registries } from "@/lib/registry";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -21,6 +22,7 @@ const getRegistryItems = (type: string) => {
       .map(async (registry) => ({
         title: registry.title,
         name: registry.name,
+        meta: registry.meta,
       }))
   );
 };
@@ -46,7 +48,7 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
                       <Skeleton className="aspect-video border rounded-lg" />
                     }
                   >
-                    <Preview name={item.name} />
+                    <Preview name={item.name} fill={item.meta?.fill} />
                   </Suspense>
                 </CardContent>
                 <CardHeader>
@@ -67,14 +69,17 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
   );
 }
 
-async function Preview({ name }: { name: string }) {
+async function Preview({ name, fill }: { name: string; fill?: boolean }) {
   const Content = (
     await import(`@/app/[locale]/(main)/registry/${name}/preview.tsx`)
   ).default;
 
   return (
     <div
-      className="aspect-video border rounded-lg flex items-center justify-center p-8 bg-muted/20 relative"
+      className={cn(
+        "aspect-video border rounded-lg flex items-center justify-center bg-muted/20 relative",
+        !fill && "p-8"
+      )}
       style={{
         backgroundImage: `
     linear-gradient(to right, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),

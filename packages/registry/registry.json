@@ -58,7 +58,10 @@
           "type": "registry:block"
         }
       ],
-      "dependencies": ["@next/third-parties"]
+      "dependencies": ["@next/third-parties"],
+      "meta": {
+        "fill": true
+      }
     }
   ]
 }

@@ -11,7 +11,7 @@ export function YouTubeVideo({
   return (
     <div
       className={cn(
-        "w-full [&_lite-youtube]:aspect-video [&_lite-youtube]:overflow-hidden [&_lite-youtube]:max-w-full! [&_lite-youtube]:rounded-md [&_lite-youtube]:border",
+        "w-full [&_lite-youtube]:aspect-video [&_lite-youtube]:overflow-hidden [&_lite-youtube]:max-w-full! [&_lite-youtube]:rounded-md",
         className
       )}
     >
