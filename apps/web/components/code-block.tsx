@@ -1,29 +1,28 @@
+import { generateCodeHtml } from "@/lib/code-to-html";
+import {
+  CodeContent,
+  CodeCopyButton,
+  CodeDisplay,
+  CodeGroupOption,
+  CodeGroupSelector,
+  CodeHeader,
+  CodeList,
+  Codes,
+  CodeTrigger,
+} from "@/registry/blocks/codes";
 import {
   SiBun,
   SiCss,
   SiHtml5,
   SiJavascript,
+  SiNpm,
+  SiPnpm,
   SiTypescript,
   SiYaml,
-  SiNpm,
   SiYarn,
-  SiPnpm,
 } from "@icons-pack/react-simple-icons";
 import { Terminal } from "lucide-react";
-import {
-  Codes,
-  CodeHeader,
-  CodeList,
-  CodeTrigger,
-  CodeContent,
-  CodeDisplay,
-  CodeCopyButton,
-  CodeGroupSelector,
-  CodeGroupOption,
-} from "@/registry/blocks/codes";
-import { generateCodeHtml } from "@/lib/code-to-html";
 import { Suspense } from "react";
-import { connection } from "next/server";
 
 type CodeBlockProps = {
   lang: string;
