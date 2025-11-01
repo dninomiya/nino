@@ -1,9 +1,10 @@
+import { Footer } from "@/components/footer";
+import { RecencyDate } from "@/components/recency-date";
 import { Button } from "@/components/ui/button";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import type { ProviderName } from "@/lib/status";
 import { providers } from "@/lib/status";
 import { getLatestStatuses, getStatusEvents } from "@/lib/status-server";
-import { formatDateByRecency } from "@/lib/util";
 import {
   statusEvents,
   type NormalizedStatus,
@@ -18,7 +19,6 @@ import {
 } from "@workspace/ui/components/card";
 import { ArrowUpRight } from "lucide-react";
 import { debugRunStatusCron } from "./actions";
-import { Footer } from "@/components/footer";
 
 // 型定義
 type StatusEvent = typeof statusEvents.$inferSelect;
@@ -137,7 +137,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                     className="text-sm text-muted-foreground ml-2"
                     title={p.occurredAt.toISOString()}
                   >
-                    {formatDateByRecency(p.occurredAt, locale)}
+                    <RecencyDate date={p.occurredAt} locale={locale} />
                   </p>
                 </CardFooter>
               </Card>
@@ -169,7 +169,7 @@ export default async function StatusPage({ params }: PageProps<"/[locale]">) {
                     </span>
                     <div className="flex items-center gap-1">
                       <span className="text-sm text-muted-foreground">
-                        ({formatDateByRecency(e.occurredAt, locale)})
+                        <RecencyDate date={e.occurredAt} locale={locale} />
                       </span>
                       {e.link && (
                         <a
