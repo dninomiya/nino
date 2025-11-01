@@ -21,7 +21,8 @@
     "drizzle-orm": "^0.44.7",
     "nanoid": "^5.1.6",
     "next": "^16.0.1",
-    "octokit": "^5.0.5"
+    "octokit": "^5.0.5",
+    "stripe": "^19.2.0"
   },
   "devDependencies": {
     "@workspace/typescript-config": "workspace:*"

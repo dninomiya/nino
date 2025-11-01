@@ -219,6 +219,9 @@ importers:
       octokit:
         specifier: ^5.0.5
         version: 5.0.5
+      stripe:
+        specifier: ^19.2.0
+        version: 19.2.0(@types/node@20.19.23)
     devDependencies:
       '@workspace/typescript-config':
         specifier: workspace:*
