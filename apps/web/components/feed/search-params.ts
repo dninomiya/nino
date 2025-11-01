@@ -13,9 +13,9 @@ import {
 } from "./search-params.shared";
 
 export const feedSearchParamParsers = {
-  type: parseAsArrayOf(parseAsString).withDefault<string[]>([]),
-  source: parseAsArrayOf(parseAsString).withDefault<string[]>([]),
-  tags: parseAsArrayOf(parseAsString).withDefault<string[]>([]),
+  type: parseAsArrayOf(parseAsString).withDefault([]),
+  source: parseAsArrayOf(parseAsString).withDefault([]),
+  tags: parseAsArrayOf(parseAsString).withDefault([]),
 };
 
 export const feedSearchParamsCache = createSearchParamsCache(
@@ -41,4 +41,3 @@ export async function parseFeedSearchParams(
 
 export { defaultFeedSearchParams } from "./search-params.shared";
 export type { SearchParams };
-

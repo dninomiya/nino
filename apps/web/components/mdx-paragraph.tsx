@@ -96,7 +96,7 @@ export function MDXParagraph({ children, ...props }: MDXParagraphProps) {
   const youtubeURL = findYouTubeURL(children);
 
   if (youtubeURL) {
-    return <YouTubeVideo url={youtubeURL} title="" />;
+    return <YouTubeVideo videoid={youtubeURL.split("v=")[1]!} />;
   }
 
   // childrenを再帰的にチェックしてGitHub URLを検出
