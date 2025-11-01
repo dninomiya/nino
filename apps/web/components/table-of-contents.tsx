@@ -14,6 +14,8 @@ export function TableOfContents() {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
+    if (headings.length > 0) return;
+
     // 見出しを抽出
     const elements = Array.from(
       document.querySelectorAll("article h2, article h3")

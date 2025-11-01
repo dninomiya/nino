@@ -381,7 +381,6 @@ function CodeTrigger({
   children?: ReactNode;
 } & VariantProps<typeof codeTriggerVariants> &
   Omit<React.ComponentProps<typeof TabsTrigger>, "value"> & { value: string }) {
-  const { activeGroups } = useCodeGroup();
   const { currentGroup, groups, registerTab } = useCode();
 
   // タブとグループの対応関係を登録
