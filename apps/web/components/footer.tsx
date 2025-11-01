@@ -17,6 +17,7 @@ import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { Copyright } from "./copyright";
+import { Suspense } from "react";
 
 const authorLinks = [
   {
@@ -92,11 +93,12 @@ export const Footer = () => {
             ))}
           </div>
         </div>
+        <FooterNavs />
       </div>
 
-      <FooterNavs />
-
-      <Copyright />
+      <Suspense>
+        <Copyright />
+      </Suspense>
     </footer>
   );
 };
