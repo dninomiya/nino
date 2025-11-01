@@ -25,9 +25,9 @@ export default async function Page({
 
   return (
     <>
-      <div className="xl:flex gap-10 items-start px-4 xl:px-8">
+      <div className="xl:flex gap-10 items-start container">
         <div className="sticky top-header hidden xl:block">
-          <div className="w-80 overflow-y-auto h-[calc(100dvh-(var(--spacing-header)))] py-10">
+          <div className="w-64 overflow-y-auto h-[calc(100dvh-(var(--spacing-header)))] py-10">
             <h2 className="mb-6">{t.filterTitle}</h2>
             <Suspense>
               <FeedFilter feedItems={feedItems} />

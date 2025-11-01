@@ -82,9 +82,7 @@ export function FeedListItem({
             {item.type === "youtube" ? (
               <YouTubeVideo
                 key={`youtube-${item.url}-${index}`}
-                url={item.url}
-                title={item.title}
-                thumbnail={item.thumbnail}
+                videoid={item.url.split("v=")[1]!}
               />
             ) : item.thumbnail && item.thumbnail.trim() !== "" ? (
               <img
