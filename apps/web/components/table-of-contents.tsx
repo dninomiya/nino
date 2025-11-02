@@ -17,9 +17,8 @@ export function TableOfContents() {
     if (headings.length > 0) return;
 
     // 見出しを抽出
-    const elements = Array.from(
-      document.querySelectorAll("article h2, article h3")
-    );
+    const firstArticle = document.querySelector("article");
+    const elements = Array.from(firstArticle?.querySelectorAll("h2, h3") || []);
 
     const items = elements.map((element) => ({
       id: element.id,
