@@ -15,7 +15,7 @@ import { cacheLife } from "next/cache";
  */
 export async function generateCodeHtml(code: string, lang: string) {
   "use cache";
-  cacheLife("max");
+  cacheLife("infinite");
 
   return await codeToHtml(code, {
     lang,
