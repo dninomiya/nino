@@ -1,4 +1,7 @@
 export default {
+  SponsorsPage: {
+    title: "スポンサー",
+  },
   Common: {
     createdAt: "作成日",
     updatedAt: "更新日",

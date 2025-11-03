@@ -3,10 +3,17 @@ import {
   anonymousClient,
   inferAdditionalFields,
 } from "better-auth/client/plugins";
-import { baseUrl } from "@workspace/lib/base-url";
 import { auth } from ".";
+import { baseUrl } from "@workspace/registry/lib/base-url";
+import { stripeClient } from "@better-auth/stripe/client";
 
 export const authClient = createAuthClient({
   baseURL: baseUrl(),
-  plugins: [inferAdditionalFields<typeof auth>(), anonymousClient()],
+  plugins: [
+    inferAdditionalFields<typeof auth>(),
+    anonymousClient(),
+    stripeClient({
+      subscription: true,
+    }),
+  ],
 });

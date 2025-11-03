@@ -6,6 +6,7 @@ import { MainNav } from "./main-nav";
 import { MobileNav } from "./mobile-nav";
 import { Button } from "../../../packages/ui/src/components/button";
 import { Heart } from "lucide-react";
+import Link from "next/link";
 
 export async function Header() {
   return (
@@ -17,10 +18,12 @@ export async function Header() {
       <GlobalSearch />
       <LocaleToggle />
       <ModeToggle />
-      <Button variant="outline">
-        <Heart className="text-pink-500" />
-        スポンサー
-        <span>3</span>
+      <Button variant="outline" asChild>
+        <Link href="/sponsors">
+          <Heart className="text-pink-500" />
+          スポンサー
+          <span>3</span>
+        </Link>
       </Button>
     </div>
   );
