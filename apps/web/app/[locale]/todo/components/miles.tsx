@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 export function Miles() {
   return (
-    <div className="h-10 -mb-4 -mx-3 mt-6 grid grid-cols-30 gap-1">
+    <div className="h-10 -mb-4 -mx-3 mt-6 grid grid-cols-30 gap-1 overflow-hidden">
       <Suspense fallback={<MilesSkeleton />}>
         <MilesContent />
       </Suspense>
@@ -29,9 +29,9 @@ async function MilesContent() {
     dates.push(dateKey);
   }
 
-  // 最大SPを計算（ゲージの高さを正規化するため）
+  // 過去30日分の最大SPを計算（ゲージの高さを正規化するため）
   const maxSp = Math.max(
-    ...completedTasks.map((t) => t.sp),
+    ...dates.map((date) => tasksByDate.get(date)?.sp ?? 0),
     1 // 0で割らないように最小値を1に
   );
 
@@ -88,7 +88,7 @@ function Item({
       <TooltipTrigger>
         <div
           className="bg-linear-to-t h-full from-lime-600/80 to-lime-600/40 rounded-t-full w-full transition duration-500 origin-bottom"
-          style={{ transform: `scaleY(${height * 0.01})` }}
+          style={{ transform: `translateY(${100 - height}%)` }}
         />
       </TooltipTrigger>
       <TooltipContent
