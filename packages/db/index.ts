@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/libsql/web";
 import * as auth from "./schemas/auth";
 import * as feed from "./schemas/feed";
 import * as status from "./schemas/status";
+import * as task from "./schemas/task";
 
 export const db = drizzle({
   connection: {
@@ -13,6 +14,7 @@ export const db = drizzle({
     ...auth,
     ...feed,
     ...status,
+    ...task,
   },
 });
 
@@ -20,6 +22,7 @@ export const db = drizzle({
 export * from "./schemas/auth";
 export * from "./schemas/feed";
 export * from "./schemas/status";
+export * from "./schemas/task";
 
 // 生成された型のエクスポート
 export * from "./types";

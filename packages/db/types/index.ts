@@ -3,6 +3,7 @@
 import * as authSchema from "../schemas/auth.js";
 import * as feedSchema from "../schemas/feed.js";
 import * as statusSchema from "../schemas/status.js";
+import * as taskSchema from "../schemas/task.js";
 
 // Auth Schema Types
 export type User = typeof authSchema.users.$inferSelect;
@@ -22,6 +23,10 @@ export type NewFeedItem = typeof feedSchema.feedItems.$inferInsert;
 export type StatusEvent = typeof statusSchema.statusEvents.$inferSelect;
 export type NewStatusEvent = typeof statusSchema.statusEvents.$inferInsert;
 
+// Task Schema Types
+export type Task = typeof taskSchema.tasks.$inferSelect;
+export type NewTask = typeof taskSchema.tasks.$inferInsert;
+
 // 全テーブルの型をまとめた型
 export type AllTables = {
   users: User;
@@ -30,6 +35,7 @@ export type AllTables = {
   verifications: Verification;
   feedItems: FeedItem;
   statusEvents: StatusEvent;
+  tasks: Task;
 };
 
 export type AllNewTables = {
@@ -39,6 +45,7 @@ export type AllNewTables = {
   verifications: NewVerification;
   feedItems: NewFeedItem;
   statusEvents: NewStatusEvent;
+  tasks: NewTask;
 };
 
 // テーブル名の型

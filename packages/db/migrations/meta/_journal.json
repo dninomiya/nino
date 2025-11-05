@@ -43,6 +43,13 @@
       "when": 1762159382043,
       "tag": "0005_melodic_sandman",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1762331530204,
+      "tag": "0006_elite_doorman",
+      "breakpoints": true
     }
   ]
 }

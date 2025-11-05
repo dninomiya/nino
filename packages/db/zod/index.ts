@@ -2,6 +2,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import * as authSchema from "../schemas/auth";
 import * as feedSchema from "../schemas/feed";
 import * as statusSchema from "../schemas/status";
+import * as taskSchema from "../schemas/task";
 import { z } from "zod";
 
 // Auth Schema Zod Schemas
@@ -33,6 +34,10 @@ export const selectStatusEventSchema = createSelectSchema(
   statusSchema.statusEvents
 );
 
+// Task Schema Zod Schemas
+export const insertTaskSchema = createInsertSchema(taskSchema.tasks);
+export const selectTaskSchema = createSelectSchema(taskSchema.tasks);
+
 // カスタムバリデーションスキーマ
 export const normalizedStatusSchema = z.enum([
   "normal",
@@ -50,6 +55,7 @@ export const updateAccountSchema = insertAccountSchema.partial();
 export const updateVerificationSchema = insertVerificationSchema.partial();
 export const updateFeedItemSchema = insertFeedItemSchema.partial();
 export const updateStatusEventSchema = insertStatusEventSchema.partial();
+export const updateTaskSchema = insertTaskSchema.partial();
 
 // 型エクスポート
 export type InsertUserSchema = z.infer<typeof insertUserSchema>;
@@ -64,4 +70,6 @@ export type InsertFeedItemSchema = z.infer<typeof insertFeedItemSchema>;
 export type SelectFeedItemSchema = z.infer<typeof selectFeedItemSchema>;
 export type InsertStatusEventSchema = z.infer<typeof insertStatusEventSchema>;
 export type SelectStatusEventSchema = z.infer<typeof selectStatusEventSchema>;
+export type InsertTaskSchema = z.infer<typeof insertTaskSchema>;
+export type SelectTaskSchema = z.infer<typeof selectTaskSchema>;
 export type NormalizedStatusSchema = z.infer<typeof normalizedStatusSchema>;
