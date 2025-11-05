@@ -15,11 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default async function AccountPage() {
+  "use cache: private";
+
   const { user } = await currentSession();
   const planId = await getPlanId();
 
   return (
-    <div className="min-h-dvh bg-muted py-14">
+    <div className="py-14">
       <h1 className="font-bold text-center text-2xl mb-6">アカウント</h1>
 
       <div className="container">
