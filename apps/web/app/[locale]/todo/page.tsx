@@ -1,17 +1,18 @@
-import { getMyTasks } from "@/data/task";
-import { TaskForm } from "./components/task-form";
-import { SortableTodoList } from "./components/sortable-todo-list";
-import { cacheTag } from "next/cache";
-import { currentSession } from "@workspace/auth";
-import { Suspense } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RecencyDate } from "@/components/recency-date";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getMyTasks } from "@/data/task";
+import { currentSession } from "@workspace/auth";
+import { cacheTag } from "next/cache";
+import { Suspense } from "react";
 import { Miles } from "./components/miles";
+import { Pomodoro } from "./components/pomodoro";
+import { SortableTodoList } from "./components/sortable-todo-list";
+import { TaskForm } from "./components/task-form";
 
 export default function TodoPage() {
   return (
-    <div className="h-dvh flex flex-col light bg-brand">
-      <div className="grid divide-x divide-dashed divide-black/20 grid-cols-4 flex-1 -mr-px -mb-px">
+    <div className="h-dvh flex flex-col bg-brand">
+      <div className="grid grid-cols-4 flex-1 -mr-px -mb-px">
         <Suspense>
           <MyTaskList />
           {/* <MyTaskList />
@@ -22,8 +23,8 @@ export default function TodoPage() {
             <MyTaskList /> */}
         </Suspense>
       </div>
-      <div className="h-14 border-t flex items-center justify-center">
-        <p>aa</p>
+      <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center px-1 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
+        <Suspense>{/* <Pomodoro /> */}</Suspense>
       </div>
     </div>
   );
@@ -43,7 +44,7 @@ async function TodoList({ userId }: { userId: string }) {
   const user = session.user;
 
   return (
-    <div className="space-y-2 flex flex-col p-6 relative">
+    <div className="space-y-4 flex flex-col p-4 relative border-r border-dashed border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
       <div className="flex items-center gap-2">
         <Avatar className="rounded-md border border-black/10 size-9">
           {user.image && <AvatarImage src={user.image} />}
@@ -51,15 +52,13 @@ async function TodoList({ userId }: { userId: string }) {
         </Avatar>
         <div className="space-y-1.5 *:leading-none">
           <h2 className="font-bold text-sm text-zinc-700">{user.name}</h2>
-          <p className="text-xs text-muted-foreground">
-            <RecencyDate date={user.createdAt} locale="ja" />
-          </p>
+          <p className="text-xs text-muted-foreground">ポートフォリオ作成中</p>
         </div>
       </div>
       <div className="flex-1">
         <SortableTodoList tasks={tasks} />
-        <TaskForm />
       </div>
+      <TaskForm />
       <Miles />
     </div>
   );

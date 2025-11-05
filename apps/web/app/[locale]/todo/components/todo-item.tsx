@@ -31,7 +31,9 @@ export function TodoItem({ item }: { item: Task }) {
   return (
     <div className="flex items-center gap-2">
       <Checkbox
-        className={cn(optimisticItem.completed ? "opacity-10" : "")}
+        className={cn(
+          optimisticItem.completed ? "opacity-10" : "border-black/20"
+        )}
         checked={optimisticItem.completed}
         onCheckedChange={(checked) => {
           if (isPending) return;

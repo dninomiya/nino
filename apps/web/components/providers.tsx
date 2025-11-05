@@ -8,6 +8,7 @@ import { getDocMetas } from "@/lib/docs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { I18nProvider } from "./i18n-provider";
 import { getCurrentLocale, getDictionary } from "@/lib/i18n/server";
+import { ThemeProvider } from "./theme-provider";
 
 export async function Providers({ children }: { children: React.ReactNode }) {
   const registryDocMetas = await getRegistryDocMetas();
@@ -16,13 +17,7 @@ export async function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <I18nProvider locale={getCurrentLocale()} dictionary={dictionary}>
-      <NextThemesProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-        enableColorScheme
-      >
+      <ThemeProvider>
         <CodeProvider>
           <RegistryProvider registryDocMetas={registryDocMetas}>
             <DocProvider docMetas={docMetas}>
@@ -30,7 +25,7 @@ export async function Providers({ children }: { children: React.ReactNode }) {
             </DocProvider>
           </RegistryProvider>
         </CodeProvider>
-      </NextThemesProvider>
+      </ThemeProvider>
     </I18nProvider>
   );
 }

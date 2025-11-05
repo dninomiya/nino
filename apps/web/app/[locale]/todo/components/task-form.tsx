@@ -8,11 +8,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 export function TaskForm() {
   return (
-    <form action={addTask} className="flex items-center gap-2">
+    <form
+      action={addTask}
+      className="flex items-center gap-1 p-1 bg-card/30 rounded-lg border"
+    >
       <Input
         autoFocus
         type="text"
@@ -20,11 +23,12 @@ export function TaskForm() {
         placeholder="手ごろなタスク..."
         spellCheck={false}
         autoComplete="off"
+        className="bg-transparent border-none shadow-none h-8"
         required
       />
 
       <Select name="sp" defaultValue="1">
-        <SelectTrigger>
+        <SelectTrigger className="bg-transparent border-none shadow-none text-muted-foreground h-8!">
           <SelectValue placeholder="SP" />
         </SelectTrigger>
         <SelectContent>
@@ -38,8 +42,8 @@ export function TaskForm() {
         </SelectContent>
       </Select>
 
-      <Button type="submit" size="icon" className="bg-black/70">
-        <Plus />
+      <Button type="submit" size="icon" className="bg-black/60 size-8">
+        <ArrowUp />
         <span className="sr-only">タスクを追加</span>
       </Button>
     </form>
