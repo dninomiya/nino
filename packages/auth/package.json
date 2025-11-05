@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "generate": "pnpx @better-auth/cli generate --output ../db/schemas/auth.ts --yes"
+    "generate": "pnpx @better-auth/cli generate --output ../db/schemas/auth.ts --yes --config ./index.ts"
   },
   "exports": {
     ".": "./index.ts",
