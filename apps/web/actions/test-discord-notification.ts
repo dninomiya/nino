@@ -1,7 +1,6 @@
 "use server";
 
 import { getFeedItemsFromDB, sendDiscordNotification } from "@/lib/feed-server";
-import { revalidatePath } from "next/cache";
 
 export async function testDiscordNotification() {
   try {

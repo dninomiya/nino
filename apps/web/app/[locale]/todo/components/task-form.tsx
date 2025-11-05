@@ -8,9 +8,11 @@ export function TaskForm() {
     <form action={addTask} className="flex items-center gap-2">
       <Input
         type="text"
+        name="title"
         placeholder="細かい単位のタスク..."
         spellCheck={false}
         autoComplete="off"
+        required
       />
       <Button type="submit" size="icon">
         <Plus />

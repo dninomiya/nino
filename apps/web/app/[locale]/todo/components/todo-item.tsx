@@ -1,5 +1,6 @@
 "use client";
 
+import { completeTask, uncompleteTask } from "@/actions/task";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useOptimistic, useTransition } from "react";
@@ -25,7 +26,12 @@ export function TodoItem({
       <Checkbox
         checked={optimisticItem.completed}
         onCheckedChange={(checked) => {
-          startTransition(() => {
+          startTransition(async () => {
+            if (checked) {
+              await completeTask(item.id);
+            } else {
+              await uncompleteTask(item.id);
+            }
             updateOptimisticItem({ completed: checked as boolean });
           });
         }}

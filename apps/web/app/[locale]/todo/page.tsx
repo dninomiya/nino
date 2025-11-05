@@ -1,18 +1,41 @@
+import { getMyTasks } from "@/data/task";
 import { TaskForm } from "./components/task-form";
 import { TodoItem } from "./components/todo-item";
+import { cacheTag } from "next/cache";
+import { currentSession } from "@workspace/auth";
+import { Suspense } from "react";
 
 export default function TodoPage() {
   return (
     <div className="h-dvh light bg-brand">
       <div className="overflow-hidden">
         <div className="grid grid-cols-4 -m-px">
-          <div className="space-y-2 border border-dashed p-8">
-            <h2 className="text-lg font-bold text-zinc-700">nino</h2>
-            <TodoItem item={{ id: "1", title: "test", completed: false }} />
-            <TaskForm />
-          </div>
+          <Suspense>
+            <MyTaskList />
+          </Suspense>
         </div>
       </div>
+    </div>
+  );
+}
+
+async function MyTaskList() {
+  const session = await currentSession();
+  return <TodoList userId={session.user.id} />;
+}
+
+async function TodoList({ userId }: { userId: string }) {
+  "use cache: private";
+  cacheTag(`tasks:${userId}`);
+  const tasks = await getMyTasks();
+
+  return (
+    <div className="space-y-2 border border-dashed border-white/50 p-8">
+      <h2 className="text-lg font-bold text-zinc-700">nino</h2>
+      {tasks.map((task) => (
+        <TodoItem key={task.id} item={task} />
+      ))}
+      <TaskForm />
     </div>
   );
 }
