@@ -29,30 +29,6 @@ export function CTA() {
     <section className="py-10 space-y-4">
       <h2 className="text-3xl font-bold">スポンサーになる</h2>
 
-      <div>
-        {PLANS.map((plan) => (
-          <div key={plan.id}>
-            <p>{plan.id}</p>
-            <p>{plan.label}</p>
-          </div>
-        ))}
-      </div>
-
-      {session ? (
-        <div className="flex flex-col gap-2">
-          <p>すでにログインしています。</p>
-          <Button
-            onClick={() => {
-              authClient.signOut();
-            }}
-          >
-            ログアウト
-          </Button>
-        </div>
-      ) : (
-        <p>ログインしてスポンサーになる</p>
-      )}
-
       <p>3,500円/月</p>
 
       <Button
