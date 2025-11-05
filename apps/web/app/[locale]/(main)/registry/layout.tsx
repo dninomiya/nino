@@ -10,7 +10,7 @@ import { Footer } from "@/components/footer";
 export default async function Layout({
   children,
   params,
-}: LayoutProps<"/[locale]/registry/[id]">) {
+}: LayoutProps<"/[locale]/registry">) {
   await setCurrentLocaleFromParams(params);
 
   return (
@@ -22,7 +22,6 @@ export default async function Layout({
           メニュー
         </div>
         {children}
-
         <Footer />
       </SidebarInset>
     </SidebarProvider>

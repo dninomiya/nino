@@ -1,3 +1,6 @@
+import * as React from "react";
+
+import { SidebarLinkButon } from "@/components/sidebar-link-button";
 import { getMessage } from "@/lib/i18n/server";
 import { gettingStartedItems, registries } from "@/lib/registry";
 import {
@@ -7,10 +10,8 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import Link from "next/link";
 
 const getRegistryItems = (type: string) => {
   return registries
@@ -28,7 +29,9 @@ const getGettingStartedItems = () => {
   }));
 };
 
-export async function RegistrySidebar() {
+export async function RegistrySidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const t = await getMessage("RegistrySidebar");
 
   const data = {
@@ -49,7 +52,10 @@ export async function RegistrySidebar() {
   };
 
   return (
-    <Sidebar className="top-(--spacing-header) h-[calc(100svh-var(--spacing-header))]!">
+    <Sidebar
+      className="top-header h-[calc(100svh-var(--spacing-header))]!"
+      {...props}
+    >
       <SidebarHeader>
         <div className="px-1 text-sm pt-3">{t.title}</div>
       </SidebarHeader>
@@ -60,9 +66,9 @@ export async function RegistrySidebar() {
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild path={item.url}>
-                    <Link href={item.url}>{item.title}</Link>
-                  </SidebarMenuButton>
+                  <SidebarLinkButon href={item.url}>
+                    {item.title}
+                  </SidebarLinkButon>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

@@ -38,7 +38,7 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
 
         <section className="py-10 space-y-6">
           <h2 className="text-2xl font-bold">{t.blocks}</h2>
-          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-2 gap-6">
             {items.map((item) => (
               <Card key={item.name} className="relative">
                 <CardContent>
