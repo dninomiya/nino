@@ -101,12 +101,15 @@ function Item({
         {tasks.length > 0 && (
           <div className="flex flex-col gap-1 w-full">
             {tasks.map((task, index) => (
-              <div key={index} className="flex justify-between">
-                <span className="font-medium truncate">{task.title}</span>
+              <div
+                key={index}
+                className="flex gap-3 justify-between text-muted-foreground"
+              >
+                <span className="font-medium max-w-40 truncate">
+                  {task.title}
+                </span>
                 {task.sp !== null && task.sp > 0 && (
-                  <span className="text-muted-foreground tabular-nums">
-                    {task.sp}
-                  </span>
+                  <span className="tabular-nums">{task.sp}</span>
                 )}
               </div>
             ))}

@@ -70,7 +70,7 @@ async function TodoList({ userId }: { userId: string }) {
           <p className="text-xs text-muted-foreground">ポートフォリオ作成中</p>
         </div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto">
         <SortableTodoList tasks={filteredTasks} />
       </div>
       <TaskForm />

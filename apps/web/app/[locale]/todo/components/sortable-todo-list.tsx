@@ -21,9 +21,18 @@ import { SortableTodoItem } from "./sortable-todo-item";
 import { Task } from "@workspace/db";
 
 export function SortableTodoList({ tasks: initialTasks }: { tasks: Task[] }) {
+  // クライアントサイドでソート: 未完了タスクを先に、完了タスクを後に
+  const sortedTasks = [...initialTasks].sort((a, b) => {
+    // 未完了タスクを先に
+    if (!a.completed && b.completed) return -1;
+    if (a.completed && !b.completed) return 1;
+    // 同じ完了状態の場合は元の順序を維持
+    return 0;
+  });
+
   const [isPending, startTransition] = useTransition();
   const [optimisticTasks, updateOptimisticTasks] = useOptimistic(
-    initialTasks,
+    sortedTasks,
     (state, action: { tasks: Task[] }) => action.tasks
   );
 
