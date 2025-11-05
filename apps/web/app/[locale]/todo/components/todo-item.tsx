@@ -1,6 +1,11 @@
 "use client";
 
-import { completeTask, uncompleteTask, updateTask } from "@/actions/task";
+import {
+  completeTask,
+  deleteTask,
+  uncompleteTask,
+  updateTask,
+} from "@/actions/task";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -25,8 +30,34 @@ export function TodoItem({ item }: { item: Task }) {
   const [debouncedTitle] = useDebounce(title, 500);
 
   useEffect(() => {
-    updateTask(item.id, { title: debouncedTitle });
-  }, [debouncedTitle]);
+    if (debouncedTitle !== item.title) {
+      updateTask(item.id, { title: debouncedTitle });
+    }
+  }, [debouncedTitle, item.id, item.title]);
+
+  const handleDelete = () => {
+    if (isPending) return;
+
+    startTransition(async () => {
+      await deleteTask(item.id);
+    });
+  };
+
+  const handleBlur = () => {
+    if (title.trim() === "") {
+      handleDelete();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      (e.metaKey || e.ctrlKey) &&
+      (e.key === "Delete" || e.key === "Backspace")
+    ) {
+      e.preventDefault();
+      handleDelete();
+    }
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -55,6 +86,8 @@ export function TodoItem({ item }: { item: Task }) {
         onChange={(e) => {
           setTitle(e.target.value);
         }}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         className={cn(
           "flex-1 bg-transparent! border-none shadow-none",
           optimisticItem.completed
