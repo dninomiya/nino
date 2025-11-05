@@ -32,38 +32,36 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
   const t = await getMessage("RegistryPage");
 
   return (
-    <>
-      <div className="p-8">
-        <h1 className="text-4xl font-bold">{t.title}</h1>
+    <div className="container py-10">
+      <h1 className="text-4xl font-bold mb-8">{t.title}</h1>
 
-        <section className="py-10 space-y-6">
-          <h2 className="text-2xl font-bold">{t.blocks}</h2>
-          <div className="grid lg:grid-cols-2 gap-6">
-            {items.map((item) => (
-              <Card key={item.name} className="relative">
-                <CardContent>
-                  <Suspense
-                    fallback={
-                      <Skeleton className="aspect-video border rounded-lg" />
-                    }
-                  >
-                    <Preview name={item.name} fill={item.meta?.fill} />
-                  </Suspense>
-                </CardContent>
-                <CardHeader>
-                  <CardTitle>
-                    <Link href={`/registry/${item.name}`}>
-                      {item.title}
-                      <span className="absolute inset-0" />
-                    </Link>
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </section>
-      </div>
-    </>
+      <section className="py-6 space-y-6">
+        <h2 className="text-3xl font-bold">{t.blocks}</h2>
+        <div className="grid lg:grid-cols-2 gap-6">
+          {items.map((item) => (
+            <Card key={item.name} className="relative">
+              <CardContent>
+                <Suspense
+                  fallback={
+                    <Skeleton className="aspect-video border rounded-lg" />
+                  }
+                >
+                  <Preview name={item.name} fill={item.meta?.fill} />
+                </Suspense>
+              </CardContent>
+              <CardHeader>
+                <CardTitle>
+                  <Link href={`/registry/${item.name}`}>
+                    {item.title}
+                    <span className="absolute inset-0" />
+                  </Link>
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 

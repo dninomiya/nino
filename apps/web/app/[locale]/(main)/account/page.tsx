@@ -7,7 +7,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import DeleteAccount from "./components/delete-account";
 import UserProfile from "./components/user-profile";
-import UserMenu from "./components/user-menu";
 import IntegrationMenu from "./components/integration-menu";
 
 export const metadata: Metadata = {
@@ -39,7 +38,6 @@ export default async function AccountPage() {
               </Button>
             )}
 
-            <UserMenu />
             {planId && <IntegrationMenu />}
           </CardContent>
         </Card>
