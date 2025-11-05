@@ -4,13 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { File, MessageCircleQuestionIcon, VideoIcon } from "lucide-react";
-import { CTA } from "./components/cta";
 import { Suspense } from "react";
+import { CTA } from "./components/cta";
 
 export default async function SponsorsPage({
   params,

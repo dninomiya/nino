@@ -149,3 +149,8 @@ export const planDetails: {
 ];
 
 export type PlanId = (typeof PLANS)[number]["id"];
+
+export const getCommunityPlanPrices = () => {
+  const plan = planDetails.find((plan) => plan.planId === "community");
+  return plan?.plans!;
+};

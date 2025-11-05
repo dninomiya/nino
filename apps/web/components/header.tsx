@@ -4,18 +4,12 @@ import { GlobalSearch } from "./global-search";
 import LocaleToggle from "./locale-toggle";
 import { MainNav } from "./main-nav";
 import { MobileNav } from "./mobile-nav";
-import { Button } from "../../../packages/ui/src/components/button";
-import { Heart } from "lucide-react";
-import Link from "next/link";
-import { getSubscriptionCount } from "@/data/subscription";
-import { cacheLife } from "next/cache";
+import { SponsorButton } from "./sponsor-button";
+import { UserMenu } from "./user-menu";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export async function Header() {
-  "use cache";
-  cacheLife("days");
-
-  const subscriptionCount = await getSubscriptionCount();
-
+export function Header() {
   return (
     <div className="fixed w-full bg-background top-0 z-50 h-header flex items-center gap-2 px-4 xl:px-8 border-b">
       <MobileNav />
@@ -25,13 +19,10 @@ export async function Header() {
       <GlobalSearch />
       <LocaleToggle />
       <ModeToggle />
-      <Button variant="outline" asChild>
-        <Link href="/sponsors">
-          <Heart className="text-pink-500" />
-          スポンサー
-          <span>{subscriptionCount}</span>
-        </Link>
-      </Button>
+      <SponsorButton />
+      <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
+        <UserMenu />
+      </Suspense>
     </div>
   );
 }

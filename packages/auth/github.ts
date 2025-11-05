@@ -1,4 +1,5 @@
 import { Octokit } from "octokit";
+import { getGithubAccount } from ".";
 
 export const octokit = new Octokit({
   auth: process.env.GITHUB_ACCESS_TOKEN,
@@ -96,4 +97,22 @@ export type GithubAccount = {
     collaborators: number;
     private_repos: number;
   };
+};
+
+export const getMyGitHubUserName = async () => {
+  const githubAccount = await getGithubAccount();
+  return githubAccount?.login;
+};
+
+export const getMyOrganizationUserInfo = async () => {
+  const githubAccount = await getGithubAccount();
+
+  try {
+    return await octokit.rest.orgs.getMembershipForUser({
+      org: "nino-plus",
+      username: githubAccount?.login,
+    });
+  } catch (error) {
+    return null;
+  }
 };
