@@ -1,6 +1,6 @@
 import { getMyTasks } from "@/data/task";
 import { TaskForm } from "./components/task-form";
-import { TodoItem } from "./components/todo-item";
+import { SortableTodoList } from "./components/sortable-todo-list";
 import { cacheTag } from "next/cache";
 import { currentSession } from "@workspace/auth";
 import { Suspense } from "react";
@@ -32,9 +32,7 @@ async function TodoList({ userId }: { userId: string }) {
   return (
     <div className="space-y-2 border border-dashed border-white/50 p-8">
       <h2 className="text-lg font-bold text-zinc-700">nino</h2>
-      {tasks.map((task) => (
-        <TodoItem key={task.id} item={task} />
-      ))}
+      <SortableTodoList tasks={tasks} />
       <TaskForm />
     </div>
   );

@@ -77,3 +77,46 @@ export async function deleteTask(id: string) {
   await db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
   updateTag(`tasks:${uid}`);
 }
+
+export async function reorderTask(
+  activeId: string,
+  overId: string,
+  items: Array<{ id: string; index: string }>
+) {
+  const session = await currentSession();
+  const uid = session.user.id;
+
+  // アクティブなアイテムと移動先のアイテムを取得
+  const activeItem = items.find((item) => item.id === activeId);
+  const overItem = items.find((item) => item.id === overId);
+
+  if (!activeItem || !overItem) return;
+
+  // アクティブなアイテムを除外したソート済みリストを取得
+  const sortedItems = [...items]
+    .filter((item) => item.id !== activeId)
+    .sort((a, b) => a.index.localeCompare(b.index));
+
+  // 移動先のインデックスを取得
+  const overIndex = sortedItems.findIndex((item) => item.id === overId);
+  if (overIndex === -1) return;
+
+  // 前後のアイテムを取得
+  const prevItem = overIndex > 0 ? sortedItems[overIndex - 1] : null;
+  const nextItem =
+    overIndex < sortedItems.length - 1 ? sortedItems[overIndex + 1] : null;
+
+  // 新しいインデックスを生成
+  const newIndex = generateKeyBetween(
+    prevItem?.index ?? null,
+    nextItem?.index ?? null
+  );
+
+  // データベースを更新
+  await db
+    .update(tasks)
+    .set({ index: newIndex })
+    .where(and(eq(tasks.id, activeId), eq(tasks.userId, uid)));
+
+  updateTag(`tasks:${uid}`);
+}
