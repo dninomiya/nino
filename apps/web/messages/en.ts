@@ -184,4 +184,7 @@ export default {
     statusMaintenance: "Maintenance",
     statusUnknown: "Unknown",
   },
+  SponsorsPage: {
+    title: "Sponsors",
+  },
 } satisfies MessagesSchema;

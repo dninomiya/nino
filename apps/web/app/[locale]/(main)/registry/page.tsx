@@ -1,4 +1,3 @@
-import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
@@ -64,7 +63,6 @@ export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 }
