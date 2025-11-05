@@ -18,13 +18,7 @@ import {
 import { useOptimistic, useTransition } from "react";
 import { reorderTask } from "@/actions/task";
 import { SortableTodoItem } from "./sortable-todo-item";
-
-type Task = {
-  id: string;
-  title: string;
-  completed: boolean;
-  index: string;
-};
+import { Task } from "@workspace/db";
 
 export function SortableTodoList({ tasks: initialTasks }: { tasks: Task[] }) {
   const [isPending, startTransition] = useTransition();
@@ -75,7 +69,7 @@ export function SortableTodoList({ tasks: initialTasks }: { tasks: Task[] }) {
         items={optimisticTasks.map((task) => task.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="space-y-2">
+        <div>
           {optimisticTasks.map((task) => (
             <SortableTodoItem key={task.id} item={task} />
           ))}

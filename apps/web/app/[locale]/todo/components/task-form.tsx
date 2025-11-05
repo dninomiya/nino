@@ -1,20 +1,44 @@
 import { addTask } from "@/actions/task";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus } from "lucide-react";
 
 export function TaskForm() {
   return (
     <form action={addTask} className="flex items-center gap-2">
       <Input
+        autoFocus
         type="text"
         name="title"
-        placeholder="細かい単位のタスク..."
+        placeholder="手ごろなタスク..."
         spellCheck={false}
         autoComplete="off"
         required
       />
-      <Button type="submit" size="icon">
+
+      <Select name="sp" defaultValue="1">
+        <SelectTrigger>
+          <SelectValue placeholder="SP" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="1">1</SelectItem>
+          <SelectItem value="2">2</SelectItem>
+          <SelectItem value="3">3</SelectItem>
+          <SelectItem value="5">5</SelectItem>
+          <SelectItem value="8">8</SelectItem>
+          <SelectItem value="13">13</SelectItem>
+          <SelectItem value="21">21</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Button type="submit" size="icon" className="bg-black/70">
         <Plus />
         <span className="sr-only">タスクを追加</span>
       </Button>

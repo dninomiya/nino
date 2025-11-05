@@ -1,7 +1,7 @@
 "use server";
 
 import { currentSession } from "@workspace/auth";
-import { db, tasks } from "@workspace/db";
+import { db, NewTask, tasks } from "@workspace/db";
 import { and, desc, eq } from "drizzle-orm";
 import { generateKeyBetween } from "fractional-indexing";
 import { updateTag } from "next/cache";
@@ -9,6 +9,7 @@ import { updateTag } from "next/cache";
 export async function addTask(formData: FormData) {
   const session = await currentSession();
   const title = formData.get("title") as string;
+  const sp = formData.get("sp") as string;
 
   // 既存のタスクを取得して、最大のindexを取得
   const existingTasks = await db
@@ -25,7 +26,7 @@ export async function addTask(formData: FormData) {
   await db.insert(tasks).values({
     title,
     userId: session.user.id,
-    sp: 1,
+    sp: sp ? parseInt(sp) : 0,
     completed: false,
     index: newIndex,
   });
@@ -33,19 +34,13 @@ export async function addTask(formData: FormData) {
   updateTag(`tasks:${session.user.id}`);
 }
 
-export async function updateTask(formData: FormData) {
+export async function updateTask(id: string, newTask: Partial<NewTask>) {
   const session = await currentSession();
   const uid = session.user.id;
-  const id = formData.get("id") as string;
-  const title = formData.get("title") as string;
-  const completed = formData.get("completed") as string;
 
   await db
     .update(tasks)
-    .set({
-      title,
-      completed: completed === "true",
-    })
+    .set(newTask)
     .where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
 
   updateTag(`tasks:${uid}`);
