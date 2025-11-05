@@ -38,7 +38,22 @@ async function MyTaskList() {
 async function TodoList({ userId }: { userId: string }) {
   "use cache: private";
   cacheTag(`tasks:${userId}`);
-  const tasks = await getMyTasks();
+  const allTasks = await getMyTasks();
+
+  // 未完了タスク + 本日完了したタスクのみをフィルタリング
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const filteredTasks = allTasks.filter(
+    (task) =>
+      !task.completed ||
+      (task.completed &&
+        task.completedAt &&
+        task.completedAt >= today &&
+        task.completedAt < tomorrow)
+  );
 
   const session = await currentSession();
   const user = session.user;
@@ -56,7 +71,7 @@ async function TodoList({ userId }: { userId: string }) {
         </div>
       </div>
       <div className="flex-1">
-        <SortableTodoList tasks={tasks} />
+        <SortableTodoList tasks={filteredTasks} />
       </div>
       <TaskForm />
       <Miles />

@@ -51,7 +51,7 @@ export async function completeTask(id: string) {
   const uid = session.user.id;
   await db
     .update(tasks)
-    .set({ completed: true })
+    .set({ completed: true, completedAt: new Date() })
     .where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
   updateTag(`tasks:${uid}`);
 }
@@ -61,7 +61,7 @@ export async function uncompleteTask(id: string) {
   const uid = session.user.id;
   await db
     .update(tasks)
-    .set({ completed: false })
+    .set({ completed: false, completedAt: null })
     .where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
   updateTag(`tasks:${uid}`);
 }

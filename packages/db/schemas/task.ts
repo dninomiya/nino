@@ -10,6 +10,7 @@ export const tasks = sqliteTable("tasks", {
     .references(() => users.id, { onDelete: "cascade" }),
   sp: integer("sp"),
   completed: integer("completed", { mode: "boolean" }).notNull(),
+  completedAt: integer("completed_at", { mode: "timestamp_ms" }),
   index: text("index").notNull(),
   ...timestamps,
 });

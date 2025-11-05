@@ -3,38 +3,115 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { getCompletedTasksForMiles } from "@/data/task";
+import { Suspense } from "react";
 
 export function Miles() {
   return (
     <div className="h-10 -mb-4 -mx-3 mt-6 grid grid-cols-30 gap-1">
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <div className="h-full" />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
-      <Item />
+      <Suspense fallback={<MilesSkeleton />}>
+        <MilesContent />
+      </Suspense>
     </div>
   );
 }
 
-function Item() {
+async function MilesContent() {
+  const completedTasks = await getCompletedTasksForMiles();
+  const tasksByDate = new Map(completedTasks.map((t) => [t.date, t]));
+
+  // 過去30日分の日付を生成
+  const dates: string[] = [];
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    dates.push(dateKey);
+  }
+
+  // 最大SPを計算（ゲージの高さを正規化するため）
+  const maxSp = Math.max(
+    ...completedTasks.map((t) => t.sp),
+    1 // 0で割らないように最小値を1に
+  );
+
+  return (
+    <>
+      {dates.map((date, index) => {
+        const taskData = tasksByDate.get(date);
+        const sp = taskData?.sp ?? 0;
+        const height = sp > 0 ? Math.max((sp / maxSp) * 100, 10) : 0; // 最小10%の高さを保証
+
+        return (
+          <Item
+            key={date}
+            date={date}
+            sp={sp}
+            tasks={taskData?.tasks ?? []}
+            height={height}
+            isWeekend={index % 7 === 0 || index % 7 === 6}
+          />
+        );
+      })}
+    </>
+  );
+}
+
+function MilesSkeleton() {
+  return Array.from({ length: 30 }).map((_, i) => (
+    <div key={i} className="h-full" />
+  ));
+}
+
+function Item({
+  date,
+  sp,
+  tasks,
+  height,
+  isWeekend,
+}: {
+  date: string;
+  sp: number;
+  tasks: Array<{ title: string; sp: number | null }>;
+  height: number;
+  isWeekend: boolean;
+}) {
+  const dateObj = new Date(date);
+  const formattedDate = `${dateObj.getFullYear()}年${dateObj.getMonth() + 1}月${dateObj.getDate()}日`;
+
+  if (sp === 0) {
+    return <div className="h-full" />;
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger>
-        <div className="bg-linear-to-t from-lime-600/80 to-lime-600/40 rounded-t-full h-full" />
+        <div
+          className="bg-linear-to-t h-full from-lime-600/80 to-lime-600/40 rounded-t-full w-full transition duration-500 origin-bottom"
+          style={{ transform: `scaleY(${height * 0.01})` }}
+        />
       </TooltipTrigger>
       <TooltipContent
         side="top"
         align="center"
-        className="flex flex-col items-center"
+        className="flex flex-col items-center gap-3 max-w-xs"
       >
-        <small className="text-xs text-muted-foreground">2025年1月12日</small>
-        <span className="font-bold text-sm">16</span>
+        <small className="text-xs">{formattedDate}</small>
+        <span className="font-bold leading-0 text-sm">{sp}</span>
+        {tasks.length > 0 && (
+          <div className="flex flex-col gap-1 w-full">
+            {tasks.map((task, index) => (
+              <div key={index} className="flex justify-between">
+                <span className="font-medium truncate">{task.title}</span>
+                {task.sp !== null && task.sp > 0 && (
+                  <span className="text-muted-foreground tabular-nums">
+                    {task.sp}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </TooltipContent>
     </Tooltip>
   );
