@@ -8,6 +8,7 @@ import { SponsorButton } from "./sponsor-button";
 import { UserMenu } from "./user-menu";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DevOnly } from "./dev-only";
 
 export function Header() {
   return (
@@ -19,10 +20,12 @@ export function Header() {
       <GlobalSearch />
       <LocaleToggle />
       <ModeToggle />
-      <SponsorButton />
-      <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
-        <UserMenu />
-      </Suspense>
+      <DevOnly>
+        <SponsorButton />
+        <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
+          <UserMenu />
+        </Suspense>
+      </DevOnly>
     </div>
   );
 }
