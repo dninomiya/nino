@@ -13,10 +13,7 @@ export async function getMyTasks() {
       eq(tasks.userId, session.user.id),
       or(
         eq(tasks.completed, false),
-        and(
-          eq(tasks.completed, true),
-          gte(tasks.completedAt, thirtyDaysAgo)
-        )
+        and(eq(tasks.completed, true), gte(tasks.completedAt, thirtyDaysAgo))
       )
     ),
     orderBy: asc(tasks.index),
