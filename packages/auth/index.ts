@@ -15,6 +15,7 @@ import { updateMemberStatusToKicking } from "./notion";
 import { PLANS } from "@workspace/lib/plan";
 import { stripe as stripeClient } from "./stripe";
 import { baseUrl } from "@workspace/registry/lib/base-url";
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   baseURL: baseUrl(),
@@ -75,6 +76,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    nextCookies(),
     stripe({
       stripeClient,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
