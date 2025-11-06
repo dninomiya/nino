@@ -1,19 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { getMyTasks } from "@/data/task";
-import { getMyProfile } from "@/data/profile";
 import { ProfileEditDialog } from "@/components/profile-edit-dialog";
-import { SiGithub, SiX } from "@icons-pack/react-simple-icons";
-import { currentSession } from "@workspace/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
+import { getMyProfile, getProfile } from "@/data/profile";
+import { getMyTasks } from "@/data/task";
 import { cacheTag } from "next/cache";
 import { Suspense } from "react";
 import { EditTodoProfileButton } from "./components/edit-todo-profile-button";
 import { Miles } from "./components/miles";
+import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
 
@@ -30,9 +24,6 @@ export default function TodoPage() {
           <Pomodoro />
         </Suspense> */}
       </div>
-      <Suspense>
-        <ProfileEditDialog />
-      </Suspense>
     </div>
   );
 }
@@ -45,11 +36,21 @@ async function MyTaskList() {
       <div className="border-r border-dashed p-4 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
         プロフィールを作成
         <EditTodoProfileButton />
+        <Suspense>
+          <ProfileEditDialog />
+        </Suspense>
       </div>
     );
   }
 
-  return <TodoList userId={profile?.userId} />;
+  return (
+    <>
+      <TodoList userId={profile?.userId} />
+      <Suspense>
+        <ProfileEditDialog profile={profile} />
+      </Suspense>
+    </>
+  );
 }
 
 async function TodoList({ userId }: { userId: string }) {
@@ -72,9 +73,13 @@ async function TodoList({ userId }: { userId: string }) {
         task.completedAt < tomorrow)
   );
 
-  const session = await currentSession();
-  const user = session.user;
-  const profile = await getMyProfile();
+  const profile = await getProfile(userId);
+
+  if (!profile) {
+    return null;
+  }
+
+  const fallbackInitial = profile?.nickname?.charAt(0) || "U";
 
   return (
     <div className="space-y-4 flex flex-col p-4 relative border-r border-dashed border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
@@ -82,46 +87,23 @@ async function TodoList({ userId }: { userId: string }) {
         <HoverCardTrigger>
           <div className="flex items-center gap-2">
             <Avatar className="rounded-md border border-black/10 size-9">
-              {user.image && <AvatarImage src={user.image} />}
-              <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+              {profile.avatar && <AvatarImage src={profile.avatar} />}
+              <AvatarFallback>{fallbackInitial}</AvatarFallback>
             </Avatar>
             <div className="space-y-1.5 *:leading-none">
-              <h2 className="font-bold text-sm text-zinc-700">{user.name}</h2>
-              <p className="text-xs text-muted-foreground">
-                ポートフォリオ作成中
-              </p>
+              <h2 className="font-bold text-sm text-zinc-700">
+                {profile.nickname}
+              </h2>
+              <p className="text-xs text-muted-foreground">{profile.tagline}</p>
             </div>
           </div>
         </HoverCardTrigger>
-        <HoverCardContent align="start" className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Avatar className="rounded-md border border-black/10 size-9">
-              {user.image && <AvatarImage src={user.image} />}
-              <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="space-y-1.5 *:leading-none">
-              <h2 className="font-bold text-sm text-zinc-700">{user.name}</h2>
-              <p className="text-xs text-muted-foreground">
-                ポートフォリオ作成中
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-1 text-muted-foreground">
-            <Button variant="ghost" className="size-6" size="icon" asChild>
-              <a href="https://nino.ai" target="_blank">
-                <SiX className="size-4" />
-              </a>
-            </Button>
-            <Button variant="ghost" className="size-6" size="icon" asChild>
-              <a href="https://nino.ai" target="_blank">
-                <SiGithub className="size-4" />
-              </a>
-            </Button>
-          </div>
-          <EditTodoProfileButton />
-        </HoverCardContent>
+        <ProfileHoverContent
+          profile={profile}
+          fallbackInitial={fallbackInitial}
+        />
       </HoverCard>
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto py-1">
         <SortableTodoList tasks={filteredTasks} />
       </div>
       <TaskForm />

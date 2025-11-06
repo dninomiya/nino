@@ -11,11 +11,13 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Task } from "@workspace/db";
 import { useEffect, useOptimistic, useState, useTransition } from "react";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebounce } from "use-debounce";
+import { useSound } from "use-sound";
 
 export function TodoItem({ item }: { item: Task }) {
   const [isPending, startTransition] = useTransition();
   const [title, setTitle] = useState(item.title);
+  const [playCompleteSound] = useSound("/sounds/check.mp3");
   const [optimisticItem, updateOptimisticItem] = useOptimistic(
     item,
     (state, action: { completed?: boolean; title?: string }) => {
@@ -72,6 +74,7 @@ export function TodoItem({ item }: { item: Task }) {
           startTransition(async () => {
             updateOptimisticItem({ completed: checked as boolean });
             if (checked) {
+              playCompleteSound();
               await completeTask(item.id);
             } else {
               await uncompleteTask(item.id);

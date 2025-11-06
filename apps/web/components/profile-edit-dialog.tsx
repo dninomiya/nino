@@ -122,7 +122,7 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
                         setSelectedFile(file);
                         setCropDialogOpen(true);
                       }}
-                      className="w-[200px] aspect-square"
+                      className="w-40 aspect-square"
                     >
                       {field.value && (
                         <ImageCropperPreview
@@ -145,9 +145,13 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
               name="tagline"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>一言メッセージ</FormLabel>
+                  <FormLabel>いま何してる？</FormLabel>
                   <FormControl>
-                    <Input placeholder="一言メッセージ" {...field} />
+                    <Input
+                      autoComplete="off"
+                      placeholder="ポートフォリオ作成中..."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -254,22 +258,18 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
 
         {/* 画像クロップ用のDialog */}
         <Dialog open={cropDialogOpen} onOpenChange={setCropDialogOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="w-80">
             <DialogTitle className="sr-only">画像をクロップ</DialogTitle>
             {selectedFile && (
               <ImageCropper
                 image={selectedFile}
-                canvasWidth={400}
-                aspectRatio={1}
-                resultWidth={600}
+                resultWidth={400}
                 onCrop={(dataUrl) => {
                   form.setValue("avatar", dataUrl);
                   setCropDialogOpen(false);
-                  setSelectedFile(null);
                 }}
                 onCancel={() => {
                   setCropDialogOpen(false);
-                  setSelectedFile(null);
                 }}
               />
             )}

@@ -79,10 +79,6 @@ function Item({
   const dateObj = new Date(date);
   const formattedDate = `${dateObj.getFullYear()}年${dateObj.getMonth() + 1}月${dateObj.getDate()}日`;
 
-  if (sp === 0) {
-    return <div className="h-full" />;
-  }
-
   return (
     <Tooltip>
       <TooltipTrigger>
