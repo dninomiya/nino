@@ -90,10 +90,12 @@ function Item({
       <TooltipContent
         side="top"
         align="center"
-        className="flex flex-col items-center gap-3 max-w-xs"
+        className="flex flex-col items-center gap-1 max-w-xs"
       >
         <small className="text-xs">{formattedDate}</small>
-        <span className="font-bold leading-0 text-sm">{sp}</span>
+        <span className="font-bold relative z-10 leading-none text-sm">
+          {sp}
+        </span>
         {tasks.length > 0 && (
           <div className="flex flex-col gap-1 w-full">
             {tasks.map((task, index) => (

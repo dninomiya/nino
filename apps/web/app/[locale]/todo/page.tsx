@@ -13,6 +13,7 @@ import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
 import { TodoSettingsButton } from "./components/todo-settings-button";
+import { Pomodoro } from "./components/pomodoro";
 
 export default function TodoPage() {
   return (
@@ -27,17 +28,22 @@ export default function TodoPage() {
       </div>
       <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
         <Suspense>
-          <TaskSettings />
+          <FooterContent />
         </Suspense>
       </div>
     </div>
   );
 }
 
-async function TaskSettings() {
+async function FooterContent() {
   const settings = await getTodoSettings();
 
-  return <TodoSettingsButton initialSettings={settings} />;
+  return (
+    <>
+      <Pomodoro soundEnabled={settings.soundEnabled} />
+      <TodoSettingsButton initialSettings={settings} />
+    </>
+  );
 }
 
 async function MyTaskList() {
@@ -153,21 +159,23 @@ async function TodoList({
         />
       </div>
       <div>
-        <div className="text-[10px] text-muted-foreground border-b-0 text-right border rounded-t-md w-fit ml-auto mr-2 px-1.5 py-0.5 bg-muted/40">
-          {(() => {
-            const totalSp = filteredTasks.reduce(
-              (sum, task) => sum + (task.sp ?? 0),
-              0
-            );
-            const completedSp = filteredTasks
-              .filter((task) => task.completed)
-              .reduce((sum, task) => sum + (task.sp ?? 0), 0);
-            return `${completedSp} / ${totalSp} SP`;
-          })()}
-        </div>
+        {isMyTasks && (
+          <div className="text-[10px] text-muted-foreground border-b-0 text-right border rounded-t-md w-fit ml-auto mr-2 px-1.5 py-0.5 bg-muted/40">
+            {(() => {
+              const totalSp = filteredTasks.reduce(
+                (sum, task) => sum + (task.sp ?? 0),
+                0
+              );
+              const completedSp = filteredTasks
+                .filter((task) => task.completed)
+                .reduce((sum, task) => sum + (task.sp ?? 0), 0);
+              return `${completedSp} / ${totalSp} SP`;
+            })()}
+          </div>
+        )}
         {isMyTasks && <TaskForm />}
       </div>
-      {isMyTasks && <Miles />}
+      <Miles />
     </div>
   );
 }

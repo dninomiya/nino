@@ -16,11 +16,21 @@ import { useState } from "react";
 export const Logo = ({
   width = 36,
   height = 36,
+  noLink,
 }: {
   width?: number;
   height?: number;
+  noLink?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
+
+  if (noLink) {
+    return (
+      <div className="relative w-fit overflow-hidden rounded-lg">
+        <Image src={img} alt={APP_NAME} width={width} height={height} />
+      </div>
+    );
+  }
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
