@@ -15,7 +15,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useOptimistic, useTransition } from "react";
+import { useId, useOptimistic, useTransition } from "react";
 import { reorderTask } from "@/actions/task";
 import { SortableTodoItem } from "./sortable-todo-item";
 import { Task } from "@workspace/db";
@@ -74,8 +74,11 @@ export function SortableTodoList({
     }
   }
 
+  const id = useId();
+
   return (
     <DndContext
+      id={id}
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}

@@ -10,6 +10,16 @@ import { getActiveSubscription, getPlanId } from "./subscription";
 import { addDiscordRole, removeDiscordRole } from "./discord";
 import { removeUserFromOrganization } from "./github";
 
+export const signIn = async (callbackURL?: string) => {
+  await auth.api.signInSocial({
+    body: {
+      provider: "discord",
+      callbackURL: callbackURL || "/",
+    },
+    headers: await headers(),
+  });
+};
+
 export const signOut = async () => {
   await auth.api.signOut({
     headers: await headers(),

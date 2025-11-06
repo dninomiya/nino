@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useQueryState } from "nuqs";
 
-export function EditTodoProfileButton() {
+export function EditTodoProfileButton({ create }: { create?: boolean }) {
   const [_, setEditTodoProfile] = useQueryState("edit-todo-profile");
 
   return (
@@ -13,7 +13,7 @@ export function EditTodoProfileButton() {
       className="w-full"
       size="sm"
     >
-      プロフィールを編集する
+      {create ? "プロフィールを作成する" : "プロフィールを編集する"}
     </Button>
   );
 }

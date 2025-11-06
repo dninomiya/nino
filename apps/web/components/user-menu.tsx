@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { authClient } from "@workspace/auth/client";
-import { signOut } from "@workspace/auth/action";
-import { LogOut, User } from "lucide-react";
+import { getSession } from "@workspace/auth";
+import { signIn, signOut } from "@workspace/auth/action";
+import { getPlanId } from "@workspace/auth/subscription";
+import { getPlanLabel } from "@workspace/lib/plan";
 import {
   Avatar,
   AvatarFallback,
@@ -15,10 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getSession } from "@workspace/auth";
-import { getPlanId } from "@workspace/auth/subscription";
-import { getPlanLabel } from "@workspace/lib/plan";
+import { LogOut, User } from "lucide-react";
 import Link from "next/link";
 
 export async function UserMenu() {
@@ -26,9 +24,9 @@ export async function UserMenu() {
 
   if (!session) {
     return (
-      <Button onClick={() => authClient.signIn.social({ provider: "discord" })}>
-        ログイン
-      </Button>
+      <form action={signIn.bind(null, undefined)}>
+        <Button type="submit">ログイン</Button>
+      </form>
     );
   }
 
@@ -68,9 +66,11 @@ export async function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <form action={signOut}>
-          <DropdownMenuItem>
-            <LogOut />
-            ログアウト
+          <DropdownMenuItem asChild>
+            <button className="w-full">
+              <LogOut />
+              ログアウト
+            </button>
           </DropdownMenuItem>
         </form>
       </DropdownMenuContent>

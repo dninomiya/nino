@@ -4,16 +4,20 @@ import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { getMyProfile, getProfile, getPublicProfiles } from "@/data/profile";
 import { getMyTasks, getTasksByUserId } from "@/data/task";
 import { getTodoSettings } from "@/data/todo-settings";
+import { Logo } from "@workspace/ui/blocks/logo/logo";
+import { Lock } from "lucide-react";
 import { cacheTag } from "next/cache";
 import { Suspense } from "react";
-import { Lock } from "lucide-react";
 import { EditTodoProfileButton } from "./components/edit-todo-profile-button";
 import { Miles } from "./components/miles";
+import { Pomodoro } from "./components/pomodoro";
 import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
 import { TodoSettingsButton } from "./components/todo-settings-button";
-import { Pomodoro } from "./components/pomodoro";
+import { getSession } from "@workspace/auth";
+import { Button } from "@/components/ui/button";
+import { signIn } from "@workspace/auth/action";
 
 export default function TodoPage() {
   return (
@@ -26,7 +30,8 @@ export default function TodoPage() {
           <PublicTaskLists />
         </Suspense>
       </div>
-      <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
+      <div className="h-14 border-t gap-2 border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
+        <Logo />
         <Suspense>
           <FooterContent />
         </Suspense>
@@ -48,15 +53,24 @@ async function FooterContent() {
 
 async function MyTaskList() {
   const profile = await getMyProfile();
+  const session = await getSession();
 
   if (!profile) {
     return (
-      <div className="border-r text-center border-dashed px-4 py-10 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
+      <div className="border-r text-center border-dashed p-10 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
         <h2 className="text-xl font-bold mb-5">プロフィールを作成</h2>
         <p className="text-sm text-muted-foreground mb-6">
           ToDoリストを作成するにはプロフィールを作成する必要があります。
         </p>
-        <EditTodoProfileButton />
+        {session ? (
+          <EditTodoProfileButton create />
+        ) : (
+          <form action={signIn.bind(null, "/todo")}>
+            <Button variant="outline" type="submit">
+              ログイン
+            </Button>
+          </form>
+        )}
         <Suspense>
           <ProfileEditDialog />
         </Suspense>

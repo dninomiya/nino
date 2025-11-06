@@ -101,7 +101,7 @@ export function Pomodoro({ soundEnabled = true }: { soundEnabled?: boolean }) {
       )}
     >
       {!isProgress && (
-        <div className="absolute right-0 bottom-0">
+        <div className="absolute left-0 bottom-0">
           <Mole sleep />
         </div>
       )}
