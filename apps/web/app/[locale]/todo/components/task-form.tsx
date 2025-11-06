@@ -20,7 +20,7 @@ export function TaskForm() {
         autoFocus
         type="text"
         name="title"
-        placeholder="手ごろなタスク..."
+        placeholder="やること..."
         spellCheck={false}
         autoComplete="off"
         className="bg-transparent border-none shadow-none h-8"

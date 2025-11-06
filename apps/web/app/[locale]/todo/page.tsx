@@ -14,7 +14,6 @@ import { EditTodoProfileButton } from "./components/edit-todo-profile-button";
 import { Miles } from "./components/miles";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
-import { Leaf } from "./components/leaf";
 
 export default function TodoPage() {
   return (
@@ -23,9 +22,6 @@ export default function TodoPage() {
         <Suspense>
           <MyTaskList />
         </Suspense>
-        <div className="relative">
-          <Leaf />
-        </div>
       </div>
       <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center px-1 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
         {/* <Suspense>

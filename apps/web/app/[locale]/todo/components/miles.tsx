@@ -1,7 +1,7 @@
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getCompletedTasksForMiles } from "@/data/task";
 import { Suspense } from "react";
