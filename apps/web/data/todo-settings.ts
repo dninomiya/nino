@@ -1,10 +1,17 @@
-import { currentSession } from "@workspace/auth";
+import { currentSession, getSession } from "@workspace/auth";
 import { db, todoSettings } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import "server-only";
 
 export async function getTodoSettings() {
-  const session = await currentSession();
+  const session = await getSession();
+
+  if (!session) {
+    return {
+      soundEnabled: true,
+    };
+  }
+
   const userId = session.user.id;
 
   const settings = await db.query.todoSettings.findFirst({

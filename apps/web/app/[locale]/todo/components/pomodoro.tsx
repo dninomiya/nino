@@ -123,7 +123,7 @@ export function Pomodoro({ soundEnabled = true }: { soundEnabled?: boolean }) {
       </div>
       <div
         className={cn(
-          "absolute inset-0 flex items-center gap-2 font-bold justify-center text-sm text-white/50"
+          "absolute inset-0 flex items-center gap-2 font-bold justify-center text-sm text-white"
         )}
       >
         <span className="mr-2 font-bold contents">

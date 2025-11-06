@@ -51,8 +51,11 @@ async function MyTaskList() {
 
   if (!profile) {
     return (
-      <div className="border-r border-dashed p-4 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
-        プロフィールを作成
+      <div className="border-r text-center border-dashed px-4 py-10 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
+        <h2 className="text-xl font-bold mb-5">プロフィールを作成</h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          ToDoリストを作成するにはプロフィールを作成する必要があります。
+        </p>
         <EditTodoProfileButton />
         <Suspense>
           <ProfileEditDialog />

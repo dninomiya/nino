@@ -6,7 +6,7 @@ import {
 import { getCompletedTasksForMiles } from "@/data/task";
 import { Suspense } from "react";
 
-export function Miles({ userId }: { userId?: string }) {
+export function Miles({ userId }: { userId: string }) {
   return (
     <div className="h-10 -mx-3 grid grid-cols-30 gap-1 overflow-hidden">
       <Suspense fallback={<MilesSkeleton />}>
@@ -16,7 +16,7 @@ export function Miles({ userId }: { userId?: string }) {
   );
 }
 
-async function MilesContent({ userId }: { userId?: string }) {
+async function MilesContent({ userId }: { userId: string }) {
   const completedTasks = await getCompletedTasksForMiles(userId);
   const tasksByDate = new Map(completedTasks.map((t) => [t.date, t]));
 

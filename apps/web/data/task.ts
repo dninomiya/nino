@@ -1,4 +1,4 @@
-import { currentSession } from "@workspace/auth";
+import { currentSession, getSession } from "@workspace/auth";
 import { db, tasks, Task, profiles } from "@workspace/db";
 import { and, asc, eq, gte, or } from "drizzle-orm";
 import "server-only";
@@ -27,15 +27,15 @@ export type CompletedTasksByDate = {
 };
 
 export async function getCompletedTasksForMiles(
-  userId?: string
+  userId: string
 ): Promise<CompletedTasksByDate[]> {
-  const session = await currentSession();
-  const targetUserId = userId ?? session.user.id;
+  const session = await getSession();
+  const myId = session && session.user.id;
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   // 他人のタスクを取得する場合、公開設定を確認
-  if (userId && userId !== session.user.id) {
+  if (userId !== myId) {
     const profile = await db.query.profiles.findFirst({
       where: eq(profiles.userId, userId),
     });
@@ -48,7 +48,7 @@ export async function getCompletedTasksForMiles(
 
   const completedTasks = await db.query.tasks.findMany({
     where: and(
-      eq(tasks.userId, targetUserId),
+      eq(tasks.userId, userId),
       eq(tasks.completed, true),
       gte(tasks.completedAt, thirtyDaysAgo)
     ),
