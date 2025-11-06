@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 export function Miles() {
   return (
-    <div className="h-10 -mb-4 -mx-3 mt-6 grid grid-cols-30 gap-1 overflow-hidden">
+    <div className="h-10 -mx-3 grid grid-cols-30 gap-1 overflow-hidden">
       <Suspense fallback={<MilesSkeleton />}>
         <MilesContent />
       </Suspense>

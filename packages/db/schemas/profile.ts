@@ -1,4 +1,4 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { id, timestamps } from "../util";
 import { users } from "./auth";
 
@@ -12,6 +12,12 @@ export const profiles = sqliteTable("profiles", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  lastTaskCompletedAt: integer("last_task_completed_at", {
+    mode: "timestamp_ms",
+  }),
+  tasksPublic: integer("tasks_public", { mode: "boolean" })
+    .notNull()
+    .default(false),
   ...timestamps,
 });
 

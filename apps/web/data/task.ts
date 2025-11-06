@@ -1,5 +1,5 @@
 import { currentSession } from "@workspace/auth";
-import { db, tasks, Task } from "@workspace/db";
+import { db, tasks, Task, profiles } from "@workspace/db";
 import { and, asc, eq, gte, or } from "drizzle-orm";
 import "server-only";
 
@@ -69,4 +69,30 @@ export async function getCompletedTasksForMiles(): Promise<
   }
 
   return result.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+export async function getTasksByUserId(userId: string): Promise<Task[]> {
+  // プロフィールの tasksPublic を確認
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, userId),
+  });
+
+  // 公開設定が false の場合は空配列を返す
+  if (!profile || !profile.tasksPublic) {
+    return [];
+  }
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  return db.query.tasks.findMany({
+    where: and(
+      eq(tasks.userId, userId),
+      or(
+        eq(tasks.completed, false),
+        and(eq(tasks.completed, true), gte(tasks.completedAt, thirtyDaysAgo))
+      )
+    ),
+    orderBy: asc(tasks.index),
+  });
 }

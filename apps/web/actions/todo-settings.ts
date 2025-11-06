@@ -7,7 +7,6 @@ import { updateTag } from "next/cache";
 
 export async function updateTodoSettings(data: {
   soundEnabled?: boolean;
-  tasksPublic?: boolean;
 }) {
   const session = await currentSession();
   const userId = session.user.id;
@@ -20,7 +19,6 @@ export async function updateTodoSettings(data: {
   const settingsData: Partial<NewTodoSettings> & { userId: string } = {
     userId,
     soundEnabled: data.soundEnabled ?? true,
-    tasksPublic: data.tasksPublic ?? false,
   };
 
   try {

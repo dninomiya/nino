@@ -11,9 +11,6 @@ export const todoSettings = sqliteTable("todo_settings", {
   soundEnabled: integer("sound_enabled", { mode: "boolean" })
     .notNull()
     .default(true),
-  tasksPublic: integer("tasks_public", { mode: "boolean" })
-    .notNull()
-    .default(false),
   ...timestamps,
 });
 

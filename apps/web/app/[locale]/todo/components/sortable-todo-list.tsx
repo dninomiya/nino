@@ -25,7 +25,7 @@ export function SortableTodoList({
   settings,
 }: {
   tasks: Task[];
-  settings: { soundEnabled: boolean; tasksPublic: boolean };
+  settings: { soundEnabled: boolean };
 }) {
   // クライアントサイドでソート: 未完了タスクを先に、完了タスクを後に
   const sortedTasks = [...initialTasks].sort((a, b) => {

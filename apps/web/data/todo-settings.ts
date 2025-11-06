@@ -15,12 +15,10 @@ export async function getTodoSettings() {
   if (!settings) {
     return {
       soundEnabled: true,
-      tasksPublic: false,
     };
   }
 
   return {
     soundEnabled: settings.soundEnabled,
-    tasksPublic: settings.tasksPublic,
   };
 }

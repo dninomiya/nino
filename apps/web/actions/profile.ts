@@ -5,7 +5,7 @@ import { db, profiles, NewProfile } from "@workspace/db";
 import { profileFormSchema, ProfileFormSchema } from "@workspace/db/zod";
 import { uploadImage, updateImage } from "@workspace/storage";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { nanoid } from "nanoid";
 
 export async function updateProfile(data: ProfileFormSchema) {
@@ -116,6 +116,31 @@ export async function updateProfile(data: ProfileFormSchema) {
     return {
       success: false,
       error: "プロフィールの保存に失敗しました",
+    };
+  }
+}
+
+export async function updateProfileTasksPublic(tasksPublic: boolean) {
+  const session = await currentSession();
+  const userId = session.user.id;
+
+  try {
+    await db
+      .update(profiles)
+      .set({ tasksPublic })
+      .where(eq(profiles.userId, userId));
+
+    updateTag(`profiles:${userId}`);
+    revalidatePath("/todo");
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Failed to update profile tasksPublic:", error);
+    return {
+      success: false,
+      error: "設定の保存に失敗しました",
     };
   }
 }

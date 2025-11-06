@@ -14,7 +14,7 @@ export function TaskForm() {
   return (
     <form
       action={addTask}
-      className="flex items-center gap-1 p-1 bg-card/30 rounded-lg border"
+      className="flex items-center gap-1 p-1 bg-card/30 rounded-lg border border-black/10"
     >
       <Input
         autoFocus

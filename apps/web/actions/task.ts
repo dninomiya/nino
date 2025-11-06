@@ -1,7 +1,7 @@
 "use server";
 
 import { currentSession } from "@workspace/auth";
-import { db, NewTask, tasks } from "@workspace/db";
+import { db, NewTask, tasks, profiles } from "@workspace/db";
 import { and, desc, eq } from "drizzle-orm";
 import { generateKeyBetween } from "fractional-indexing";
 import { updateTag } from "next/cache";
@@ -49,11 +49,21 @@ export async function updateTask(id: string, newTask: Partial<NewTask>) {
 export async function completeTask(id: string) {
   const session = await currentSession();
   const uid = session.user.id;
+  const now = new Date();
+  
   await db
     .update(tasks)
-    .set({ completed: true, completedAt: new Date() })
+    .set({ completed: true, completedAt: now })
     .where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
+  
+  // プロフィールの lastTaskCompletedAt を更新
+  await db
+    .update(profiles)
+    .set({ lastTaskCompletedAt: now })
+    .where(eq(profiles.userId, uid));
+  
   updateTag(`tasks:${uid}`);
+  updateTag(`profiles:${uid}`);
 }
 
 export async function uncompleteTask(id: string) {
