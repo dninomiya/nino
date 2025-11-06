@@ -14,22 +14,19 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@workspace/ui/components/label";
 import { updateTodoSettings } from "@/actions/todo-settings";
-import { updateProfileTasksPublic } from "@/actions/profile";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useState } from "react";
 
 const todoSettingsFormSchema = z.object({
   soundEnabled: z.boolean(),
-  tasksPublic: z.boolean(),
 });
 
 type TodoSettingsFormSchema = z.infer<typeof todoSettingsFormSchema>;
@@ -37,7 +34,6 @@ type TodoSettingsFormSchema = z.infer<typeof todoSettingsFormSchema>;
 interface TodoSettingsButtonProps {
   initialSettings: {
     soundEnabled: boolean;
-    tasksPublic: boolean;
   };
 }
 
@@ -51,21 +47,19 @@ export function TodoSettingsButton({
     resolver: zodResolver(todoSettingsFormSchema),
     defaultValues: {
       soundEnabled: initialSettings.soundEnabled,
-      tasksPublic: initialSettings.tasksPublic,
     },
   });
 
   async function onSubmit(data: TodoSettingsFormSchema) {
-    const [soundResult, tasksPublicResult] = await Promise.all([
-      updateTodoSettings({ soundEnabled: data.soundEnabled }),
-      updateProfileTasksPublic(data.tasksPublic),
-    ]);
+    const result = await updateTodoSettings({
+      soundEnabled: data.soundEnabled,
+    });
 
-    if (soundResult?.success && tasksPublicResult?.success) {
+    if (result?.success) {
       setOpen(false);
       router.refresh();
     } else {
-      console.error("設定の保存に失敗しました:", soundResult?.error || tasksPublicResult?.error);
+      console.error("設定の保存に失敗しました:", result?.error);
     }
   }
 
@@ -79,7 +73,7 @@ export function TodoSettingsButton({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>タスク設定</DialogTitle>
+          <DialogTitle>設定</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -88,43 +82,22 @@ export function TodoSettingsButton({
               control={form.control}
               name="soundEnabled"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">効果音</FormLabel>
-                    <FormDescription>
-                      タスク完了時に効果音を再生します
-                    </FormDescription>
+                <FormItem>
+                  <div className="flex items-start gap-3">
+                    <FormControl>
+                      <Checkbox
+                        id="sound-enabled"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="grid gap-2">
+                      <Label htmlFor="sound-enabled">効果音</Label>
+                      <p className="text-muted-foreground text-sm">
+                        タスク完了時に効果音を再生します
+                      </p>
+                    </div>
                   </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tasksPublic"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      マイタスクの公開
-                    </FormLabel>
-                    <FormDescription>
-                      マイタスクを他のユーザーに公開します
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

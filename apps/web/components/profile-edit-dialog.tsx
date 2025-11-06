@@ -22,6 +22,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@workspace/ui/components/label";
 import { updateProfile } from "@/actions/profile";
 import { Profile } from "@workspace/db";
 import { profileFormSchema, ProfileFormSchema } from "@workspace/db/zod";
@@ -249,19 +250,25 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
               control={form.control}
               name="tasksPublic"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormItem>
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Label className="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950 cursor-pointer">
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+                      />
+                      <div className="grid gap-1.5 font-normal">
+                        <p className="text-sm leading-none font-medium">
+                          タスクを公開する
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          チェックを入れると、他のユーザーがあなたのタスクリストを閲覧できるようになります。
+                        </p>
+                      </div>
+                    </Label>
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>タスクを公開する</FormLabel>
-                    <FormDescription>
-                      チェックを入れると、他のユーザーがあなたのタスクリストを閲覧できるようになります。
-                    </FormDescription>
-                  </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />

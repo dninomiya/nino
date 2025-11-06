@@ -36,10 +36,8 @@ export default function TodoPage() {
 
 async function TaskSettings() {
   const settings = await getTodoSettings();
-  const myProfile = await getMyProfile();
-  const tasksPublic = myProfile?.tasksPublic ?? false;
 
-  return <TodoSettingsButton initialSettings={{ ...settings, tasksPublic }} />;
+  return <TodoSettingsButton initialSettings={settings} />;
 }
 
 async function MyTaskList() {
