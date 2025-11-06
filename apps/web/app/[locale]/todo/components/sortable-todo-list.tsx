@@ -20,7 +20,13 @@ import { reorderTask } from "@/actions/task";
 import { SortableTodoItem } from "./sortable-todo-item";
 import { Task } from "@workspace/db";
 
-export function SortableTodoList({ tasks: initialTasks }: { tasks: Task[] }) {
+export function SortableTodoList({
+  tasks: initialTasks,
+  settings,
+}: {
+  tasks: Task[];
+  settings: { soundEnabled: boolean; tasksPublic: boolean };
+}) {
   // クライアントサイドでソート: 未完了タスクを先に、完了タスクを後に
   const sortedTasks = [...initialTasks].sort((a, b) => {
     // 未完了タスクを先に
@@ -80,7 +86,11 @@ export function SortableTodoList({ tasks: initialTasks }: { tasks: Task[] }) {
       >
         <div>
           {optimisticTasks.map((task) => (
-            <SortableTodoItem key={task.id} item={task} />
+            <SortableTodoItem
+              key={task.id}
+              item={task}
+              soundEnabled={settings.soundEnabled}
+            />
           ))}
         </div>
       </SortableContext>

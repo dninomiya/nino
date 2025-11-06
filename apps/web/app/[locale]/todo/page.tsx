@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { getMyProfile, getProfile } from "@/data/profile";
 import { getMyTasks } from "@/data/task";
+import { getTodoSettings } from "@/data/todo-settings";
 import { cacheTag } from "next/cache";
 import { Suspense } from "react";
 import { EditTodoProfileButton } from "./components/edit-todo-profile-button";
@@ -10,8 +11,12 @@ import { Miles } from "./components/miles";
 import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
+import { TodoSettingsButton } from "./components/todo-settings-button";
+import { TodoSettingsDialog } from "./components/todo-settings-dialog";
 
-export default function TodoPage() {
+export default async function TodoPage() {
+  const settings = await getTodoSettings();
+
   return (
     <div className="h-dvh flex flex-col bg-brand overflow-hidden">
       <div className="grid grid-cols-4 flex-1 -mr-px -mb-px">
@@ -19,10 +24,11 @@ export default function TodoPage() {
           <MyTaskList />
         </Suspense>
       </div>
-      <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center px-1 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
-        {/* <Suspense>
-          <Pomodoro />
-        </Suspense> */}
+      <div className="h-14 border-t border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-1 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
+        <TodoSettingsButton />
+        <Suspense>
+          <TodoSettingsDialog initialSettings={settings} />
+        </Suspense>
       </div>
     </div>
   );
@@ -43,9 +49,11 @@ async function MyTaskList() {
     );
   }
 
+  const settings = await getTodoSettings();
+
   return (
     <>
-      <TodoList userId={profile?.userId} />
+      <TodoList userId={profile?.userId} settings={settings} />
       <Suspense>
         <ProfileEditDialog profile={profile} />
       </Suspense>
@@ -53,7 +61,13 @@ async function MyTaskList() {
   );
 }
 
-async function TodoList({ userId }: { userId: string }) {
+async function TodoList({
+  userId,
+  settings,
+}: {
+  userId: string;
+  settings: { soundEnabled: boolean; tasksPublic: boolean };
+}) {
   "use cache: private";
   cacheTag(`tasks:${userId}`);
   const allTasks = await getMyTasks();
@@ -104,7 +118,7 @@ async function TodoList({ userId }: { userId: string }) {
         />
       </HoverCard>
       <div className="flex-1 overflow-auto py-1">
-        <SortableTodoList tasks={filteredTasks} />
+        <SortableTodoList tasks={filteredTasks} settings={settings} />
       </div>
       <TaskForm />
       <Miles />

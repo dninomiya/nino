@@ -5,6 +5,7 @@ import * as feed from "./schemas/feed";
 import * as status from "./schemas/status";
 import * as task from "./schemas/task";
 import * as profile from "./schemas/profile";
+import * as todoSettings from "./schemas/todo-settings";
 
 export const db = drizzle({
   connection: {
@@ -17,6 +18,7 @@ export const db = drizzle({
     ...status,
     ...task,
     ...profile,
+    ...todoSettings,
   },
 });
 
@@ -26,6 +28,7 @@ export * from "./schemas/feed";
 export * from "./schemas/status";
 export * from "./schemas/task";
 export * from "./schemas/profile";
+export * from "./schemas/todo-settings";
 
 // 生成された型のエクスポート
 export * from "./types";

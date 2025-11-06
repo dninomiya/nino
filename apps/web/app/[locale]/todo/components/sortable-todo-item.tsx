@@ -6,7 +6,13 @@ import { TodoItem } from "./todo-item";
 import { GripVertical } from "lucide-react";
 import { Task } from "@workspace/db";
 
-export function SortableTodoItem({ item }: { item: Task }) {
+export function SortableTodoItem({
+  item,
+  soundEnabled,
+}: {
+  item: Task;
+  soundEnabled: boolean;
+}) {
   const {
     attributes,
     listeners,
@@ -29,7 +35,7 @@ export function SortableTodoItem({ item }: { item: Task }) {
       className="flex items-center text-sm gap-2 group hover:bg-accent/20 rounded-md px-2 py-0"
     >
       <div className="flex-1">
-        <TodoItem item={item} />
+        <TodoItem item={item} soundEnabled={soundEnabled} />
       </div>
       <button
         {...attributes}

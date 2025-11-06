@@ -4,6 +4,7 @@ import * as feedSchema from "../schemas/feed";
 import * as statusSchema from "../schemas/status";
 import * as taskSchema from "../schemas/task";
 import * as profileSchema from "../schemas/profile";
+import * as todoSettingsSchema from "../schemas/todo-settings";
 import { z } from "zod";
 
 // Auth Schema Zod Schemas
@@ -43,6 +44,14 @@ export const selectTaskSchema = createSelectSchema(taskSchema.tasks);
 export const insertProfileSchema = createInsertSchema(profileSchema.profiles);
 export const selectProfileSchema = createSelectSchema(profileSchema.profiles);
 
+// Todo Settings Schema Zod Schemas
+export const insertTodoSettingsSchema = createInsertSchema(
+  todoSettingsSchema.todoSettings
+);
+export const selectTodoSettingsSchema = createSelectSchema(
+  todoSettingsSchema.todoSettings
+);
+
 // カスタムバリデーションスキーマ
 export const normalizedStatusSchema = z.enum([
   "normal",
@@ -81,6 +90,7 @@ export const updateFeedItemSchema = insertFeedItemSchema.partial();
 export const updateStatusEventSchema = insertStatusEventSchema.partial();
 export const updateTaskSchema = insertTaskSchema.partial();
 export const updateProfileSchema = insertProfileSchema.partial();
+export const updateTodoSettingsSchema = insertTodoSettingsSchema.partial();
 
 // 型エクスポート
 export type InsertUserSchema = z.infer<typeof insertUserSchema>;
@@ -99,5 +109,7 @@ export type InsertTaskSchema = z.infer<typeof insertTaskSchema>;
 export type SelectTaskSchema = z.infer<typeof selectTaskSchema>;
 export type InsertProfileSchema = z.infer<typeof insertProfileSchema>;
 export type SelectProfileSchema = z.infer<typeof selectProfileSchema>;
+export type InsertTodoSettingsSchema = z.infer<typeof insertTodoSettingsSchema>;
+export type SelectTodoSettingsSchema = z.infer<typeof selectTodoSettingsSchema>;
 export type NormalizedStatusSchema = z.infer<typeof normalizedStatusSchema>;
 export type ProfileFormSchema = z.infer<typeof profileFormSchema>;

@@ -5,6 +5,7 @@ import * as feedSchema from "../schemas/feed.js";
 import * as statusSchema from "../schemas/status.js";
 import * as taskSchema from "../schemas/task.js";
 import * as profileSchema from "../schemas/profile.js";
+import * as todoSettingsSchema from "../schemas/todo-settings.js";
 
 // Auth Schema Types
 export type User = typeof authSchema.users.$inferSelect;
@@ -32,6 +33,10 @@ export type NewTask = typeof taskSchema.tasks.$inferInsert;
 export type Profile = typeof profileSchema.profiles.$inferSelect;
 export type NewProfile = typeof profileSchema.profiles.$inferInsert;
 
+// Todo Settings Schema Types
+export type TodoSettings = typeof todoSettingsSchema.todoSettings.$inferSelect;
+export type NewTodoSettings = typeof todoSettingsSchema.todoSettings.$inferInsert;
+
 // 全テーブルの型をまとめた型
 export type AllTables = {
   users: User;
@@ -42,6 +47,7 @@ export type AllTables = {
   statusEvents: StatusEvent;
   tasks: Task;
   profiles: Profile;
+  todoSettings: TodoSettings;
 };
 
 export type AllNewTables = {
@@ -53,6 +59,7 @@ export type AllNewTables = {
   statusEvents: NewStatusEvent;
   tasks: NewTask;
   profiles: NewProfile;
+  todoSettings: NewTodoSettings;
 };
 
 // テーブル名の型
