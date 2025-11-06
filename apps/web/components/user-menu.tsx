@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getSession } from "@workspace/auth";
-import { signIn, signOut } from "@workspace/auth/action";
+import { signOut } from "@workspace/auth/action";
 import { getPlanId } from "@workspace/auth/subscription";
 import { getPlanLabel } from "@workspace/lib/plan";
 import {
@@ -18,16 +18,13 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { LoginButton } from "./login-button";
 
 export async function UserMenu() {
   const session = await getSession();
 
   if (!session) {
-    return (
-      <form action={signIn.bind(null, undefined)}>
-        <Button type="submit">ログイン</Button>
-      </form>
-    );
+    return <LoginButton />;
   }
 
   const planId = await getPlanId();

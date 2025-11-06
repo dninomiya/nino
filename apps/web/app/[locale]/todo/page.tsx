@@ -1,9 +1,11 @@
+import { LoginButton } from "@/components/login-button";
 import { ProfileEditDialog } from "@/components/profile-edit-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { getMyProfile, getProfile, getPublicProfiles } from "@/data/profile";
 import { getMyTasks, getTasksByUserId } from "@/data/task";
 import { getTodoSettings } from "@/data/todo-settings";
+import { getSession } from "@workspace/auth";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
 import { Lock } from "lucide-react";
 import { cacheTag } from "next/cache";
@@ -15,9 +17,6 @@ import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
 import { TodoSettingsButton } from "./components/todo-settings-button";
-import { getSession } from "@workspace/auth";
-import { Button } from "@/components/ui/button";
-import { signIn } from "@workspace/auth/action";
 
 export default function TodoPage() {
   return (
@@ -62,15 +61,7 @@ async function MyTaskList() {
         <p className="text-sm text-muted-foreground mb-6">
           ToDoリストを作成するにはプロフィールを作成する必要があります。
         </p>
-        {session ? (
-          <EditTodoProfileButton create />
-        ) : (
-          <form action={signIn.bind(null, "/todo")}>
-            <Button variant="outline" type="submit">
-              ログイン
-            </Button>
-          </form>
-        )}
+        {session ? <EditTodoProfileButton create /> : <LoginButton />}
         <Suspense>
           <ProfileEditDialog />
         </Suspense>
@@ -163,6 +154,7 @@ async function TodoList({
         <ProfileHoverContent
           profile={profile}
           fallbackInitial={fallbackInitial}
+          isOwn={isMyTasks}
         />
       </HoverCard>
       <div className="flex-1 overflow-auto py-1">

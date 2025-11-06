@@ -1,15 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { HoverCardContent } from "@/components/ui/hover-card";
-import { Profile } from "@workspace/db";
 import { SiGithub, SiX } from "@icons-pack/react-simple-icons";
-import { LucideIcon, Link as LinkIcon } from "lucide-react";
+import { Profile } from "@workspace/db";
+import { Link as LinkIcon } from "lucide-react";
 import { ComponentType } from "react";
 import { EditTodoProfileButton } from "./edit-todo-profile-button";
 
 interface ProfileHoverContentProps {
   profile: Profile;
   fallbackInitial: string;
+  isOwn: boolean;
 }
 
 // URLから適切なアイコンを取得する関数
@@ -36,6 +37,7 @@ function getIconForUrl(url: string): ComponentType<{ className?: string }> {
 
 export function ProfileHoverContent({
   profile,
+  isOwn,
   fallbackInitial,
 }: ProfileHoverContentProps) {
   // linksをJSONから配列に変換
@@ -80,8 +82,7 @@ export function ProfileHoverContent({
           })}
         </div>
       )}
-      <EditTodoProfileButton />
+      {isOwn && <EditTodoProfileButton />}
     </HoverCardContent>
   );
 }
-
