@@ -6,6 +6,8 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { getMyTasks } from "@/data/task";
+import { getMyProfile } from "@/data/profile";
+import { ProfileEditDialog } from "@/components/profile-edit-dialog";
 import { SiGithub, SiX } from "@icons-pack/react-simple-icons";
 import { currentSession } from "@workspace/auth";
 import { cacheTag } from "next/cache";
@@ -59,9 +61,11 @@ async function TodoList({ userId }: { userId: string }) {
 
   const session = await currentSession();
   const user = session.user;
+  const profile = await getMyProfile();
 
   return (
     <div className="space-y-4 flex flex-col p-4 relative border-r border-dashed border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
+      <ProfileEditDialog profile={profile} />
       <HoverCard>
         <HoverCardTrigger>
           <div className="flex items-center gap-2">
