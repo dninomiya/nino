@@ -26,16 +26,29 @@ export type CompletedTasksByDate = {
   tasks: Array<{ title: string; sp: number | null }>;
 };
 
-export async function getCompletedTasksForMiles(): Promise<
-  CompletedTasksByDate[]
-> {
+export async function getCompletedTasksForMiles(
+  userId?: string
+): Promise<CompletedTasksByDate[]> {
   const session = await currentSession();
+  const targetUserId = userId ?? session.user.id;
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
+  // 他人のタスクを取得する場合、公開設定を確認
+  if (userId && userId !== session.user.id) {
+    const profile = await db.query.profiles.findFirst({
+      where: eq(profiles.userId, userId),
+    });
+
+    // 公開設定が false の場合は空配列を返す
+    if (!profile || !profile.tasksPublic) {
+      return [];
+    }
+  }
+
   const completedTasks = await db.query.tasks.findMany({
     where: and(
-      eq(tasks.userId, session.user.id),
+      eq(tasks.userId, targetUserId),
       eq(tasks.completed, true),
       gte(tasks.completedAt, thirtyDaysAgo)
     ),

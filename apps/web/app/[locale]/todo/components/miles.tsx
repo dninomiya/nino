@@ -6,18 +6,18 @@ import {
 import { getCompletedTasksForMiles } from "@/data/task";
 import { Suspense } from "react";
 
-export function Miles() {
+export function Miles({ userId }: { userId?: string }) {
   return (
     <div className="h-10 -mx-3 grid grid-cols-30 gap-1 overflow-hidden">
       <Suspense fallback={<MilesSkeleton />}>
-        <MilesContent />
+        <MilesContent userId={userId} />
       </Suspense>
     </div>
   );
 }
 
-async function MilesContent() {
-  const completedTasks = await getCompletedTasksForMiles();
+async function MilesContent({ userId }: { userId?: string }) {
+  const completedTasks = await getCompletedTasksForMiles(userId);
   const tasksByDate = new Map(completedTasks.map((t) => [t.date, t]));
 
   // 過去30日分の日付を生成

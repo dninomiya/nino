@@ -175,7 +175,7 @@ async function TodoList({
         )}
         {isMyTasks && <TaskForm />}
       </div>
-      <Miles />
+      <Miles userId={userId} />
     </div>
   );
 }
