@@ -93,6 +93,7 @@ export async function updateProfile(data: ProfileFormSchema) {
     tagline: validatedData.tagline || null,
     bio: validatedData.bio || null,
     links: linksJsonString,
+    tasksPublic: validatedData.tasksPublic ?? false,
   };
 
   try {

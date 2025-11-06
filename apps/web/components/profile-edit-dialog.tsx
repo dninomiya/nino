@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { updateProfile } from "@/actions/profile";
 import { Profile } from "@workspace/db";
 import { profileFormSchema, ProfileFormSchema } from "@workspace/db/zod";
@@ -54,6 +55,7 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
     tagline: profile?.tagline ?? "",
     bio: profile?.bio ?? "",
     links: linksArray,
+    tasksPublic: profile?.tasksPublic ?? false,
   };
 
   const form = useForm<ProfileFormSchema>({
@@ -242,6 +244,27 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
                 </Button>
               </div>
             </div>
+
+            <FormField
+              control={form.control}
+              name="tasksPublic"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>タスクを公開する</FormLabel>
+                    <FormDescription>
+                      チェックを入れると、他のユーザーがあなたのタスクリストを閲覧できるようになります。
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
 
             <div className="flex justify-end gap-2">
               <Button

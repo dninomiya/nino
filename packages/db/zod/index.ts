@@ -79,6 +79,7 @@ export const profileFormSchema = z.object({
       .min(1, "URLを入力してください")
       .url("有効なURLを入力してください")
   ),
+  tasksPublic: z.boolean().optional(),
 });
 
 // バリデーション用のスキーマ（オプショナルフィールドを追加）

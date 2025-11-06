@@ -6,6 +6,7 @@ import { getMyTasks, getTasksByUserId } from "@/data/task";
 import { getTodoSettings } from "@/data/todo-settings";
 import { cacheTag } from "next/cache";
 import { Suspense } from "react";
+import { Lock } from "lucide-react";
 import { EditTodoProfileButton } from "./components/edit-todo-profile-button";
 import { Miles } from "./components/miles";
 import { ProfileHoverContent } from "./components/profile-hover-content";
@@ -126,9 +127,14 @@ async function TodoList({
               <AvatarFallback>{fallbackInitial}</AvatarFallback>
             </Avatar>
             <div className="space-y-1.5 *:leading-none">
-              <h2 className="font-bold text-sm text-zinc-700">
-                {profile.nickname}
-              </h2>
+              <div className="flex items-center gap-1.5">
+                <h2 className="font-bold text-sm text-zinc-700">
+                  {profile.nickname}
+                </h2>
+                {isMyTasks && !profile.tasksPublic && (
+                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">{profile.tagline}</p>
             </div>
           </div>
