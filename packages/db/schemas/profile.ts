@@ -15,3 +15,4 @@ export const profiles = sqliteTable("profiles", {
   ...timestamps,
 });
 
+

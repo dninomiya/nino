@@ -30,13 +30,26 @@ export default function TodoPage() {
           <Pomodoro />
         </Suspense> */}
       </div>
+      <Suspense>
+        <ProfileEditDialog />
+      </Suspense>
     </div>
   );
 }
 
 async function MyTaskList() {
-  const session = await currentSession();
-  return <TodoList userId={session.user.id} />;
+  const profile = await getMyProfile();
+
+  if (!profile) {
+    return (
+      <div className="border-r border-dashed p-4 border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
+        プロフィールを作成
+        <EditTodoProfileButton />
+      </div>
+    );
+  }
+
+  return <TodoList userId={profile?.userId} />;
 }
 
 async function TodoList({ userId }: { userId: string }) {
@@ -65,7 +78,6 @@ async function TodoList({ userId }: { userId: string }) {
 
   return (
     <div className="space-y-4 flex flex-col p-4 relative border-r border-dashed border-black/20 bg-linear-to-tl from-black/5 from-5% to-20%">
-      <ProfileEditDialog profile={profile} />
       <HoverCard>
         <HoverCardTrigger>
           <div className="flex items-center gap-2">

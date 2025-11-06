@@ -14,6 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +25,12 @@ import { updateProfile } from "@/actions/profile";
 import { Profile } from "@workspace/db";
 import { profileFormSchema, ProfileFormSchema } from "@workspace/db/zod";
 import { ArrowUp, ArrowDown, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import {
+  ImageCropper,
+  ImageCropperFileSelector,
+  ImageCropperPreview,
+} from "@/registry/blocks/image-cropper";
 
 interface ProfileEditDialogProps {
   profile?: Profile | null;
@@ -32,6 +39,8 @@ interface ProfileEditDialogProps {
 export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
   const [editTodoProfile, setEditTodoProfile] =
     useQueryState("edit-todo-profile");
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // linksをJSONから配列に変換
   const linksArray: string[] =
@@ -106,14 +115,26 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
               name="avatar"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>アバター</FormLabel>
+                  <FormLabel>プロフィール画像</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="https://example.com/avatar.png"
-                      type="url"
-                      {...field}
-                    />
+                    <ImageCropperFileSelector
+                      onFileSelect={(file) => {
+                        setSelectedFile(file);
+                        setCropDialogOpen(true);
+                      }}
+                      className="w-[200px] aspect-square"
+                    >
+                      {field.value && (
+                        <ImageCropperPreview
+                          src={field.value}
+                          onRemove={() => field.onChange("")}
+                        />
+                      )}
+                    </ImageCropperFileSelector>
                   </FormControl>
+                  <FormDescription>
+                    プロフィールに表示される画像をアップロードしてください。
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -230,6 +251,30 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
             </div>
           </form>
         </Form>
+
+        {/* 画像クロップ用のDialog */}
+        <Dialog open={cropDialogOpen} onOpenChange={setCropDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogTitle className="sr-only">画像をクロップ</DialogTitle>
+            {selectedFile && (
+              <ImageCropper
+                image={selectedFile}
+                canvasWidth={400}
+                aspectRatio={1}
+                resultWidth={600}
+                onCrop={(dataUrl) => {
+                  form.setValue("avatar", dataUrl);
+                  setCropDialogOpen(false);
+                  setSelectedFile(null);
+                }}
+                onCancel={() => {
+                  setCropDialogOpen(false);
+                  setSelectedFile(null);
+                }}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </DialogContent>
     </Dialog>
   );
