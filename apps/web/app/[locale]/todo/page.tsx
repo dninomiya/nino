@@ -21,13 +21,15 @@ import { TodoSettingsButton } from "./components/todo-settings-button";
 export default function TodoPage() {
   return (
     <div className="h-dvh flex flex-col bg-brand overflow-hidden">
-      <div className="grid grid-cols-4 flex-1 -mr-px -mb-px">
+      <div className="grid grid-cols-1 lg:grid-cols-4 flex-1 -mr-px -mb-px">
         <Suspense>
           <MyTaskList />
         </Suspense>
-        <Suspense>
-          <PublicTaskLists />
-        </Suspense>
+        <div className="hidden lg:contents">
+          <Suspense>
+            <PublicTaskLists />
+          </Suspense>
+        </div>
       </div>
       <div className="h-14 border-t gap-2 border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
         <Logo />

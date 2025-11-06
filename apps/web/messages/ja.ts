@@ -160,6 +160,7 @@ export default {
   },
   Footer: {
     linksTitle: "リンク",
+    todo: "ToDo",
     feed: "フィード",
     status: "ステータス",
     docs: "ドキュメント",

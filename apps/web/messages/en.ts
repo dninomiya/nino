@@ -160,6 +160,7 @@ export default {
   },
   Footer: {
     linksTitle: "Links",
+    todo: "ToDo",
     feed: "Feed",
     status: "Status",
     docs: "Documentation",
