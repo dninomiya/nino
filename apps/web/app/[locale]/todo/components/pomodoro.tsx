@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Coffee } from "lucide-react";
+import { Coffee, Flame } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSound } from "use-sound";
 import { Mole, Wall } from "./mole";
@@ -95,49 +95,44 @@ export function Pomodoro({ soundEnabled = true }: { soundEnabled?: boolean }) {
   }
 
   return (
-    <div
-      className={cn(
-        "h-10 relative flex-1 overflow-hidden rounded-full bg-black/30 inset-shadow-[0_0_6px_0_rgba(0,0,0,0.5)]"
-      )}
-    >
-      {!isProgress && (
-        <div className="absolute left-0 bottom-0">
-          <Mole sleep />
-        </div>
-      )}
-      <div
-        className="size-full transition duration-1000 ease-linear flex items-end"
-        style={{
-          transform: `translateX(${progressScale * 100}%)`,
-        }}
-      >
-        {isProgress && (
-          <>
-            <div className="height-6">
-              <Mole />
-            </div>
-            <Wall className="text-[#2A2520] w-10 -ml-7 -mr-px" />
-            <div className="flex-1 bg-[#2A2520] h-full"></div>
-          </>
-        )}
-      </div>
+    <>
       <div
         className={cn(
-          "absolute inset-0 flex items-center gap-2 font-bold justify-center text-sm text-white"
+          "h-10 relative flex-1 overflow-hidden rounded-full bg-black/30 inset-shadow-[0_0_6px_0_rgba(0,0,0,0.5)]"
         )}
       >
-        <span className="mr-2 font-bold contents">
-          {isProgress ? (
-            "がんばりタイム"
-          ) : (
+        {!isProgress && (
+          <div className="absolute left-0 bottom-0">
+            <Mole sleep />
+          </div>
+        )}
+        <div
+          className="size-full transition duration-1000 ease-linear flex items-end"
+          style={{
+            transform: `translateX(${progressScale * 100}%)`,
+          }}
+        >
+          {isProgress && (
             <>
-              <Coffee className="size-5" />
-              ちょっと一息
+              <div className="height-6">
+                <Mole />
+              </div>
+              <Wall className="text-[#2A2520] w-10 -ml-7 -mr-px" />
+              <div className="flex-1 bg-[#2A2520] h-full"></div>
             </>
           )}
-        </span>
-        <span className="tabular-nums">{formatTime(remainingSeconds)}</span>
+        </div>
       </div>
-    </div>
+      <div className="flex items-center gap-1">
+        {isProgress ? (
+          <Flame className="size-5 opacity-70" />
+        ) : (
+          <Coffee className="size-5 opacity-70" />
+        )}
+        <span className="tabular-nums text-sm">
+          {formatTime(remainingSeconds)}
+        </span>
+      </div>
+    </>
   );
 }

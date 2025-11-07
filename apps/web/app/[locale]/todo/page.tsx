@@ -31,7 +31,7 @@ export default function TodoPage() {
           </Suspense>
         </div>
       </div>
-      <div className="h-14 border-t gap-2 border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center justify-end px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
+      <div className="h-14 border-t gap-2 border-amber-900/5 bg-linear-to-t from-amber-900/35 to-amber-900/20 flex items-center px-3 shadow-[0_-2px_6px_0_rgba(0,0,0,0.1)]">
         <Logo />
         <Suspense>
           <FooterContent />
