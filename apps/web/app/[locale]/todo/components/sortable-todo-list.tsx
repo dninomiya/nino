@@ -18,6 +18,7 @@ import {
 import { useId, useOptimistic, useTransition } from "react";
 import { reorderTask } from "@/actions/task";
 import { SortableTodoItem } from "./sortable-todo-item";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { Task } from "@workspace/db";
 
 export function SortableTodoList({
@@ -28,12 +29,13 @@ export function SortableTodoList({
   settings: { soundEnabled: boolean };
 }) {
   // クライアントサイドでソート: 未完了タスクを先に、完了タスクを後に
+  // 同じ完了状態の場合は index の順序を尊重
   const sortedTasks = [...initialTasks].sort((a, b) => {
     // 未完了タスクを先に
     if (!a.completed && b.completed) return -1;
     if (a.completed && !b.completed) return 1;
-    // 同じ完了状態の場合は元の順序を維持
-    return 0;
+    // 同じ完了状態の場合は index の順序を維持
+    return a.index.localeCompare(b.index);
   });
 
   const [isPending, startTransition] = useTransition();
@@ -82,6 +84,7 @@ export function SortableTodoList({
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      modifiers={[restrictToVerticalAxis]}
     >
       <SortableContext
         items={optimisticTasks.map((task) => task.id)}
