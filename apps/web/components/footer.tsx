@@ -71,6 +71,10 @@ const footerLinks = [
         href: "/todo",
         labelKey: "todo",
       },
+      {
+        href: "/architecture",
+        labelKey: "architecture",
+      },
     ],
   },
 ];
