@@ -15,11 +15,12 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useId, useOptimistic, useTransition } from "react";
-import { reorderTask } from "@/actions/task";
+import { useId, useMemo, useOptimistic, useTransition } from "react";
+import { updateTask } from "@/actions/task";
 import { SortableTodoItem } from "./sortable-todo-item";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { Task } from "@workspace/db";
+import { generateKeyBetween } from "fractional-indexing";
 
 export function SortableTodoList({
   tasks: initialTasks,
@@ -28,15 +29,11 @@ export function SortableTodoList({
   tasks: Task[];
   settings: { soundEnabled: boolean };
 }) {
-  // クライアントサイドでソート: 未完了タスクを先に、完了タスクを後に
-  // 同じ完了状態の場合は index の順序を尊重
-  const sortedTasks = [...initialTasks].sort((a, b) => {
-    // 未完了タスクを先に
-    if (!a.completed && b.completed) return -1;
-    if (a.completed && !b.completed) return 1;
-    // 同じ完了状態の場合は index の順序を維持
-    return a.index.localeCompare(b.index);
-  });
+  const sortedTasks = useMemo(() => {
+    const incompleteTasks = initialTasks.filter((task) => !task.completed);
+    const completedTasks = initialTasks.filter((task) => task.completed);
+    return [...incompleteTasks, ...completedTasks];
+  }, [initialTasks]);
 
   const [isPending, startTransition] = useTransition();
   const [optimisticTasks, updateOptimisticTasks] = useOptimistic(
@@ -67,11 +64,19 @@ export function SortableTodoList({
         // オプティミスティック更新
         updateOptimisticTasks({ tasks: newTasks });
 
-        await reorderTask(
-          active.id as string,
-          over.id as string,
-          optimisticTasks.map((task) => ({ id: task.id, index: task.index }))
+        // 移動先の前後のタスクを取得
+        const prevTask = newIndex > 0 ? newTasks[newIndex - 1] : null;
+        const nextTask =
+          newIndex < newTasks.length - 1 ? newTasks[newIndex + 1] : null;
+
+        // 新しい index を計算
+        const newIndexValue = generateKeyBetween(
+          prevTask?.index ?? null,
+          nextTask?.index ?? null
         );
+
+        // updateTask で更新
+        await updateTask(active.id as string, { index: newIndexValue });
       });
     }
   }
