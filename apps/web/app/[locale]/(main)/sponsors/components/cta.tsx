@@ -1,15 +1,16 @@
 "use client";
 
+import { redirectToBillingPortal } from "@/actions/stripe";
 import { upgradeSubscription } from "@/actions/subscription";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@workspace/auth/client";
-import { getCommunityPlanPrices, PlanId, PLANS } from "@workspace/lib/plan";
+import { getCommunityPlanPrices, PlanId } from "@workspace/lib/plan";
 import { Switch } from "@workspace/ui/components/switch";
 import { useQueryState } from "nuqs";
 import { useEffect } from "react";
 
-export function CTA() {
+export function CTA({ hasSubscription }: { hasSubscription: boolean }) {
   const { data: session } = authClient.useSession();
   const [plan, setPlan] = useQueryState("plan");
   const [annual, setAnnual] = useQueryState("annual");
@@ -48,7 +49,14 @@ export function CTA() {
       <Button
         onClick={() => {
           if (session) {
-            alert("すでにログインしています。");
+            if (hasSubscription) {
+              redirectToBillingPortal();
+            } else {
+              upgradeSubscription({
+                plan: "community",
+                annual: annual === "true",
+              });
+            }
           } else {
             authClient.signIn.social({
               provider: "discord",

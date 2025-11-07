@@ -10,12 +10,14 @@ import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { File, MessageCircleQuestionIcon, VideoIcon } from "lucide-react";
 import { Suspense } from "react";
 import { CTA } from "./components/cta";
+import { getActiveSubscription } from "@workspace/auth/subscription";
 
 export default async function SponsorsPage({
   params,
 }: PageProps<"/[locale]/sponsors">) {
   await setCurrentLocaleFromParams(params);
   const t = await getMessage("SponsorsPage");
+  const subscription = await getActiveSubscription();
 
   return (
     <div className="container py-10">
@@ -79,7 +81,7 @@ export default async function SponsorsPage({
       </section>
 
       <Suspense>
-        <CTA />
+        <CTA hasSubscription={Boolean(subscription)} />
       </Suspense>
 
       <section className="py-10 space-y-4">

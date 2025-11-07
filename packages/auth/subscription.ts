@@ -20,6 +20,11 @@ export const getActiveSubscription = async () => {
   return activeSubscription;
 };
 
+const isSponsor = async () => {
+  const subscription = await getActiveSubscription();
+  return subscription?.plan === "community";
+};
+
 export const getPlanId = async () => {
   const subscription = await getActiveSubscription();
 
