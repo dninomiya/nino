@@ -1,15 +1,26 @@
 "use server";
 
 import { currentSession } from "@workspace/auth";
-import { db, NewTask, tasks, profiles } from "@workspace/db";
+import { db, NewTask, tasks, profiles, taskFormSchema } from "@workspace/db";
 import { and, desc, eq } from "drizzle-orm";
 import { generateKeyBetween } from "fractional-indexing";
 import { updateTag } from "next/cache";
 
-export async function addTask(formData: FormData) {
+export async function addTask(data: Pick<NewTask, "title"> & { sp?: string }) {
   const session = await currentSession();
-  const title = formData.get("title") as string;
-  const sp = formData.get("sp") as string;
+
+  // バリデーション
+  const validationResult = taskFormSchema.safeParse(data);
+
+  if (!validationResult.success) {
+    return {
+      success: false,
+      error: "バリデーションエラーが発生しました",
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  const validatedData = validationResult.data;
 
   // 既存のタスクを取得して、最大のindexを取得
   const existingTasks = await db
@@ -23,15 +34,22 @@ export async function addTask(formData: FormData) {
   const maxIndex = existingTasks[0]?.index ?? null;
   const newIndex = generateKeyBetween(maxIndex, null);
 
-  await db.insert(tasks).values({
-    title,
+  // NewTask型に準拠したデータを作成
+  const taskData: NewTask = {
+    title: validatedData.title,
     userId: session.user.id,
-    sp: sp ? parseInt(sp) : 0,
+    sp: parseInt(validatedData.sp),
     completed: false,
     index: newIndex,
-  });
+  };
+
+  await db.insert(tasks).values(taskData);
 
   updateTag(`tasks:${session.user.id}`);
+
+  return {
+    success: true,
+  };
 }
 
 export async function updateTask(id: string, newTask: Partial<NewTask>) {
@@ -50,18 +68,18 @@ export async function completeTask(id: string) {
   const session = await currentSession();
   const uid = session.user.id;
   const now = new Date();
-  
+
   await db
     .update(tasks)
     .set({ completed: true, completedAt: now })
     .where(and(eq(tasks.id, id), eq(tasks.userId, uid)));
-  
+
   // プロフィールの lastTaskCompletedAt を更新
   await db
     .update(profiles)
     .set({ lastTaskCompletedAt: now })
     .where(eq(profiles.userId, uid));
-  
+
   updateTag(`tasks:${uid}`);
   updateTag(`profiles:${uid}`);
 }

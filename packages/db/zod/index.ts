@@ -82,6 +82,16 @@ export const profileFormSchema = z.object({
   tasksPublic: z.boolean().optional(),
 });
 
+// Task Form Schema (UI向け - title と sp のみ)
+export const taskFormSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, "タイトルを入力してください")
+    .max(255, "タイトルは255文字以内にしてください"),
+  sp: z.enum(["1", "2", "3", "5", "8", "13", "21"]),
+});
+
 // バリデーション用のスキーマ（オプショナルフィールドを追加）
 export const updateUserSchema = insertUserSchema.partial();
 export const updateSessionSchema = insertSessionSchema.partial();
@@ -114,3 +124,4 @@ export type InsertTodoSettingsSchema = z.infer<typeof insertTodoSettingsSchema>;
 export type SelectTodoSettingsSchema = z.infer<typeof selectTodoSettingsSchema>;
 export type NormalizedStatusSchema = z.infer<typeof normalizedStatusSchema>;
 export type ProfileFormSchema = z.infer<typeof profileFormSchema>;
+export type TaskFormSchema = z.infer<typeof taskFormSchema>;
