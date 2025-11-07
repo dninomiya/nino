@@ -24,6 +24,8 @@ import { updateTodoSettings } from "@/actions/todo-settings";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
+import { SiRaycast } from "@icons-pack/react-simple-icons";
 
 const todoSettingsFormSchema = z.object({
   soundEnabled: z.boolean(),
@@ -115,6 +117,13 @@ export function TodoSettingsButton({
             </div>
           </form>
         </Form>
+        <Separator />
+        <Button asChild>
+          <a href="raycast://extensions/raycast/raycast/create-quicklink?fallbackText=https://dninomiya.com/todo">
+            <SiRaycast color="default" />
+            QuickLinkを作成
+          </a>
+        </Button>
       </DialogContent>
     </Dialog>
   );
