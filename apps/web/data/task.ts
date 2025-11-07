@@ -1,6 +1,6 @@
 import { currentSession, getSession } from "@workspace/auth";
 import { db, tasks, Task, profiles } from "@workspace/db";
-import { and, asc, eq, gte, or } from "drizzle-orm";
+import { and, asc, eq, gte, lt, or } from "drizzle-orm";
 import "server-only";
 
 export async function getMyTasks() {
@@ -107,5 +107,31 @@ export async function getTasksByUserId(userId: string): Promise<Task[]> {
       )
     ),
     orderBy: asc(tasks.index),
+  });
+}
+
+/**
+ * 昨日(00:00〜24:00 JST)に完了したタスクを取得
+ * 結果は UTC の Date でクエリ（DBはUTC前提）
+ */
+export async function getYesterdayCompletedTasks(): Promise<Task[]> {
+  const DAY_MS = 86_400_000;
+  const JST_OFFSET = 9 * 60 * 60 * 1000;
+
+  // JSTの今日の0時(=UTC起点で丸め)を出す
+  const nowMs = Date.now();
+  const todayJstMidnightMs = Math.floor((nowMs + JST_OFFSET) / DAY_MS) * DAY_MS;
+
+  // 昨日のJST 00:00 をUTCに直した時刻、[start, end) の範囲を作る
+  const startUtc = new Date(todayJstMidnightMs - JST_OFFSET - DAY_MS); // 昨日 00:00 JST
+  const endUtc = new Date(startUtc.getTime() + DAY_MS); // 今日 00:00 JST (独占上限)
+
+  return db.query.tasks.findMany({
+    where: and(
+      eq(tasks.completed, true),
+      gte(tasks.completedAt, startUtc),
+      lt(tasks.completedAt, endUtc) // 半開区間で安全
+    ),
+    orderBy: asc(tasks.completedAt),
   });
 }
