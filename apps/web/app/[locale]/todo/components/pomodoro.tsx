@@ -129,7 +129,7 @@ export function Pomodoro({ soundEnabled = true }: { soundEnabled?: boolean }) {
         ) : (
           <Coffee className="size-5 opacity-70" />
         )}
-        <span className="tabular-nums text-sm">
+        <span className="tabular-nums text-sm font-bold opacity-70">
           {formatTime(remainingSeconds)}
         </span>
       </div>
