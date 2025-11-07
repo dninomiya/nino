@@ -56,7 +56,7 @@ export function ProfileEditDialog({ profile }: ProfileEditDialogProps) {
     tagline: profile?.tagline ?? "",
     bio: profile?.bio ?? "",
     links: linksArray,
-    tasksPublic: profile?.tasksPublic ?? false,
+    tasksPublic: profile?.tasksPublic ?? true,
   };
 
   const form = useForm<ProfileFormSchema>({

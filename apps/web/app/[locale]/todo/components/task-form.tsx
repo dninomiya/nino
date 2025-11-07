@@ -50,7 +50,7 @@ export function TaskForm() {
                 <Input
                   autoFocus
                   type="text"
-                  placeholder="やること..."
+                  placeholder="今日やること..."
                   spellCheck={false}
                   autoComplete="off"
                   className="bg-transparent border-none shadow-none h-8"
