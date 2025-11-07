@@ -5,20 +5,15 @@ import { db, profiles } from "@workspace/db";
 import { and, eq, inArray } from "drizzle-orm";
 import { sendDiscordWebhook } from "@workspace/discord";
 import { baseUrl } from "@/registry/lib/base-url";
+import { verifyCronAuth } from "@/lib/cron";
 
 export async function GET(request: NextRequest) {
   await connection();
 
   try {
-    // 本番環境では認証をチェック
-    if (process.env.NODE_ENV === "production") {
-      const authHeader = request.headers.get("authorization");
-      const cronSecret = process.env.CRON_SECRET;
-
-      if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-    }
+    // 認証をチェック
+    const authError = verifyCronAuth(request);
+    if (authError) return authError;
 
     // 1. 昨日完了したタスクを全取得（全ユーザー分）
     const yesterdayTasks = await getYesterdayCompletedTasks();
