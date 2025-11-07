@@ -17,6 +17,12 @@ import { ProfileHoverContent } from "./components/profile-hover-content";
 import { SortableTodoList } from "./components/sortable-todo-list";
 import { TaskForm } from "./components/task-form";
 import { TodoSettingsButton } from "./components/todo-settings-button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Todo",
+  description: "Todo",
+};
 
 export default function TodoPage() {
   return (
