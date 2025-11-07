@@ -11,6 +11,10 @@ export default {
     readingTime: "Reading Time",
     copyMarkdown: "Copy Markdown",
   },
+  ArchitecturePage: {
+    title: "Architecture",
+    description: "Architecture",
+  },
   LocaleSwitcher: {
     locale: "Change Language",
   },

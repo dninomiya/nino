@@ -8,6 +8,10 @@ export default {
     readingTime: "読了目安",
     copyMarkdown: "マークダウンをコピー",
   },
+  ArchitecturePage: {
+    title: "アーキテクチャ",
+    description: "アーキテクチャ",
+  },
   Language: {
     ja: "日本語",
     en: "英語",
