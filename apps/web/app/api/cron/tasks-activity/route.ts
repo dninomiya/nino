@@ -55,7 +55,6 @@ export async function GET(request: NextRequest) {
     }
 
     // 4. メッセージ生成（RSSフィード形式を参考）
-    const siteUrl = baseUrl();
     const sections = publicProfiles
       .map((profile) => {
         const tasks = tasksByUserId.get(profile.userId) || [];
@@ -70,13 +69,9 @@ export async function GET(request: NextRequest) {
         // サマリー（タスク数）
         const summary = `${tasks.length}件のタスク完了`;
 
-        // リンク（todoページへのリンク）
-        const link = `${siteUrl}/todo`;
-
         return {
           title: profileName,
           summary: summary,
-          link: link,
           taskList: taskList,
         };
       })
@@ -102,12 +97,13 @@ export async function GET(request: NextRequest) {
     const formattedSections = sections
       .map((section) => {
         if (!section) return "";
-        const link = `<${section.link}>`;
-        return `**${section.title}**: ${section.summary}\n${section.taskList}\n${link}`;
+        return `**${section.title}**: ${section.summary}\n${section.taskList}`;
       })
       .join("\n\n");
 
-    const message = header + formattedSections;
+    const footer = `\n\n一緒にタスク管理しましょう☕️\n<${baseUrl()}/todo>`;
+
+    const message = header + formattedSections + footer;
 
     // 5. Discord webhookに送信
     const isDev = process.env.NODE_ENV === "development";
