@@ -20,12 +20,10 @@ export function Header() {
       <GlobalSearch />
       <LocaleToggle />
       <ModeToggle />
-      <DevOnly>
-        <SponsorButton />
-        <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
-          <UserMenu />
-        </Suspense>
-      </DevOnly>
+      <SponsorButton />
+      <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
+        <UserMenu />
+      </Suspense>
     </div>
   );
 }

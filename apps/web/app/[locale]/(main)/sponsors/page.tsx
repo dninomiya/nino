@@ -17,7 +17,6 @@ export default async function SponsorsPage({
 }: PageProps<"/[locale]/sponsors">) {
   await setCurrentLocaleFromParams(params);
   const t = await getMessage("SponsorsPage");
-  const subscription = await getActiveSubscription();
 
   return (
     <div className="container py-10">
@@ -31,7 +30,7 @@ export default async function SponsorsPage({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-6">
               <File />
               <CardTitle>スポンサー限定ドキュメントの閲覧</CardTitle>
             </CardHeader>
@@ -40,7 +39,7 @@ export default async function SponsorsPage({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-6">
               <SiGithub />
               <CardTitle>限定コードの参照</CardTitle>
             </CardHeader>
@@ -49,7 +48,7 @@ export default async function SponsorsPage({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-6">
               <SiDiscord />
               <CardTitle>スポンサー限定コミュニティへの参加</CardTitle>
             </CardHeader>
@@ -58,7 +57,7 @@ export default async function SponsorsPage({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-6">
               <VideoIcon />
               <CardTitle>勉強会、交流会への参加</CardTitle>
             </CardHeader>
@@ -69,7 +68,7 @@ export default async function SponsorsPage({
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-6">
               <MessageCircleQuestionIcon />
               <CardTitle>技術的な質問、相談が可能</CardTitle>
             </CardHeader>
@@ -81,7 +80,7 @@ export default async function SponsorsPage({
       </section>
 
       <Suspense>
-        <CTA hasSubscription={Boolean(subscription)} />
+        <CTA />
       </Suspense>
 
       <section className="py-10 space-y-4">

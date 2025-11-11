@@ -8,13 +8,24 @@ import { authClient } from "@workspace/auth/client";
 import { getCommunityPlanPrices, PlanId } from "@workspace/lib/plan";
 import { Switch } from "@workspace/ui/components/switch";
 import { useQueryState } from "nuqs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export function CTA({ hasSubscription }: { hasSubscription: boolean }) {
+export function CTA() {
   const { data: session } = authClient.useSession();
   const [plan, setPlan] = useQueryState("plan");
   const [annual, setAnnual] = useQueryState("annual");
   const prices = getCommunityPlanPrices();
+  const [hasSubscription, setHasSubscription] = useState(false);
+
+  useEffect(() => {
+    authClient.subscription.list().then((subscriptions) => {
+      setHasSubscription(
+        subscriptions.data?.some(
+          (subscription) => subscription.status === "active"
+        ) ?? false
+      );
+    });
+  }, []);
 
   useEffect(() => {
     if (plan) {
@@ -47,6 +58,7 @@ export function CTA({ hasSubscription }: { hasSubscription: boolean }) {
       </p>
 
       <Button
+        disabled={hasSubscription}
         onClick={() => {
           if (session) {
             if (hasSubscription) {
@@ -67,6 +79,11 @@ export function CTA({ hasSubscription }: { hasSubscription: boolean }) {
       >
         スポンサーになる
       </Button>
+      {hasSubscription && (
+        <p className="text-sm text-muted-foreground">
+          あなたはすでにスポンサーです。ありがとうございます！
+        </p>
+      )}
     </section>
   );
 }
