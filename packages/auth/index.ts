@@ -164,3 +164,15 @@ export const getDiscordAccount = async () => {
 export const getNotionAccount = async () => {
   return getProviderAccount("notion");
 };
+
+export const isSponsor = async () => {
+  const session = await getSession();
+  if (!session) return false;
+  const subscriptions = await auth.api.listActiveSubscriptions({
+    headers: await headers(),
+  });
+  return subscriptions.some(
+    (subscription) =>
+      subscription.status === "active" || subscription.status === "trialing"
+  );
+};

@@ -1,7 +1,14 @@
-"use client";
-
 import * as React from "react";
 
+import { SidebarLinkButon } from "@/components/sidebar-link-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { getMessage } from "@/lib/i18n/server";
+import { cn } from "@/lib/utils";
+import { isSponsor } from "@workspace/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -9,20 +16,9 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { useMessage } from "@/components/i18n-provider";
 import { Lock } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useIsSponsor } from "@/hooks/use-is-sponsor";
-import { cn } from "@/lib/utils";
 
 interface DocItem {
   title: string;
@@ -38,10 +34,9 @@ interface DocSidebarProps extends React.ComponentProps<typeof Sidebar> {
   };
 }
 
-export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
-  const pathname = usePathname();
-  const t = useMessage("DocsSidebar");
-  const { isSponsor } = useIsSponsor();
+export async function DocSidebar({ docItems, ...props }: DocSidebarProps) {
+  const t = await getMessage("DocsSidebar");
+  const sponsor = await isSponsor();
 
   const data = {
     navGroup: [
@@ -71,25 +66,22 @@ export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                    className={cn(item.sponsors && !isSponsor && "opacity-50")}
+                  <SidebarLinkButon
+                    href={item.url}
+                    className={cn(item.sponsors && !sponsor && "opacity-50")}
                   >
-                    <Link href={item.url}>
-                      {item.title}
-                      {item.sponsors && !isSponsor && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Lock className="ml-auto" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>このドキュメントはスポンサー限定です</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </Link>
-                  </SidebarMenuButton>
+                    {item.title}
+                    {item.sponsors && !sponsor && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Lock className="ml-auto" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>このドキュメントはスポンサー限定です</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </SidebarLinkButon>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
