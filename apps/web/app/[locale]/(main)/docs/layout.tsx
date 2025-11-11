@@ -1,5 +1,6 @@
 import { DocSidebar } from "@/app/[locale]/(main)/docs/components/doc-sidebar";
 import { Footer } from "@/components/footer";
+import { docsConfig } from "@/app/[locale]/(main)/docs/docs-config";
 import { getDocMetas } from "@/lib/docs";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import {
@@ -16,23 +17,6 @@ export default async function Layout({
 
   // すべてのドキュメントのメタデータを一度に取得
   const allMetas = await getDocMetas();
-
-  const docsConfig = {
-    categories: [
-      {
-        title: "gettingStarted",
-        items: ["changelog"],
-      },
-      {
-        title: "guides",
-        items: ["installation-web-app", "cron-feed-system"],
-      },
-      {
-        title: "reference",
-        items: [],
-      },
-    ],
-  };
 
   // カテゴリごとにアイテムを生成
   const createItems = (items: string[]) => {

@@ -1,0 +1,34 @@
+---
+title: Turso のテーブル移行
+createdAt: 2025-11-11
+---
+
+## 前提条件
+
+- [Turso CLI](https://docs.turso.tech/cli/introduction) がインストール済みで、`turso auth login` により認証済みであること。
+
+## エクスポート
+
+```sh
+turso db shell <database-name> .dump > dump.sql
+```
+
+## インポート
+
+### ダッシュボードからインポートするパターン
+
+Turso ダッシュボード>データベース>データベース>インポート
+
+dump.sql から必要なテーブルの insert 文をコピー＆ペースト。
+
+- 一括で行わず、テーブル単位で実行することを推奨。
+- リレーションがある場合、参照先のテーブルを先に作成する。
+
+
+### コマンドラインからインポートするパターン
+
+テーブルデータを根こそぎインポートするパターン
+
+```sh
+turso db shell <database-name> < dump.sql
+```
