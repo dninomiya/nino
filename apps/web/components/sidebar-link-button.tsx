@@ -17,7 +17,7 @@ export function SidebarLinkButon({
   const isActive = pathname === href;
 
   return (
-    <SidebarMenuButton asChild isActive={isActive}>
+    <SidebarMenuButton asChild isActive={isActive} className={className}>
       <Link href={href}>{children}</Link>
     </SidebarMenuButton>
   );
