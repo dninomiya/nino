@@ -23,6 +23,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/[locale]/(main)/docs/page.mdx"
-  ],
+, "app/[locale]/(main)/sponsors/page.mdx"  ],
   "exclude": ["node_modules"]
 }
