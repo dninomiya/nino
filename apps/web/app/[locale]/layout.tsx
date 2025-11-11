@@ -25,10 +25,11 @@ export default async function RootLayout({
   params,
   children,
 }: LayoutProps<"/[locale]">) {
+  const locale = (await params).locale;
   await setCurrentLocaleFromParams(params);
 
   return (
-    <html suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >

@@ -1,48 +1,95 @@
-// Webhook URLマッピング
-export const DISCORD_WEBHOOK_URLS = {
-  log: "https://discord.com/api/webhooks/1429742476792430685/tCtkI5RvrGVLA6bKnC7BtfaA8IgfOMFpkfM3ts0_yWRRhS5GUwckw8ItBSUyYM3I1dLP",
-  activity:
-    "https://discord.com/api/webhooks/1436267727827374211/1p96KBmmx5MDyqJEFKdsxD6_RNdpkE5pvIA4a-rCsGiu5Qn6_pgYIDYjkiusfF_Tdrpc",
-  status:
-    "https://discord.com/api/webhooks/1429829353424027718/r09KQ4ePM4YRqA6I5WsbU2n5li1htKJJ1tyV2UZj6Q3KCUvinsqFmaCKU9LavepW2lZd",
-  admin:
-    "https://discord.com/api/webhooks/1208588091091193966/rBr3nn9bj1L8NUdQlMK27SL2IcaPIrC-5fjKBqj_upDvoE1TTQkOKIht8BoUmijArryL",
-  techNews:
-    "https://discord.com/api/webhooks/1428317946861846598/jirnzbsZFXWduVSksv-4zOyCeyxcXDifyDPoXNJvO-ahvi1ik5Qfcn6OegnkDQPvxE-d",
+// DiscordチャンネルIDマッピング
+import { Client, GatewayIntentBits } from "discord.js";
+
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+
+let discordClientPromise: Promise<Client> | null = null;
+
+async function getDiscordClient(): Promise<Client> {
+  if (discordClientPromise) {
+    return discordClientPromise;
+  }
+
+  discordClientPromise = (async () => {
+    if (!DISCORD_BOT_TOKEN) {
+      throw new Error("DISCORD_BOT_TOKEN is not set");
+    }
+
+    const client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+    });
+
+    client.on("error", (error) => {
+      console.error("[discord] client error:", error);
+    });
+
+    try {
+      await client.login(DISCORD_BOT_TOKEN);
+      return client;
+    } catch (error) {
+      discordClientPromise = null;
+      throw error;
+    }
+  })();
+
+  return discordClientPromise;
+}
+
+export const DISCORD_CHANNEL_IDS = {
+  mentor: "1205818988156682250",
+  activity: "1416948401282748566",
+  status: "1429829323627561130",
+  admin: "1208588016969318400",
+  techNews: "1428317855820157058",
+  members: "1404815303099023360",
 } as const;
 
 // チャンネルの型
-export type DiscordChannel = keyof typeof DISCORD_WEBHOOK_URLS;
+export type DiscordChannel = keyof typeof DISCORD_CHANNEL_IDS;
 
-// Discord Webhook送信関数（型安全なチャンネル指定）
+// Discord Bot送信関数（型安全なチャンネル指定）
 export async function sendDiscordWebhook(
   channel: DiscordChannel,
   content: string
 ): Promise<void> {
-  const webhookUrl = DISCORD_WEBHOOK_URLS[channel];
+  if (!content) {
+    throw new Error("Discord message content must not be empty");
+  }
 
-  if (!webhookUrl) {
-    throw new Error(`Webhook URL not found for channel: ${channel}`);
+  if (content.length > 2000) {
+    throw new Error(
+      `Discord message content exceeds 2000 character limit (length: ${content.length})`
+    );
+  }
+
+  const channelId = DISCORD_CHANNEL_IDS[channel];
+
+  if (!channelId) {
+    throw new Error(`Channel ID not configured for channel: ${channel}`);
   }
 
   try {
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content,
-      }),
-    });
+    const client = await getDiscordClient();
+    const targetChannel = await client.channels.fetch(channelId);
 
-    if (!response.ok) {
-      throw new Error(
-        `Discord webhook failed: ${response.status} ${response.statusText}`
-      );
+    if (!targetChannel) {
+      throw new Error(`Discord channel not found: ${channelId}`);
     }
+
+    if (!targetChannel.isTextBased()) {
+      throw new Error(`Discord channel is not text-based: ${channelId}`);
+    }
+
+    if (
+      !("send" in targetChannel) ||
+      typeof targetChannel.send !== "function"
+    ) {
+      throw new Error(`Discord channel is not sendable: ${channelId}`);
+    }
+
+    await targetChannel.send({ content });
   } catch (error) {
-    console.error(`Failed to send Discord webhook to ${channel}:`, error);
+    console.error(`Failed to send Discord message to ${channel}:`, error);
     throw error;
   }
 }
@@ -83,7 +130,15 @@ export function formatDiscordMessage(
     })
     .join("\n\n");
 
-  return header + formattedSections;
+  const message = header + formattedSections;
+
+  if (message.length > 2000) {
+    throw new Error(
+      `Discord message exceeds 2000 character limit (length: ${message.length})`
+    );
+  }
+
+  return message;
 }
 
 // ステータス更新用のDiscordメッセージフォーマッター
@@ -148,5 +203,13 @@ export function formatStatusDiscordMessage(
     })
     .join("\n\n");
 
-  return header + formattedUpdates;
+  const message = header + formattedUpdates;
+
+  if (message.length > 2000) {
+    throw new Error(
+      `Discord message exceeds 2000 character limit (length: ${message.length})`
+    );
+  }
+
+  return message;
 }
