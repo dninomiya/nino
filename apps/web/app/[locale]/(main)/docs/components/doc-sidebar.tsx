@@ -15,10 +15,19 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useMessage } from "@/components/i18n-provider";
+import { Lock } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useIsSponsor } from "@/hooks/use-is-sponsor";
+import { cn } from "@/lib/utils";
 
 interface DocItem {
   title: string;
   url: string;
+  sponsors?: boolean;
 }
 
 interface DocSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -32,6 +41,7 @@ interface DocSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
   const pathname = usePathname();
   const t = useMessage("DocsSidebar");
+  const { isSponsor } = useIsSponsor();
 
   const data = {
     navGroup: [
@@ -48,7 +58,7 @@ export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
 
   return (
     <Sidebar
-      className="top-(--spacing-header) h-[calc(100svh-var(--spacing-header))]!"
+      className="top-header h-[calc(100svh-var(--spacing-header))]!"
       {...props}
     >
       <SidebarHeader>
@@ -61,8 +71,24 @@ export function DocSidebar({ docItems, ...props }: DocSidebarProps) {
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <Link href={item.url}>{item.title}</Link>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.url}
+                    className={cn(item.sponsors && !isSponsor && "opacity-50")}
+                  >
+                    <Link href={item.url}>
+                      {item.title}
+                      {item.sponsors && !isSponsor && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Lock className="ml-auto" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>このドキュメントはスポンサー限定です</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

@@ -27,6 +27,7 @@ export default async function Layout({
         return {
           title: meta.title || itemId,
           url: `/docs/${itemId}`,
+          sponsors: meta.sponsors,
         };
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
