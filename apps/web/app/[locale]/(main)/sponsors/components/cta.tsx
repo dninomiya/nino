@@ -40,8 +40,8 @@ export function CTA() {
   }, [plan, annual]);
 
   return (
-    <section className="py-10 space-y-4">
-      <h2 className="text-3xl font-bold">スポンサーになる</h2>
+    <section>
+      <h2>スポンサーになる</h2>
 
       <div className="flex items-center space-x-2">
         <Switch
@@ -53,7 +53,9 @@ export function CTA() {
       </div>
 
       <p>
-        {annual === "true" ? prices?.primary.price / 12 : prices?.monthly.price}
+        {annual === "true"
+          ? (prices?.primary.price / 12).toLocaleString()
+          : (prices?.monthly.price).toLocaleString()}
         円/月
       </p>
 
