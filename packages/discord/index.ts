@@ -1,39 +1,6 @@
 // DiscordチャンネルIDマッピング
-import { Client, GatewayIntentBits } from "discord.js";
-
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-
-let discordClientPromise: Promise<Client> | null = null;
-
-async function getDiscordClient(): Promise<Client> {
-  if (discordClientPromise) {
-    return discordClientPromise;
-  }
-
-  discordClientPromise = (async () => {
-    if (!DISCORD_BOT_TOKEN) {
-      throw new Error("DISCORD_BOT_TOKEN is not set");
-    }
-
-    const client = new Client({
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
-    });
-
-    client.on("error", (error) => {
-      console.error("[discord] client error:", error);
-    });
-
-    try {
-      await client.login(DISCORD_BOT_TOKEN);
-      return client;
-    } catch (error) {
-      discordClientPromise = null;
-      throw error;
-    }
-  })();
-
-  return discordClientPromise;
-}
+const DISCORD_API_BASE_URL = "https://discord.com/api/v10";
 
 export const DISCORD_CHANNEL_IDS = {
   mentor: "1205818988156682250",
@@ -68,26 +35,27 @@ export async function sendDiscordWebhook(
     throw new Error(`Channel ID not configured for channel: ${channel}`);
   }
 
+  if (!DISCORD_BOT_TOKEN) {
+    throw new Error("DISCORD_BOT_TOKEN is not set");
+  }
+
   try {
-    const client = await getDiscordClient();
-    const targetChannel = await client.channels.fetch(channelId);
+    const url = `${DISCORD_API_BASE_URL}/channels/${channelId}/messages`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
 
-    if (!targetChannel) {
-      throw new Error(`Discord channel not found: ${channelId}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Failed to send Discord message: ${response.status} ${response.statusText}. ${JSON.stringify(errorData)}`
+      );
     }
-
-    if (!targetChannel.isTextBased()) {
-      throw new Error(`Discord channel is not text-based: ${channelId}`);
-    }
-
-    if (
-      !("send" in targetChannel) ||
-      typeof targetChannel.send !== "function"
-    ) {
-      throw new Error(`Discord channel is not sendable: ${channelId}`);
-    }
-
-    await targetChannel.send({ content });
   } catch (error) {
     console.error(`Failed to send Discord message to ${channel}:`, error);
     throw error;
