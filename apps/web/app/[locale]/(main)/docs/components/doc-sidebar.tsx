@@ -70,7 +70,7 @@ export async function DocSidebar({ docItems, ...props }: DocSidebarProps) {
                     href={item.url}
                     className={cn(item.sponsors && !sponsor && "opacity-50")}
                   >
-                    {item.title}
+                    <span className="truncate">{item.title}</span>
                     {item.sponsors && !sponsor && (
                       <Tooltip>
                         <TooltipTrigger asChild>
