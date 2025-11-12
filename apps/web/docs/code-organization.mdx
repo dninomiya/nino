@@ -1,0 +1,23 @@
+---
+title: コードの整理
+createdAt: 2025-11-12
+sponsors: true
+---
+
+shadcn/ui を踏襲し、以下のツリーでコードを整理することが多いです。
+
+## ディレクトリ構成
+
+<Tree>
+/app/page.tsx
+/app/api/auth/[...nextauth]/route.ts
+/app/api/legal/route.ts
+/app/api/search/route.ts
+/app/api/users/route.ts
+/app/api/users/[id]/route.ts
+/app/api/users/[id]/route.ts
+</Tree>
+
+## コロケーションのルール
+
+明らかに特定の画面に依存するコードは、その画面のディレクトリに配置します。

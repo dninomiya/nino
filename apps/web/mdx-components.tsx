@@ -11,6 +11,7 @@ import {
   ComponentPreviewDemo,
 } from "./components/code-preview";
 import { GoodToKnow } from "./components/good-to-know";
+import Tree from "./components/tree";
 
 export function useMDXComponents(): MDXComponents {
   return {
@@ -20,6 +21,7 @@ export function useMDXComponents(): MDXComponents {
     div: createCodeSlotRenderer({
       render: CodeBlock,
     }),
+    Tree,
     GoodToKnow,
     RegistryInstallCommand,
     ComponentPreview: ComponentPreview,

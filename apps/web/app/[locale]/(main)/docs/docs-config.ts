@@ -13,6 +13,7 @@ export const docsConfig = {
         "date-time-management",
         "browser-cache-client-filter",
         "search-params-dialog",
+        "code-organization",
       ],
     },
     {
