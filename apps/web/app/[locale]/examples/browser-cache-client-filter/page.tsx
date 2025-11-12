@@ -1,6 +1,11 @@
 import { Suspense } from "react";
 import { SearchForm } from "./search-form";
 import { TodoList } from "./todo-list";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cache API & Client Filter Example",
+};
 
 export default function BrowserCacheClientFilterPage() {
   return (
