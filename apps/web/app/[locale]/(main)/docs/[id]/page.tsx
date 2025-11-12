@@ -59,7 +59,7 @@ export default async function DocsPage({
 
   if (metadata.sponsors) {
     return (
-      <Suspense>
+      <Suspense fallback={<div className="h-content"></div>}>
         <SponsorOnly>
           <MainContent id={id} metadata={metadata} readingTime={readingTime}>
             <Content />
