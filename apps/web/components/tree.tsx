@@ -1,19 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  File,
-  Folder,
-  FolderOpen,
-} from "lucide-react";
+import { SiCss, SiTypescript } from "@icons-pack/react-simple-icons";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible";
-import { SiCss, SiTypescript } from "@icons-pack/react-simple-icons";
+import { File, Folder, FolderOpen } from "lucide-react";
+import { ReactNode, useState } from "react";
 
 const icons = {
   file: File,
@@ -30,16 +24,6 @@ function getFileIcon(fileName: string) {
   }
   return icons.file;
 }
-
-const mockPaths = [
-  "/app/page.tsx # comment",
-  "/app/api/auth/[...nextauth]/route.ts",
-  "/app/api/legal/route.ts",
-  "/app/api/search/route.ts",
-  "/app/api/users/route.ts",
-  "/app/api/users/[id]/route.ts",
-  "/app/api/users/[id]/route.ts",
-];
 
 type TreeNode = {
   name: string;
@@ -58,35 +42,73 @@ function buildTree(paths: string[]): Map<string, TreeNode> {
     const comment = partsWithComment[1]?.trim();
     const actualComment = comment || undefined;
 
-    const parts = pathPart.split("/").filter((p): p is string => Boolean(p));
+    // 末尾が / で終わる場合はディレクトリとして扱う
+    const isDirectoryPath = pathPart.endsWith("/");
+    const normalizedPath = isDirectoryPath ? pathPart.slice(0, -1) : pathPart;
+
+    const parts = normalizedPath
+      .split("/")
+      .filter((p): p is string => Boolean(p));
     let current = root;
 
     parts.forEach((part, i) => {
       const isLast = i === parts.length - 1;
+      // 最後の部分で、かつ元のパスが / で終わっていた場合はディレクトリ
+      const isDirectory = isLast ? isDirectoryPath : true;
 
       if (!current.has(part)) {
         current.set(part, {
           name: part,
-          type: isLast ? "file" : "directory",
+          type: isDirectory ? "directory" : "file",
           comment: isLast ? actualComment : undefined,
-          children: isLast ? undefined : new Map(),
+          children: isDirectory ? new Map() : undefined,
         });
       } else {
-        // 既存のノードがある場合、コメントを更新（ファイルの場合のみ）
+        // 既存のノードがある場合、コメントを更新（最後の部分の場合のみ）
         const node = current.get(part)!;
         if (isLast && actualComment) {
           node.comment = actualComment;
         }
+        // 既存のノードがファイルだったが、ディレクトリとして指定された場合は更新
+        if (isLast && isDirectory && node.type === "file") {
+          node.type = "directory";
+          node.children = new Map();
+        }
       }
 
       const node = current.get(part)!;
-      if (!isLast && node.children) {
+      if (node.children) {
         current = node.children;
       }
     });
   }
 
   return root;
+}
+
+function extractPathsFromChildren(children: ReactNode): string[] {
+  // childrenを文字列に変換する関数
+  const toString = (node: ReactNode): string => {
+    if (typeof node === "string") {
+      return node;
+    }
+    if (typeof node === "number") {
+      return String(node);
+    }
+    if (Array.isArray(node)) {
+      return node.map(toString).join("");
+    }
+    if (node && typeof node === "object" && "props" in node) {
+      return toString((node as any).props.children);
+    }
+    return "";
+  };
+
+  const text = toString(children);
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 }
 
 function TreeNodeComponent({ node }: { node: TreeNode }) {
@@ -163,11 +185,12 @@ function TreeNodeComponent({ node }: { node: TreeNode }) {
   );
 }
 
-export default function Tree({ paths = mockPaths }: { paths: string[] }) {
+export default function Tree({ children }: { children: ReactNode }) {
+  const paths = extractPathsFromChildren(children);
   const tree = buildTree(paths);
 
   return (
-    <div className="rounded-lg border bg-muted/50 p-4 font-mono">
+    <figure className="rounded-lg border bg-muted/50 p-4 font-mono">
       {Array.from(tree.values())
         .sort((a, b) => {
           // ディレクトリを先に、その後ファイルをソート
@@ -179,6 +202,6 @@ export default function Tree({ paths = mockPaths }: { paths: string[] }) {
         .map((node) => (
           <TreeNodeComponent key={node.name} node={node} />
         ))}
-    </div>
+    </figure>
   );
 }
