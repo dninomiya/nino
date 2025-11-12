@@ -27,6 +27,7 @@ import { notFound } from "next/navigation";
 import path from "path";
 import { Suspense } from "react";
 import { faker } from "@faker-js/faker";
+import { cacheLife } from "next/cache";
 
 export const generateMetadata = async ({
   params,
@@ -77,7 +78,11 @@ export default async function DocsPage({
 }
 
 async function SponsorOnly({ children }: { children: React.ReactNode }) {
-  "use cache: private";
+  // TODO: ローカルサーバーで謎のエラーが出るバグが解消したら復活
+  // "use cache: private";
+  // cacheLife({
+  //   stale: Number.MAX_VALUE,
+  // });
 
   const sponsor = await isSponsor();
 
