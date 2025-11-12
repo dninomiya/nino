@@ -66,6 +66,7 @@ export async function DocSidebar({ docItems, ...props }: DocSidebarProps) {
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarLinkButon
+                    prefetch
                     href={item.url}
                     className={cn(item.sponsors && !sponsor && "opacity-50")}
                   >
