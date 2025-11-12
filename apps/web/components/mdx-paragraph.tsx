@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { YouTubeVideo } from "@/registry/blocks/youtube-video";
+import { ReactNode } from "react";
 import { GitHubRepo } from "./github-repo";
 
 interface MDXParagraphProps {

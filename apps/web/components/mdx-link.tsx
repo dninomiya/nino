@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -23,6 +24,17 @@ export function MDXLink({ href, children, ...props }: MDXLinkProps) {
         {children}
         <ArrowUpRight className="size-3 inline text-muted-foreground" />
       </a>
+    );
+  }
+
+  if (children === "DEMO") {
+    return (
+      <Button className="not-prose" asChild>
+        <a href={href} target="_blank">
+          ライブデモ
+          <ArrowUpRight className="size-3 inline text-muted-foreground" />
+        </a>
+      </Button>
     );
   }
 

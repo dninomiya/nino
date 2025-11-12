@@ -54,9 +54,11 @@ const icons = {
 async function CodeBlockContent({
   groups,
   codes,
+  className,
 }: {
   groups?: string[];
   codes: CodeBlockProps[];
+  className?: string;
 }) {
   // 各コードをHTMLに変換し、valueを割り当て
   const codesWithValue = await Promise.all(
@@ -74,7 +76,7 @@ async function CodeBlockContent({
   const defaultValue = codesWithValue[0]?.value;
 
   return (
-    <Codes defaultValue={defaultValue} groups={groups}>
+    <Codes className={className} defaultValue={defaultValue} groups={groups}>
       <CodeHeader>
         <CodeList>
           {codesWithValue.map((item, i) => {
@@ -119,13 +121,15 @@ async function CodeBlockContent({
 export function CodeBlock({
   groups,
   codes,
+  className,
 }: {
   groups?: string[];
   codes: CodeBlockProps[];
+  className?: string;
 }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <CodeBlockContent groups={groups} codes={codes} />
+      <CodeBlockContent groups={groups} codes={codes} className={className} />
     </Suspense>
   );
 }
