@@ -32,19 +32,22 @@ export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
       <h1 className="text-4xl font-bold mb-8">{t.title}</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {docs.map((doc) => (
-          <Link key={doc.id} href={`/docs/${doc.id}`}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{doc.title}</CardTitle>
-                <CardDescription>
-                  <RecencyDate
-                    date={doc.updatedAt || doc.createdAt}
-                    locale={locale}
-                  />
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
+          <Card className="relative" key={doc.id}>
+            <CardHeader>
+              <CardTitle className="leading-relaxed">
+                <Link href={`/docs/${doc.id}`}>
+                  {doc.title}
+                  <span className="absolute inset-0" />
+                </Link>
+              </CardTitle>
+              <CardDescription>
+                <RecencyDate
+                  date={doc.updatedAt || doc.createdAt}
+                  locale={locale}
+                />
+              </CardDescription>
+            </CardHeader>
+          </Card>
         ))}
       </div>
     </div>
