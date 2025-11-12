@@ -176,7 +176,9 @@ async function MainContent({
         </div>
 
         {children}
-        <HelpBanner />
+        <div className="mt-20">
+          <HelpBanner />
+        </div>
       </MDXContent>
       <aside className="hidden xl:block w-64 sticky top-header h-content px-6 py-10 overflow-auto">
         <TableOfContents />
