@@ -1,0 +1,122 @@
+---
+title: 日時の管理
+createdAt: 2025-01-27
+sponsors: true
+---
+
+## 標準時間と日本時間の違い
+
+標準時間（UTC: Coordinated Universal Time）と日本時間（JST: Japan Standard Time）には、9時間の時差があります。
+
+- **UTC**: 協定世界時。世界中で標準として使用される時刻
+- **JST**: 日本標準時。UTC+9時間
+
+例：
+- UTC: 2025-01-27 00:00:00
+- JST: 2025-01-27 09:00:00
+
+### UTC・JST管理で発生しやすいトラブル例
+
+- **変換ミスによる時刻のズレ**  
+  UTCからJSTへの変換処理を漏れたり、二重に変換してしまうことで「9時間ズレて表示される」といったミスが発生しやすいです。
+
+- **日付のまたぎ**  
+  UTC だと「前日」だが JST だと「当日」となるケースなど、日付をまたぐタイミングで意図しない表示や判定が起きることがあります。
+
+## データベースでの保存
+
+データベースでは、**すべての日時をUTCで保存**します。これにより、タイムゾーンに依存しない一貫したデータ管理が可能になります。
+
+### libsql (Drizzle) での実装例
+
+Drizzleスキーマでは、`integer`型に`timestamp_ms`モードを使用して、ミリ秒単位のUnixタイムスタンプとして保存します。
+
+```typescript:packages/db/schemas/feed.ts
+export const feedItems = sqliteTable(
+  "feed_items",
+  {
+    id,
+    url: text("url").notNull(),
+    date: integer("date", { mode: "timestamp_ms" }).notNull(),
+    // ... 他のフィールド
+    ...timestamps,
+  }
+);
+```
+
+`timestamps`ユーティリティを使用すると、`createdAt`と`updatedAt`が自動的に追加されます：
+
+```typescript:packages/db/util.ts
+export const timestamps = {
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+};
+```
+
+## クライアント側での日付表示
+
+日付の表示は**クライアント側（ブラウザ）で行うことを推奨**します。これには以下の理由があります：
+
+### 各ブラウザの時刻に準拠するため
+
+ブラウザはユーザーのシステム設定に基づいてタイムゾーンを自動的に取得します。サーバー側で特定のタイムゾーンに変換する必要がなく、ユーザーの環境に応じた適切な時刻が表示されます。
+
+### 相対的な表記に対応できるため
+
+クライアント側で日付を処理することで、「3時間前」「2日前」などの相対的な表記を、現在時刻との差分を計算して動的に表示できます。
+
+## 相対的な日付を表示する参考例
+
+### RecencyDate コンポーネント
+
+`RecencyDate`コンポーネントは、日付の新しさに応じて相対的な表記または絶対的な表記を切り替えます：
+
+```typescript:apps/web/components/recency-date.tsx
+"use client";
+
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
+import { enUS, ja } from "date-fns/locale";
+import { Locale } from "@/lib/i18n/locale";
+import { useEffect, useState } from "react";
+
+export const RecencyDate = ({ date, locale }: RecencyDateProps) => {
+  const [formattedDate, setFormattedDate] = useState<string>("");
+
+  useEffect(() => {
+    const dateObj = new Date(date);
+    const diffDays = differenceInDays(new Date(), dateObj);
+
+    // 5日以内は相対的な表記（例: "3時間前"）
+    if (diffDays < 5) {
+      setFormattedDate(
+        formatDistanceToNow(dateObj, {
+          addSuffix: true,
+          locale: locale === "ja" ? ja : enUS,
+        })
+      );
+    } else {
+      // 5日以上経過している場合は絶対的な表記（例: "2025年01月27日"）
+      setFormattedDate(format(dateObj, "yyyy年MM月dd日"));
+    }
+  }, [date, locale]);
+
+  return <span>{formattedDate || <>&nbsp;</>}</span>;
+};
+```
+
+### 使用例
+
+```typescript
+// コンポーネント内での使用
+<RecencyDate date={item.date} locale={locale} />
+
+// 関数としての使用
+const formattedDate = formatDateByRecency(item.date, locale);
+```
+
+これらの実装により、UTCで保存された日時が、ユーザーのタイムゾーンに応じて適切に表示され、新しいコンテンツは相対的な表記で、古いコンテンツは絶対的な表記で表示されます。

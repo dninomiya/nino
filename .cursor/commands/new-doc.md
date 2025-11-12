@@ -1,5 +1,6 @@
-- apps/web/docs/*.mdx に新しいドキュメントを作成する
+- apps/web/docs/*.mdx に新しいドキュメントのファイルを作成する
 - ドキュメント名はケバブケースの英語で作成する
 - マークダウンでh1見出しは不要
-- frontmatterを作成する（タイトルとcreatedAtだけでOK）
+- frontmatterを作成する（タイトルとcreatedAt, sponsors: true だけでOK）
+- 内容は空でOK
 - apps/web/app/[locale]/(main)/docs/docs-config.ts にドキュメントを追加する

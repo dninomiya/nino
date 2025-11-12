@@ -10,6 +10,7 @@ export const docsConfig = {
         "installation-web-app",
         "cron-feed-system",
         "turso-export-import",
+        "date-time-management",
       ],
     },
     {
