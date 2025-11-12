@@ -358,9 +358,9 @@ function CodeDisplay({
       className={cn(
         "not-prose",
         "*:border-none *:focus-visible:outline-none *:p-0! *:m-0 text-sm",
-        "overflow-auto",
+        "overflow-auto py-4",
         "[&_pre]:bg-transparent! [&_pre]:dark:bg-transparent!",
-        "[&_code]:py-3 [&_code]:flex [&_code]:flex-col [&_code]:w-fit [&_code]:min-w-full",
+        "[&_code]:py-3 [&_code]:w-fit [&_code]:min-w-full",
         "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px",
         "[&_.highlighted]:bg-muted",
         "[&_.add]:bg-muted",
