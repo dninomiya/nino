@@ -58,7 +58,7 @@ export default async function Image({
 
   return new ImageResponse(
     (
-      <div tw="flex flex-col h-full w-full items-center justify-center px-18 py-14 tracking-tight bg-neutral-900">
+      <div tw="flex flex-col h-full w-full items-center justify-center px-18 py-14 text-base tracking-tight bg-neutral-900">
         <div tw="flex flex-wrap justify-center leading-relaxed text-[64px] text-neutral-50 font-black tracking-wider">
           {parsedTitle.map((line, index) => (
             <div className="flex" key={index}>
