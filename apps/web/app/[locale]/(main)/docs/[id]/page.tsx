@@ -51,7 +51,7 @@ export default async function DocsPage({
   }
 
   return (
-    <div className="flex max-w-6xl container gap-10">
+    <div className="flex items-start max-w-6xl container gap-10">
       <MDXContent className="flex-1">
         <div className="flex items-center justify-between gap-2 not-prose mb-6">
           <div className="space-y-3">
@@ -87,7 +87,7 @@ export default async function DocsPage({
         <Content />
         <HelpBanner />
       </MDXContent>
-      <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-var(--spacing-header)-var(--spacing-4))] px-6 py-10 overflow-auto">
+      <aside className="hidden xl:block w-64 sticky top-header h-content px-6 py-10 overflow-auto">
         <TableOfContents />
       </aside>
     </div>

@@ -10,7 +10,7 @@ export function MDXContent({
   return (
     <article
       className={cn(
-        "prose min-w-0 max-w-none prose-headings:scroll-mt-[calc(var(--spacing-header)+var(--spacing-8))] py-10 xl:py-14 dark:prose-invert prose-neutral",
+        "prose min-w-0 max-w-none prose-headings:scroll-mt-header py-10 xl:py-14 dark:prose-invert prose-neutral",
         className
       )}
     >

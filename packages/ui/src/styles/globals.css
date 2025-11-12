@@ -121,6 +121,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --spacing-header: 64px;
+  --spacing-content: calc(100dvh - var(--spacing-header));
 }
 
 @layer base {
@@ -129,6 +130,9 @@
   }
   body {
     @apply bg-background text-foreground wrap-anywhere;
+  }
+  html[data-scroll-behavior="smooth"] {
+    scroll-behavior: smooth;
   }
 
   .shiki {

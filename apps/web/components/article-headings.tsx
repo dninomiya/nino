@@ -8,7 +8,7 @@ const Heading = ({
 }: React.JSX.IntrinsicElements["h1"] & { level: number }) => {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   return (
-    <Tag id={id} className="group scroll-mt-8" {...props}>
+    <Tag id={id} className="group" {...props}>
       {children}
       <a
         href={`#${id}`}

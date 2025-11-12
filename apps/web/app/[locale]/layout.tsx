@@ -29,7 +29,7 @@ export default async function RootLayout({
   await setCurrentLocaleFromParams(params);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
