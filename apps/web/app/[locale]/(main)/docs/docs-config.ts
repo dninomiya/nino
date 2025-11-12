@@ -11,6 +11,7 @@ export const docsConfig = {
         "cron-feed-system",
         "turso-export-import",
         "date-time-management",
+        "browser-cache-client-filter",
       ],
     },
     {
