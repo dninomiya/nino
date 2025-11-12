@@ -12,6 +12,7 @@ export const docsConfig = {
         "turso-export-import",
         "date-time-management",
         "browser-cache-client-filter",
+        "search-params-dialog",
       ],
     },
     {

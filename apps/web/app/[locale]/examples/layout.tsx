@@ -5,6 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
+import { Suspense } from "react";
 
 export default function ExamplesLayout({
   children,
@@ -15,7 +16,9 @@ export default function ExamplesLayout({
 }) {
   return (
     <SidebarProvider className="[--sidebar-width:720px]!">
-      <Sidebar>{source}</Sidebar>
+      <Sidebar>
+        <Suspense>{source}</Suspense>
+      </Sidebar>
       <SidebarInset>
         <header className="flex bg-background items-center gap-2 h-12 px-2 border-b shrink-0 sticky top-0">
           <SidebarTrigger />

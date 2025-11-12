@@ -1,5 +1,4 @@
 import SourceTree from "@/components/source-tree";
-import { Suspense } from "react";
 
 const paths = [
   {
@@ -28,11 +27,9 @@ export default async function BrowserCacheClientFilterSource({
   searchParams,
 }: PageProps<"/[locale]/examples/browser-cache-client-filter">) {
   return (
-    <Suspense>
-      <SourceTree
-        currentFile={searchParams.then((params) => params.file as string)}
-        paths={paths}
-      />
-    </Suspense>
+    <SourceTree
+      currentFile={searchParams.then((params) => params.file as string)}
+      paths={paths}
+    />
   );
 }
