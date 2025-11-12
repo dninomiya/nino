@@ -1,20 +1,19 @@
-import { connection } from "next/server";
-import { NextRequest, NextResponse } from "next/server";
 import { getYesterdayCompletedTasks } from "@/data/task";
-import { db, profiles } from "@workspace/db";
-import { and, eq, inArray } from "drizzle-orm";
-import { sendDiscordWebhook } from "@workspace/discord";
-import { baseUrl } from "@/registry/lib/base-url";
 import { verifyCronAuth } from "@/lib/cron";
+import { baseUrl } from "@/registry/lib/base-url";
+import { db, profiles } from "@workspace/db";
+import { sendDiscordWebhook } from "@workspace/discord";
+import { and, eq, inArray } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
+import { initializeCronRequest } from "../utils";
 
 export async function GET(request: NextRequest) {
-  await connection();
+  const initResponse = await initializeCronRequest(request);
+  if (initResponse) {
+    return initResponse;
+  }
 
   try {
-    // 認証をチェック
-    const authError = verifyCronAuth(request);
-    if (authError) return authError;
-
     // 1. 昨日完了したタスクを全取得（全ユーザー分）
     const yesterdayTasks = await getYesterdayCompletedTasks();
 
