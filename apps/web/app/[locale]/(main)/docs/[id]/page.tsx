@@ -139,9 +139,11 @@ async function MainContent({
   return (
     <div className="flex items-start max-w-6xl container gap-10">
       <MDXContent className="flex-1">
-        <div className="flex items-center justify-between gap-2 not-prose mb-6">
+        <div className="not-prose mb-6">
           <div className="space-y-3">
-            <h1 className="text-4xl font-bold">{metadata.title}</h1>
+            <h1 className="text-4xl font-bold leading-normal">
+              {metadata.title}
+            </h1>
             <div className="flex gap-4 flex-wrap">
               <p
                 className="text-muted-foreground text-sm flex items-center gap-1.5"
@@ -165,9 +167,12 @@ async function MainContent({
                 <ClockFading className="size-3.5" />
                 {formatReadingTime(readingTime, locale)}
               </p>
+              <span className="flex-1 hidden xl:block" />
+              <CopyButon value={markdownString}>
+                {tCommon.copyMarkdown}
+              </CopyButon>
             </div>
           </div>
-          <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
         </div>
 
         {children}

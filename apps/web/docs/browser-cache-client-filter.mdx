@@ -45,8 +45,10 @@ yarn add fuse.js nuqs
 ## Cache API 用のヘルパー関数を作成
 
 ```ts title=lib/cache.ts
-// キャッシュからデータを取得します。
-export async function getCachedData(cacheName, url) {
+export const getCachedData = async <T>(
+  cacheName: string,
+  url: string
+): Promise<T | false> => {
   const cacheStorage = await caches.open(cacheName);
   const cachedResponse = await cacheStorage.match(url);
 
@@ -54,21 +56,19 @@ export async function getCachedData(cacheName, url) {
     return false;
   }
 
-  return await cachedResponse.json();
-}
+  return (await cachedResponse.json()) as T;
+};
 
-// 古いキャッシュを削除して、ユーザーのディスク容量を尊重します。
-export async function deleteOldCaches(currentCache) {
+export const deleteOldCaches = async (keyPrefix: string) => {
   const keys = await caches.keys();
-
   for (const key of keys) {
-    const isOurCache = key.startsWith("todos-");
-    if (currentCache === key || !isOurCache) {
+    const isOurCache = key.startsWith(keyPrefix);
+    if (!isOurCache) {
       continue;
     }
     caches.delete(key);
   }
-}
+};
 
 export async function getCacheVersion() {
   const cachedData = await db.query.todoSettings.findFirst();
@@ -86,57 +86,89 @@ export async function updateCacheVersion() {
 }
 ```
 
-## データ取得関数を作成
+## リストコンポーネントを作成
 
-```ts
-// キャッシュからデータを取得しようとしますが、ない場合データベースから取得します。
-async function getTodos(cacheVersion: number) {
-  const cacheName = `todos-${cacheVersion}`;
-  const url = "https://jsonplaceholder.typicode.com/todos/1";
-  let cachedData = await getCachedData(cacheName, url);
+```ts title=todo-list.tsx
+"use client";
 
-  if (cachedData) {
-    console.log("取得したキャッシュデータ");
-    return cachedData;
+import { useEffect, useMemo, useState } from "react";
+import { getTodos } from "./data";
+import { Todo } from "./type";
+import { useQueryState } from "nuqs";
+
+export function TodoList() {
+  const [todos, setTodos] = useState<Todo[] | null>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search] = useQueryState("q", {
+    defaultValue: "",
+  });
+
+  useEffect(() => {
+    getTodos().then((todos) => {
+      setTodos(todos);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const filteredTodos = useMemo(() => {
+    return todos?.filter((todo) => todo.title.includes(search));
+  }, [todos, search]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  console.log("最新データの取得");
-  const cacheStorage = await caches.open(cacheName);
-  await cacheStorage.add(url);
-  cachedData = await getCachedData(cacheName, url);
-  await deleteOldCaches(cacheName); // 古いキャッシュの削除
-
-  return cachedData;
+  return (
+    <ul>
+      {filteredTodos?.map((todo) => (
+        <li key={todo.id}>
+          {todo.id}_{todo.title}
+        </li>
+      ))}
+    </ul>
+  );
 }
 ```
 
-## データを取得し、fuse.js を使って検索する
+## 検索用フォームを作成
 
-```tsx
-const fuse = new Fuse(todos, {
-  keys: ["title", "description"],
-  threshold: 0.3,
-});
+```tsx title=search-form.tsx
+"use client";
 
-async function Page() {
-  const cacheVersion = await getCacheVersion();
-  const todos = await getTodos(cacheVersion);
-  const [query, setQuery] = useQueryState("q");
+import { Input } from "@/components/ui/input";
+import { useQueryState } from "nuqs";
 
-  const results = useMemo(() => {
-    return fuse.search(query);
-  }, [query, fuse]);
+export function SearchForm() {
+  const [search, setSearch] = useQueryState("q", {
+    defaultValue: "",
+  });
 
   return (
-    <div>
-      <input type="text" placeholder="Search" onChange={(e) => {
-        setQuery(e.target.value);
-      }} />
-      <ul>
-        {results.map((result) => (
-          <li key={result.item.id}>{result.item.title}</li>
-        ))}
-      </ul>
+    <Input
+      type="text"
+      placeholder="Search"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  );
+}
+```
+
+## 画面
+
+```tsx
+import { Suspense } from "react";
+import { SearchForm } from "./search-form";
+import { TodoList } from "./todo-list";
+
+export default function BrowserCacheClientFilterPage() {
+  return (
+    <div className="space-y-4 container py-10">
+      <h1 className="text-2xl font-bold">Todo List</h1>
+      <Suspense>
+        <SearchForm />
+        <TodoList />
+      </Suspense>
     </div>
   );
 }
