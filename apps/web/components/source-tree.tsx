@@ -15,7 +15,7 @@ export default async function SourceTree({
   paths: Path[];
   currentFile: Promise<string>;
 }) {
-  const currentPath = await currentFile;
+  const currentPath = (await currentFile) || paths[0]?.path;
   const extension = currentPath ? path.extname(currentPath) : "";
   const lang = extension.slice(1);
   const sources = await Promise.all(
