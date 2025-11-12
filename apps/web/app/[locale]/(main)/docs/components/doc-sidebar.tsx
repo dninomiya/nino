@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { SidebarLinkButon } from "@/components/sidebar-link-button";
 import {
   Tooltip,
@@ -19,6 +17,7 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
 import { Lock } from "lucide-react";
+import { Suspense } from "react";
 
 interface DocItem {
   title: string;

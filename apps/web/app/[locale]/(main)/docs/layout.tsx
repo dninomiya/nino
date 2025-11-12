@@ -8,6 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
+import { Suspense } from "react";
 
 export default async function Layout({
   children,
@@ -41,7 +42,9 @@ export default async function Layout({
 
   return (
     <SidebarProvider>
-      <DocSidebar docItems={docItems} />
+      <Suspense fallback={<div className="h-full w-[--sidebar-width]" />}>
+        <DocSidebar docItems={docItems} />
+      </Suspense>
       <SidebarInset>
         <div className="flex items-center text-sm gap-2 p-4 border-b xl:hidden">
           <SidebarTrigger />

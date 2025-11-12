@@ -9,7 +9,7 @@ import {
   getMessage,
   setCurrentLocaleFromParams,
 } from "@/lib/i18n/server";
-import { formatDateByRecency, formatReadingTime } from "@/lib/util";
+import { formatReadingTime } from "@/lib/util";
 import { readFileSync } from "fs";
 import { ClockFading, RefreshCw } from "lucide-react";
 import { Metadata } from "next";
