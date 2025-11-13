@@ -14,6 +14,7 @@ export const docsConfig = {
         "browser-cache-client-filter",
         "search-params-dialog",
         "code-organization",
+        "agents",
       ],
     },
     {
