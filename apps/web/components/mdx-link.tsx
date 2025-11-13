@@ -20,9 +20,15 @@ export function MDXLink({ href, children, ...props }: MDXLinkProps) {
 
   if (isExternal) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="print:no-underline"
+        {...props}
+      >
         {children}
-        <ArrowUpRight className="size-3 inline text-muted-foreground" />
+        <ArrowUpRight className="size-3 inline text-muted-foreground print:hidden" />
       </a>
     );
   }

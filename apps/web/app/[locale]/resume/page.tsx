@@ -17,8 +17,8 @@ export default async function RedumePage({
   const active = content.frontmatter?.active;
 
   return (
-    <article className="prose pt-14 pb-32 prose-neutral container dark:prose-invert">
-      <div className="flex items-center justify-end not-prose mb-4 gap-3">
+    <article className="prose not-print:pt-14 not-print:pb-32 prose-neutral mx-auto not-print:px-6 dark:prose-invert">
+      <div className="flex items-center justify-end not-prose mb-4 gap-3 print:hidden">
         {active ? (
           <Badge>求職中</Badge>
         ) : (
