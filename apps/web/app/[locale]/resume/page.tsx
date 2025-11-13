@@ -4,6 +4,7 @@ export const metadata = {
 
 import { ModeToggle } from "@/components/mode-toggle";
 import { RecencyDate } from "@/components/recency-date";
+import { Badge } from "@/components/ui/badge";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 
 export default async function RedumePage({
@@ -13,14 +14,22 @@ export default async function RedumePage({
   const content = (await import(`@/app/[locale]/resume/content.mdx`)) as any;
   const Content = content.default;
   const updatedAt = content.frontmatter?.updatedAt;
+  const active = content.frontmatter?.active;
 
   return (
-    <article className="prose py-14 prose-neutral container dark:prose-invert">
-      <div className="flex items-center justify-end not-prose mb-4">
+    <article className="prose pt-14 pb-32 prose-neutral container dark:prose-invert">
+      <div className="flex items-center justify-end not-prose mb-4 gap-3">
+        {active ? (
+          <Badge>求職中</Badge>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            積極的な求職活動は行なっていません。
+          </p>
+        )}
         <p className="text-sm text-muted-foreground">
           最終更新: <RecencyDate date={updatedAt} locale={locale} />
         </p>
-        <div className="fixed right-4 top-4">
+        <div className="fixed right-4 top-4 print:hidden">
           <ModeToggle />
         </div>
       </div>
