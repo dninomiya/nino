@@ -47,7 +47,7 @@ export default async function Layout({
           <div
             className="h-full"
             style={{
-              width: "var(--sidebar-width)",
+              width: "xl:var(--sidebar-width)",
             }}
           />
         }
