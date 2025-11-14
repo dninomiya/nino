@@ -335,36 +335,30 @@ export const updateMyProfile = async () => {
 }
 ```
 
-## ログイン、ログアウト
+## ログアウト
 
-ログインとログアウトの状態をただちに画面に反映させる場合、クライアントから直接 `authClient` を使ってログイン/ログアウトを行います。
-小さなクライアントコンポーネントを用意します。サーバーアクションを別途用意する必要もないので実装がシンプルになります。
+サーバーアクションと `refresh` を使ってログアウトおよび即時反映ができます。
 
 ### ボタンコンポーネント
 
-```tsx title=components/login-button.tsx
-"use client";
-
-import { authClient } from "@/lib/auth/client";
-
-export function LoginButton() {
-  return (
-    <Button onClick={() => authClient.signIn.anonymous()}>
-      ログイン
-    </Button>
-  );
-```
-
 ```tsx title=components/logout-button.tsx
-"use client";
-
-import { authClient } from "@/lib/auth/client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { refresh } from "next/cache";
 
 export function LogoutButton() {
   return (
-    <Button onClick={() => authClient.signOut()}>
-      ログアウト
-    </Button>
+    <form action={async () => {
+      "use server";
+      await auth.api.signOut({
+        headers: await headers(),
+      });
+      refresh();
+    }}>
+      <Button>
+        ログアウト
+      </Button>
+    </form>
   );
 }
 ```
