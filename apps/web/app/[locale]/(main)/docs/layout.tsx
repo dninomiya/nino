@@ -42,16 +42,7 @@ export default async function Layout({
 
   return (
     <SidebarProvider>
-      <Suspense
-        fallback={
-          <div
-            className="h-full"
-            style={{
-              width: "xl:var(--sidebar-width)",
-            }}
-          />
-        }
-      >
+      <Suspense fallback={<div className="h-full xl:w-(--sidebar-width)" />}>
         <DocSidebar docItems={docItems} />
       </Suspense>
       <SidebarInset>
