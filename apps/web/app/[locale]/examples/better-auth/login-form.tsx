@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@workspace/ui/components/spinner";
 import {
   Card,
   CardContent,
@@ -20,16 +19,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { authClient } from "@workspace/auth/client";
+import { Spinner } from "@workspace/ui/components/spinner";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 import { loginFormSchema } from "./zod";
-import { authClient } from "@workspace/auth/client";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 
 type FormData = z.infer<typeof loginFormSchema>;
 
 export function LoginForm({ signUp = false }: { signUp?: boolean }) {
+  const router = useRouter();
   const form = useForm<FormData>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -38,37 +39,39 @@ export function LoginForm({ signUp = false }: { signUp?: boolean }) {
     },
   });
 
-  function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData) {
     if (signUp) {
-      return authClient.signUp
-        .email({
+      await authClient.signUp.email(
+        {
           email: data.email,
           password: data.password,
           name: data.email,
           callbackURL: "/examples/better-auth",
-        })
-        .then((result) => {
-          if (result.error) {
-            toast.error(result.error?.message);
-          }
-        });
+        },
+        {
+          onError(ctx) {
+            alert(ctx.error.message);
+          },
+        }
+      );
     }
 
-    return authClient.signIn
-      .email({
+    await authClient.signIn.email(
+      {
         email: data.email,
         password: data.password,
         callbackURL: "/examples/better-auth",
-      })
-      .then((result) => {
-        if (result.error) {
-          toast.error(
-            result.error?.status === 401
+      },
+      {
+        onError(ctx) {
+          alert(
+            ctx.error.status === 401
               ? "メールアドレスまたはパスワードが間違っています。"
-              : result.error?.message
+              : ctx.error.message
           );
-        }
-      });
+        },
+      }
+    );
   }
 
   const isPending = form.formState.isSubmitting;
@@ -129,6 +132,18 @@ export function LoginForm({ signUp = false }: { signUp?: boolean }) {
                 <Spinner className="size-3" />
               </div>
             )}
+
+            <Button
+              variant="outline"
+              className="ml-auto"
+              type="button"
+              onClick={() => {
+                form.setValue("email", `test${Math.random()}@example.com`);
+                form.setValue("password", "Password123!");
+              }}
+            >
+              ランダムデータをセット
+            </Button>
           </CardFooter>
         </Card>
       </form>
