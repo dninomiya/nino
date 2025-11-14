@@ -1,6 +1,7 @@
 - apps/web/docs/*.mdx に新しいドキュメントのファイルを作成する
 - ドキュメント名はケバブケースの英語で作成する
 - マークダウンでh1見出しは不要
-- frontmatterを作成する（タイトルとcreatedAt=今日の日付, sponsors: true だけでOK）
+- frontmatterを作成する（タイトルとcreatedAt, sponsors: true だけでOK）
+- 日付は date コマンドで取得し、YYYY-MM-DD 形式で設定する
 - 内容は空でOK。ファイル名はタイトルに伴うケバブケースの英語で作成する
 - apps/web/app/[locale]/(main)/docs/docs-config.ts にドキュメントを追加する
