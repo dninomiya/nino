@@ -16,6 +16,7 @@ export const docsConfig = {
         "code-organization",
         "agents",
         "better-auth",
+        "product-development-policy",
       ],
     },
     {

@@ -88,14 +88,14 @@ async function SponsorOnly({ children }: { children: React.ReactNode }) {
 
   if (!sponsor) {
     return (
-      <div className="h-content container py-10 grid place-items-center relative">
+      <div className="h-content container py-10 grid place-content-center relative">
         <div className="absolute inset-0 blur container py-10 prose dark:prose-invert">
           <h1 className="text-4xl font-bold">{faker.lorem.words(3)}</h1>
           <p>{faker.lorem.paragraphs(3)}</p>
           <p>{faker.lorem.paragraphs(3)}</p>
           <p>{faker.lorem.paragraphs(3)}</p>
         </div>
-        <Card className="w-96 max-w-full relative z-10">
+        <Card className="relative z-10 w-80">
           <CardHeader>
             <Lock className="mb-2" />
             <CardTitle>スポンサー限定</CardTitle>
