@@ -177,7 +177,11 @@ export const config = {
 };
 ```
 
-## スキーマの生成
+## データベースの更新
+
+認証機能を動作させるために、データベースにテーブルを追加する必要があります。
+
+### スキーマの生成
 
 ORM 用のスキーマを生成します。--output で出力先を指定します。実際のスキーマの場所を指定してください。
 
@@ -185,11 +189,26 @@ ORM 用のスキーマを生成します。--output で出力先を指定しま�
 pnpx @better-auth/cli@latest generate --output ../db/schemas/auth.ts --yes
 ```
 
-スキーマができたら ORM 側で生成されたスキーマを設定に加え、マイグレーションを実行します。
+`lib/auth.ts` に応じてデータベースも更新する必要があるので、その都度上記コマンドを実行してスキーマを再生成します。この観点から、生成された `auth.ts` を直接編集するのはお勧めしません。
 
-### Drizzle の場合
+今後のためにスクリプトを用意しておくと便利です。
+
+```json title=package.json
+{
+  "scripts": {
+    "generate:auth": "pnpx @better-auth/cli@latest generate --output ../db/schemas/auth.ts --yes"
+  }
+}
+```
+
+### マイグレーション
+
+スキーマができたら ORM の設定に生成されたスキーマを加え、マイグレーションを実行します。
 
 ```ts
+import { drizzle } from "drizzle-orm/libsql/web";
+import { auth } from "@/db/schemas/auth"; // 生成されたスキーマの場所 [!code ++]
+
 export const db = drizzle({
   connection: {
     url: process.env.TURSO_DATABASE_URL!,
@@ -199,4 +218,183 @@ export const db = drizzle({
     ...auth, // [!code ++]
   },
 });
+```
+
+```bash
+pnpm generate && pnpm migrate
+```
+
+## データの保護
+
+画面のリダイレクトは `proxy.ts` で Cookie を参照して楽観的に行っていますが、データの保護はデータ通信関数で行います。
+
+### 保護用のヘルパー関数
+
+`getSession` と `currentSession` を作成します。
+
+- `getSession` - セッションの有無を確認する場合に使用
+- `currentSession` - セッションの存在を担保する場合に使用
+
+```tsx title=lib/session.ts
+import "server-only";
+
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+// セッションを取得
+export const getSession = async () => {
+  return await auth.api.getSession({
+    headers: await headers(),
+  });
+};
+
+// セッションを取得（ない場合リダイレクト）
+export const currentSession = async () => {
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  return session;
+};
+```
+
+`redirect` を使うとその時点で処理が強制終了するため、`currentSession` を挟むことでログインしていないユーザーの処理を中断できます。
+
+データベースとの通信関数では基本的に `currentSession` を使ってログイン状態を担保しつつログイン中のユーザーを特定し、そのユーザーのIDに基づいてデータベースを操作します。
+
+### 安全なデータの取得
+
+```tsx
+import "server-only";
+
+import { currentSession } from "@/lib/session";
+
+export const getMyProfile = async () => {
+  const session = await currentSession(); // ログインが担保され、ユーザーも特定される [!code highlight]
+  const userId = session.user.id;
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, userId), // ログイン中のユーザーのプロフィールを取得 [!code highlight]
+  });
+}
+```
+
+### 安全なデータの更新
+
+```tsx
+"use server";
+
+import { currentSession } from "@/lib/session";
+
+// 自分のプロフィールを更新
+export const updateMyProfile = async () => {
+  const session = await currentSession(); // ログインが担保され、ユーザーも特定される [!code highlight]
+  const userId = session.user.id;
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, userId), // ログイン中のユーザー自身であることを担保 [!code highlight]
+  });
+}
+
+// 記事を追加
+export const addArticle = async () => {
+  const session = await currentSession(); // ログインが担保され、ユーザーも特定される [!code highlight]
+  const userId = session.user.id;
+  const article = await db.insert(articles).values({
+    authorId: userId, // 記事の投稿者 [!code highlight]
+    title: "新しい記事",
+    content: "これは新しい記事です。",
+  });
+}
+```
+
+### 個人の特定はサーバーサイドで行う
+
+たとえば自分のプロフィールを更新する場合、自分が誰であるかは必ずサーバーサイドで特定します。
+
+```ts
+"use server";
+
+import { currentSession } from "@/lib/session";
+
+// ❌ 悪い例: クライアントから渡されるIDが本人のものとは限らない
+export const updateMyProfile = async (id: string) => {
+  const profile = await db.update(profiles).set({
+    name: "新しい名前",
+  }).where(eq(profiles.userId, id)); // 他人のプロフィールを更新できてしまう [!code error]
+}
+
+// ✅ 良い例: サーバーサイドでログイン中のユーザーを特定してからプロフィールを取得
+export const updateMyProfile = async () => {
+  const session = await currentSession(); // ログインが担保され、ユーザーも特定される [!code highlight]
+  const userId = session.user.id;
+  const profile = await db.update(profiles).set({
+    name: "新しい名前",
+  }).where(eq(profiles.userId, userId)); // ログイン中のユーザー自身であることを担保 [!code highlight]
+}
+```
+
+## ログイン、ログアウト
+
+ログインとログアウトの状態をただちに画面に反映させる場合、クライアントから直接 `authClient` を使ってログイン/ログアウトを行います。
+小さなクライアントコンポーネントを用意します。サーバーアクションを別途用意する必要もないので実装がシンプルになります。
+
+### ボタンコンポーネント
+
+```tsx title=components/login-button.tsx
+"use client";
+
+import { authClient } from "@/lib/auth/client";
+
+export function LoginButton() {
+  return (
+    <Button onClick={() => authClient.signIn.anonymous()}>
+      ログイン
+    </Button>
+  );
+```
+
+```tsx title=components/logout-button.tsx
+"use client";
+
+import { authClient } from "@/lib/auth/client";
+
+export function LogoutButton() {
+  return (
+    <Button onClick={() => authClient.signOut()}>
+      ログアウト
+    </Button>
+  );
+}
+```
+
+### ログイン状態に応じたUIの出しわけ
+
+ログイン不要でみれて良い画面の場合、`getSession` を使ってログイン状態を確認します。 `currentSession` を使うとログインしていない場合リダイレクトされてしまいます。
+
+```tsx title=page.tsx
+import { getSession } from "@/lib/session";
+import { LoginButton } from "@/components/login-button";
+
+export async function Page() {
+  const session = await getSession();
+
+  if (!session) {
+    return (
+      <div>
+        <p>ログインしてください</p>
+        <LoginButton />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <p>ログインしています</p>
+      <p>ようこそ、{session.user.name}さん</p>
+      <LogoutButton />
+    </div>
+  );
+}
 ```

@@ -3,6 +3,7 @@ import "server-only";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
+  transformerNotationErrorLevel,
 } from "@shikijs/transformers";
 import { codeToHtml } from "shiki";
 import { cacheLife } from "next/cache";
@@ -23,6 +24,10 @@ export async function generateCodeHtml(code: string, lang: string) {
       dark: "github-dark",
       light: "github-light",
     },
-    transformers: [transformerNotationDiff(), transformerNotationHighlight()],
+    transformers: [
+      transformerNotationDiff(),
+      transformerNotationHighlight(),
+      transformerNotationErrorLevel(),
+    ],
   });
 }

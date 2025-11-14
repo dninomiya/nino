@@ -140,7 +140,7 @@
       @apply relative;
 
       &:before {
-        @apply absolute top-1/2 left-1.5 -translate-y-1/2;
+        @apply absolute top-1/2 left-1 -translate-y-1/2;
       }
     }
     .remove:before {
@@ -150,6 +150,9 @@
     .add:before {
       @apply text-green-500;
       content: "+";
+    }
+    .error {
+      @apply bg-red-500/10
     }
   }
 }
@@ -179,20 +182,4 @@ html.dark .shiki span {
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
-}
-
-/* Mermaid */
-.mermaid {
-  .appClass .label-container {
-    @apply fill-red-500/20! border-red-500!;
-  }
-  .packageClass .label-container {
-    @apply fill-blue-500/20! border-blue-500!;
-  }
-  .baasClass .label-container {
-    @apply fill-green-500/20! border-green-500!;
-  }
-  .databaseClass .label-container {
-    @apply fill-purple-500/20! border-purple-500!;
-  }
 }

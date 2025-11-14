@@ -336,6 +336,7 @@ function CodeDisplay({
         "[&_code]:w-fit [&_code]:min-w-full",
         "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px [&_.line]:inline-block [&_.line]:min-w-full",
         "[&_.highlighted]:bg-muted",
+        "[&_.error]:bg-red-400/15!",
         "[&_.add]:bg-muted",
         className
       )}
@@ -432,7 +433,13 @@ function CodeCopyButton({
      * Removes shiki transformer notation lines from code.
      * @link https://shiki.style/packages/transformers
      */
-    const cleanCode = code?.replace(/\s*\/\/\s*\[!.*$/gm, "");
+    // 生成されたスキーマの場所 [!code ++] や
+    // 追加・削除行 [!code ++],[!code --] など英語以外や ++/-- 等の notation を広く対応
+    const cleanCode = code
+      // Remove shiki transformer notations (lines with e.g. //[!code ++], //[!code --], //[!code ...] etc.)
+      ?.replace(/\s*\/\/\s*\[!.*$/gm, "")
+      // Also remove aftercode ' [! ... ]' from end of lines
+      ?.replace(/\s*\[!.*\]$/gm, "");
 
     if (!cleanCode) return;
 
