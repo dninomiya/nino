@@ -7,12 +7,12 @@ const links = [
     label: "マイページ",
   },
   {
-    href: "/examples/better-auth/logout",
-    label: "ログアウト",
+    href: "/examples/better-auth/login",
+    label: "ログインページ",
   },
   {
     href: "/examples/better-auth/signup",
-    label: "新規登録",
+    label: "新規登録ページ",
   },
 ];
 
