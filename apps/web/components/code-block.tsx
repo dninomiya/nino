@@ -87,8 +87,8 @@ async function CodeBlockContent({
 
             return (
               <CodeTrigger key={i} value={item.value} group={item.group}>
-                {Icon && <Icon className="size-3.5" />}
-                <span>{label}</span>
+                {Icon && <Icon className="size-3.5 shrink-0" />}
+                <span className="truncate">{label}</span>
               </CodeTrigger>
             );
           })}

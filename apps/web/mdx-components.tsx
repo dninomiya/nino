@@ -12,6 +12,7 @@ import {
 } from "./components/code-preview";
 import { GoodToKnow } from "./components/good-to-know";
 import Tree from "./components/tree";
+import Callout from "./components/callout";
 
 export function useMDXComponents(): MDXComponents {
   return {
@@ -27,5 +28,6 @@ export function useMDXComponents(): MDXComponents {
     ComponentPreview: ComponentPreview,
     ComponentPreviewCode: ComponentPreviewCode,
     ComponentPreviewDemo: ComponentPreviewDemo,
+    Callout,
   };
 }

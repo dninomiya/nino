@@ -1,0 +1,202 @@
+---
+title: Better Auth
+createdAt: 2025-01-27
+sponsors: true
+---
+
+## Better Auth とは
+
+Better Auth は、認証を簡単に設定できる次世代の認証ライブラリです。
+
+1. 認証の設定を定義
+2. 認証に必要な ORMスキーマを生成（マイグレーション）
+3. 動作
+
+となります。スキーマも一般的な内容であるためロックインを気にせず導入できます。
+
+## インストール
+
+```bash
+pnpm add better-auth
+
+# SECRET_KEYを生成
+pnpx @better-auth/cli@latest secret
+```
+
+```dotenv title=.env
+BETTER_AUTH_SECRET=生成した内容をセット
+```
+
+## Base URL 判定
+
+(推奨)Better Auth はアプリが動作するURLを知る必要がありますが、Vercelの場合はプレビュー環境ごとにURLが生成され、この判定が複雑になるため既存のヘルパーを導入します。
+
+```bash
+pnpx shadcn@latest add https://dninomiya.com/r/base-url.json
+```
+
+<details>
+
+<summary>マニュアルで作成する場合</summary>
+
+```ts title=lib/base-url.ts
+export const baseUrl = (options?: { useCommitURL?: boolean }) => {
+  const isProd = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
+  const url = isProd
+    ? process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+    : options?.useCommitURL
+      ? process.env.NEXT_PUBLIC_VERCEL_URL
+      : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+
+  return url
+    ? `https://${url}`
+    : `http://localhost:${process.env.PORT || 3000}`;
+};
+```
+
+</details>
+
+## インスタンスの作成
+
+Drizzle を使う想定です。サーバー用のインスタンスとクライアント用のインスタンスを用意します。サーバー用のインスタンスは Better Auth の設定も兼ねており、ORMスキーマの生成に影響します。
+
+今回は匿名ログインをベースに進めます。
+
+<Callout type="tip" title="ヒント">
+Better Auth がはじめての場合や開発初期の場合、匿名ログインを有効にすることをお勧めします。匿名ログインを使うとメールアドレスやSNSアカウントを使わずにログインできます。
+</Callout>
+
+### サーバー用のインスタンス
+
+サーバーサイドから認証機能にアクセスする場合は、サーバー用のインスタンスを作成します。
+
+```tsx title=lib/auth.ts
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { anonymous } from "better-auth/plugins"
+import { nextCookies } from "better-auth/next-js";
+import { db } from "@/db"; // dbクライアントの場所
+import { baseUrl } from "@/lib/base-url"; // baseURLの場所
+
+export const auth = betterAuth({
+  baseURL: baseUrl(),
+  database: drizzleAdapter(db, {
+      provider: "sqlite",
+      usePlural: true, // スキーマを複数形に
+  }),
+  socialProviders: {
+    // ソーシャルログインの設定
+    // github: {
+    //   clientId: process.env.GITHUB_CLIENT_ID as string,
+    //   clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    // },
+  },
+  plugins: [
+    nextCookies(),
+    anonymous(), // 匿名ログイン
+  ]
+});
+```
+
+### クライアント用のインスタンス
+
+`"use client"` を使うクライアントコンポーネントから認証機能にアクセスする場合は、クライアント用のインスタンスを作成します。
+
+```tsx title=lib/auth/client.ts
+import { createAuthClient } from "better-auth/react";
+import {
+  anonymousClient,
+  inferAdditionalFields,
+} from "better-auth/client/plugins";
+import { auth } from "./auth";
+
+export const authClient = createAuthClient({
+  baseURL: baseUrl(),
+  plugins: [
+    inferAdditionalFields<typeof auth>(),
+    anonymousClient(),
+  ],
+});
+```
+
+## ルートハンドラー
+
+Better Auth を動作させるために、ルートハンドラーを作成します。
+
+```tsx title=app/api/auth/[...all]/route.ts
+import { auth } from "@/lib/auth";
+import { toNextJsHandler } from "better-auth/next-js";
+
+export const { GET, POST } = toNextJsHandler(auth.handler);
+```
+
+## Proxy の設定
+
+認証状態に応じてリダイレクトする場合、Proxy を設定します。たとえばログインしていないユーザーをログインページにリダイレクトする場合、以下のように設定します。
+
+<Callout type="warning">
+ここで行っているのは画面やデータの保護ではなく、あくまで「ログインしてないユーザーをログイン画面に飛ばす」というシンプルなリダイレクト処理です。データの保護は別途データ取得関数で行なってください。
+
+<details>
+
+<summary>くわしく</summary>
+
+ここでは `getSessionCookie` を使って Cookie の内容でログイン状態を判断していますが、**Cookie は誰でも書き換えることができます**。データベースにログイン状態を問い合わせないので高速ですが、信頼性は低くなります。
+
+ただし基本的には画面に必要なデータを取得するタイミングでサーバーサイドの検証を行うため問題ありません。たとえCookieを偽装して画面にアクセスしても、肝心のデータ取得が失敗するので情報漏洩にはなりません。
+
+</details>
+
+</Callout>
+
+```tsx title=proxy.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
+
+// 公開ルート
+const publicRoutes = [
+  "/",
+  "/login",
+];
+
+export async function proxy(request: NextRequest) {
+	const sessionCookie = getSessionCookie(request);
+  const isPrivateRoute = !publicRoutes.includes(request.nextUrl.pathname);
+
+  // ログインしてないユーザーかつ公開ルートでない場合はログイン画面にリダイレクト
+	if (!sessionCookie && isPrivateRoute) {
+		return NextResponse.redirect(new URL("/login", request.url));
+	}
+
+	return NextResponse.next();
+}
+
+export const config = {
+  matcher:
+    "/((?!api|monitoring|trpc|_next|_vercel|rss/|llms\\.txt|r/|.*\\..*).*)",
+};
+```
+
+## スキーマの生成
+
+ORM 用のスキーマを生成します。--output で出力先を指定します。実際のスキーマの場所を指定してください。
+
+```bash
+pnpx @better-auth/cli@latest generate --output ../db/schemas/auth.ts --yes
+```
+
+スキーマができたら ORM 側で生成されたスキーマを設定に加え、マイグレーションを実行します。
+
+### Drizzle の場合
+
+```ts
+export const db = drizzle({
+  connection: {
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+  },
+  schema: {
+    ...auth, // [!code ++]
+  },
+});
+```

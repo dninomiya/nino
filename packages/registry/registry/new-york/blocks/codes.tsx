@@ -1,19 +1,7 @@
 "use client";
 
-import {
-  SiBun,
-  SiCss,
-  SiHtml5,
-  SiJavascript,
-  SiTypescript,
-  SiYaml,
-  SiNpm,
-  SiYarn,
-  SiPnpm,
-} from "@icons-pack/react-simple-icons";
 import { Slot } from "@radix-ui/react-slot";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
-import { cva, type VariantProps } from "class-variance-authority";
 import { Button } from "@workspace/ui/components/button";
 import {
   Select,
@@ -23,7 +11,8 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { cn } from "@workspace/ui/lib/utils";
-import { Check, Copy, Terminal } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Check, Copy } from "lucide-react";
 import * as React from "react";
 import {
   createContext,
@@ -36,25 +25,9 @@ import {
   useState,
 } from "react";
 
-// Icons mapping
-const icons = {
-  ts: SiTypescript,
-  tsx: SiTypescript,
-  js: SiJavascript,
-  jsx: SiJavascript,
-  css: SiCss,
-  html: SiHtml5,
-  yml: SiYaml,
-  sh: Terminal,
-  npm: SiNpm,
-  yarn: SiYarn,
-  bun: SiBun,
-  pnpm: SiPnpm,
-} as const;
-
 // Variants
 const codeTriggerVariants = cva(
-  "flex items-center gap-2 text-sm rounded px-2 py-1 outline-none transition-colors text-nowrap truncate max-w-50",
+  "flex items-center gap-2 text-sm rounded px-2 py-1 outline-none transition-colors text-nowrap truncate aria-selected:only:bg-transparent",
   {
     variants: {
       variant: {
@@ -360,8 +333,8 @@ function CodeDisplay({
         "*:border-none *:focus-visible:outline-none *:p-0! *:m-0 text-sm",
         "overflow-auto py-4",
         "[&_pre]:bg-transparent! [&_pre]:dark:bg-transparent!",
-        "[&_code]:py-3 [&_code]:w-fit [&_code]:min-w-full",
-        "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px",
+        "[&_code]:w-fit [&_code]:min-w-full",
+        "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px [&_.line]:inline-block [&_.line]:min-w-full",
         "[&_.highlighted]:bg-muted",
         "[&_.add]:bg-muted",
         className
@@ -407,11 +380,7 @@ function CodeTrigger({
       data-slot="code-block-title"
       data-group={group}
       value={value}
-      className={cn(
-        codeTriggerVariants({ variant, size }),
-        "only:bg-transparent!",
-        className
-      )}
+      className={cn(codeTriggerVariants({ variant, size }), className)}
       {...props}
     >
       {children}
@@ -563,16 +532,16 @@ function CodeGroupOption({
 }
 
 export {
-  CodeProvider,
-  Codes,
+  CodeContent,
+  CodeCopyButton,
+  CodeDisplay,
+  CodeGroupOption,
+  CodeGroupSelector,
   CodeHeader,
   CodeList,
+  CodeProvider,
+  Codes,
   CodeTrigger,
-  CodeContent,
-  CodeDisplay,
-  CodeCopyButton,
-  CodeGroupSelector,
-  CodeGroupOption,
   useCode,
   useCodeGroup,
 };

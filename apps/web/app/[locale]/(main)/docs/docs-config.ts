@@ -15,6 +15,7 @@ export const docsConfig = {
         "search-params-dialog",
         "code-organization",
         "agents",
+        "better-auth",
       ],
     },
     {
