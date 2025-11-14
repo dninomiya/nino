@@ -4,16 +4,22 @@ export const examplesSourceMap: Record<
 > = {
   "better-auth": [
     {
-      path: "/app/[locale]/examples/better-auth/page.tsx",
-      label: "page.tsx",
+      path: "/app/[locale]/examples/better-auth/layout.tsx",
+      label: "layout.tsx",
     },
     {
       path: "/app/[locale]/examples/better-auth/user-menu.tsx",
       label: "user-menu.tsx",
     },
     {
-      path: "/app/[locale]/examples/better-auth/layout.tsx",
-      label: "layout.tsx",
+      path: "/app/[locale]/examples/better-auth/session.ts",
+      label: "session.ts",
+    },
+  ],
+  "better-auth/mypage": [
+    {
+      path: "/app/[locale]/examples/better-auth/page.tsx",
+      label: "page.tsx",
     },
     {
       path: "/app/[locale]/examples/better-auth/session.ts",
@@ -33,14 +39,6 @@ export const examplesSourceMap: Record<
       path: "/app/[locale]/examples/better-auth/zod.ts",
       label: "zod",
     },
-    {
-      path: "/app/[locale]/examples/better-auth/user-menu.tsx",
-      label: "user-menu.tsx",
-    },
-    {
-      path: "/app/[locale]/examples/better-auth/layout.tsx",
-      label: "layout.tsx",
-    },
   ],
   "better-auth/signup": [
     {
@@ -54,14 +52,6 @@ export const examplesSourceMap: Record<
     {
       path: "/app/[locale]/examples/better-auth/zod.ts",
       label: "zod",
-    },
-    {
-      path: "/app/[locale]/examples/better-auth/user-menu.tsx",
-      label: "user-menu.tsx",
-    },
-    {
-      path: "/app/[locale]/examples/better-auth/layout.tsx",
-      label: "layout.tsx",
     },
   ],
   "browser-cache-client-filter": [
