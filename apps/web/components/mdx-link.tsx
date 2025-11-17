@@ -18,6 +18,17 @@ export function MDXLink({ href, children, ...props }: MDXLinkProps) {
   // 外部リンクかどうかを判定
   const isExternal = href.startsWith("http://") || href.startsWith("https://");
 
+  if (children === "DEMO") {
+    return (
+      <Button className="not-prose" asChild>
+        <a href={href} target="_blank">
+          ライブデモ
+          <ArrowUpRight className="size-3 inline text-muted-foreground" />
+        </a>
+      </Button>
+    );
+  }
+
   if (isExternal) {
     return (
       <a
@@ -30,17 +41,6 @@ export function MDXLink({ href, children, ...props }: MDXLinkProps) {
         {children}
         <ArrowUpRight className="size-3 inline text-muted-foreground print:hidden" />
       </a>
-    );
-  }
-
-  if (children === "DEMO") {
-    return (
-      <Button className="not-prose" asChild>
-        <a href={href} target="_blank">
-          ライブデモ
-          <ArrowUpRight className="size-3 inline text-muted-foreground" />
-        </a>
-      </Button>
     );
   }
 
