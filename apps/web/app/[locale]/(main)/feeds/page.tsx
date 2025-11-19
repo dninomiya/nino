@@ -18,7 +18,7 @@ import { Suspense } from "react";
 export default async function Page({
   params,
   searchParams,
-}: PageProps<"/[locale]">) {
+}: PageProps<"/[locale]/feeds">) {
   await setCurrentLocaleFromParams(params);
   const feedItems = await getFeedItemsFromDB(7);
   const t = await getMessage("MainPage");
