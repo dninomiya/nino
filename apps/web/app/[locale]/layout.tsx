@@ -2,7 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Providers } from "@/components/providers";
-import { locales } from "@/lib/i18n/locale";
+import { Locale, locales } from "@/lib/i18n/locale";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { Toaster } from "@workspace/ui/components/sonner";
 import "@workspace/ui/globals.css";
@@ -25,7 +25,7 @@ export default async function RootLayout({
   params,
   children,
 }: LayoutProps<"/[locale]">) {
-  const locale = (await params).locale;
+  const locale = (await params).locale as Locale;
   await setCurrentLocaleFromParams(params);
 
   return (
@@ -33,7 +33,7 @@ export default async function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>{children}</Providers>
+        <Providers locale={locale}>{children}</Providers>
         <Analytics />
         <Toaster />
       </body>

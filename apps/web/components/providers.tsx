@@ -1,31 +1,39 @@
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { CodeProvider } from "@/registry/blocks/codes";
-import { RegistryProvider } from "./registry-provider";
-import { DocProvider } from "./doc-provider";
-import { getRegistryDocMetas } from "@/lib/registry";
 import { getDocMetas } from "@/lib/docs";
+import { Locale } from "@/lib/i18n/locale";
+import { getDictionary } from "@/lib/i18n/server";
+import { getRegistryDocMetas } from "@/lib/registry";
+import { CodeProvider } from "@/registry/blocks/codes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { DocProvider } from "./doc-provider";
 import { I18nProvider } from "./i18n-provider";
-import { getCurrentLocale, getDictionary } from "@/lib/i18n/server";
+import { RegistryProvider } from "./registry-provider";
 import { ThemeProvider } from "./theme-provider";
+import { Suspense } from "react";
 
-export async function Providers({ children }: { children: React.ReactNode }) {
+export async function Providers({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: Locale;
+}) {
   const registryDocMetas = await getRegistryDocMetas();
   const docMetas = await getDocMetas();
   const dictionary = await getDictionary();
 
   return (
-    <I18nProvider locale={getCurrentLocale()} dictionary={dictionary}>
-      <ThemeProvider>
-        <CodeProvider>
-          <RegistryProvider registryDocMetas={registryDocMetas}>
-            <DocProvider docMetas={docMetas}>
-              <NuqsAdapter>{children}</NuqsAdapter>
-            </DocProvider>
-          </RegistryProvider>
-        </CodeProvider>
-      </ThemeProvider>
+    <I18nProvider locale={locale} dictionary={dictionary}>
+      <Suspense>
+        <ThemeProvider>
+          <CodeProvider>
+            <RegistryProvider registryDocMetas={registryDocMetas}>
+              <DocProvider docMetas={docMetas}>
+                <NuqsAdapter>{children}</NuqsAdapter>
+              </DocProvider>
+            </RegistryProvider>
+          </CodeProvider>
+        </ThemeProvider>
+      </Suspense>
     </I18nProvider>
   );
 }

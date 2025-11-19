@@ -9,15 +9,18 @@ import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 
 export default async function RedumePage({
   params,
-}: PageProps<"/[locale]/resume">) {
+}: PageProps<"/[locale]/resume/[[...type]]">) {
   const locale = await setCurrentLocaleFromParams(params);
-  const content = (await import(`@/app/[locale]/resume/content.mdx`)) as any;
+  const type = (await params).type;
+  const content = (await import(
+    `@/app/[locale]/resume/contents/${type ?? "default"}.mdx`
+  )) as any;
   const Content = content.default;
   const updatedAt = content.frontmatter?.updatedAt;
   const active = content.frontmatter?.active;
 
   return (
-    <article className="prose not-print:pt-14 not-print:pb-32 prose-neutral mx-auto not-print:px-6 dark:prose-invert">
+    <article className="prose print:prose-sm not-print:pt-14 not-print:pb-32 prose-neutral mx-auto not-print:px-6 dark:prose-invert">
       <div className="flex items-center justify-end not-prose mb-4 gap-3 print:hidden">
         {active ? (
           <Badge>求職中</Badge>
