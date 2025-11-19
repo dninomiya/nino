@@ -1,14 +1,13 @@
 import { ModeToggle } from "@/components/mode-toggle";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Logo } from "@workspace/ui/blocks/logo/logo";
+import { Suspense } from "react";
 import { GlobalSearch } from "./global-search";
 import LocaleToggle from "./locale-toggle";
 import { MainNav } from "./main-nav";
 import { MobileNav } from "./mobile-nav";
 import { SponsorButton } from "./sponsor-button";
 import { UserMenu } from "./user-menu";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { DevOnly } from "./dev-only";
 
 export function Header() {
   return (

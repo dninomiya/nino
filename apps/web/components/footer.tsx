@@ -52,7 +52,7 @@ const footerLinks = [
     titleKey: "linksTitle",
     links: [
       {
-        href: "/",
+        href: "/feeds",
         labelKey: "feed",
       },
       {
