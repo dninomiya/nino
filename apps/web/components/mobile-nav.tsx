@@ -14,6 +14,9 @@ import { archive, links, tools } from "@/lib/nav";
 import { NINO_PLUS_URL } from "@workspace/lib/constants";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Link from "next/link";
+import { LocaleToggleWithDropdownMenuItem } from "./locale-toggle";
+import { ModeToggleWithDropdownMenuItem } from "./mode-toggle";
+import { SponsorButtonWithDropdownMenuItem } from "./sponsor-button";
 
 export async function MobileNav() {
   const t = await getMessage("MainNav");
@@ -60,6 +63,10 @@ export async function MobileNav() {
               </a>
             </DropdownMenuItem>
           </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <LocaleToggleWithDropdownMenuItem />
+          <ModeToggleWithDropdownMenuItem />
+          <SponsorButtonWithDropdownMenuItem />
         </DropdownMenuContent>
       </DropdownMenu>
     </>

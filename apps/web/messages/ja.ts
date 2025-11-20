@@ -20,7 +20,7 @@ export default {
     locale: "言語を切り替える",
   },
   ModeToggle: {
-    label: "モードを切り替える",
+    label: "テーマ",
     light: "ライト",
     dark: "ダーク",
     system: "システム",

@@ -7,6 +7,9 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import { Languages } from "lucide-react";
@@ -43,5 +46,36 @@ export default function LocaleToggle() {
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+export function LocaleToggleWithDropdownMenuItem() {
+  const pathname = usePathname();
+  const { locale } = useI18n();
+  const t = useMessage("Language");
+
+  const handleChange = (nextLocale: Locale) => {
+    location.href = `/${nextLocale}${pathname}`;
+  };
+
+  return (
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>
+        <Languages />
+        {t[locale]}
+      </DropdownMenuSubTrigger>
+      <DropdownMenuSubContent>
+        <DropdownMenuRadioGroup
+          value={locale}
+          onValueChange={(value) => handleChange(value as Locale)}
+        >
+          {locales.map((locale) => (
+            <DropdownMenuRadioItem key={locale} value={locale}>
+              {t[locale]}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
   );
 }

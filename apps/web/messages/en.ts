@@ -19,7 +19,7 @@ export default {
     locale: "Change Language",
   },
   ModeToggle: {
-    label: "Toggle theme",
+    label: "Theme",
     light: "Light",
     dark: "Dark",
     system: "System",

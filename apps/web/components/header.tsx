@@ -17,9 +17,11 @@ export function Header() {
       <MainNav />
       <span className="flex-1" />
       <GlobalSearch />
-      <LocaleToggle />
-      <ModeToggle />
-      <SponsorButton />
+      <div className="hidden md:flex items-center gap-2">
+        <LocaleToggle />
+        <ModeToggle />
+        <SponsorButton />
+      </div>
       <Suspense fallback={<Skeleton className="size-9 rounded-full" />}>
         <UserMenu />
       </Suspense>
