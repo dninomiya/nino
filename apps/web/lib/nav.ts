@@ -44,6 +44,10 @@ export const tools = [
     href: "https://dninomiya.github.io/tree-to-image/",
     labelKey: "treeToImage",
   },
+  {
+    href: "https://next-16-guide.vercel.app/dynamic-cache",
+    labelKey: "Next.js Cache Guide",
+  },
 ] as const;
 
 export const archive = [
