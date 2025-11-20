@@ -144,7 +144,9 @@ async function TodoList({
           <div className="flex items-center gap-2">
             <Avatar className="rounded-md border border-black/10 size-9">
               {profile.avatar && <AvatarImage src={profile.avatar} />}
-              <AvatarFallback>{fallbackInitial}</AvatarFallback>
+              <AvatarFallback className="rounded-none">
+                {fallbackInitial}
+              </AvatarFallback>
             </Avatar>
             <div className="space-y-1.5 *:leading-none">
               <div className="flex items-center gap-1.5">
