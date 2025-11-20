@@ -2,11 +2,10 @@ import "server-only";
 
 import {
   transformerNotationDiff,
-  transformerNotationHighlight,
   transformerNotationErrorLevel,
+  transformerNotationHighlight,
 } from "@shikijs/transformers";
 import { codeToHtml } from "shiki";
-import { cacheLife } from "next/cache";
 
 /**
  * コードをシンタックスハイライト付きのHTMLに変換する共通関数
@@ -15,9 +14,6 @@ import { cacheLife } from "next/cache";
  * @returns HTMLに変換されたコード
  */
 export async function generateCodeHtml(code: string, lang: string) {
-  "use cache";
-  cacheLife("infinite");
-
   return await codeToHtml(code, {
     lang,
     themes: {
