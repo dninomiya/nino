@@ -16,6 +16,22 @@ sponsors: true
 
 URLの言語階層('/ja', '/en')は [Proxy](https://nextjs.org/docs/app/getting-started/proxy) や [ライブラリ](https://next-intl.dev/) を使うことで隠蔽できます。このガイドでは隠蔽する方法を紹介します。
 
+### 関連ファイル
+
+最終的に以下のファイルで構成されます。
+
+<Tree>
+/lib/i18n/routing.ts # 言語パスに基づいてリダイレクトする関数
+/lib/i18n/locale.ts # 言語の定義
+/lib/i18n/server.ts # サーバーサイドでの言語取得とキャッシュ
+/lib/i18n/utils.ts # 言語取得用のヘルパー関数
+/components/i18n-provider.tsx # クライアントでの言語取得用プロバイダー
+/components/locale-toggle.tsx # 表示言語の切り替えコンポーネント
+/messages/ja.ts # 日本語の翻訳文
+/messages/en.ts # 英語の翻訳文
+/types/message.ts # 翻訳文の型定義
+</Tree>
+
 ## 翻訳文の定義
 
 まずデフォルト言語の翻訳文を定義します。
