@@ -17,6 +17,7 @@ export const docsConfig = {
         "agents",
         "better-auth",
         "product-development-policy",
+        "recommended-tools",
       ],
     },
     {
