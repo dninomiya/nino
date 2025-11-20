@@ -14,7 +14,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           {locale === "ja" ? (
             <h1 className="text-lg md:text-6xl font-bold leading-relaxed text-center">
               <Link href="/resume" className="text-muted-foreground underline">
-                nino
+                私
               </Link>{" "}
               は
               <a
