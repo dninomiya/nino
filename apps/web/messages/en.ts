@@ -165,6 +165,10 @@ export default {
       label: "Next.js Cache Guide",
       description: "Next.js cache guide",
     },
+    betterAuthExample: {
+      label: "Better Auth Demo",
+      description: "Better Auth demo",
+    },
   },
   Footer: {
     linksTitle: "Links",

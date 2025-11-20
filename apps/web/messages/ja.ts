@@ -165,6 +165,10 @@ export default {
       label: "Next.js キャッシュガイド",
       description: "Next.js のキャッシュガイド",
     },
+    betterAuthExample: {
+      label: "Better Auth デモ",
+      description: "Better Auth のデモ",
+    },
   },
   Footer: {
     linksTitle: "リンク",

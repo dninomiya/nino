@@ -48,6 +48,10 @@ export const tools = [
     href: "https://next-16-guide.vercel.app/dynamic-cache",
     labelKey: "nextjsCacheGuide",
   },
+  {
+    href: "https://better-auth-example-eta.vercel.app/",
+    labelKey: "betterAuthExample",
+  },
 ] as const;
 
 export const archive = [
