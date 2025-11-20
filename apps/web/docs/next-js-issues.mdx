@@ -1,0 +1,15 @@
+---
+title: Next.js の課題、不具合
+createdAt: 2025-11-20
+sponsors: true
+---
+
+## 不具合
+
+- `scroll-behavior: smooth;` を有効にした状態で画面遷移すると最上位にスクロールしない([Issue](https://github.com/vercel/next.js/issues/64441#issuecomment-3508327520))
+  - html に `data-scroll-behavior="smooth"` を追加すると解決（[関連ドキュメント](https://nextjs.org/docs/app/guides/upgrading/version-16#scroll-behavior-override)）
+- `use cache: private` は機能していません。([Issue](https://github.com/vercel/next.js/issues/85672))
+
+## 課題
+
+- `router.events` がなくなったことで Next.js のルーティングをグローバルに監視する手段がなくなったため、離脱防止のためにライブラリを導入するか、カスタムフックを用いる必要がある。（[参考](https://zenn.dev/nino/articles/fafa5053364c03)）

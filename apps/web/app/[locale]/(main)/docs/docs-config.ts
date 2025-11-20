@@ -22,6 +22,7 @@ export const docsConfig = {
         "internationalization",
         "swr",
         "cache-component",
+        "next-js-issues",
       ],
     },
     {
