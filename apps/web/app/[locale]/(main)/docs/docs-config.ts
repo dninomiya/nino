@@ -21,6 +21,7 @@ export const docsConfig = {
         "proxy",
         "internationalization",
         "swr",
+        "cache-component",
       ],
     },
     {
