@@ -18,6 +18,7 @@ import {
   setCurrentLocaleFromParams,
 } from "@/lib/i18n/server";
 import { formatReadingTime } from "@/lib/util";
+import { faker } from "@faker-js/faker";
 import { isSponsor } from "@workspace/auth";
 import { readFileSync } from "fs";
 import { ClockFading, Lock, RefreshCw } from "lucide-react";
@@ -26,8 +27,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import path from "path";
 import { Suspense } from "react";
-import { faker } from "@faker-js/faker";
-import { cacheLife } from "next/cache";
 
 export const generateMetadata = async ({
   params,
@@ -61,11 +60,9 @@ export default async function DocsPage({
   if (metadata.sponsors) {
     return (
       <Suspense fallback={<div className="h-content"></div>}>
-        <SponsorOnly>
-          <MainContent id={id} metadata={metadata} readingTime={readingTime}>
-            <Content />
-          </MainContent>
-        </SponsorOnly>
+        <MainContent id={id} metadata={metadata} readingTime={readingTime}>
+          <Content />
+        </MainContent>
       </Suspense>
     );
   }
@@ -83,19 +80,17 @@ async function SponsorOnly({ children }: { children: React.ReactNode }) {
   // cacheLife({
   //   stale: Number.MAX_VALUE,
   // });
-
   const sponsor = await isSponsor();
 
   if (!sponsor) {
     return (
-      <div className="h-content container py-10 grid place-content-center relative">
-        <div className="absolute inset-0 blur container py-10 prose dark:prose-invert">
-          <h1 className="text-4xl font-bold">{faker.lorem.words(3)}</h1>
+      <div className="grid place-content-center relative">
+        <div className="blur select-none">
           <p>{faker.lorem.paragraphs(3)}</p>
           <p>{faker.lorem.paragraphs(3)}</p>
           <p>{faker.lorem.paragraphs(3)}</p>
         </div>
-        <Card className="relative z-10 w-80">
+        <Card className="absolute top-20 left-1/2 -translate-x-1/2 z-10 w-[80%] not-prose">
           <CardHeader>
             <Lock className="mb-2" />
             <CardTitle>スポンサー限定</CardTitle>
@@ -135,6 +130,7 @@ async function MainContent({
   );
   const tCommon = await getMessage("Common");
   const locale = getCurrentLocale();
+  const isSponsorConent = metadata.sponsors;
 
   return (
     <div className="flex items-start max-w-6xl container gap-10">
@@ -175,7 +171,8 @@ async function MainContent({
           </div>
         </div>
 
-        {children}
+        {isSponsorConent ? <SponsorOnly>{children}</SponsorOnly> : children}
+
         <div className="mt-20">
           <HelpBanner />
         </div>
