@@ -161,6 +161,10 @@ export default {
       label: "nino(archive)",
       description: "旧個人サイト",
     },
+    nextjsCacheGuide: {
+      label: "Next.js キャッシュガイド",
+      description: "Next.js のキャッシュガイド",
+    },
   },
   Footer: {
     linksTitle: "リンク",

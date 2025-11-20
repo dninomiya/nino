@@ -46,7 +46,7 @@ export const tools = [
   },
   {
     href: "https://next-16-guide.vercel.app/dynamic-cache",
-    labelKey: "Next.js Cache Guide",
+    labelKey: "nextjsCacheGuide",
   },
 ] as const;
 

@@ -161,6 +161,10 @@ export default {
       label: "nino(archive)",
       description: "Old personal website",
     },
+    nextjsCacheGuide: {
+      label: "Next.js Cache Guide",
+      description: "Next.js cache guide",
+    },
   },
   Footer: {
     linksTitle: "Links",
