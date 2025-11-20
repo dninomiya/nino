@@ -23,6 +23,7 @@ export const docsConfig = {
         "swr",
         "cache-component",
         "next-js-issues",
+        "app-development-flow",
       ],
     },
     {
