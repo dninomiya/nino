@@ -26,6 +26,28 @@ export const TAGS = {
   BREAKING_CHANGE: "breaking-change",
 } as const;
 
+// プレリリースバージョンを検出する関数
+// タイトルからbeta/canary/alpha/rcが含まれるかチェック
+function detectPrereleaseVersion(title: string): string | null {
+  const titleLower = title.toLowerCase();
+
+  // プレリリース識別子を検出（順序は重要度順）
+  if (titleLower.includes("-beta") || titleLower.includes(".beta")) {
+    return "beta";
+  }
+  if (titleLower.includes("-canary") || titleLower.includes(".canary")) {
+    return "canary";
+  }
+  if (titleLower.includes("-alpha") || titleLower.includes(".alpha")) {
+    return "alpha";
+  }
+  if (titleLower.includes("-rc") || titleLower.includes(".rc")) {
+    return "rc";
+  }
+
+  return null;
+}
+
 // バッチ処理用のスキーマ
 const batchSummarySchema = z.object({
   summaries: z.array(
@@ -345,6 +367,18 @@ export async function fetchAndSaveNewFeedItems(): Promise<void> {
       }
     }
 
+    // プレリリースバージョンの検出とtagへの識別子追加
+    for (const item of newItems) {
+      const prereleaseType = detectPrereleaseVersion(item.title);
+      if (prereleaseType) {
+        // 既存のtags配列に識別子を追加（重複チェック）
+        const existingTags = item.tags || [];
+        if (!existingTags.includes(prereleaseType)) {
+          item.tags = [...existingTags, prereleaseType];
+        }
+      }
+    }
+
     // 5. DB保存
     await saveFeedItemsToDB(newItems);
 
@@ -446,7 +480,7 @@ export async function getFeedItemsFromDB(
       .where(gte(feedItems.date, cutoffDate))
       .orderBy(desc(feedItems.date));
 
-    return items.map((item: any) => ({
+    const feedItemsList = items.map((item: any) => ({
       date: item.date,
       title: item.title,
       url: item.url,
@@ -459,6 +493,12 @@ export async function getFeedItemsFromDB(
       summary: item.summary || undefined,
       tags: item.tags ? JSON.parse(item.tags) : undefined,
     }));
+
+    // プレリリースバージョンを除外
+    return feedItemsList.filter((item) => {
+      const prereleaseType = detectPrereleaseVersion(item.title);
+      return prereleaseType === null;
+    });
   } catch (error) {
     console.error("Failed to get feed items from DB:", error);
     throw error;
@@ -597,8 +637,18 @@ export async function regenerateMissingSummariesInBatch(): Promise<{
 export async function sendDiscordNotification(
   items: FeedItem[]
 ): Promise<void> {
+  // プレリリースバージョンを除外
+  const filteredItems = items.filter((item) => {
+    const prereleaseType = detectPrereleaseVersion(item.title);
+    return prereleaseType === null;
+  });
+
+  if (filteredItems.length === 0) {
+    return;
+  }
+
   // 技術（source）ごとにグループ化
-  const groupedBySource = items.reduce(
+  const groupedBySource = filteredItems.reduce(
     (acc, item) => {
       if (!acc[item.source]) {
         acc[item.source] = [];
