@@ -19,6 +19,7 @@ export const docsConfig = {
         "product-development-policy",
         "recommended-tools",
         "proxy",
+        "internationalization",
       ],
     },
     {

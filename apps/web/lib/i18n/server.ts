@@ -35,7 +35,7 @@ export const setCurrentLocaleFromParams = async (
   }
 
   setCurrentLocale(locale);
-  return locale as Locale;
+  return getCurrentLocale();
 };
 
 export const getCurrentLocale = cache(() => {

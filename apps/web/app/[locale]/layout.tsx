@@ -25,8 +25,7 @@ export default async function RootLayout({
   params,
   children,
 }: LayoutProps<"/[locale]">) {
-  const locale = (await params).locale as Locale;
-  await setCurrentLocaleFromParams(params);
+  const locale = await setCurrentLocaleFromParams(params);
 
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
