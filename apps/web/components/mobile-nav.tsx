@@ -3,6 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getMessage } from "@/lib/i18n/server";
-import { archive, links, tools } from "@/lib/nav";
+import { archive, demos, links, tools } from "@/lib/nav";
 import { NINO_PLUS_URL } from "@workspace/lib/constants";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Link from "next/link";
@@ -38,20 +39,34 @@ export async function MobileNav() {
             </DropdownMenuItem>
           ))}
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>ツール</DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
+            <DropdownMenuSubTrigger>{t["links"]}</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="max-h-[70dvh] overflow-auto">
+              <DropdownMenuLabel>{t["tools"]}</DropdownMenuLabel>
               {tools.map((tool) => (
                 <DropdownMenuItem key={tool.href} asChild>
                   <a href={tool.href} target="_blank">
                     {t[tool.labelKey].label}
+                    <ArrowUpRight className="size-3" />
                   </a>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
+              <DropdownMenuLabel>{t["demos"]}</DropdownMenuLabel>
+              {demos.map((demo) => (
+                <DropdownMenuItem key={demo.href} asChild>
+                  <a href={demo.href} target="_blank">
+                    {t[demo.labelKey].label}
+                    <ArrowUpRight className="size-3" />
+                  </a>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>{t["archive"]}</DropdownMenuLabel>
               {archive.map((archiveItem) => (
                 <DropdownMenuItem key={archiveItem.href} asChild>
                   <a href={archiveItem.href} target="_blank">
                     {t[archiveItem.labelKey].label}
+                    <ArrowUpRight className="size-3" />
                   </a>
                 </DropdownMenuItem>
               ))}
@@ -59,7 +74,7 @@ export async function MobileNav() {
             <DropdownMenuItem asChild>
               <a href={NINO_PLUS_URL} target="_blank">
                 nino+
-                <ArrowUpRight className="size-4" />
+                <ArrowUpRight className="size-3" />
               </a>
             </DropdownMenuItem>
           </DropdownMenuSub>

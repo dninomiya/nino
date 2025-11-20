@@ -9,9 +9,16 @@ export const tools = [
     labelKey: "toolhub",
   },
   {
-    href: "https://react-gude-plum.vercel.app/",
-    labelKey: "reactGuide",
+    href: "https://dninomiya.github.io/form-guide/stop-enter-submit",
+    labelKey: "stopEnterSubmit",
   },
+  {
+    href: "https://dninomiya.github.io/tree-to-image/",
+    labelKey: "treeToImage",
+  },
+] as const;
+
+export const demos = [
   {
     href: "https://swr-guide.vercel.app/basic",
     labelKey: "swrGuide",
@@ -21,28 +28,8 @@ export const tools = [
     labelKey: "nextjsRenderingGuide",
   },
   {
-    href: "https://dninomiya.github.io/stripe-doc/payments/",
-    labelKey: "stripeGuide",
-  },
-  {
-    href: "https://nextjs-play-app-routing.vercel.app/",
-    labelKey: "nextjsRoutingGuide",
-  },
-  {
-    href: "https://hub.nino.plus/",
-    labelKey: "hub",
-  },
-  {
     href: "https://dninomiya.github.io/form-guide/",
     labelKey: "formGuide",
-  },
-  {
-    href: "https://dninomiya.github.io/form-guide/stop-enter-submit",
-    labelKey: "stopEnterSubmit",
-  },
-  {
-    href: "https://dninomiya.github.io/tree-to-image/",
-    labelKey: "treeToImage",
   },
   {
     href: "https://next-16-guide.vercel.app/dynamic-cache",
@@ -51,6 +38,22 @@ export const tools = [
   {
     href: "https://better-auth-example-eta.vercel.app/",
     labelKey: "betterAuthExample",
+  },
+  {
+    href: "https://react-gude-plum.vercel.app/",
+    labelKey: "reactGuide",
+  },
+  {
+    href: "https://nextjs-play-app-routing.vercel.app/",
+    labelKey: "nextjsRoutingGuide",
+  },
+  {
+    href: "https://dninomiya.github.io/stripe-doc/payments/",
+    labelKey: "stripeGuide",
+  },
+  {
+    href: "https://hub.nino.plus/",
+    labelKey: "hub",
   },
 ] as const;
 

@@ -111,8 +111,10 @@ export default {
     registry: "Registry",
     architecture: "Architecture",
     tools: "Tools",
+    links: "Links",
     membership: "Membership",
     archive: "Archive",
+    demos: "Demos",
     toolhub: {
       label: "ToolHub",
       description: "Tool links collection",

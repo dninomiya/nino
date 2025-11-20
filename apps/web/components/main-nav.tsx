@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { getMessage } from "@/lib/i18n/server";
-import { archive, links, tools } from "@/lib/nav";
+import { archive, demos, links, tools } from "@/lib/nav";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@workspace/ui/components/navigation-menu";
-import { Archive, ArrowUpRight } from "lucide-react";
+import { Archive, ArrowUpRight, Code2, ToolCase } from "lucide-react";
 import Link from "next/link";
 
 export async function MainNav() {
@@ -35,8 +35,12 @@ export async function MainNav() {
         ))}
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>{t.tools}</NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <NavigationMenuTrigger>{t.links}</NavigationMenuTrigger>
+          <NavigationMenuContent className="h-[70dvh] overflow-auto!">
+            <h3 className="text-sm flex items-center font-semibold mb-2 px-2 text-muted-foreground mt-2">
+              <ToolCase className="size-4 mr-2" />
+              {t["tools"]}
+            </h3>
             <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               {tools.map((tool) => (
                 <ListItem
@@ -48,7 +52,24 @@ export async function MainNav() {
                 </ListItem>
               ))}
             </ul>
-            <Separator className="my-4" />
+            <Separator className="mt-2 mb-4" />
+            <h3 className="text-sm flex items-center font-semibold mb-2 px-2 text-muted-foreground">
+              <Code2 className="size-4 mr-2" />
+              {t["demos"]}
+            </h3>
+            <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              {demos.map((demoItem) => (
+                <ListItem
+                  key={demoItem.labelKey}
+                  title={t[demoItem.labelKey].label}
+                  href={demoItem.href}
+                >
+                  {t[demoItem.labelKey].description}
+                </ListItem>
+              ))}
+            </ul>
+
+            <Separator className="mt-2 mb-4" />
             <h3 className="text-sm flex items-center font-semibold mb-2 px-2 text-muted-foreground">
               <Archive className="size-4 mr-2" />
               {t["archive"]}

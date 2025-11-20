@@ -111,8 +111,10 @@ export default {
     registry: "レジストリ",
     architecture: "アーキテクチャ",
     tools: "ツール",
+    links: "リンク",
     membership: "メンバーシップ",
     archive: "アーカイブ",
+    demos: "デモ",
     toolhub: {
       label: "ToolHub",
       description: "ツールのリンク集",
@@ -147,7 +149,7 @@ export default {
     },
     stopEnterSubmit: {
       label: "Stop Enter Submit",
-      description: "Enterキーでの誤送信防止を啓蒙ツール",
+      description: "Enterキーでの誤送信を防止する啓蒙ツール",
     },
     treeToImage: {
       label: "Tree to Image",
