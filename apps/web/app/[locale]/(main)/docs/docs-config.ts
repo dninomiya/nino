@@ -18,6 +18,7 @@ export const docsConfig = {
         "better-auth",
         "product-development-policy",
         "recommended-tools",
+        "proxy",
       ],
     },
     {
