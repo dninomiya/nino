@@ -54,3 +54,6 @@ export const MENTOR_ZOOM_URL =
 
 export const COMMUNITY_ZOOM_URL =
   "https://us06web.zoom.us/j/83310204869?pwd=BkGoNQGECmvODcP4bb915AnfcJSpzN.1";
+
+export const OFFER_URL =
+  "https://nino-plus.notion.site/2b01fc40c97580c4be32d9d4ba9659e1?pvs=105";
