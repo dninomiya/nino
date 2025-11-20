@@ -20,6 +20,7 @@ export const docsConfig = {
         "recommended-tools",
         "proxy",
         "internationalization",
+        "swr",
       ],
     },
     {
