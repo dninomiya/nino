@@ -28,7 +28,7 @@ const getRegistryItems = (type: string) => {
 
 export default async function RegistryPage({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
-  const items = await getRegistryItems("registry:block");
+  const items = await getRegistryItems("registry:component");
   const t = await getMessage("RegistryPage");
 
   return (
