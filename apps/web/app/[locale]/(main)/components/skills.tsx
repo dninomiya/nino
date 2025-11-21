@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { InView } from "@workspace/registry/components/in-view";
 import { cn } from "@/lib/utils";
 import {
+  SiAsana,
   SiDiscord,
+  SiNotion,
+  SiOpenai,
+  SiSlack,
   SiX,
   SiYoutube,
   SiZenn,
@@ -17,10 +21,14 @@ import {
   CardContent,
   CardDescription,
 } from "@workspace/ui/components/card";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Hammer } from "lucide-react";
+import { YouTubeVideo } from "@/registry/components/youtube-video";
 
 const brandingBadgeStyle =
-  "font-bold shadow-lg opacity-0 scale-80 group-data-[in-view=true]:opacity-100 group-data-[in-view=true]:scale-100";
+  "font-bold shadow-lg opacity-0 scale-80 transition duration-800 hover:scale-105 group-data-[in-view=true]:opacity-100 group-data-[in-view=true]:scale-100 duration-400";
+
+const toolIconStyle =
+  "border rounded-lg size-20 grid place-content-center bg-linear-to-tr from-muted shadow-xl *:size-9 ring-background ring-4 transition duration-400 hover:-translate-y-4";
 
 export const Skills = () => {
   return (
@@ -45,6 +53,43 @@ export const Skills = () => {
           ></iframe>
         </SkillItem>
         <SkillItem
+          title="ビジネス駆動"
+          description="競合やユーザーの動向に合わせて柔軟かつ迅速にMVPの展開やPOCを行います。他社を圧倒するスピードでビジネスを推進します。"
+          tags={["POC", "MVP"]}
+        ></SkillItem>
+        <SkillItem
+          title="DX推進"
+          description="機動力を活かし、社内の業務効率化ツールを素早く展開できます。あるいは既存ツールをリプレイすることでランニングコストを大きく削減できます。"
+          className="overflow-hidden"
+          tags={[
+            "顧客管理システム",
+            "競合調査ダッシュボード",
+            "顧客分析ダッシュボード",
+            "情報管理ツールの導入、普及",
+          ]}
+        >
+          <InView>
+            <div className="flex -space-x-4 justify-center transition duration-800 translate-y-full group-data-[in-view=true]:translate-y-0">
+              <div className={cn(toolIconStyle, "-rotate-5")}>
+                <SiNotion />
+              </div>
+              <div className={cn(toolIconStyle, "rotate-2")}>
+                <SiAsana />
+              </div>
+              <div className={cn(toolIconStyle, "-rotate-4")}>
+                <SiOpenai />
+              </div>
+              <div className={cn(toolIconStyle, "rotate-4")}>
+                <SiSlack />
+              </div>
+              <div className={cn(toolIconStyle, "rotate-4")}>
+                <Hammer />
+              </div>
+            </div>
+          </InView>
+        </SkillItem>
+
+        <SkillItem
           title="技術教育"
           description="長年のメンター経験を活かし、技術者育成が可能です。非技術職のメンバーにAIツールや開発技術を教えることもできます。"
           tags={[
@@ -53,22 +98,9 @@ export const Skills = () => {
             "AIツールの勉強会",
             "技術者の人事評価制度の構築",
           ]}
-        ></SkillItem>
-        <SkillItem
-          title="DX推進"
-          description="機動力を活かし、社内の業務効率化ツールを素早く展開できます。あるいは既存ツールをリプレイすることでランニングコストを大きく削減できます。"
-          tags={[
-            "顧客管理システム",
-            "競合調査ダッシュボード",
-            "顧客分析ダッシュボード",
-            "情報管理ツールの導入、普及",
-          ]}
-        ></SkillItem>
-        <SkillItem
-          title="ビジネス駆動"
-          description="競合やニーズの動向に合わせて柔軟かつ迅速にMVPの展開やPOCを行います。他社を圧倒するスピードでビジネスを推進します。"
-          tags={["POC", "MVP"]}
-        ></SkillItem>
+        >
+          <YouTubeVideo videoid="FXF2LSX7Cy8" />
+        </SkillItem>
         <SkillItem
           title="ブランディング、採用支援"
           description="動画、図解を通した発信を得意とするため、エンジニア組織のブランディングや採用に貢献します。ユーザーと積極的に交流することでプロダクトの信頼性を高め、ユーザー獲得にも貢献します。"
@@ -88,7 +120,7 @@ export const Skills = () => {
                     asChild
                     size="sm"
                     variant="outline"
-                    className={cn(brandingBadgeStyle, "origin-right")}
+                    className={cn(brandingBadgeStyle, "origin-right rotate-4")}
                   >
                     <a href={X_URL} target="_blank">
                       <SiX /> 4,800人のフォロワー
@@ -99,7 +131,7 @@ export const Skills = () => {
                     asChild
                     size="sm"
                     variant="outline"
-                    className="font-bold shadow-lg -rotate-2"
+                    className={cn(brandingBadgeStyle, "origin-right -rotate-2")}
                   >
                     <a href={AUTHOR_ZENN_URL} target="_blank">
                       <SiZenn /> 技術ブログでの発信
@@ -120,7 +152,7 @@ export const Skills = () => {
                     asChild
                     size="sm"
                     variant="outline"
-                    className="font-bold shadow-lg -rotate-4"
+                    className={cn(brandingBadgeStyle, "origin-left -rotate-4")}
                   >
                     <a href={YOUTUBE_URL} target="_blank">
                       <SiYoutube /> YouTube での発信
@@ -130,7 +162,7 @@ export const Skills = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="font-bold shadow-lg rotate-2"
+                    className={cn(brandingBadgeStyle, "origin-left rotate-2")}
                   >
                     <SiDiscord /> ユーザーコミュニティの運営
                   </Button>

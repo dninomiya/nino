@@ -8,22 +8,29 @@ export function InView({
   children,
   asChild,
   className,
+  threshold = 1,
   ...props
 }: {
   children: React.ReactNode;
   asChild?: boolean;
   className?: string;
+  threshold?: number;
 } & React.ComponentProps<"div">) {
   const [inView, setInView] = useState(false);
   const Component = asChild ? Slot : "div";
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        setInView(entry.isIntersecting);
-      });
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: threshold,
+      }
+    );
     if (ref.current) {
       observer.observe(ref.current);
     }

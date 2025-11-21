@@ -5,15 +5,15 @@
   "items": [
     {
       "name": "codes",
-      "type": "registry:block",
+      "type": "registry:component",
       "title": "Codes",
       "description": "シンタックスハイライトとタブ切り替え機能を備えた高機能なコードブロックコンポーネント。",
       "registryDependencies": ["button", "select"],
       "dependencies": ["@radix-ui/react-tabs"],
       "files": [
         {
-          "path": "registry/new-york/blocks/codes.tsx",
-          "type": "registry:block"
+          "path": "registry/new-york/components/codes.tsx",
+          "type": "registry:component"
         }
       ]
     },
@@ -31,7 +31,7 @@
     },
     {
       "name": "image-cropper",
-      "type": "registry:block",
+      "type": "registry:component",
       "title": "Image Cropper",
       "description": "画像のアップロード、プレビュー、クロップ機能を提供するコンポーネント群。",
       "registryDependencies": ["button", "slider"],
@@ -42,20 +42,20 @@
       ],
       "files": [
         {
-          "path": "registry/new-york/blocks/image-cropper.tsx",
-          "type": "registry:block"
+          "path": "registry/new-york/components/image-cropper.tsx",
+          "type": "registry:component"
         }
       ]
     },
     {
       "name": "youtube-video",
-      "type": "registry:block",
+      "type": "registry:component",
       "title": "YouTube Video",
       "description": "YouTube 動画を簡単にレスポンシブ埋め込みできるコンポーネント。",
       "files": [
         {
-          "path": "registry/new-york/blocks/youtube-video.tsx",
-          "type": "registry:block"
+          "path": "registry/new-york/components/youtube-video.tsx",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@next/third-parties"],
