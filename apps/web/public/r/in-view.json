@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "in-view",
+  "type": "registry:component",
+  "title": "In View",
+  "description": "要素が画面に入った時に属性を付与するコンポーネント。",
+  "files": [
+    {
+      "path": "registry/new-york/components/in-view.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { useEffect, useRef, useState } from \"react\";\n\nexport function InView({\n  children,\n  asChild,\n  className,\n  threshold = 1,\n  ...props\n}: {\n  children: React.ReactNode;\n  asChild?: boolean;\n  className?: string;\n  threshold?: number;\n} & React.ComponentProps<\"div\">) {\n  const [inView, setInView] = useState(false);\n  const Component = asChild ? Slot : \"div\";\n  const ref = useRef<HTMLDivElement>(null);\n\n  useEffect(() => {\n    const observer = new IntersectionObserver(\n      (entries) => {\n        entries.forEach((entry) => {\n          setInView(entry.isIntersecting);\n        });\n      },\n      {\n        threshold: threshold,\n      }\n    );\n    if (ref.current) {\n      observer.observe(ref.current);\n    }\n    return () => observer.disconnect();\n  }, []);\n\n  return (\n    <Component\n      data-in-view={inView}\n      className={cn(\"group\", className)}\n      ref={ref}\n      {...props}\n    >\n      {children}\n    </Component>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ]
+}

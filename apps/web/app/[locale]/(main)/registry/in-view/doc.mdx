@@ -1,0 +1,27 @@
+---
+title: In View
+description: 要素が画面に入った時に属性を付与するコンポーネント。
+createdAt: 2025-11-21
+---
+
+import Preview from "./preview";
+
+要素が画面に入った時に `data-in-view="true"` 属性を付与するコンポーネント。これを使ってCSSをアニメーションさせることができます。
+
+<ComponentPreview>
+  <ComponentPreviewCode>
+```tsx file=./preview.tsx
+```
+  </ComponentPreviewCode>
+  <ComponentPreviewDemo>
+    <Preview />
+  </ComponentPreviewDemo>
+</ComponentPreview>
+
+## インストール
+
+<RegistryInstallCommand registryName="in-view" />
+
+## オプション
+
+- threshold: 要素が画面に入った時に属性を付与する閾値。0から1の間で指定。デフォルトは1。

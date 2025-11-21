@@ -40,13 +40,13 @@ export async function RegistrySidebar({
         title: t.gettingStarted,
         items: getGettingStartedItems(),
       },
-      {
-        title: t.blocks,
-        items: getRegistryItems("registry:block"),
-      },
+      // {
+      //   title: t.blocks,
+      //   items: getRegistryItems("registry:block"),
+      // },
       {
         title: t.components,
-        items: getRegistryItems("registry:components"),
+        items: getRegistryItems("registry:component"),
       },
       {
         title: t.libraries,
