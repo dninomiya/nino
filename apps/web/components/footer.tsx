@@ -52,14 +52,6 @@ const footerLinks = [
     titleKey: "linksTitle",
     links: [
       {
-        href: "/feeds",
-        labelKey: "feed",
-      },
-      {
-        href: "/status",
-        labelKey: "status",
-      },
-      {
         href: "/docs",
         labelKey: "docs",
       },
@@ -68,12 +60,21 @@ const footerLinks = [
         labelKey: "registry",
       },
       {
-        href: "/todo",
-        labelKey: "todo",
-      },
-      {
         href: "/architecture",
         labelKey: "architecture",
+      },
+    ],
+  },
+  {
+    titleKey: "tools",
+    links: [
+      {
+        href: "/feeds",
+        labelKey: "feed",
+      },
+      {
+        href: "/status",
+        labelKey: "status",
       },
     ],
   },

@@ -175,6 +175,7 @@ export default {
   },
   Footer: {
     linksTitle: "Links",
+    tools: "Tools",
     todo: "ToDo",
     feed: "Feed",
     status: "Status",

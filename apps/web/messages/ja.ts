@@ -175,6 +175,7 @@ export default {
   },
   Footer: {
     linksTitle: "リンク",
+    tools: "ツール",
     todo: "ToDo",
     feed: "フィード",
     status: "ステータス",
