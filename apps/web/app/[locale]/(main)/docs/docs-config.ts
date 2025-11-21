@@ -27,6 +27,7 @@ export const docsConfig = {
         "prompt-guide",
         "css-tips",
         "self-branding",
+        "self-onboarding",
       ],
     },
     {
