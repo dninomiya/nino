@@ -25,6 +25,7 @@ export const docsConfig = {
         "next-js-issues",
         "app-development-flow",
         "prompt-guide",
+        "css-tips",
       ],
     },
     {
