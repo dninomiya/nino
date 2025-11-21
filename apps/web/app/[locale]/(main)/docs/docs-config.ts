@@ -28,6 +28,7 @@ export const docsConfig = {
         "css-tips",
         "self-branding",
         "self-onboarding",
+        "office-tools",
       ],
     },
     {
