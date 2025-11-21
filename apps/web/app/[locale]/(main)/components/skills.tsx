@@ -33,12 +33,12 @@ const toolIconStyle =
 export const Skills = () => {
   return (
     <section className="container py-10">
-      <h2 className="text-4xl font-bold mb-6">能力</h2>
+      <h2 className="text-2xl lg:text-4xl font-bold mb-6">能力</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <SkillItem
           title="Webアプリケーションのワンストップ開発"
           description="モダンな技術を使い、1〜数名でWebアプリケーションを開発できます。テックリード、プレイングマネージャー、PM、スクラムマスターとしてプロダクト開発をリードします。"
-          className="col-span-2 row-span-2"
+          className="lg:col-span-2 lg:row-span-2"
           tags={[
             "Eラーニング",
             "マッチング",
@@ -104,7 +104,7 @@ export const Skills = () => {
         <SkillItem
           title="ブランディング、採用支援"
           description="動画、図解を通した発信を得意とするため、エンジニア組織のブランディングや採用に貢献します。ユーザーと積極的に交流することでプロダクトの信頼性を高め、ユーザー獲得にも貢献します。"
-          className="col-span-2"
+          className="lg:col-span-2 overflow-hidden"
           contentSide="top"
           tags={[
             "Xでの発信",
@@ -112,18 +112,21 @@ export const Skills = () => {
             "対外的イベントの開催、登壇",
           ]}
         >
-          <div className="flex items-center justify-center aspect-16/5">
-            <InView>
+          <div className="flex items-center justify-center lg:aspect-16/5">
+            <InView className="w-full overflow-hidden py-10">
               <div className="flex items-center">
-                <div className="flex-1 text-center space-y-6">
+                <div className="flex-1 text-center flex flex-col gap-6 items-center">
                   <Button
                     asChild
                     size="sm"
                     variant="outline"
-                    className={cn(brandingBadgeStyle, "origin-right rotate-4")}
+                    className={cn(brandingBadgeStyle, "origin-right rotate-2")}
                   >
                     <a href={X_URL} target="_blank">
-                      <SiX /> 4,800人のフォロワー
+                      <SiX />
+                      <span className="hidden lg:inline">
+                        4,800人のフォロワー
+                      </span>
                       <ArrowUpRight />
                     </a>
                   </Button>
@@ -134,20 +137,24 @@ export const Skills = () => {
                     className={cn(brandingBadgeStyle, "origin-right -rotate-2")}
                   >
                     <a href={AUTHOR_ZENN_URL} target="_blank">
-                      <SiZenn /> 技術ブログでの発信
+                      <SiZenn />
+                      <span className="hidden lg:inline">
+                        技術ブログでの発信
+                      </span>
                       <ArrowUpRight />
                     </a>
                   </Button>
                 </div>
-                <div className="relative">
-                  <div className="absolute inset-0 border border-sky-500 animate-ping rounded-full bg-radial to-sky-500" />
+                <div className="relative shrink-0">
+                  <div className="absolute inset-0 animate-ping rounded-full bg-radial to-muted" />
                   <Logo
-                    className="rounded-full outline-4 outline-offset-1 outline-border"
-                    width={120}
+                    className="rounded-full outline-4 outline-offset-1 outline-border size-16 lg:size-30"
+                    width={240}
+                    height={240}
                     noLink
                   />
                 </div>
-                <div className="flex-1 text-center space-y-6">
+                <div className="flex-1 text-center flex flex-col gap-6 items-center">
                   <Button
                     asChild
                     size="sm"
@@ -155,7 +162,8 @@ export const Skills = () => {
                     className={cn(brandingBadgeStyle, "origin-left -rotate-4")}
                   >
                     <a href={YOUTUBE_URL} target="_blank">
-                      <SiYoutube /> YouTube での発信
+                      <SiYoutube />
+                      <span className="hidden lg:inline">YouTube での発信</span>
                       <ArrowUpRight />
                     </a>
                   </Button>
@@ -164,7 +172,10 @@ export const Skills = () => {
                     variant="outline"
                     className={cn(brandingBadgeStyle, "origin-left rotate-2")}
                   >
-                    <SiDiscord /> ユーザーコミュニティの運営
+                    <SiDiscord />
+                    <span className="hidden lg:inline">
+                      ユーザーコミュニティの運営
+                    </span>
                   </Button>
                 </div>
               </div>
