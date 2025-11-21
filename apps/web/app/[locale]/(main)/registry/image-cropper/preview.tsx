@@ -4,7 +4,7 @@ import {
   ImageCropper,
   ImageCropperFileSelector,
   ImageCropperPreview,
-} from "@/registry/blocks/image-cropper";
+} from "@/registry/components/image-cropper";
 import {
   Dialog,
   DialogContent,

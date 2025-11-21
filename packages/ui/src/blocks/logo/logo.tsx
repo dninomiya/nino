@@ -12,21 +12,26 @@ import {
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@workspace/ui/lib/utils";
 
 export const Logo = ({
   width = 36,
   height = 36,
   noLink,
+  className,
 }: {
   width?: number;
   height?: number;
   noLink?: boolean;
+  className?: string;
 }) => {
   const [open, setOpen] = useState(false);
 
   if (noLink) {
     return (
-      <div className="relative w-fit overflow-hidden rounded-lg">
+      <div
+        className={cn("relative w-fit overflow-hidden rounded-lg", className)}
+      >
         <Image src={img} alt={APP_NAME} width={width} height={height} />
       </div>
     );
@@ -34,7 +39,9 @@ export const Logo = ({
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <div className="relative w-fit overflow-hidden rounded-lg">
+      <div
+        className={cn("relative w-fit overflow-hidden rounded-lg", className)}
+      >
         <DropdownMenuTrigger className="absolute inset-0" disabled />
         <Link
           href="/"

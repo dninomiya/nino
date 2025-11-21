@@ -1,11 +1,11 @@
 import { Footer } from "@/components/footer";
-import { getMessage, setCurrentLocaleFromParams } from "@/lib/i18n/server";
+import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
 import { OFFER_URL } from "@workspace/lib/constants";
 import Link from "next/link";
+import { Skills } from "./components/skills";
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const locale = await setCurrentLocaleFromParams(params);
-  const t = await getMessage("MainPage");
 
   return (
     <>
@@ -43,6 +43,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
             </h1>
           )}
         </section>
+
+        <Skills />
       </div>
       <Footer />
     </>

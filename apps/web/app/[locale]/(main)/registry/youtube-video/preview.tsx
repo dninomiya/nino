@@ -1,4 +1,4 @@
-import { YouTubeVideo } from "@/registry/blocks/youtube-video";
+import { YouTubeVideo } from "@/registry/components/youtube-video";
 
 export default function YouTubeVideoPreview() {
   return <YouTubeVideo videoid="sF80I-TQiW0" />;

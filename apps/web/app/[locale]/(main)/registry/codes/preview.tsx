@@ -20,7 +20,7 @@ import {
   CodeCopyButton,
   CodeGroupSelector,
   CodeGroupOption,
-} from "@/registry/blocks/codes";
+} from "@/registry/components/codes";
 import { generateCodeHtml } from "@/lib/code-to-html";
 // import { generateCodeHtml } from "@/lib/code-to-html";
 
