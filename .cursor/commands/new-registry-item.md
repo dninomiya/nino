@@ -1,4 +1,4 @@
 - packages/registry/registry.json に新しいレジストリアイテムを追加する
 - apps/web/app/[locale]/(main)/registry/ に doc.mdx と preview.tsx を作成する
 - 日付は date コマンドで取得し、YYYY-MM-DD 形式で設定する
-- 内容は空でOK。ファイル名はタイトルに伴うケバブケースの英語で作成する
+- 内容は空でOK。**ファイル名はタイトルに伴うケバブケースの英語で作成する**

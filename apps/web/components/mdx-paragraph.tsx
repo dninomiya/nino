@@ -1,4 +1,4 @@
-import { YouTubeVideo } from "@/registry/blocks/youtube-video";
+import { YouTubeVideo } from "@/registry/components/youtube-video";
 import { ReactNode } from "react";
 import { GitHubRepo } from "./github-repo";
 

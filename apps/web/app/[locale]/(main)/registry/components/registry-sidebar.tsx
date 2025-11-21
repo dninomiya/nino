@@ -45,6 +45,10 @@ export async function RegistrySidebar({
         items: getRegistryItems("registry:block"),
       },
       {
+        title: t.components,
+        items: getRegistryItems("registry:components"),
+      },
+      {
         title: t.libraries,
         items: getRegistryItems("registry:lib"),
       },

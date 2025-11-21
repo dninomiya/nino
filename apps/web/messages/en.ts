@@ -95,6 +95,7 @@ export default {
     gettingStarted: "Getting Started",
     blocks: "Blocks",
     libraries: "Libraries",
+    components: "Components",
   },
   MainPage: {
     filterTitle: "Filter",

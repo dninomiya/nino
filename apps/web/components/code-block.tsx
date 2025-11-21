@@ -9,7 +9,7 @@ import {
   CodeList,
   Codes,
   CodeTrigger,
-} from "@/registry/blocks/codes";
+} from "@workspace/registry/components/codes";
 import {
   SiBun,
   SiCss,

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { InView } from "@workspace/registry/components/in-view";
 import { cn } from "@/lib/utils";
-import { InView } from "react-intersection-observer";
 import {
   SiDiscord,
   SiX,
@@ -18,6 +18,9 @@ import {
   CardDescription,
 } from "@workspace/ui/components/card";
 import { ArrowUpRight } from "lucide-react";
+
+const brandingBadgeStyle =
+  "font-bold shadow-lg opacity-0 scale-80 group-data-[in-view=true]:opacity-100 group-data-[in-view=true]:scale-100";
 
 export const Skills = () => {
   return (
@@ -85,7 +88,7 @@ export const Skills = () => {
                     asChild
                     size="sm"
                     variant="outline"
-                    className="font-bold shadow-lg rotate-4"
+                    className={cn(brandingBadgeStyle, "origin-right")}
                   >
                     <a href={X_URL} target="_blank">
                       <SiX /> 4,800人のフォロワー

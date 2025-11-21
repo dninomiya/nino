@@ -96,6 +96,7 @@ export default {
     gettingStarted: "はじめに",
     blocks: "ブロック",
     libraries: "ライブラリ",
+    components: "コンポーネント",
   },
   MainPage: {
     filterTitle: "絞り込み",

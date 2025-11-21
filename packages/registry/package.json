@@ -8,6 +8,7 @@
   "exports": {
     ".": "./registry.json",
     "./blocks/*": "./registry/new-york/blocks/*.tsx",
+    "./components/*": "./registry/new-york/components/*.tsx",
     "./lib/*": "./registry/new-york/lib/*.ts"
   },
   "dependencies": {

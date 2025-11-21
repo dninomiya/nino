@@ -2,7 +2,7 @@ import { getDocMetas } from "@/lib/docs";
 import { Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/server";
 import { getRegistryDocMetas } from "@/lib/registry";
-import { CodeProvider } from "@/registry/blocks/codes";
+import { CodeProvider } from "@/registry/components/codes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { DocProvider } from "./doc-provider";
 import { I18nProvider } from "./i18n-provider";
