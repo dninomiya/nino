@@ -10,6 +10,10 @@ export const gettingStartedItems = [
     name: "mcp",
     title: "MCP",
   },
+  {
+    name: "template",
+    title: "テンプレート",
+  },
 ] as const;
 
 export const registryDocNames = [

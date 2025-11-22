@@ -1,0 +1,35 @@
+---
+title: テンプレート
+description: テンプレートを使用すると、プロジェクトを迅速に立ち上げることができます。
+createdAt: 2025-11-22
+---
+
+事前に[スポンサー](/sponsors)の登録と [gh](https://cli.github.com/) のインストールが必要です。
+
+## 初期化
+
+`foo` の部分は自分のリポジトリ名にしてください。
+
+```sh
+gh repo create foo --template nino-plus/turborepo-template --clone --private
+```
+
+- Turborepo
+- Better Auth
+- nuqs
+- Drizzle
+- shadcn/ui
+- Resend
+- Storybook
+- Playwright
+- Vitest
+
+などが入ったテンプレートリポジトリをGitHub上に作成し、コマンドを実行したディレクトリにクローンされます。
+
+## セットアップ
+
+```sh
+pnpm install
+pnpm setup # 環境変数ファイルやローカルDBファイルの作成
+pnpm dev
+```
