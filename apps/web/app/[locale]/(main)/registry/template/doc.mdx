@@ -4,15 +4,25 @@ description: テンプレートを使用すると、プロジェクトを迅速�
 createdAt: 2025-11-22
 ---
 
-事前に[スポンサー](/sponsors)の登録と [gh](https://cli.github.com/) のインストールが必要です。
-
 ## 初期化
 
-`foo` の部分は自分のリポジトリ名にしてください。
+`foo` の部分は自分のリポジトリ名にしてください。事前に[スポンサー](/sponsors)の登録と [gh](https://cli.github.com/) のインストールが必要です。
+
+### リポジトリを作成する場合
 
 ```sh
-gh repo create foo --template nino-plus/turborepo-template --clone --private
+gh repo create my-app --template nino-plus/turborepo-template --clone --private
 ```
+
+### リポジトリの作成が不要な場合
+
+クローン後、手動でリモートリポジトリを接続してください。
+
+```sh
+git clone https://github.com/nino-plus/turborepo-template.git my-app
+```
+
+### 内容
 
 - Turborepo
 - Better Auth
@@ -26,16 +36,10 @@ gh repo create foo --template nino-plus/turborepo-template --clone --private
 
 などが入ったテンプレートリポジトリをGitHub上に作成し、コマンドを実行したディレクトリにクローンされます。
 
-リポジトリの作成が不要な場合は単にクローンし、リポートリポジトリを自分で設定してください。
-
-```sh
-git clone https://github.com/nino-plus/turborepo-template.git
-```
-
 ## セットアップ
 
 ```sh
 pnpm install
-pnpm setup # 環境変数ファイルやローカルDBファイルの作成
+pnpm run setup # 環境変数ファイルやローカルDBファイルの作成
 pnpm dev
 ```
