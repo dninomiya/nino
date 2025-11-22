@@ -29,6 +29,7 @@ export const docsConfig = {
         "self-branding",
         "self-onboarding",
         "office-tools",
+        "email",
       ],
     },
     {

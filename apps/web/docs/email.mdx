@@ -1,0 +1,101 @@
+---
+title: Email
+createdAt: 2025-11-22
+sponsors: true
+---
+
+- ローカルメール送信（開発）: [Mailpit](https://mailpit.axllent.org/)
+- リモートメール送信（本番）: [Resend](https://resend.com/)
+
+## Mailpit のセットアップ
+
+以下のコマンドでMailpitを起動します。以後ローカルで送信されたメールはMailpitで確認できます。Playwrightのテストでも利用できます。
+
+```sh
+brew services start mailpit
+
+# ブラウザで開く
+# http://localhost:8025
+```
+
+## メール送信ヘルパーを作成
+
+```sh
+pnpm add nodemailer @react-email/components resend
+pnpm add -D @types/nodemailer
+```
+
+```ts
+import { render } from "@react-email/components";
+import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+const DEFAULT_FROM = "noreply@resend.dev";
+
+type SendEmailProps = {
+  from?: string;
+  to: string;
+  subject: string;
+  react?: React.ReactNode;
+  text: string;
+};
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const sendResendEmail = async (props: SendEmailProps) => {
+  const response = await resend.emails.send({
+    ...props,
+    from: props.from ?? DEFAULT_FROM,
+  });
+  return response;
+};
+
+const transporter = nodemailer.createTransport({
+  host: "localhost",
+  port: 1025,
+  secure: false,
+});
+
+const sendMailpitEmail = async ({ react, ...props }: SendEmailProps) => {
+  const info = await transporter.sendMail({
+    ...props,
+    html: react ? await render(react) : undefined,
+    from: props.from ?? DEFAULT_FROM,
+  });
+  return info;
+};
+
+export const sendEmail = async (props: SendEmailProps) => {
+  if (process.env.NODE_ENV === "production") {
+    return sendResendEmail(props);
+  }
+  return sendMailpitEmail(props);
+};
+```
+
+```ts
+"use server";
+
+export const deleteUser = async () => {
+  // ユーザーを削除する処理...
+
+  await sendEmail({
+    to: "test@example.com",
+    subject: "ユーザー削除のお知らせ",
+    text: "ユーザー削除のお知らせ",
+    react: <DeleteUserEmail url="https://example.com" />,
+  });
+}
+```
+
+## HTMLメール
+
+[React Email](https://react.email/) を使うと簡単にHTMLメールを作成できます。
+
+## Resend のドメインについて
+
+`resend.dev` ドメインを使えば独自ドメインを接続しなくてもメール送信できます。ただし、 `resend.dev` ドメインは制限があるためあくまで開発用途で使用し、最終的に本番環境では独自ドメインを使用してください。
+
+また、送信先につても送信失敗扱いになるアドレスが用意されています。
+
+https://resend.dev/
