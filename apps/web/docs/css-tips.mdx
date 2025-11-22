@@ -31,3 +31,12 @@ PCファーストで開発すると折り返しが少ないため気付きづら
 ```tsx
 <h2 className="leading-relaxed tracking-wide">長いテキスト</h2>
 ```
+
+## ヒーローセクションの高さをスクリーンサイズに合わせる
+
+`dvh` を使うと iOS Safari でスクロールした際に Safari のアドレスバーが表示されるため、高さの基準が変わってがたつきが生じる。**後続の要素がある場合**は `dvh` ではなく `lvh` を使う。
+
+```tsx
+<section className="h-lvh">
+  <h1>キャッチフレーズ</div>
+</section>
