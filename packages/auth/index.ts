@@ -2,7 +2,7 @@ import { getActiveSubscription } from "./subscription";
 import { db } from "@workspace/db";
 import { GithubAccount } from "./github";
 import { stripe } from "@better-auth/stripe";
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-auth/minimal";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nanoid } from "nanoid";
@@ -146,7 +146,7 @@ const getProviderAccount = async (provider: string) => {
   }
 
   const result = await auth.api.accountInfo({
-    body: { accountId: account.accountId },
+    query: { accountId: account.accountId },
     headers: await headers(),
   });
 
