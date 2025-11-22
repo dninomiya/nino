@@ -9,4 +9,4 @@ export async function generateStaticParams() {
   return params;
 }
 
-export { Image, size } from "@/components/opengraph-image";
+export { Image as default, size } from "@/components/opengraph-image";
