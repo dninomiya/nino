@@ -1,5 +1,8 @@
-import { DocMeta, getDocMetas } from "@/lib/docs";
+import { DocMeta, getDocMeta, getDocMetas } from "@/lib/docs";
 import { locales } from "@/lib/i18n/locale";
+import { generateOpenGraphImage } from "@/components/opengraph-image";
+
+export { size } from "@/components/opengraph-image";
 
 export async function generateStaticParams() {
   const docs = (await getDocMetas()) as DocMeta[];
@@ -9,4 +12,10 @@ export async function generateStaticParams() {
   return params;
 }
 
-export { Image as default, size } from "@/components/opengraph-image";
+export default async function OpenGraphImage({
+  params,
+}: PageProps<"/[locale]/docs/[id]">) {
+  const id = (await params).id;
+  const doc = await getDocMeta(id);
+  return generateOpenGraphImage({ title: doc.title });
+}

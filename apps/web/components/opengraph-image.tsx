@@ -1,4 +1,3 @@
-import { getDocMeta } from "@/lib/docs";
 import { loadDefaultJapaneseParser } from "budoux";
 import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
@@ -26,11 +25,7 @@ async function loadGoogleFont(font: string, text: string) {
   throw new Error("failed to load font data");
 }
 
-export async function Image({ params }: { params: Promise<{ id: string }> }) {
-  const id = (await params).id;
-  const doc = await getDocMeta(id);
-  const title = doc.title;
-
+export async function generateOpenGraphImage({ title }: { title: string }) {
   const parser = loadDefaultJapaneseParser();
   const parsedTitle = parser.parse(title);
   const author = "dninomiya.com";
