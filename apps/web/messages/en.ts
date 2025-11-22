@@ -184,6 +184,10 @@ export default {
     description: "Developer.",
     architecture: "Architecture",
     copyright: "All rights reserved.",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    policies: "Policies",
+    legal: "Legal",
   },
   StatusPage: {
     title: "Service Status",

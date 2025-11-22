@@ -184,6 +184,10 @@ export default {
     architecture: "アーキテクチャ",
     description: "開発者。",
     copyright: "All rights reserved.",
+    terms: "利用規約",
+    privacy: "プライバシーポリシー",
+    policies: "ポリシー",
+    legal: "特定商取引法に基づく表示",
   },
   StatusPage: {
     title: "サービスステータス",

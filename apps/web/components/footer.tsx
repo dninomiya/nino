@@ -78,6 +78,23 @@ const footerLinks = [
       },
     ],
   },
+  {
+    titleKey: "policies",
+    links: [
+      {
+        href: "/terms",
+        labelKey: "terms",
+      },
+      {
+        href: "/privacy",
+        labelKey: "privacy",
+      },
+      {
+        href: "/legal",
+        labelKey: "legal",
+      },
+    ],
+  },
 ];
 
 export const Footer = () => {
