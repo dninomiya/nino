@@ -4,6 +4,9 @@
   "type": "registry:component",
   "title": "In View",
   "description": "要素が画面に入った時に属性を付与するコンポーネント。",
+  "dependencies": [
+    "@radix-ui/react-slot"
+  ],
   "files": [
     {
       "path": "registry/new-york/components/in-view.tsx",
