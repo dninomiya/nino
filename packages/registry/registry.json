@@ -73,7 +73,8 @@
           "path": "registry/new-york/components/in-view.tsx",
           "type": "registry:component"
         }
-      ]
+      ],
+      "dependencies": ["@radix-ui/react-slot"]
     }
   ]
 }
