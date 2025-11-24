@@ -1,5 +1,9 @@
 # Agents
 
+## Commit
+
+- コミットメッセージは conventional commits に従う。
+
 ## 実装フロー
 
 1. Drizzle スキーマの更新 /packages/db/schemas/
@@ -8,11 +12,18 @@
   - `export type Task = typeof taskSchema.tasks.$inferSelect;`
 4. /packages/db/zod/ にDrizzleスキーマを使ってZodスキーマを定義
   - `export const insertTaskSchema = createInsertSchema(tasks, {title: ...});`
-5. 各アプリケーションで使用
+5. /data にデータ取得関数を作成（`import "server-only"`）
+6. /actions にデータ作成、更新、削除関数を作成(`"use server"`)
+7. 各アプリケーションで使用
 
-## Commit
+## データ通信
 
-- コミットメッセージは conventional commits に従う。
+- クライアントからフェッチする場合、ルートハンドラーを作成し、 /swr にSWRフックを作成して使用する。
+
+## パッケージのインストール
+
+- パッケージをインストールする際は常に @latest をつけて最新バージョンをインストールする
+- app, package 間で同じパッケージがある場合最新バージョンに合わせて揃える
 
 ## Forms
 
