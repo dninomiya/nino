@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "turso dev -f local/local.db",
+    "dev": "turso dev -f local/local.db -p 8081",
     "generate": "pnpm drizzle-kit generate",
     "migrate": "pnpm drizzle-kit migrate",
     "gm": "pnpm drizzle-kit generate && pnpm drizzle-kit migrate",
