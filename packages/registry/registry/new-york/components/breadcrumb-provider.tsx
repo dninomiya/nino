@@ -53,7 +53,7 @@ export function BreadcrumbConfig({ items }: { items: BreadCrumbItem[] }) {
   return null;
 }
 
-export function MainBreadCrumb({ homeHref = "/" }: { homeHref?: string }) {
+export function BreadcrumbMain({ homeHref = "/" }: { homeHref?: string }) {
   const { breadcrumbs } = use(BreadcrumbContext);
 
   return (

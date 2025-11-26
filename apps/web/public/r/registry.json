@@ -75,6 +75,20 @@
         }
       ],
       "dependencies": ["@radix-ui/react-slot"]
+    },
+    {
+      "name": "breadcrumb-provider",
+      "type": "registry:component",
+      "title": "Breadcrumb Provider",
+      "description": "パンくずナビゲーション用のコンテキストプロバイダーとコンポーネント。宣言的にパンくずを定義できます。",
+      "registryDependencies": ["breadcrumb"],
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/new-york/components/breadcrumb-provider.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

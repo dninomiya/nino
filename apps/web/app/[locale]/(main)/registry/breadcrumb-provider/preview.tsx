@@ -3,7 +3,7 @@
 import {
   BreadcrumbProvider,
   BreadcrumbConfig,
-  MainBreadCrumb,
+  BreadcrumbMain,
 } from "@/registry/components/breadcrumb-provider";
 
 export default function Preview() {
@@ -16,8 +16,7 @@ export default function Preview() {
           { label: "ガイド" },
         ]}
       />
-      <MainBreadCrumb />
+      <BreadcrumbMain />
     </BreadcrumbProvider>
   );
 }
-

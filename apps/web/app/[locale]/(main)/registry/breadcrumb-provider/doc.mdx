@@ -10,8 +10,45 @@ import Preview from "./preview";
 
 <ComponentPreview>
   <ComponentPreviewCode>
-```tsx file=./preview.tsx
+
+:::code-group
+
+```tsx title=layout.tsx
+import { BreadcrumbProvider, BreadcrumbMain } from "@/registry/components/breadcrumb-provider";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <BreadcrumbProvider>
+      <header>LOGO</header>
+      <BreadcrumbMain />
+      {children}
+    </BreadcrumbProvider>
+  );
+}
 ```
+
+```tsx title=page.tsx
+import { BreadcrumbConfig } from "@/registry/components/breadcrumb-provider";
+
+export default function Page() {
+  return (
+    <div>
+      <BreadcrumbConfig items={[
+        { label: "ホーム", href: "/" },
+        { label: "ドキュメント", href: "/docs" },
+        { label: "ガイド" },
+      ]} />
+      <h1>Page</h1>
+    </div>
+  );
+}
+```
+
+:::
   </ComponentPreviewCode>
   <ComponentPreviewDemo>
     <Preview />
@@ -22,191 +59,24 @@ import Preview from "./preview";
 
 <RegistryInstallCommand registryName="breadcrumb-provider" />
 
-## BreadcrumbProvider の設置
+## 動的ルートでの使用
 
-パンくずの状態を管理するために、`BreadcrumbProvider` をレイアウトに設置する必要があります。
+```tsx title=/posts/[id]/page.tsx
+import { BreadcrumbConfig } from "@/registry/components/breadcrumb-provider";
 
-```tsx title="app/layout.tsx"
-import { BreadcrumbProvider } from "@/registry/components/breadcrumb-provider";
+export default async function Page({ params }: PageProps<"/posts/[id]">) {
+  const id = (await params).id;
+  const post = await getPost(id);
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="ja">
-      <body>
-        <BreadcrumbProvider>{children}</BreadcrumbProvider>
-      </body>
-    </html>
-  );
-}
-```
-
-## 使い方
-
-### 基本的な使い方
-
-```tsx
-import {
-  BreadcrumbProvider,
-  BreadcrumbConfig,
-  MainBreadCrumb,
-} from "@/registry/components/breadcrumb-provider";
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <BreadcrumbProvider>
-      <MainBreadCrumb />
-      {children}
-    </BreadcrumbProvider>
-  );
-}
-
-export default function Page() {
   return (
     <div>
-      <BreadcrumbConfig
-        items={[
-          { label: "設定", href: "/settings" },
-          { label: "プロフィール" },
-        ]}
-      />
-      <h1>プロフィール設定</h1>
+      <BreadcrumbConfig items={[
+        { label: "ホーム", href: "/" },
+        { label: "ポスト", href: "/posts" },
+        { label: post.title },
+      ]} />
+      <h1>{post.title}</h1>
     </div>
   );
 }
 ```
-
-### リンク付きパンくず
-
-```tsx
-<BreadcrumbConfig
-  items={[
-    { label: "ホーム", href: "/" },
-    { label: "ドキュメント", href: "/docs" },
-    { label: "ガイド" },
-  ]}
-/>
-```
-
-### カスタムホームリンク
-
-`MainBreadCrumb` コンポーネントの `homeHref` プロップでホームリンクをカスタマイズできます。
-
-```tsx
-<MainBreadCrumb homeHref="/admin" />
-```
-
-## コンポーネント
-
-### BreadcrumbProvider
-
-パンくずの状態を管理するコンテキストプロバイダー。
-
-**Props**
-
-| Name | Type | Description |
-|------|------|-------------|
-| children | React.ReactNode | 子要素 |
-
-### BreadcrumbConfig
-
-パンくずを設定するコンポーネント。ページコンポーネント内で使用します。
-
-**Props**
-
-| Name | Type | Description |
-|------|------|-------------|
-| items | BreadCrumbItem[] | パンくずのアイテム配列 |
-
-**BreadCrumbItem**
-
-| Name | Type | Description |
-|------|------|-------------|
-| label | string | パンくずのラベル（必須） |
-| href | string | リンク先のURL（オプション） |
-
-### MainBreadCrumb
-
-パンくずを表示するコンポーネント。
-
-**Props**
-
-| Name | Type | Description |
-|------|------|-------------|
-| homeHref | string | ホームリンクのURL（デフォルト: "/"） |
-
-### useBreadcrumbs
-
-パンくずデータにアクセスするフック。
-
-```tsx
-import { useBreadcrumbs } from "@/registry/components/breadcrumb-provider";
-
-function MyComponent() {
-  const { breadcrumbs, setBreadcrumbs } = useBreadcrumbs();
-  // ...
-}
-```
-
-## 実装のヒント
-
-### サーバーコンポーネントでの使用
-
-`BreadcrumbConfig` はクライアントコンポーネントですが、ページコンポーネントはサーバーコンポーネントのままにできます。
-
-```tsx
-// ✅ 良い例: ページコンポーネントはサーバーコンポーネント
-export default function Page() {
-  return (
-    <div>
-      <BreadcrumbConfig items={[{ label: "設定" }]} />
-      <h1>設定</h1>
-    </div>
-  );
-}
-```
-
-### 動的なパンくず
-
-動的なデータからパンくずを生成することもできます。
-
-```tsx
-export default async function PostPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const post = await getPost(params.id);
-
-  return (
-    <div>
-      <BreadcrumbConfig
-        items={[
-          { label: "ブログ", href: "/blog" },
-          { label: post.category, href: `/blog/${post.category}` },
-          { label: post.title },
-        ]}
-      />
-      <article>
-        <h1>{post.title}</h1>
-        {/* ... */}
-      </article>
-    </div>
-  );
-}
-```
-
-### クリーンアップ
-
-`BreadcrumbConfig` は自動的にクリーンアップを行います。コンポーネントがアンマウントされると、パンくずは空の配列にリセットされます。
-
-## 使用例
-
-- ドキュメントサイトでの階層ナビゲーション
-- 管理画面でのページ階層の表示
-- ブログやECサイトでのカテゴリ階層の表示
-- 設定ページでのセクション階層の表示
-
