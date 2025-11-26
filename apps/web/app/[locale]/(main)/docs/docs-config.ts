@@ -30,6 +30,7 @@ export const docsConfig = {
         "self-onboarding",
         "office-tools",
         "email",
+        "new-doc",
       ],
     },
     {
