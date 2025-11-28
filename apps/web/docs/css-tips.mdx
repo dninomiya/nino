@@ -41,3 +41,31 @@ PCファーストで開発すると折り返しが少ないため気付きづら
 <section className="h-lvh">
   <h1>キャッチフレーズ</div>
 </section>
+```
+
+## Next.js 環境で最初に行う調整
+
+### `layout.tsx` から `antialiased` を削除する
+
+これがあると日本語が細く表現されて見づらいため
+
+```tsx title=layout.tsx
+<body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}> // [!code --]
+<body className={`${fontSans.variable} ${fontMono.variable} font-sans`}> // [!code ++]
+```
+
+### `globals.css` で container のデフォルトスタイルを定義
+
+```css title=globals.css
+@utility container {
+  @apply mx-auto px-4 sm:px-6 lg:px-8;
+}
+```
+
+### body で `wrap-anywhere` を有効にする
+
+```css title=globals.css
+body {
+  @apply wrap-anywhere;
+}
+```
