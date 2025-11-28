@@ -31,6 +31,7 @@ export const docsConfig = {
         "office-tools",
         "email",
         "breadcrumb",
+        "sort",
       ],
     },
     {
