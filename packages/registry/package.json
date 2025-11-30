@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "registry:build": "shadcn build --output ../../apps/web/public/r/"
+    "registry:build": "shadcn build --output ../../apps/web/registry/out/r/"
   },
   "exports": {
     ".": "./registry.json",
     "./blocks/*": "./registry/new-york/blocks/*.tsx",
     "./components/*": "./registry/new-york/components/*.tsx",
-    "./lib/*": "./registry/new-york/lib/*.ts"
+    "./lib/*": "./registry/new-york/lib/*.ts",
+    "./jwt": "./jwt.ts"
   },
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.8.0",
@@ -20,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "google": "link:@next/third-parties/google",
+    "jose": "^6.1.2",
     "lucide-react": "^0.487.0",
     "next": "16.0.1",
     "react": "19.2.0",
