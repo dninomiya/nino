@@ -89,6 +89,18 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "flip-card",
+      "type": "registry:component",
+      "title": "Flip Card",
+      "description": "ホバー時に3D回転アニメーションで裏返るカードコンポーネント。",
+      "files": [
+        {
+          "path": "registry/new-york/components/flip-card.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
