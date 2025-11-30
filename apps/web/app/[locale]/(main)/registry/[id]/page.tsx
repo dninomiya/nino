@@ -50,24 +50,12 @@ export default async function RegistryPage({
     path.join(process.cwd(), `app/[locale]/(main)/registry/${id}/doc.mdx`),
     "utf-8"
   );
-  const tCommon = await getMessage("Common");
-
   if (!metadata) {
     notFound();
   }
 
-  if (metadata.sponsors) {
-    return (
-      <Suspense fallback={<div className="h-content"></div>}>
-        <MainContent id={id} metadata={metadata} markdownString={markdownString}>
-          <Content />
-        </MainContent>
-      </Suspense>
-    );
-  }
-
   return (
-    <MainContent id={id} metadata={metadata} markdownString={markdownString}>
+    <MainContent metadata={metadata} markdownString={markdownString}>
       <Content />
     </MainContent>
   );
@@ -113,19 +101,21 @@ async function SponsorOnly({ children }: { children: React.ReactNode }) {
 }
 
 async function MainContent({
-  id,
   metadata,
   markdownString,
   children,
 }: {
-  id: string;
-  metadata: { title: string; createdAt: string; updatedAt?: string; sponsors?: boolean };
+  metadata: {
+    title: string;
+    createdAt: string;
+    updatedAt?: string;
+    sponsors?: boolean;
+  };
   markdownString: string;
   children: React.ReactNode;
 }) {
   const tCommon = await getMessage("Common");
   const locale = getCurrentLocale();
-  const isSponsorContent = metadata.sponsors;
 
   return (
     <div className="flex max-w-6xl container gap-10">
@@ -154,7 +144,7 @@ async function MainContent({
           <CopyButon value={markdownString}>{tCommon.copyMarkdown}</CopyButon>
         </div>
 
-        {isSponsorContent ? <SponsorOnly>{children}</SponsorOnly> : children}
+        {children}
       </MDXContent>
       <aside className="hidden xl:block w-64 sticky top-header h-[calc(100svh-(var(--spacing-header))-(--spacing(4)))] px-6 py-10 overflow-auto">
         <TableOfContents />

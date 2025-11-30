@@ -3,6 +3,7 @@ import { CodeBlock } from "@/components/code-block";
 import { getRegistryDocMeta } from "@/lib/registry";
 import { isSponsor } from "@workspace/auth";
 import { issueRegistryJWT } from "@workspace/registry/jwt";
+import { Lock } from "lucide-react";
 
 export async function RegistryInstallCommand({
   registryName,
@@ -12,6 +13,7 @@ export async function RegistryInstallCommand({
   const meta = await getRegistryDocMeta(registryName);
   const sponsors = meta.sponsors;
   const token = sponsors ? `?token=${await issueRegistryJWT()}` : "";
+  const sponsor = await isSponsor();
 
   const codes = [
     {
@@ -35,6 +37,15 @@ export async function RegistryInstallCommand({
       group: "bun",
     },
   ];
+
+  if (sponsors && !sponsor) {
+    return (
+      <p className="border flex items-center gap-2 rounded-lg not-prose p-4 bg-muted text-muted-foreground text-sm">
+        <Lock className="size-4" />
+        このレジストリアイテムはスポンサー限定です
+      </p>
+    );
+  }
 
   return <CodeBlock groups={["pnpm", "npm", "yarn", "bun"]} codes={codes} />;
 }
