@@ -9,22 +9,22 @@ export function RegistryInstallCommand({
   const codes = [
     {
       lang: "sh",
-      code: `pnpx shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
+      code: `pnpx shadcn@latest add ${baseUrl()}/r/${registryName}`,
       group: "pnpm",
     },
     {
       lang: "sh",
-      code: `npx shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
+      code: `npx shadcn@latest add ${baseUrl()}/r/${registryName}`,
       group: "npm",
     },
     {
       lang: "sh",
-      code: `yarn shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
+      code: `yarn shadcn@latest add ${baseUrl()}/r/${registryName}`,
       group: "yarn",
     },
     {
       lang: "sh",
-      code: `bunx --bun shadcn@latest add ${baseUrl()}/r/${registryName}.json`,
+      code: `bunx --bun shadcn@latest add ${baseUrl()}/r/${registryName}`,
       group: "bun",
     },
   ];

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyRegistryJWT } from "@workspace/registry/jwt";
 import { getRegistryDocMeta } from "@/lib/registry";
 import { isSponsor } from "@workspace/auth";
+import { promises as fs } from "fs";
 
 export async function GET(
   request: NextRequest,
-  { params }: RouteContext<"/api/registry/[name]">
+  { params }: RouteContext<"/api/r/[name]">
 ) {
   // Get token from Authorization header.
   const authHeader = request.headers.get("authorization");
@@ -17,7 +18,7 @@ export async function GET(
 
   const metadata = await getRegistryDocMeta(registryName);
 
-  if (metadata.sponsorOnly && !(await isSponsor())) {
+  if (metadata.sponsors && !(await isSponsor())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -26,7 +27,11 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const component = await import(`@/registry/out/r/${registryName}.json`);
+  const file = await fs.readFile(
+    process.cwd() + "/public/r/" + registryName + ".json",
+    "utf8"
+  );
+  const data = JSON.parse(file);
 
-  return NextResponse.json(component);
+  return NextResponse.json(data);
 }

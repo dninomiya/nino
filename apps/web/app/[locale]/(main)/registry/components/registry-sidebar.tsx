@@ -1,8 +1,19 @@
 import * as React from "react";
 
 import { SidebarLinkButon } from "@/components/sidebar-link-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getMessage } from "@/lib/i18n/server";
-import { gettingStartedItems, registries } from "@/lib/registry";
+import { cn } from "@/lib/utils";
+import {
+  gettingStartedItems,
+  getRegistryDocMetas,
+  registries,
+} from "@/lib/registry";
+import { isSponsor } from "@workspace/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -12,45 +23,57 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
+import { Lock } from "lucide-react";
 
-const getRegistryItems = (type: string) => {
+const getRegistryItems = async (type: string) => {
+  const allMetas = await getRegistryDocMetas();
   return registries
     .filter((registry) => registry.type === type)
-    .map((registry) => ({
-      title: registry.title,
-      url: `/registry/${registry.name}`,
-    }));
+    .map((registry) => {
+      const meta = allMetas.find((m) => m.name === registry.name);
+      return {
+        title: registry.title,
+        url: `/registry/${registry.name}`,
+        sponsors: meta?.sponsors,
+      };
+    });
 };
 
-const getGettingStartedItems = () => {
-  return gettingStartedItems.map((item) => ({
-    title: item.title,
-    url: `/registry/${item.name}`,
-  }));
+const getGettingStartedItems = async () => {
+  const allMetas = await getRegistryDocMetas();
+  return gettingStartedItems.map((item) => {
+    const meta = allMetas.find((m) => m.name === item.name);
+    return {
+      title: item.title,
+      url: `/registry/${item.name}`,
+      sponsors: meta?.sponsors,
+    };
+  });
 };
 
 export async function RegistrySidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const t = await getMessage("RegistrySidebar");
+  const sponsor = await isSponsor();
 
   const data = {
     navGroup: [
       {
         title: t.gettingStarted,
-        items: getGettingStartedItems(),
+        items: await getGettingStartedItems(),
       },
       // {
       //   title: t.blocks,
-      //   items: getRegistryItems("registry:block"),
+      //   items: await getRegistryItems("registry:block"),
       // },
       {
         title: t.components,
-        items: getRegistryItems("registry:component"),
+        items: await getRegistryItems("registry:component"),
       },
       {
         title: t.libraries,
-        items: getRegistryItems("registry:lib"),
+        items: await getRegistryItems("registry:lib"),
       },
     ],
   };
@@ -70,8 +93,21 @@ export async function RegistrySidebar({
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarLinkButon href={item.url}>
-                    {item.title}
+                  <SidebarLinkButon
+                    href={item.url}
+                    className={cn(item.sponsors && !sponsor && "opacity-50")}
+                  >
+                    <span className="truncate">{item.title}</span>
+                    {item.sponsors && !sponsor && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Lock className="ml-auto" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>このコンポーネントはスポンサー限定です</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
                   </SidebarLinkButon>
                 </SidebarMenuItem>
               ))}
