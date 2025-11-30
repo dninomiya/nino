@@ -12,9 +12,18 @@ export async function RegistryInstallCommand({
 }) {
   const meta = await getRegistryDocMeta(registryName);
   const sponsors = meta.sponsors;
-  const token = sponsors ? `?token=${await issueRegistryJWT()}` : "";
   const sponsor = await isSponsor();
 
+  if (sponsors && !sponsor) {
+    return (
+      <p className="border flex items-center gap-2 rounded-lg not-prose p-4 bg-muted text-muted-foreground text-sm">
+        <Lock className="size-4" />
+        このレジストリアイテムはスポンサー限定です
+      </p>
+    );
+  }
+
+  const token = sponsors ? `?token=${await issueRegistryJWT()}` : "";
   const codes = [
     {
       lang: "sh",
@@ -37,15 +46,6 @@ export async function RegistryInstallCommand({
       group: "bun",
     },
   ];
-
-  if (sponsors && !sponsor) {
-    return (
-      <p className="border flex items-center gap-2 rounded-lg not-prose p-4 bg-muted text-muted-foreground text-sm">
-        <Lock className="size-4" />
-        このレジストリアイテムはスポンサー限定です
-      </p>
-    );
-  }
 
   return <CodeBlock groups={["pnpm", "npm", "yarn", "bun"]} codes={codes} />;
 }
