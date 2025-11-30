@@ -23,7 +23,7 @@ export async function GET(
   }
 
   const file = await fs.readFile(
-    process.cwd() + "/public/r/" + registryName + ".json",
+    process.cwd() + "/registry/out/" + registryName + ".json",
     "utf8"
   );
   const data = JSON.parse(file);

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "registry:build": "shadcn build --output ../../apps/web/registry/out/r/"
+    "registry:build": "shadcn build --output ../../apps/web/registry/out/"
   },
   "exports": {
     ".": "./registry.json",
