@@ -10,8 +10,8 @@ export default function Preview() {
     "grid place-content-center rounded-xl *:size-20 shadow-xl";
 
   return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <FlipCard className="aspect-video w-40">
+    <div className="flex items-center justify-center">
+      <FlipCard className="aspect-video w-80">
         <FlipCardFront className={cn(cardClassName, "bg-pink-500")}>
           <img src="/nino-line-white.svg" alt="" />
         </FlipCardFront>
