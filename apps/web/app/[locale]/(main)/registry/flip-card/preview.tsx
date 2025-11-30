@@ -11,7 +11,7 @@ export default function Preview() {
 
   return (
     <div className="flex items-center justify-center min-h-[400px]">
-      <FlipCard className="aspect-9/14 w-40">
+      <FlipCard className="aspect-video w-40">
         <FlipCardFront className={cn(cardClassName, "bg-pink-500")}>
           <img src="/nino-line-white.svg" alt="" />
         </FlipCardFront>
