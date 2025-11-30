@@ -18,12 +18,7 @@ export async function GET(
 
   const metadata = await getRegistryDocMeta(registryName);
 
-  if (metadata.sponsors && !(await isSponsor())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // Check if token is valid.
-  if (!verifyRegistryJWT(token || queryToken)) {
+  if (metadata.sponsors && !(await verifyRegistryJWT(token || queryToken))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
