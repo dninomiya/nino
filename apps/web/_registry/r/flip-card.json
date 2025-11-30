@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "flip-card",
+  "type": "registry:component",
+  "title": "Flip Card",
+  "description": "ホバー時に3D回転アニメーションで裏返るカードコンポーネント。",
+  "files": [
+    {
+      "path": "registry/new-york/components/flip-card.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\nfunction FlipCard({\n  children,\n  className,\n}: {\n  children: React.ReactNode;\n  className?: string;\n}) {\n  return (\n    <div className={cn(\"group/flip-card perspective-midrange\", className)}>\n      <div className=\"relative size-full transition duration-500 transform-3d group-hover/flip-card:rotate-y-180\">\n        {children}\n      </div>\n    </div>\n  );\n}\n\nconst panelClassName = \"size-full absolute inset-0 backface-hidden\";\n\nfunction FlipCardFront({\n  children,\n  className,\n}: {\n  children: React.ReactNode;\n  className?: string;\n}) {\n  return <div className={cn(panelClassName, className)}>{children}</div>;\n}\n\nfunction FlipCardBack({\n  children,\n  className,\n}: {\n  children: React.ReactNode;\n  className?: string;\n}) {\n  return (\n    <div className={cn(panelClassName, \"rotate-y-180\", className)}>\n      {children}\n    </div>\n  );\n}\n\nexport { FlipCard, FlipCardFront, FlipCardBack };\n",
+      "type": "registry:component"
+    }
+  ]
+}

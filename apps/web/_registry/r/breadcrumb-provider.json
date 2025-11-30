@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "breadcrumb-provider",
+  "type": "registry:component",
+  "title": "Breadcrumb Provider",
+  "description": "パンくずナビゲーション用のコンテキストプロバイダーとコンポーネント。宣言的にパンくずを定義できます。",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "breadcrumb"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/components/breadcrumb-provider.tsx",
+      "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { Fragment } from \"react\";\nimport { createContext, use, useEffect, useState } from \"react\";\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbLink,\n  BreadcrumbList,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n} from \"@workspace/ui/components/breadcrumb\";\nimport { Home } from \"lucide-react\";\n\ntype BreadCrumbItem = {\n  label: string;\n  href?: string;\n};\n\nconst BreadcrumbContext = createContext<{\n  breadcrumbs: BreadCrumbItem[];\n  setBreadcrumbs: (breadcrumbs: BreadCrumbItem[]) => void;\n}>({\n  breadcrumbs: [],\n  setBreadcrumbs: () => {},\n});\n\nexport function BreadcrumbProvider({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  const [breadcrumbs, setBreadcrumbs] = useState<BreadCrumbItem[]>([]);\n  return (\n    <BreadcrumbContext.Provider value={{ breadcrumbs, setBreadcrumbs }}>\n      {children}\n    </BreadcrumbContext.Provider>\n  );\n}\n\nexport function BreadcrumbConfig({ items }: { items: BreadCrumbItem[] }) {\n  const { setBreadcrumbs } = use(BreadcrumbContext);\n\n  useEffect(() => {\n    setBreadcrumbs(items);\n\n    return () => {\n      setBreadcrumbs([]);\n    };\n  }, [items, setBreadcrumbs]);\n\n  return null;\n}\n\nexport function BreadcrumbMain({ homeHref = \"/\" }: { homeHref?: string }) {\n  const { breadcrumbs } = use(BreadcrumbContext);\n\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink asChild>\n            <Link href={homeHref}>\n              <Home className=\"size-5\" />\n            </Link>\n          </BreadcrumbLink>\n        </BreadcrumbItem>\n        {breadcrumbs.map((breadcrumb) => (\n          <Fragment key={breadcrumb.label}>\n            <BreadcrumbSeparator />\n            <BreadcrumbItem>\n              {breadcrumb.href ? (\n                <BreadcrumbLink asChild>\n                  <Link href={breadcrumb.href}>{breadcrumb.label}</Link>\n                </BreadcrumbLink>\n              ) : (\n                <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>\n              )}\n            </BreadcrumbItem>\n          </Fragment>\n        ))}\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}\n\nexport const useBreadcrumbs = () => {\n  return use(BreadcrumbContext);\n};\n",
+      "type": "registry:component"
+    }
+  ]
+}
