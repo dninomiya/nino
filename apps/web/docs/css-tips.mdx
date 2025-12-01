@@ -45,15 +45,6 @@ PCファーストで開発すると折り返しが少ないため気付きづら
 
 ## Next.js 環境で最初に行う調整
 
-### `layout.tsx` から `antialiased` を削除する
-
-これがあると日本語が細く表現されて見づらいため
-
-```tsx title=layout.tsx
-<body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}> // [!code --]
-<body className={`${fontSans.variable} ${fontMono.variable} font-sans`}> // [!code ++]
-```
-
 ### `globals.css` で container のデフォルトスタイルを定義
 
 ```css title=globals.css
@@ -69,3 +60,9 @@ body {
   @apply wrap-anywhere;
 }
 ```
+
+## shadcn/ui のコンポーネントをカスタマイズする（オプション）
+
+- Button に font-semibold を加える（日本語がはっきり表現されるため）
+- Button に type="button" をつける（フォーム内で誤って送信されるのを防ぐため）
+- Input の autoComplete を off にする（必要な場面でセットする方式にする）
