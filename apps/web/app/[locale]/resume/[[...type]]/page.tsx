@@ -1,11 +1,15 @@
-export const metadata = {
-  title: "Resume",
-};
-
 import { ModeToggle } from "@/components/mode-toggle";
 import { RecencyDate } from "@/components/recency-date";
 import { Badge } from "@/components/ui/badge";
 import { setCurrentLocaleFromParams } from "@/lib/i18n/server";
+
+export const metadata = {
+  title: "Resume",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function RedumePage({
   params,
