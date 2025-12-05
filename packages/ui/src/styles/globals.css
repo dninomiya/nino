@@ -151,9 +151,6 @@
       @apply text-green-500;
       content: "+";
     }
-    .error {
-      @apply bg-red-500/10
-    }
   }
 }
 

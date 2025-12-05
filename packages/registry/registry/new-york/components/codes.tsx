@@ -333,11 +333,11 @@ function CodeDisplay({
         "*:border-none *:focus-visible:outline-none *:p-0! *:m-0 text-sm",
         "overflow-auto py-4",
         "[&_pre]:bg-transparent! [&_pre]:dark:bg-transparent!",
-        "[&_code]:w-fit [&_code]:min-w-full",
-        "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px [&_.line]:inline-block [&_.line]:min-w-full",
+        "[&_code]:min-w-full [&_code]:w-fit [&_code]:px-4 [&_code]:block",
+        "[&_.line]:px-4 [&_.line]:leading-relaxed [&_.line]:py-px [&_.line]:inline-block [&_.line]:w-[calc(100%+32px)] [&_.line]:-mx-4",
         "[&_.highlighted]:bg-muted",
         "[&_.error]:bg-red-400/15!",
-        "[&_.add]:bg-muted",
+        "[&_.remove]:opacity-50",
         className
       )}
       dangerouslySetInnerHTML={{ __html: html }}

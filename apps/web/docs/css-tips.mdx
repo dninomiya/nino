@@ -53,12 +53,12 @@ PCファーストで開発すると折り返しが少ないため気付きづら
 }
 ```
 
-### body で `wrap-anywhere` を有効にする
+### body に `wrap-anywhere` を付与する
 
-```css title=globals.css
-body {
-  @apply wrap-anywhere;
-}
+```tsx title=layout.tsx
+<body className="wrap-anywhere">
+  {children}
+</body>
 ```
 
 ## shadcn/ui のコンポーネントをカスタマイズする（オプション）

@@ -1,16 +1,5 @@
 import { generateCodeHtml } from "@/lib/code-to-html";
 import {
-  CodeContent,
-  CodeCopyButton,
-  CodeDisplay,
-  CodeGroupOption,
-  CodeGroupSelector,
-  CodeHeader,
-  CodeList,
-  Codes,
-  CodeTrigger,
-} from "@workspace/registry/components/codes";
-import {
   SiBun,
   SiCss,
   SiHtml5,
@@ -21,6 +10,17 @@ import {
   SiYaml,
   SiYarn,
 } from "@icons-pack/react-simple-icons";
+import {
+  CodeContent,
+  CodeCopyButton,
+  CodeDisplay,
+  CodeGroupOption,
+  CodeGroupSelector,
+  CodeHeader,
+  CodeList,
+  Codes,
+  CodeTrigger,
+} from "@workspace/registry/components/codes";
 import { Terminal } from "lucide-react";
 import { Suspense } from "react";
 

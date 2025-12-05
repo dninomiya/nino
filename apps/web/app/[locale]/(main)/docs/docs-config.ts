@@ -26,6 +26,7 @@ export const docsConfig = {
         "app-development-flow",
         "prompt-guide",
         "css-tips",
+        "font-family",
         "self-branding",
         "self-onboarding",
         "office-tools",
