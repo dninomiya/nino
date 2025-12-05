@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "recency-date",
+  "type": "registry:component",
+  "title": "Recency Date",
+  "description": "日付の新旧を判断して表示するコンポーネント。",
+  "dependencies": [
+    "date-fns"
+  ],
+  "registryDependencies": [
+    "tooltip"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/components/recency-date.tsx",
+      "content": "import {\n  Tooltip,\n  TooltipContent,\n  TooltipTrigger,\n} from \"@workspace/ui/components/tooltip\";\nimport { cn } from \"@workspace/ui/lib/utils\";\nimport { differenceInDays, format, formatDistanceToNow } from \"date-fns\";\nimport { ja } from \"date-fns/locale\";\n\nexport function RecencyDate({\n  date,\n  className,\n}: {\n  date: Date;\n  className?: string;\n}) {\n  const diffInDays = differenceInDays(new Date(), date);\n  const fullDate = format(date, \"yyyy年M月d日 HH:mm\");\n  const iso = date.toISOString();\n\n  if (diffInDays <= 3) {\n    return (\n      <Tooltip>\n        <TooltipTrigger\n          className={cn(\n            \"text-sm text-muted-foreground font-medium leading-none\",\n            className\n          )}\n          asChild\n        >\n          <time dateTime={iso}>\n            {formatDistanceToNow(date, {\n              addSuffix: true,\n              locale: ja,\n            })}\n          </time>\n        </TooltipTrigger>\n        <TooltipContent>{fullDate}</TooltipContent>\n      </Tooltip>\n    );\n  }\n\n  return (\n    <time\n      dateTime={iso}\n      className={cn(\n        \"text-sm text-muted-foreground font-medium leading-none\",\n        className\n      )}\n    >\n      {fullDate}\n    </time>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ]
+}

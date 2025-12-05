@@ -101,6 +101,20 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "recency-date",
+      "type": "registry:component",
+      "title": "Recency Date",
+      "description": "日付の新旧を判断して表示するコンポーネント。",
+      "dependencies": ["date-fns"],
+      "registryDependencies": ["tooltip"],
+      "files": [
+        {
+          "path": "registry/new-york/components/recency-date.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }
