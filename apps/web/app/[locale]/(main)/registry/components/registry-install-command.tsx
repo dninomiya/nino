@@ -27,22 +27,22 @@ export async function RegistryInstallCommand({
   const codes = [
     {
       lang: "sh",
-      code: `pnpx shadcn@latest add ${baseUrl()}/api/r/${registryName}${token}`,
+      code: `pnpx shadcn@latest add "${baseUrl()}/api/r/${registryName}${token}"`,
       group: "pnpm",
     },
     {
       lang: "sh",
-      code: `npx shadcn@latest add ${baseUrl()}/api/r/${registryName}${token}`,
+      code: `npx shadcn@latest add "${baseUrl()}/api/r/${registryName}${token}"`,
       group: "npm",
     },
     {
       lang: "sh",
-      code: `yarn shadcn@latest add ${baseUrl()}/api/r/${registryName}${token}`,
+      code: `yarn shadcn@latest add "${baseUrl()}/api/r/${registryName}${token}"`,
       group: "yarn",
     },
     {
       lang: "sh",
-      code: `bunx --bun shadcn@latest add ${baseUrl()}/api/r/${registryName}${token}`,
+      code: `bunx --bun shadcn@latest add "${baseUrl()}/api/r/${registryName}${token}"`,
       group: "bun",
     },
   ];
