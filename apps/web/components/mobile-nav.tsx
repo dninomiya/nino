@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getMessage } from "@/lib/i18n/server";
 import { archive, demos, links, tools } from "@/lib/nav";
-import { NINO_PLUS_URL } from "@workspace/lib/constants";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Link from "next/link";
 import { LocaleToggleWithDropdownMenuItem } from "./locale-toggle";
@@ -71,12 +70,6 @@ export async function MobileNav() {
                 </DropdownMenuItem>
               ))}
             </DropdownMenuSubContent>
-            <DropdownMenuItem asChild>
-              <a href={NINO_PLUS_URL} target="_blank">
-                nino+
-                <ArrowUpRight className="size-3" />
-              </a>
-            </DropdownMenuItem>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
           <LocaleToggleWithDropdownMenuItem />

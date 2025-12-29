@@ -1,5 +1,4 @@
 export const links = [
-  { href: "/docs", labelKey: "docs" },
   { href: "/registry", labelKey: "registry" },
 ] as const;
 

@@ -87,19 +87,6 @@ export async function MainNav() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <a
-              href="https://nino.plus"
-              target="_blank"
-              className="flex-row items-center gap-2"
-            >
-              {t["membership"]}
-              <ArrowUpRight className="size-4" />
-            </a>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   );

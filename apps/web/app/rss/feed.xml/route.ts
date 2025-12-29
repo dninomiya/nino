@@ -1,4 +1,3 @@
-import { getDocMetas } from "@/lib/docs";
 import { getRegistryDocMetas } from "@/lib/registry";
 import { APP_NAME } from "@workspace/lib/constants";
 import { baseUrl } from "@workspace/registry/lib/base-url";
@@ -18,7 +17,7 @@ async function generateFeed() {
 
   const feed = new Feed({
     title: APP_NAME,
-    description: "ninoのドキュメントとレジストリ",
+    description: "ninoのレジストリ",
     id: siteUrl,
     link: siteUrl,
     language: "ja",
@@ -29,27 +28,19 @@ async function generateFeed() {
     },
   });
 
-  // docs を取得
-  const docs = await getDocMetas();
+  // registry を取得
   const registryDocs = await getRegistryDocMetas();
 
-  // すべてのアイテムを結合してソート
-  const allItems = [
-    ...docs.map((doc) => ({
-      title: doc.title,
-      description: doc.description,
-      link: `${siteUrl}/docs/${doc.id}`,
-      date: new Date(doc.updatedAt),
-      category: [{ name: "docs" }],
-    })),
-    ...registryDocs.map((doc) => ({
+  // すべてのアイテムをソート
+  const allItems = registryDocs
+    .map((doc) => ({
       title: doc.title,
       description: doc.description,
       link: `${siteUrl}/registry/${doc.name}`,
       date: new Date(doc.updatedAt),
       category: [{ name: "registry" }],
-    })),
-  ].sort((a, b) => b.date.getTime() - a.date.getTime());
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
   // フィードにアイテムを追加
   allItems.forEach((item) => {

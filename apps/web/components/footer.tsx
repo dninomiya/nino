@@ -52,10 +52,6 @@ const footerLinks = [
     titleKey: "linksTitle",
     links: [
       {
-        href: "/docs",
-        labelKey: "docs",
-      },
-      {
         href: "/registry",
         labelKey: "registry",
       },

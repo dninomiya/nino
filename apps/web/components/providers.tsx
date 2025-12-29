@@ -1,10 +1,8 @@
-import { getDocMetas } from "@/lib/docs";
 import { Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/server";
 import { getRegistryDocMetas } from "@/lib/registry";
 import { CodeProvider } from "@/registry/components/codes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { DocProvider } from "./doc-provider";
 import { I18nProvider } from "./i18n-provider";
 import { RegistryProvider } from "./registry-provider";
 import { ThemeProvider } from "./theme-provider";
@@ -18,7 +16,6 @@ export async function Providers({
   locale: Locale;
 }) {
   const registryDocMetas = await getRegistryDocMetas();
-  const docMetas = await getDocMetas();
   const dictionary = await getDictionary();
 
   return (
@@ -27,9 +24,7 @@ export async function Providers({
         <ThemeProvider>
           <CodeProvider>
             <RegistryProvider registryDocMetas={registryDocMetas}>
-              <DocProvider docMetas={docMetas}>
-                <NuqsAdapter>{children}</NuqsAdapter>
-              </DocProvider>
+              <NuqsAdapter>{children}</NuqsAdapter>
             </RegistryProvider>
           </CodeProvider>
         </ThemeProvider>

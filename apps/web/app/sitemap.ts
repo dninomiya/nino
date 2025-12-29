@@ -1,4 +1,3 @@
-import { getDocMetas } from "@/lib/docs";
 import { locales } from "@/lib/i18n/locale";
 import { getRegistryDocMetas } from "@/lib/registry";
 import { baseUrl } from "@/registry/lib/base-url";
@@ -31,12 +30,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      path: "/docs",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       path: "/registry",
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -51,20 +44,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Promise.allで並列実行
-  const [docMetas, registryDocMetas] = await Promise.all([
-    getDocMetas(),
-    getRegistryDocMetas(),
-  ]);
+  const registryDocMetas = await getRegistryDocMetas();
 
-  const docPaths = docMetas.map(
-    (doc) =>
-      ({
-        path: `/docs/${doc.id}`,
-        lastModified: createSafeDate(doc.updatedAt),
-        changeFrequency: "monthly",
-        priority: 0.8,
-      }) satisfies SitemapPath
-  );
   const registryPaths = registryDocMetas.map(
     (doc) =>
       ({
@@ -75,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }) satisfies SitemapPath
   );
 
-  const allItems = [...staticPaths, ...docPaths, ...registryPaths];
+  const allItems = [...staticPaths, ...registryPaths];
 
   return locales.flatMap((locale) =>
     allItems.map((item) => ({
