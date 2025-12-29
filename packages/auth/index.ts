@@ -1,19 +1,12 @@
-import { getActiveSubscription } from "./subscription";
 import { db } from "@workspace/db";
 import { GithubAccount } from "./github";
-import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth/minimal";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nanoid } from "nanoid";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { addDiscordRole, joinDiscordGuild } from "./discord";
 import { inviteUserToOrganization } from "./github";
-import { refreshIntegrations } from "./integration";
-import { updateMemberStatusToKicking } from "./notion";
-import { PLANS } from "@workspace/lib/plan";
-import { stripe as stripeClient } from "./stripe";
 import { baseUrl } from "@workspace/registry/lib/base-url";
 import { nextCookies } from "better-auth/next-js";
 
@@ -43,20 +36,6 @@ export const auth = betterAuth({
           }
         }
       }
-      if (ctx.path === "/link-social") {
-        const activeSubscription = await getActiveSubscription();
-        const provider = ctx.body.provider;
-        if (!activeSubscription) return;
-        if (provider === "discord") {
-          const discordAccount = await getDiscordAccount();
-          if (discordAccount) {
-            await addDiscordRole(
-              discordAccount.accountId,
-              activeSubscription.plan
-            );
-          }
-        }
-      }
     }),
   },
   socialProviders: {
@@ -77,44 +56,6 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
-    stripe({
-      stripeClient,
-      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
-      createCustomerOnSignUp: true,
-      subscription: {
-        enabled: true,
-        plans: PLANS.map((plan) => ({
-          name: plan.id,
-          priceId: plan.priceId,
-          annualDiscountPriceId: plan.annualDiscountPriceId,
-        })),
-        getCheckoutSessionParams: async () => {
-          return {
-            params: {
-              allow_promotion_codes: true,
-              automatic_tax: {
-                enabled: true,
-              },
-            },
-          };
-        },
-        onSubscriptionComplete: async ({ subscription, plan }) => {
-          await joinDiscordGuild(subscription.referenceId);
-          await refreshIntegrations(subscription.referenceId, plan.name);
-        },
-        onSubscriptionUpdate: async ({ subscription }) => {
-          await joinDiscordGuild(subscription.referenceId);
-          await refreshIntegrations(
-            subscription.referenceId,
-            subscription.plan
-          );
-        },
-        onSubscriptionDeleted: async ({ subscription }) => {
-          await updateMemberStatusToKicking(subscription.referenceId);
-          await refreshIntegrations(subscription.referenceId);
-        },
-      },
-    }),
   ],
 });
 
@@ -163,16 +104,4 @@ export const getDiscordAccount = async () => {
 
 export const getNotionAccount = async () => {
   return getProviderAccount("notion");
-};
-
-export const isSponsor = async () => {
-  const session = await getSession();
-  if (!session) return false;
-  const subscriptions = await auth.api.listActiveSubscriptions({
-    headers: await headers(),
-  });
-  return subscriptions.some(
-    (subscription) =>
-      subscription.status === "active" || subscription.status === "trialing"
-  );
 };

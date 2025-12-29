@@ -1,13 +1,11 @@
 "use server";
 
 import { headers } from "next/headers";
-import { auth, currentSession, getDiscordAccount, getGithubAccount } from ".";
+import { auth, currentSession, getGithubAccount } from ".";
 import { baseUrl } from "@workspace/registry/lib/base-url";
 import { refreshIntegrations } from "./integration";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { getActiveSubscription, getPlanId } from "./subscription";
-import { addDiscordRole, removeDiscordRole } from "./discord";
 import { removeUserFromOrganization } from "./github";
 
 export const signOut = async () => {
@@ -17,22 +15,7 @@ export const signOut = async () => {
 };
 
 export const deleteAccount = async () => {
-  const subscriptions = await auth.api.listActiveSubscriptions({
-    headers: await headers(),
-  });
-
   const session = await currentSession();
-
-  // すべてキャンセル
-  for (const subscription of subscriptions) {
-    await auth.api.cancelSubscription({
-      headers: await headers(),
-      body: {
-        subscriptionId: subscription.id,
-        returnUrl: baseUrl() + "/account",
-      },
-    });
-  }
 
   // すべて連携解除
   await refreshIntegrations(session.user.id);
@@ -46,13 +29,6 @@ export const deleteAccount = async () => {
 };
 
 export const linkDiscord = async () => {
-  const account = await getDiscordAccount();
-  const activeSubscription = await getActiveSubscription();
-
-  if (account && activeSubscription) {
-    await removeDiscordRole(account.accountId, activeSubscription.plan);
-  }
-
   const result = await auth.api.linkSocialAccount({
     headers: await headers(),
     body: {
@@ -118,11 +94,3 @@ export const unlinkGitHub = async () => {
     });
 };
 
-export const syncDiscordRole = async () => {
-  const discordAccount = await getDiscordAccount();
-  const planId = await getPlanId();
-
-  if (discordAccount && planId) {
-    await addDiscordRole(discordAccount.id, planId);
-  }
-};

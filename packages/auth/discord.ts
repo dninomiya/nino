@@ -1,4 +1,3 @@
-import { getPlanId } from "./subscription";
 import { auth, getDiscordAccount } from ".";
 import { getUserAccounts } from "./integration";
 import { PLANS } from "@workspace/lib/plan";
@@ -99,43 +98,6 @@ export const isDiscordMember = async () => {
   }
 };
 
-export const hasDiscordRole = async () => {
-  const planId = await getPlanId();
-  const discordAccount = await getDiscordAccount();
-
-  if (!planId) {
-    return false;
-  }
-
-  const roleId = PLANS.find((plan) => plan.id === planId)?.discordRoleId;
-
-  if (!discordAccount) {
-    return false;
-  }
-
-  const url = `https://discord.com/api/v10/guilds/${DISCORD_GUILD_ID}/members/${discordAccount.id}`;
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
-    },
-  };
-
-  try {
-    const res = await fetch(url, options);
-    const status = res.status;
-
-    if (status === 404) {
-      return false;
-    }
-
-    const member = await res.json();
-    return member ? member.roles.includes(roleId) : false;
-  } catch (err) {
-    console.error("Discord APIリクエスト中にエラーが発生しました：", err);
-    return false;
-  }
-};
 
 export const sendDiscordMessage = async (
   channelId: string,
