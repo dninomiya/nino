@@ -1,37 +1,25 @@
-import { getSubscriptionCount } from "@/data/subscription";
 import { Button } from "@workspace/ui/components/button";
-import Link from "next/link";
 import { Heart } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-export async function SponsorButton() {
-  "use cache";
-
-  const subscriptionCount = await getSubscriptionCount();
-
+export function SponsorButton() {
   return (
     <Button variant="outline" asChild>
-      <Link href="/sponsors">
+      <a href="https://dninomiya.notion.site/sponsor" target="_blank" rel="noopener noreferrer">
         <Heart className="text-pink-500" />
         <span>スポンサー</span>
-        <span>{subscriptionCount}</span>
-      </Link>
+      </a>
     </Button>
   );
 }
 
-export async function SponsorButtonWithDropdownMenuItem() {
-  "use cache";
-
-  const subscriptionCount = await getSubscriptionCount();
-
+export function SponsorButtonWithDropdownMenuItem() {
   return (
     <DropdownMenuItem asChild>
-      <Link href="/sponsors">
+      <a href="https://dninomiya.notion.site/sponsor" target="_blank" rel="noopener noreferrer">
         <Heart className="text-pink-500" />
         <span>スポンサー</span>
-        <span>{subscriptionCount}</span>
-      </Link>
+      </a>
     </DropdownMenuItem>
   );
 }
