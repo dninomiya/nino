@@ -3,14 +3,6 @@ import { HelpBanner } from "@/components/help-banner";
 import { MDXContent } from "@/components/mdx-contenet";
 import { RecencyDate } from "@/components/recency-date";
 import { TableOfContents } from "@/components/table-of-contents";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { DocMeta, getDocMeta, getDocMetas } from "@/lib/docs";
 import {
   getCurrentLocale,
@@ -18,15 +10,11 @@ import {
   setCurrentLocaleFromParams,
 } from "@/lib/i18n/server";
 import { formatReadingTime } from "@/lib/util";
-import { faker } from "@faker-js/faker";
-import { isSponsor } from "@workspace/auth";
 import { readFileSync } from "fs";
-import { ClockFading, Lock, RefreshCw } from "lucide-react";
+import { ClockFading, RefreshCw } from "lucide-react";
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import path from "path";
-import { Suspense } from "react";
 
 export const generateMetadata = async ({
   params,
@@ -57,60 +45,11 @@ export default async function DocsPage({
     notFound();
   }
 
-  if (metadata.sponsors) {
-    return (
-      <Suspense fallback={<div className="h-content"></div>}>
-        <MainContent id={id} metadata={metadata} readingTime={readingTime}>
-          <Content />
-        </MainContent>
-      </Suspense>
-    );
-  }
-
   return (
     <MainContent id={id} metadata={metadata} readingTime={readingTime}>
       <Content />
     </MainContent>
   );
-}
-
-async function SponsorOnly({ children }: { children: React.ReactNode }) {
-  // TODO: ローカルサーバーで謎のエラーが出るバグが解消したら復活
-  // "use cache: private";
-  // cacheLife({
-  //   stale: Number.MAX_VALUE,
-  // });
-  const sponsor = await isSponsor();
-
-  if (!sponsor) {
-    return (
-      <div className="grid place-content-center relative">
-        <div className="blur select-none">
-          <p>{faker.lorem.paragraphs(3)}</p>
-          <p>{faker.lorem.paragraphs(3)}</p>
-          <p>{faker.lorem.paragraphs(3)}</p>
-        </div>
-        <Card className="absolute top-20 left-1/2 -translate-x-1/2 z-10 w-[80%] not-prose">
-          <CardHeader>
-            <Lock className="mb-2" />
-            <CardTitle>スポンサー限定</CardTitle>
-            <CardDescription>
-              このドキュメントはスポンサー限定です
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link href="/sponsors">
-                <span>スポンサーになる</span>
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return children;
 }
 
 async function MainContent({
@@ -130,7 +69,6 @@ async function MainContent({
   );
   const tCommon = await getMessage("Common");
   const locale = getCurrentLocale();
-  const isSponsorConent = metadata.sponsors;
 
   return (
     <div className="flex items-start max-w-6xl container gap-10">
@@ -171,7 +109,7 @@ async function MainContent({
           </div>
         </div>
 
-        {isSponsorConent ? <SponsorOnly>{children}</SponsorOnly> : children}
+        {children}
 
         <div className="mt-20">
           <HelpBanner />

@@ -1,19 +1,12 @@
 import * as React from "react";
 
 import { SidebarLinkButon } from "@/components/sidebar-link-button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { getMessage } from "@/lib/i18n/server";
-import { cn } from "@/lib/utils";
 import {
   gettingStartedItems,
   getRegistryDocMetas,
   registries,
 } from "@/lib/registry";
-import { isSponsor } from "@workspace/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +16,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { Lock } from "lucide-react";
 
 const getRegistryItems = async (type: string) => {
   const allMetas = await getRegistryDocMetas();
@@ -55,7 +47,6 @@ export async function RegistrySidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const t = await getMessage("RegistrySidebar");
-  const sponsor = await isSponsor();
 
   const data = {
     navGroup: [
@@ -93,21 +84,8 @@ export async function RegistrySidebar({
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarLinkButon
-                    href={item.url}
-                    className={cn(item.sponsors && !sponsor && "opacity-50")}
-                  >
+                  <SidebarLinkButon href={item.url}>
                     <span className="truncate">{item.title}</span>
-                    {item.sponsors && !sponsor && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Lock className="ml-auto" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>このコンポーネントはスポンサー限定です</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
                   </SidebarLinkButon>
                 </SidebarMenuItem>
               ))}

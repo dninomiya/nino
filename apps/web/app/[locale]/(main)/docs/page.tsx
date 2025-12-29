@@ -12,10 +12,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import Link from "next/link";
-import { Lock } from "lucide-react";
-import { Suspense } from "react";
-import { NotSponsor } from "@/components/not-sponsor";
-import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">) {
   await setCurrentLocaleFromParams(params);
@@ -49,17 +45,6 @@ export default async function DocsListPage({ params }: PageProps<"/[locale]">) {
                   date={doc.updatedAt || doc.createdAt}
                   locale={locale}
                 />
-
-                {doc.sponsors && (
-                  <Suspense>
-                    <NotSponsor>
-                      <Badge variant="outline">
-                        <Lock />
-                        <span>スポンサー限定</span>
-                      </Badge>
-                    </NotSponsor>
-                  </Suspense>
-                )}
               </CardDescription>
             </CardHeader>
           </Card>

@@ -1,12 +1,5 @@
 import { SidebarLinkButon } from "@/components/sidebar-link-button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { getMessage } from "@/lib/i18n/server";
-import { cn } from "@/lib/utils";
-import { isSponsor } from "@workspace/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import { Lock } from "lucide-react";
 
 interface DocItem {
   title: string;
@@ -34,7 +26,6 @@ interface DocSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export async function DocSidebar({ docItems, ...props }: DocSidebarProps) {
   const t = await getMessage("DocsSidebar");
-  const sponsor = await isSponsor();
 
   const data = {
     navGroup: [
@@ -64,22 +55,8 @@ export async function DocSidebar({ docItems, ...props }: DocSidebarProps) {
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarLinkButon
-                    prefetch
-                    href={item.url}
-                    className={cn(item.sponsors && !sponsor && "opacity-50")}
-                  >
+                  <SidebarLinkButon prefetch href={item.url}>
                     <span className="truncate">{item.title}</span>
-                    {item.sponsors && !sponsor && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Lock className="ml-auto" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>このドキュメントはスポンサー限定です</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
                   </SidebarLinkButon>
                 </SidebarMenuItem>
               ))}
